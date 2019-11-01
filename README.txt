@@ -1,1 +1,1 @@
-Theolojy - A Study of Spirituality, Religion, and something Greater
+# Theolojy - A Study of Spirituality, Religion, and something Greater
