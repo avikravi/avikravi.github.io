@@ -290,6 +290,163 @@
             gap: 30px;
         }
 
+        /* Projects Showcase Section */
+        .projects-showcase {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .showcase-grid {
+            display: grid;
+            gap: 40px;
+        }
+
+        .showcase-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 32px;
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .showcase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .showcase-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .showcase-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px rgba(0, 245, 255, 0.3),
+                        0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .showcase-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(0, 102, 255, 0.1));
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .showcase-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder-image {
+            font-size: 64px;
+            opacity: 0.5;
+        }
+
+        .showcase-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .showcase-content h3 {
+            font-size: 24px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .showcase-content > p {
+            color: var(--text-dim);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .showcase-metrics {
+            display: flex;
+            gap: 32px;
+            padding: 16px 0;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--neon-blue);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .showcase-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .showcase-link-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .showcase-link-btn.primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            color: white;
+            border: none;
+        }
+
+        .showcase-link-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+        }
+
+        .showcase-link-btn.secondary {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+        }
+
+        .showcase-link-btn.secondary:hover {
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        /* End Projects Showcase */
+
         .project-card {
             background: rgba(26, 26, 46, 0.6);
             border: 2px solid rgba(0, 245, 255, 0.2);
@@ -337,6 +494,14 @@
             color: var(--text);
             margin-bottom: 8px;
             font-weight: 700;
+        }
+
+        .project-year {
+            font-size: 13px;
+            color: var(--neon-blue);
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .project-badge {
@@ -476,6 +641,30 @@
                 padding: 6px 12px;
             }
 
+            .showcase-card {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .showcase-image {
+                width: 100%;
+                height: 180px;
+            }
+
+            .showcase-metrics {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .showcase-links {
+                flex-direction: column;
+            }
+
+            .showcase-link-btn {
+                text-align: center;
+                justify-content: center;
+            }
+
             h1 {
                 font-size: 40px;
             }
@@ -563,9 +752,106 @@
             </div>
         </section>
 
+        <section class="projects-showcase">
+            <div class="section-header">
+                <h2>Projects</h2>
+                <p class="section-subtitle">Technical work and personal experiments</p>
+            </div>
+            <div class="showcase-grid">
+                <div class="showcase-card">
+                    <div class="showcase-image">
+                        <div class="placeholder-image">📊</div>
+                    </div>
+                    <div class="showcase-content">
+                        <h3>NBA Momentum Analysis</h3>
+                        <p>Statistical research investigating whether recent scoring patterns (momentum) improve NBA game prediction accuracy beyond traditional variables using logistic regression models.</p>
+                        <div class="showcase-metrics">
+                            <div class="metric">
+                                <span class="metric-value">600+</span>
+                                <span class="metric-label">Games Analyzed</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">Python</span>
+                                <span class="metric-label">Primary Tool</span>
+                            </div>
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Pandas</span>
+                            <span class="tech-tag">Scikit-learn</span>
+                            <span class="tech-tag">NBA API</span>
+                        </div>
+                        <div class="showcase-links">
+                            <a href="#" class="showcase-link-btn primary">View Project</a>
+                            <a href="https://github.com/epochzeroavi" target="_blank" class="showcase-link-btn secondary">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="showcase-card">
+                    <div class="showcase-image">
+                        <div class="placeholder-image">🏀</div>
+                    </div>
+                    <div class="showcase-content">
+                        <h3>Clutch Sports Data</h3>
+                        <p>Analytics platform serving university basketball programs (UH Cougars, Baylor Bears). Built data pipelines and visualization tools for real-time game insights.</p>
+                        <div class="showcase-metrics">
+                            <div class="metric">
+                                <span class="metric-value">2</span>
+                                <span class="metric-label">University Teams</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">Live</span>
+                                <span class="metric-label">Game Analytics</span>
+                            </div>
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Data Pipelines</span>
+                            <span class="tech-tag">Tableau</span>
+                            <span class="tech-tag">Sports Analytics</span>
+                        </div>
+                        <div class="showcase-links">
+                            <a href="#" class="showcase-link-btn primary">Learn More</a>
+                            <a href="https://github.com/epochzeroavi" target="_blank" class="showcase-link-btn secondary">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="showcase-card">
+                    <div class="showcase-image">
+                        <div class="placeholder-image">🏈</div>
+                    </div>
+                    <div class="showcase-content">
+                        <h3>Texans Explosive Plays Analysis</h3>
+                        <p>Defined and analyzed Explosive Plays using 2024 play data. Engineered features and presented actionable recommendations to football operations staff.</p>
+                        <div class="showcase-metrics">
+                            <div class="metric">
+                                <span class="metric-value">600+</span>
+                                <span class="metric-label">Plays Analyzed</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">4</span>
+                                <span class="metric-label">Recommendations</span>
+                            </div>
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">PowerBI</span>
+                            <span class="tech-tag">Feature Engineering</span>
+                            <span class="tech-tag">NFL Analytics</span>
+                        </div>
+                        <div class="showcase-links">
+                            <a href="#" class="showcase-link-btn primary">View Analysis</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="projects">
             <div class="section-header">
-                <h2>Featured Work</h2>
+                <h2>Career</h2>
                 <p class="section-subtitle">Projects that combine technical depth with real impact</p>
             </div>
             <div class="projects-grid">
@@ -574,6 +860,7 @@
                         <h3>Houston Texans Analytics</h3>
                         <span class="project-badge">Professional</span>
                     </div>
+                    <div class="project-year">2025</div>
                     <p>
                         Conducted 4-week analytics project defining Explosive Plays using 2024 Texans play data. 
                         Engineered features and analyzed 600+ plays to identify offensive trends, presenting findings 
@@ -593,6 +880,7 @@
                         <h3>TaskTag</h3>
                         <span class="project-badge">Product</span>
                     </div>
+                    <div class="project-year">2022 - 2025</div>
                     <p>
                         Led product management for construction project management platform. Managed teams of 20+ 
                         distributed across 9 countries, launched mobile and web app, acquired 2000+ users in 3 months. 
@@ -612,6 +900,7 @@
                         <h3>Mesos</h3>
                         <span class="project-badge">Startup</span>
                     </div>
+                    <div class="project-year">2021 - 2022</div>
                     <p>
                         VP of Product for stratospheric drone and aerial imagery company. Managed engineering team 
                         building imaging systems, oversaw software development for image detection and cataloging of 
@@ -631,6 +920,7 @@
                         <h3>daytum</h3>
                         <span class="project-badge">Startup</span>
                     </div>
+                    <div class="project-year">2019 - 2021</div>
                     <p>
                         Built online Learning Management System (LMS) in Anaconda (Jupyterhub with Postgres) to teach 
                         data science and machine learning to 1000+ energy professionals. Led customer discovery and 
@@ -650,6 +940,7 @@
                         <h3>muvve</h3>
                         <span class="project-badge">Startup</span>
                     </div>
+                    <div class="project-year">2016 - 2019</div>
                     <p>
                         Co-founded fitness events marketplace connecting enthusiasts to local events. Managed team of 
                         4, built iPhone app with 1000+ downloads, partnered with 20+ fitness companies to increase 
@@ -666,47 +957,10 @@
 
                 <div class="project-card">
                     <div class="project-header">
-                        <h3>Clutch Sports Data</h3>
-                        <span class="project-badge">Startup</span>
-                    </div>
-                    <p>
-                        Founded sports data science company serving university basketball programs including UH Cougars 
-                        and Baylor Bears. Built data pipelines and visualization tools to help coaches make data-driven 
-                        decisions during games and practice sessions.
-                    </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Data Pipelines</span>
-                        <span class="tech-tag">Visualization</span>
-                        <span class="tech-tag">Sports Analytics</span>
-                    </div>
-                    <a href="#" class="project-link">Learn More</a>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>NBA Momentum Analysis</h3>
-                        <span class="project-badge">Research</span>
-                    </div>
-                    <p>
-                        Statistical analysis investigating momentum effects in NBA games using logistic regression 
-                        models. Testing whether recent scoring patterns improve game prediction accuracy beyond 
-                        traditional variables.
-                    </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Statistical Modeling</span>
-                        <span class="tech-tag">NBA API</span>
-                        <span class="tech-tag">Machine Learning</span>
-                    </div>
-                    <a href="#" class="project-link">View Research</a>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
                         <h3>Occidental Oil & Gas</h3>
                         <span class="project-badge">Professional</span>
                     </div>
+                    <div class="project-year">2009 - 2015</div>
                     <p>
                         Mechanical Engineer working on pipeline integrity risk modeling software for Permian Basin and 
                         Colombia assets. Implemented H2S monitoring programs and conducted risk matrix analysis of 
