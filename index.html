@@ -100,6 +100,39 @@
         header {
             padding: 100px 0 60px;
             text-align: center;
+            position: relative;
+        }
+
+        .resume-button {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            border: 2px solid var(--neon-pink);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resume-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 110, 0.6),
+                        0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .resume-button::before {
+            content: '↓';
+            font-size: 16px;
         }
 
         .avatar-container {
@@ -435,6 +468,12 @@
 
         /* Mobile responsiveness */
         @media (max-width: 768px) {
+            .resume-button {
+                position: static;
+                margin: 0 auto 20px;
+                display: inline-flex;
+            }
+
             h1 {
                 font-size: 40px;
             }
@@ -478,6 +517,7 @@
 <body>
     <div class="container">
         <header>
+            <a href="Avi_Resume.pdf" download class="resume-button">Download Resume</a>
             <div class="avatar-container">
                 <div class="avatar">AR</div>
             </div>
