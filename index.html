@@ -99,29 +99,30 @@
 
         header {
             padding: 100px 0 60px;
-            text-align: center;
+            text-align: left;
             position: relative;
         }
 
         .resume-button {
-            position: absolute;
-            top: 40px;
-            right: 0;
-            padding: 12px 24px;
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 8px 16px;
             background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
             border: 2px solid var(--neon-pink);
-            border-radius: 8px;
+            border-radius: 6px;
             color: white;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             transition: all 0.3s;
             box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            z-index: 1000;
         }
 
         .resume-button:hover {
@@ -132,7 +133,7 @@
 
         .resume-button::before {
             content: '↓';
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .avatar-container {
@@ -216,7 +217,7 @@
         .social-links {
             display: flex;
             gap: 16px;
-            justify-content: center;
+            justify-content: flex-start;
             margin-top: 40px;
             flex-wrap: wrap;
         }
@@ -248,7 +249,7 @@
         }
 
         .section-header {
-            text-align: center;
+            text-align: left;
             margin-bottom: 60px;
         }
 
@@ -451,7 +452,7 @@
 
         footer {
             padding: 60px 0 40px;
-            text-align: center;
+            text-align: left;
             color: var(--text-dim);
             font-size: 14px;
             border-top: 1px solid rgba(0, 245, 255, 0.2);
@@ -469,9 +470,10 @@
         /* Mobile responsiveness */
         @media (max-width: 768px) {
             .resume-button {
-                position: static;
-                margin: 0 auto 20px;
-                display: inline-flex;
+                top: 16px;
+                right: 16px;
+                font-size: 10px;
+                padding: 6px 12px;
             }
 
             h1 {
@@ -519,7 +521,9 @@
         <header>
             <a href="Avi_Resume.pdf" download class="resume-button">Download Resume</a>
             <div class="avatar-container">
-                <div class="avatar">AR</div>
+                <div class="avatar">
+                    <img src="headshot.jpg" alt="Avi Ravishankar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
             </div>
             <h1>AVI RAVISHANKAR</h1>
             <p class="tagline">Data Scientist | Product Manager | Mechanical Engineer</p>
@@ -584,7 +588,7 @@
                     <a href="#" class="project-link">View Details</a>
                 </div>
 
-                <div class="project-card">
+                <a href="https://tasktag.com" target="_blank" class="project-card" style="text-decoration: none; color: inherit;">
                     <div class="project-header">
                         <h3>TaskTag</h3>
                         <span class="project-badge">Product</span>
@@ -600,8 +604,8 @@
                         <span class="tech-tag">B2B</span>
                         <span class="tech-tag">Mobile/Web</span>
                     </div>
-                    <a href="#" class="project-link">Learn More</a>
-                </div>
+                    <span class="project-link">Learn More</span>
+                </a>
 
                 <div class="project-card">
                     <div class="project-header">
@@ -622,7 +626,7 @@
                     <a href="#" class="project-link">View Details</a>
                 </div>
 
-                <div class="project-card">
+                <a href="https://daytum.io" target="_blank" class="project-card" style="text-decoration: none; color: inherit;">
                     <div class="project-header">
                         <h3>daytum</h3>
                         <span class="project-badge">Startup</span>
@@ -638,8 +642,8 @@
                         <span class="tech-tag">Product Launch</span>
                         <span class="tech-tag">EdTech</span>
                     </div>
-                    <a href="#" class="project-link">Learn More</a>
-                </div>
+                    <span class="project-link">Learn More</span>
+                </a>
 
                 <div class="project-card">
                     <div class="project-header">
@@ -766,5 +770,5 @@
 
         <footer>
             <p>© 2026 Avi Ravishankar</p>
-            <p>Built with <span class="footer-glow">passion</span> and <span class="footer-glow">Python</span></p>
+            <p>This website was built without even opening a code editor LOL thanks <span class="footer-glow">claude</span></p>
     
