@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avi Ravishankar | Data Scientist</title>
+    <meta name="description" content="Data Science Master's student at Rice University specializing in sports analytics and machine learning.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-pink: #ff006e;
+            --neon-blue: #00f5ff;
+            --neon-purple: #8b5cf6;
+            --hot-pink: #ff0080;
+            --electric-blue: #0066ff;
+            --bg-dark: #0a0a0f;
+            --bg-surface: #1a1a2e;
+            --text: #ffffff;
+            --text-dim: #a8b2d1;
+            --grid-color: rgba(0, 245, 255, 0.1);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                text-shadow: 0 0 10px var(--neon-blue),
+                            0 0 20px var(--neon-blue),
+                            0 0 30px var(--neon-blue);
+            }
+            50% { 
+                text-shadow: 0 0 20px var(--neon-blue),
+                            0 0 30px var(--neon-blue),
+                            0 0 40px var(--neon-blue),
+                            0 0 50px var(--neon-pink);
+            }
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(255, 0, 110, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            padding: 100px 0 60px;
+            text-align: center;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue), var(--neon-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            font-weight: 900;
+            color: white;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(255, 0, 110, 0.5),
+                        0 0 80px rgba(0, 102, 255, 0.3);
+        }
+
+        .avatar::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue), var(--neon-purple));
+            filter: blur(10px);
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-size: 24px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22c55e;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .status::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: glow 2s ease-in-out infinite;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            padding: 12px 24px;
+            background: rgba(0, 245, 255, 0.05);
+            border: 2px solid var(--neon-blue);
+            border-radius: 8px;
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .social-links a:hover {
+            background: rgba(0, 245, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.5),
+                        0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 18px;
+        }
+
+        .about-content {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-content p {
+            font-size: 18px;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            border-color: var(--neon-pink);
+            transform: translateY(-8px);
+            box-shadow: 0 0 40px rgba(255, 0, 110, 0.4),
+                        0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .project-card h3 {
+            font-size: 22px;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .project-badge {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            border-radius: 6px;
+            font-size: 11px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+        }
+
+        .project-card p {
+            color: var(--text-dim);
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tech-tag {
+            padding: 6px 12px;
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--neon-blue);
+            font-weight: 500;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neon-pink);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-link:hover {
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .project-link::after {
+            content: '→';
+            transition: transform 0.3s;
+        }
+
+        .project-link:hover::after {
+            transform: translateX(4px);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .skill-category {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .skill-category h3 {
+            font-size: 18px;
+            color: var(--neon-blue);
+            margin-bottom: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 8px 0;
+            color: var(--text-dim);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-category li::before {
+            content: '▸';
+            margin-right: 12px;
+            color: var(--neon-pink);
+            font-size: 16px;
+        }
+
+        footer {
+            padding: 60px 0 40px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        .footer-glow {
+            color: var(--neon-pink);
+            font-weight: 700;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+            }
+
+            .avatar {
+                width: 120px;
+                height: 120px;
+                font-size: 48px;
+            }
+
+            h2 {
+                font-size: 32px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .about-content {
+                padding: 28px;
+            }
+
+            .project-card {
+                padding: 24px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="avatar-container">
+                <div class="avatar">AR</div>
+            </div>
+            <h1>AVI RAVISHANKAR</h1>
+            <p class="tagline">Data Scientist × Product Manager × Mechanical Engineer</p>
+            <div class="status">Seeking Summer 2026 Internships</div>
+            <div class="social-links">
+                <a href="https://github.com/epochzeroavi" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/avinash-ravishankar" target="_blank">LinkedIn</a>
+                <a href="mailto:avikravi@gmail.com">Email</a>
+                <a href="https://youtube.com/@epochzeroavi" target="_blank">YouTube</a>
+            </div>
+        </header>
+
+        <section class="about">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <p class="section-subtitle">Building the future with data, one insight at a time</p>
+            </div>
+            <div class="about-content">
+                <p>
+                    I'm a Master's student in Data Science at Rice University with a passion for turning complex 
+                    data into actionable insights. My work lives at the intersection of sports analytics, machine 
+                    learning, and real-world impact.
+                </p>
+                <p>
+                    From analyzing play-by-play data for the Houston Texans to building predictive models for NBA 
+                    momentum effects, I thrive on extracting meaningful patterns from chaos. I founded Clutch Sports 
+                    Data to bring advanced analytics to university basketball programs, helping coaches make smarter 
+                    decisions backed by data.
+                </p>
+                <p>
+                    I'm actively seeking summer 2026 internships where I can apply my skills in data science, machine 
+                    learning, and analytics engineering to solve challenging problems at scale.
+                </p>
+            </div>
+        </section>
+
+        <section class="projects">
+            <div class="section-header">
+                <h2>Featured Work</h2>
+                <p class="section-subtitle">Projects that combine technical depth with real impact</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>NBA Momentum Analysis</h3>
+                        <span class="project-badge">Research</span>
+                    </div>
+                    <p>
+                        Statistical analysis investigating momentum effects in NBA games using logistic regression 
+                        models. Testing whether recent scoring patterns improve game prediction accuracy beyond 
+                        traditional variables.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Statistical Modeling</span>
+                        <span class="tech-tag">NBA API</span>
+                        <span class="tech-tag">Machine Learning</span>
+                    </div>
+                    <a href="#" class="project-link">View Research</a>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Clutch Sports Data</h3>
+                        <span class="project-badge">Startup</span>
+                    </div>
+                    <p>
+                        Founded analytics platform serving university basketball programs. Built comprehensive data 
+                        pipelines and visualization tools to help coaches make data-driven decisions during games 
+                        and practice sessions.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Data Pipelines</span>
+                        <span class="tech-tag">Visualization</span>
+                        <span class="tech-tag">Sports Analytics</span>
+                    </div>
+                    <a href="#" class="project-link">Learn More</a>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>Houston Texans Analytics</h3>
+                        <span class="project-badge">Professional</span>
+                    </div>
+                    <p>
+                        Analyzed play-by-play data to identify strategic patterns and optimize game performance. 
+                        Collaborated with coaching staff to translate statistical insights into actionable on-field 
+                        strategies.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">SQL</span>
+                        <span class="tech-tag">Data Analysis</span>
+                        <span class="tech-tag">NFL Analytics</span>
+                    </div>
+                    <a href="#" class="project-link">View Details</a>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>muvve</h3>
+                        <span class="project-badge">Product</span>
+                    </div>
+                    <p>
+                        Developed fitness tracking application with integrated workout recommendations and progress 
+                        analytics. Focus on seamless user experience and data-driven insights for optimal training.
+                    </p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Mobile Dev</span>
+                        <span class="tech-tag">Analytics</span>
+                        <span class="tech-tag">Product Design</span>
+                        <span class="tech-tag">ML</span>
+                    </div>
+                    <a href="#" class="project-link">View App</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="skills">
+            <div class="section-header">
+                <h2>Technical Arsenal</h2>
+                <p class="section-subtitle">Tools and technologies I use to build solutions</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Languages</h3>
+                    <ul>
+                        <li>Python</li>
+                        <li>R</li>
+                        <li>SQL</li>
+                        <li>JavaScript</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Data Science</h3>
+                    <ul>
+                        <li>Machine Learning</li>
+                        <li>Statistical Modeling</li>
+                        <li>Data Visualization</li>
+                        <li>Predictive Analytics</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Tools & Frameworks</h3>
+                    <ul>
+                        <li>Pandas / NumPy</li>
+                        <li>Scikit-learn</li>
+                        <li>TensorFlow</li>
+                        <li>Tableau / Plotly</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Infrastructure</h3>
+                    <ul>
+                        <li>Git / GitHub</li>
+                        <li>Docker</li>
+                        <li>AWS / Cloud</li>
+                        <li>Data Pipelines</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 Avi Ravishankar</p>
+            <p>Built with <span class="footer-glow">passion</span> and <span class="footer-glow">Python</span></p>
+        </footer>
+    </div>
+</body>
+</html>
