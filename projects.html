@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Avinash Ravishankar</title>
+    <meta name="description" content="Technical projects and research by Avinash Ravishankar - Data Science, Sports Analytics, and Machine Learning">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-pink: #ff006e;
+            --neon-blue: #00f5ff;
+            --neon-purple: #8b5cf6;
+            --hot-pink: #ff0080;
+            --electric-blue: #0066ff;
+            --bg-dark: #0a0a0f;
+            --bg-surface: #1a1a2e;
+            --text: #ffffff;
+            --text-dim: #a8b2d1;
+            --grid-color: rgba(0, 245, 255, 0.1);
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Gradient overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(255, 0, 110, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+            z-index: 1000;
+            padding: 20px 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--neon-pink);
+        }
+
+        .nav-resume-btn {
+            padding: 9px 18px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            border: 2px solid var(--neon-pink);
+            border-radius: 6px;
+            color: white !important;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 16px;
+        }
+
+        .nav-resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 110, 0.6);
+        }
+
+        .nav-resume-btn::before {
+            content: '↓';
+            font-size: 13px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
+            text-align: left;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-dim);
+            max-width: 600px;
+        }
+
+        /* Project Grid */
+        .projects-section {
+            padding: 60px 0 100px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .project-showcase {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .project-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .project-showcase:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-showcase:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.3),
+                        0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .project-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .project-emoji {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .project-title {
+            font-size: 18px;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .project-year {
+            font-size: 11px;
+            color: var(--neon-blue);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .project-badge {
+            padding: 4px 8px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            border-radius: 4px;
+            font-size: 9px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
+            flex-shrink: 0;
+        }
+
+        .project-description {
+            color: var(--text-dim);
+            font-size: 13px;
+            line-height: 1.5;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .tech-tag {
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .github-button {
+            margin-top: 8px;
+            padding: 5px 10px;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(255, 128, 0, 0.1));
+            border: 1.5px solid var(--neon-pink);
+            border-radius: 5px;
+            color: var(--neon-pink);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.3s;
+        }
+
+        .github-button::before {
+            content: '→';
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+
+        .project-showcase:hover .github-button {
+            background: linear-gradient(135deg, var(--neon-pink), var(--hot-pink));
+            color: white;
+            box-shadow: 0 0 15px var(--neon-pink);
+            border-color: var(--hot-pink);
+        }
+
+        .project-showcase:hover .github-button::before {
+            transform: translateX(3px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                gap: 16px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .nav-resume-btn {
+                font-size: 11px;
+                padding: 8px 14px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+            .project-image {
+                width: 100%;
+                height: 250px;
+                border-right: none;
+                border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .project-stats {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .project-content {
+                padding: 24px;
+            }
+
+            .project-title {
+                font-size: 24px;
+            }
+
+            .project-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">AVINASH RAVISHANKAR</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="projects.html" class="active">Projects</a>
+                <a href="Avi_Resume.pdf" download class="nav-resume-btn">Download Resume</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <h1>PROJECTS</h1>
+            <p>Technical work combining data science, analytics, and product thinking to solve real-world problems.</p>
+        </section>
+
+        <section class="projects-section">
+            <div class="projects-grid">
+                <!-- NBA Momentum Analysis - Dec 2025 (Most Recent) -->
+                <a href="https://github.com/epochzeroavi" target="_blank" class="project-showcase">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <div class="project-title-wrapper">
+                                <span class="project-emoji">📊</span>
+                                <div>
+                                    <h2 class="project-title">NBA Momentum Analysis</h2>
+                                    <div class="project-year">December 2025</div>
+                                </div>
+                            </div>
+                            <span class="project-badge">Research</span>
+                        </div>
+                        <p class="project-description">
+                            Statistical research investigating whether recent scoring patterns improve NBA game 
+                            prediction accuracy beyond traditional variables using logistic regression models.
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Pandas</span>
+                            <span class="tech-tag">Scikit-learn</span>
+                            <span class="tech-tag">NBA API</span>
+                        </div>
+                        <div class="github-button">View on GitHub</div>
+                    </div>
+                </a>
+
+                <!-- Texans Explosive Plays - Nov 2025 -->
+                <a href="https://github.com/epochzeroavi" target="_blank" class="project-showcase">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <div class="project-title-wrapper">
+                                <span class="project-emoji">🏈</span>
+                                <div>
+                                    <h2 class="project-title">Texans Explosive Plays</h2>
+                                    <div class="project-year">November 2025</div>
+                                </div>
+                            </div>
+                            <span class="project-badge">Professional</span>
+                        </div>
+                        <p class="project-description">
+                            4-week analytics project defining Explosive Plays using 2024 play data. Engineered features 
+                            and presented actionable recommendations to football operations staff.
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">PowerBI</span>
+                            <span class="tech-tag">Feature Engineering</span>
+                            <span class="tech-tag">NFL Analytics</span>
+                        </div>
+                        <div class="github-button">View on GitHub</div>
+                    </div>
+                </a>
+
+                <!-- Clutch Sports Data - Aug 2020 to Dec 2025 -->
+                <a href="https://github.com/epochzeroavi" target="_blank" class="project-showcase">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <div class="project-title-wrapper">
+                                <span class="project-emoji">🏀</span>
+                                <div>
+                                    <h2 class="project-title">Clutch Sports Data</h2>
+                                    <div class="project-year">Aug 2020 - Dec 2025</div>
+                                </div>
+                            </div>
+                            <span class="project-badge">Startup</span>
+                        </div>
+                        <p class="project-description">
+                            Analytics platform serving university basketball programs including UH Cougars and Baylor Bears. 
+                            Built data pipelines and visualization tools for real-time game insights.
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">Data Pipelines</span>
+                            <span class="tech-tag">Tableau</span>
+                            <span class="tech-tag">Real-time Analytics</span>
+                        </div>
+                        <div class="github-button">View on GitHub</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
