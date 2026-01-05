@@ -634,54 +634,116 @@
             transform: translateX(4px);
         }
 
-        .skills-grid {
+        .skills-visual {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            max-width: 100%;
+            grid-template-columns: 1fr;
+            gap: 28px;
         }
 
-        .skill-category {
+        .skill-group {
             background: rgba(26, 26, 46, 0.6);
-            border: 2px solid rgba(139, 92, 246, 0.3);
+            border: 2px solid rgba(0, 245, 255, 0.2);
             border-radius: 12px;
-            padding: 28px;
+            padding: 24px;
             backdrop-filter: blur(10px);
             transition: all 0.3s;
         }
 
-        .skill-category:hover {
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
-            transform: translateY(-4px);
+        .skill-group:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.2);
+            transform: translateY(-2px);
         }
 
-        .skill-category h3 {
+        .skill-group-title {
             font-size: 18px;
             color: var(--neon-blue);
-            margin-bottom: 16px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .skill-category ul {
-            list-style: none;
-        }
-
-        .skill-category li {
-            padding: 8px 0;
-            color: var(--text-dim);
-            font-size: 14px;
             display: flex;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
-        .skill-category li::before {
-            content: '▸';
-            margin-right: 12px;
+        .math-group .skill-group-title {
+            color: var(--neon-purple);
+        }
+
+        .domain-group .skill-group-title {
             color: var(--neon-pink);
-            font-size: 16px;
+        }
+
+        .tools-group .skill-group-title {
+            color: #ffa500;
+        }
+
+        .skill-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-chip {
+            padding: 4px 10px;
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 12px;
+            color: var(--neon-blue);
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: default;
+            white-space: nowrap;
+        }
+
+        .software-group .skill-chip {
+            background: rgba(0, 245, 255, 0.1);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .software-group .skill-chip:hover {
+            background: rgba(0, 245, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+        }
+
+        .math-group .skill-chip {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+        }
+
+        .math-group .skill-chip:hover {
+            background: rgba(139, 92, 246, 0.2);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .domain-group .skill-chip {
+            background: rgba(255, 0, 110, 0.1);
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
+        .domain-group .skill-chip:hover {
+            background: rgba(255, 0, 110, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+        }
+
+        .tools-group .skill-chip {
+            background: rgba(255, 165, 0, 0.1);
+            border-color: #ffa500;
+            color: #ffa500;
+        }
+
+        .tools-group .skill-chip:hover {
+            background: rgba(255, 165, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .skill-chip:hover {
+            background: rgba(0, 245, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         footer {
@@ -779,7 +841,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .skills-grid {
+            .skills-visual {
                 grid-template-columns: 1fr;
             }
         }
@@ -820,26 +882,22 @@
         <section class="about">
             <div class="section-header">
                 <h2>About Me</h2>
-                <p class="section-subtitle">Building the future with data, one insight at a time</p>
+                <p class="section-subtitle">Data nerd who likes building things people actually use</p>
             </div>
             <div class="about-content">
                 <p>
-                    I'm a Master's student in Data Science at Rice University who thrives at the intersection of 
-                    technical depth and business impact. I speak the language of both data scientists and product 
-                    teams, translating complex analytics into actionable business strategies that drive real results.
+                    I'm getting my Master's in Data Science at Rice. I like the challenge of figuring out what 
+                    the data is actually saying and then making something useful with it. I've worked on everything 
+                    from analyzing NFL plays with the Texans to building a sports analytics startup for college basketball teams.
                 </p>
                 <p>
-                    My experience spans from crunching play-by-play data for the Houston Texans to founding Clutch 
-                    Sports Data, where I learned what it takes to ship products in a startup environment. I understand 
-                    the pressure of tight deadlines, the importance of user feedback, and how to balance perfectionism 
-                    with moving fast. Whether I'm building predictive models for NBA momentum effects or working with 
-                    university basketball programs, I combine strong product intuition with rigorous analytical methods.
+                    I started out as a mechanical engineer at an oil company, which taught me how real companies work. 
+                    Then I jumped into product management and startups because I wanted to build things from scratch. 
+                    Turns out I really like the combination of writing code, understanding what users need, and shipping stuff that works.
                 </p>
                 <p>
-                    I bring both the technical chops to build sophisticated ML pipelines and the business acumen to 
-                    know which problems are worth solving. Currently seeking summer 2026 internships where I can 
-                    leverage this unique blend of product sense, startup hustle, and analytical rigor to solve 
-                    challenging problems at scale.
+                    Right now I'm looking for summer 2026 internships where I can work on interesting data problems. 
+                    I'm especially drawn to roles where I can build something end-to-end rather than just run analyses in a silo.
                 </p>
             </div>
         </section>
@@ -975,44 +1033,50 @@
         <section class="skills">
             <div class="section-header">
                 <h2>Technical Arsenal</h2>
-                <p class="section-subtitle">Tools and technologies I use to build solutions</p>
+                <p class="section-subtitle">Core competencies for modern data science</p>
             </div>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Languages</h3>
-                    <ul>
-                        <li>Python</li>
-                        <li>R</li>
-                        <li>SQL</li>
-                        <li>JavaScript</li>
-                    </ul>
+            <div class="skills-visual">
+                <div class="skill-group software-group">
+                    <h3 class="skill-group-title">💻 Software Engineering</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">Python</span>
+                        <span class="skill-chip">SQL</span>
+                        <span class="skill-chip">R</span>
+                        <span class="skill-chip">Git</span>
+                        <span class="skill-chip">GitHub</span>
+                        <span class="skill-chip">Pandas</span>
+                        <span class="skill-chip">NumPy</span>
+                    </div>
                 </div>
-                <div class="skill-category">
-                    <h3>Data Science</h3>
-                    <ul>
-                        <li>Machine Learning</li>
-                        <li>Statistical Modeling</li>
-                        <li>Data Visualization</li>
-                        <li>Predictive Analytics</li>
-                    </ul>
+                <div class="skill-group math-group">
+                    <h3 class="skill-group-title">📐 Mathematics & Statistics</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">Statistical Modeling</span>
+                        <span class="skill-chip">Regression Analysis</span>
+                        <span class="skill-chip">Hypothesis Testing</span>
+                        <span class="skill-chip">Bayesian Methods</span>
+                        <span class="skill-chip">Linear Algebra</span>
+                        <span class="skill-chip">Probability</span>
+                        <span class="skill-chip">Causal Inference</span>
+                    </div>
                 </div>
-                <div class="skill-category">
-                    <h3>Tools & Frameworks</h3>
-                    <ul>
-                        <li>Pandas / NumPy</li>
-                        <li>Scikit-learn</li>
-                        <li>TensorFlow</li>
-                        <li>Tableau / Plotly</li>
-                    </ul>
+                <div class="skill-group domain-group">
+                    <h3 class="skill-group-title">🎯 Domain Expertise</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">Sports Analytics</span>
+                        <span class="skill-chip">Oil & Gas</span>
+                        <span class="skill-chip">Mechanical Engineering</span>
+                        <span class="skill-chip">B2C Apps</span>
+                        <span class="skill-chip">Product Management</span>
+                    </div>
                 </div>
-                <div class="skill-category">
-                    <h3>Infrastructure</h3>
-                    <ul>
-                        <li>Git / GitHub</li>
-                        <li>Docker</li>
-                        <li>AWS / Cloud</li>
-                        <li>Data Pipelines</li>
-                    </ul>
+                <div class="skill-group tools-group">
+                    <h3 class="skill-group-title">🛠️ Tech Tools</h3>
+                    <div class="skill-chips">
+                        <span class="skill-chip">Jira</span>
+                        <span class="skill-chip">Anaconda & Jupyter</span>
+                        <span class="skill-chip">Excel</span>
+                    </div>
                 </div>
             </div>
         </section>
