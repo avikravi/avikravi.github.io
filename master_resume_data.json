@@ -1,0 +1,177 @@
+{
+  "contact": {
+    "name": "Avinash K. Ravishankar (Avi)",
+    "location": "Houston, TX",
+    "email": "avikravi@gmail.com",
+    "phone": "832-600-2398",
+    "linkedin": "https://www.linkedin.com/in/avikravi",
+    "linkedin_conflict_note": "Earlier version of this file used '/in/avinashravishankar/'. MASTERResume.docx and the LinkedIn experience-edit URLs Avi pasted earlier both point to '/in/avikravi', so that's now treated as correct. Confirm if this is wrong.",
+    "website": "https://avikravi.github.io",
+    "github": "https://github.com/avikravi",
+    "github_io": "http://avikravi.github.io"
+  },
+  "overview_statement": "Data scientist, mechanical engineer, and product manager with experience scaling technology teams, launching software products, and translating data into decisions. Currently pursuing a Masters in Data Science at Rice University with interests in Bayesian methods, machine learning, spatial-temporal modeling, and image/video processing, with the goal of building statistical tools that solve real-world problems.",
+  "overview_statement_note": "This summary line does not appear in MASTERResume.docx itself (that resume has no summary paragraph) — kept here since it's useful for cover letters and longer-form bios, not for the one-page resume template.",
+  "education": [
+    {
+      "school": "Rice University",
+      "location": "Houston, TX",
+      "degree": "M.S. Data Science",
+      "dates": "Expected December 2026",
+      "status": "current",
+      "coursework": ["Machine Learning", "Computer Vision", "Deep Learning", "Bayesian Methods", "Big Data (PySpark/AWS EMR)", "DevOps Tools"],
+      "teaching_assistant": "COMP 665 Data Visualization — Python (matplotlib, Plotly, seaborn), Tableau, Power BI, time series analysis",
+      "data_competitions": ["Hex Data Hackathon", "NCL Cybersecurity CTF (log forensics, network analysis, data challenges)"]
+    },
+    {
+      "school": "Rice University",
+      "location": "Houston, TX",
+      "degree": "B.S. Mechanical Engineering",
+      "dates": "2008-2012",
+      "activities_and_coursework": ["Society of Automotive Engineers (SAE)", "Rice Robotics Team", "MATLAB", "System Design"]
+    }
+  ],
+  "additional_training": [
+    "Rice University Owlspark Startup Accelerator",
+    "App Academy - 4 week Javascript Course",
+    "YC Startup School 2018"
+  ],
+  "experience": [
+    {
+      "id": "rice_digital_health",
+      "title": "Computer Vision Research Intern",
+      "org": "Houston Methodist Rice Digital Health Institute & Rice University",
+      "employment_type": "Internship",
+      "dates": "May 2026 – Present",
+      "tagline": "Tissue material characterization for autonomous surgical robots",
+      "bullets": [
+        {"text": "Developed 500 GPU-accelerated soft-body physics simulations using the Genesis simulator in Python to model tissue deformation and material properties relevant to autonomous robotic surgery. Built and debugged simulation workflows.", "metric": "500 simulations"},
+        {"text": "Studied and implemented 5 research papers including NVIDIA's DiSECt, GIC (NeurIPS 2024), and MASIV to understand differentiable simulation techniques for estimating material properties using video processing tools (OpenCV and FFmpeg).", "metric": "5 research papers"},
+        {"text": "Exploring a machine learning pipeline to identify tissue material characteristics (stiffness, elasticity) from RGB video using physics-based simulation with NVIDIA's IsaacSIM, including applications in surgical robotics and haptic feedback systems.", "metric": null}
+      ],
+      "skills": ["Python", "Genesis simulator", "OpenCV", "FFmpeg", "NVIDIA IsaacSIM", "differentiable simulation", "computer vision", "physics-based simulation"],
+      "industry_tags": ["healthcare", "digital health", "computer vision", "research", "robotics"]
+    },
+    {
+      "id": "texans",
+      "title": "Data Science Intern",
+      "org": "Houston Texans",
+      "dates": "September 2025 – October 2025",
+      "tagline": "4-week data science project to define Explosive Plays, sponsored by Strength in Numbers",
+      "bullets": [
+        {"text": "Built Python (scikit-learn, pandas, numpy) classification models achieving 82% accuracy on 600+ sequential events using time-series features from spatial positioning and velocity data.", "metric": "82% accuracy on 600+ events"},
+        {"text": "Developed automated SQL pipeline for sensor measurement extraction, presented recommendations to operations team.", "metric": null}
+      ],
+      "skills": ["Python (scikit-learn, pandas, numpy)", "SQL", "time-series analysis", "classification modeling", "football analytics"],
+      "industry_tags": ["sports analytics", "data science", "machine learning"]
+    },
+    {
+      "id": "tasktag",
+      "title": "Sr. Product Manager",
+      "org": "TaskTag",
+      "dates": "Jul 2022 – May 2025",
+      "tagline": "Mobile and Web app for construction project management through chat",
+      "bullets": [
+        {"text": "Managed distributed engineering team (12 engineers, 2 QA across 8 countries) to launch mobile/web application acquiring 2,000+ users within 3 months; built SQL analytics dashboards and conducted A/B testing to optimize product features.", "metric": "12 engineers, 2 QA, 8 countries, 2,000+ users"}
+      ],
+      "additional_detail_available": "Earlier resume versions also mentioned managing 2 product managers, 2 designers, and 5 MBA interns, and listed 9 specific countries/regions rather than 8. MASTERResume.docx's simplified 'team of 12 engineers, 2 QA across 8 countries' is now the primary version — the more detailed breakdown is available if a specific job description calls for showing broader team-management scope.",
+      "skills": ["Agile development", "SQL analytics dashboards", "A/B testing", "sprint planning", "product release and launch", "product roadmapping", "Figma"],
+      "industry_tags": ["product management", "construction tech", "B2B SaaS", "data analytics"]
+    },
+    {
+      "id": "mesos",
+      "title": "Sr. Product Manager",
+      "org": "Mesos",
+      "dates": "Mar 2021 – Aug 2022",
+      "team_size_conflict_note": "Avi confirmed in conversation that Mesos was a 2-engineer team. MASTERResume.docx, however, says 'Led 3-person team.' This is a direct conflict between what Avi told me directly and his own master document — flagging rather than picking one silently. Confirm which is correct before using either in a new resume.",
+      "tagline": "Autonomous stratospheric drone and aerial imagery with computer vision and machine learning",
+      "bullets": [
+        {"text": "Led a small team (2-3 engineers — see team_size_conflict_note) designing stratospheric UAVs with autonomous imaging systems integrating camera, GPS, and barometric altitude sensors for real-time navigation and asset tracking.", "metric": "team size unconfirmed — see conflict note"},
+        {"text": "Developed computer vision algorithms using CNNs in Python (TensorFlow) for automated object detection from aerial platforms, saving customers average $10,000 annually.", "metric": "$10,000/year customer savings"}
+      ],
+      "skills": ["Hardware product management", "Computer vision", "CNNs", "TensorFlow", "Product Roadmapping", "VC Fundraising"],
+      "industry_tags": ["hardware", "robotics/UAV", "computer vision", "energy"]
+    },
+    {
+      "id": "daytum",
+      "title": "Product Manager",
+      "org": "daytum",
+      "dates": "Jan 2019 – Feb 2021",
+      "tagline": "Online data science education software teaching data science and machine learning to energy professionals",
+      "bullets": [
+        {"text": "Built Learning Management System in Anaconda (Jupyterhub, Postgres, Docker) serving 500+ engineers across 12 energy companies. Designed curriculum alongside technical team, spanning topics from linear regression to neural networks and PyTorch. Recorded and distributed 50+ hours of data science education content.", "metric": "500+ engineers, 12 companies, 50+ hours of content"}
+      ],
+      "metric_conflict_note": "Earlier version of this file said '1000+ individual customers.' MASTERResume.docx instead frames this as '500+ engineers across 12 energy companies' — a more specific but numerically different claim. Treating MASTERResume.docx as current/authoritative; flagging in case '1000+ customers' was meant to describe something broader (e.g. platform-wide) than the engineer count.",
+      "skills": ["Data science curriculum design", "Anaconda", "Jupyterhub", "Docker", "Postgres", "PyTorch", "Product Launch", "Product Roadmapping"],
+      "industry_tags": ["edtech", "energy", "data science", "product management"]
+    },
+    {
+      "id": "muvve",
+      "title": "Product Manager",
+      "org": "Muvve",
+      "dates": "May 2016 – Jan 2019",
+      "dates_conflict_note": "LinkedIn showed a Sep 2015 start date (used in a prior version of this file); MASTERResume.docx says May 2016. Reverting to MASTERResume.docx's May 2016 as the more authoritative, deliberately-maintained source — confirm which is correct.",
+      "tagline": "Fitness events marketplace. B2B2C product connecting fitness enthusiasts to local fitness events",
+      "bullets": [
+        {"text": "Managed 2 engineers and 1 designer to launch an iOS marketplace with 1,000+ downloads.", "metric": "1,000+ downloads"},
+        {"text": "Analyzed user behavior patterns from 20,000+ contacts using SQL.", "metric": "20,000+ contacts"},
+        {"text": "Optimized feature development and drove a 10% revenue increase for 20+ partner companies using product analytics.", "metric": "+10% revenue, 20+ partners"}
+      ],
+      "additional_detail_available": "Earlier resume versions described a 6-person total team (2 engineers, 1 UI/UX engineer, 1 marketing manager) and framed the title as 'Head of Product & Cofounder' or 'Chief Product Officer & Cofounder.' Avi already confirmed the title should just be 'Product Manager' going forward — that part is settled. The team-composition detail is preserved here in case a specific resume wants the fuller breakdown.",
+      "skills": ["Sprint planning", "SQL", "User testing", "Product Roadmapping", "Product Launch", "Product Analytics"],
+      "industry_tags": ["fitness/wellness", "marketplace", "product management", "startup founder"]
+    },
+    {
+      "id": "blackswan_marketing",
+      "title": "Marketing Director",
+      "org": "Black Swan Yoga",
+      "dates": "Aug 2016 – Jul 2017",
+      "usage_rule": "CONDITIONAL — nice-to-have. Only include this role if the job description calls for marketing experience, sales experience, brick-and-mortar/retail operations, or integrating technology into a physical studio/location setting. Otherwise omit entirely from tailored resumes. Note: this role does not appear in MASTERResume.docx at all, consistent with it being conditional/optional rather than a core resume item.",
+      "tagline": "Austin-based yoga studio and on-demand yoga app",
+      "bullets": [
+        {"text": "Created email, web, and print marketing reaching 25k+ contacts.", "metric": "25k+ contacts"},
+        {"text": "Increased customer reach 30% and revenue 20% through marketing and media projects.", "metric": "+30% reach, +20% revenue"},
+        {"text": "Used Google Analytics to increase website page hits and SEO by 5% weekly.", "metric": "+5% weekly"}
+      ],
+      "skills": ["Mailchimp", "email marketing", "Social Media", "Marketing Analytics", "Marketing Communications", "Customer Experience", "Market research", "SaaS", "CRM"],
+      "industry_tags": ["marketing", "wellness", "consumer"]
+    },
+    {
+      "id": "oxy",
+      "title": "Mechanical Engineer",
+      "org": "OXY Occidental Oil and Gas",
+      "dates": "Jun 2009 – Aug 2015",
+      "tagline": "Oil and Gas E&P Upstream (Permian Basin, Bogota, Bakersfield)",
+      "bullets": [
+        {"text": "Applied risk modeling software and sensor data analysis across 200+ miles of pipeline infrastructure and 50 well sites; managed large-scale corrosion datasets for predictive maintenance and failure prevention.", "metric": "200+ miles pipeline, 50 well sites"}
+      ],
+      "additional_detail_available": "Earlier resume versions included more specific sub-projects: Risk Modeling Software using CredoSoft, API 579-certified Corrosion Modeling and Facility Risk Assessments in the San Joaquin Valley Basin, an H2S Monitor Program, and a 1-year HSE rotational training program with a Near Miss Incidents risk-matrix capstone. MASTERResume.docx consolidates these into the single bullet above. The detailed version is preserved here in case a specific oil & gas or risk-modeling-focused application wants that level of specificity.",
+      "skills": ["Risk modeling", "Corrosion data analysis", "Sensor data analysis", "Data Visualization", "Regulatory compliance"],
+      "industry_tags": ["oil and gas", "mechanical engineering", "risk modeling"]
+    }
+  ],
+  "side_projects_and_ventures": [
+    {
+      "id": "clutch_sports_data",
+      "name": "Clutch Sports Data",
+      "description": "Founded a sports data science company; worked with UH Cougars & Baylor Bears Basketball.",
+      "industry_tags": ["sports analytics", "data science", "entrepreneurship"]
+    }
+  ],
+  "skills_summary": {
+    "coding_languages": ["Python", "SQL", "R (Beginner)", "HTML/CSS/Javascript (Beginner)"],
+    "spoken_languages": ["English (fluent)", "Spanish (fluent)", "Tamil"],
+    "other": ["Adobe Photoshop", "Premiere Pro"]
+  },
+  "formatting_preferences": {
+    "instruction": "MASTERResume.docx (uploaded by Avi, matching the live AvinashResume.pdf on the site) is now the canonical formatting template. Tailor future resumes by editing a copy of this file's word/document.xml in place — do not redesign or restyle. Only content (which roles/bullets are included, and their wording) should change per job description; the visual template stays constant.",
+    "template_source": "MASTERResume.docx"
+  },
+  "unresolved_conflicts_for_avi_to_confirm": [
+    "Mesos team size: you told me directly it was 2 engineers, but MASTERResume.docx says 'Led 3-person team.' Which is correct?",
+    "Muvve start date: MASTERResume.docx says May 2016; a prior LinkedIn-sourced version of this file said Sep 2015. Which is correct?",
+    "daytum metric framing: MASTERResume.docx says '500+ engineers across 12 energy companies' — replacing the older '1000+ individual customers' framing. Confirm this is the version you want used going forward.",
+    "LinkedIn URL: now set to linkedin.com/in/avikravi (matching MASTERResume.docx and the experience-edit links you pasted earlier) rather than the previously-used /in/avinashravishankar/. Confirm this is correct.",
+    "Ongoing Black Swan Yoga teacher/studio manager role (separate from the 2016-2017 Marketing Director role) — still not added to master data. Want this added as its own entry?"
+  ]
+}
