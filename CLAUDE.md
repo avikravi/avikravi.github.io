@@ -12,14 +12,18 @@ Avi Ravishankar's personal site, hosted on GitHub Pages at `avikravi.github.io`.
 index.html              Home page (bio, experience, skills)
 projects.html           Project showcase
 tracker.html            Live application tracker (reads tracker-data/applications.json)
+                         Not linked from the nav bar on purpose — direct-URL-only.
 tracker-data/
   applications.json     The tracker's actual data — see schema below
 scripts/
   add_application.py    CLI helper to append a new application entry
-master_resume_data.json Source-of-truth for Avi's real resume content (see below)
+AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
+Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```
+
+Note: there is no `master_resume_data.json` in this repo. If a future task references one, it doesn't exist yet — don't assume it does.
 
 ## Design system — DO NOT change without being asked
 
@@ -40,14 +44,14 @@ All three HTML pages use the same inline `<style>` tokens. Preserve these exactl
 Font stack: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace`
 
 Shared conventions:
-- Fixed nav bar with blurred background, gradient logo text, uppercase nav links, pink "active" state, gradient "Download Resume" button
+- Fixed nav bar with blurred background, gradient logo text ("AR"), uppercase nav links, pink "active" state, gradient "Download Resume" button (no icon — the arrow was removed)
 - Animated grid background (`body::before`) + radial gradient overlay (`body::after`)
 - Section headers: gradient `h2` (pink → blue), `.section-subtitle` in `--text-dim`
 - Cards: `rgba(26,26,46,0.6)` background, 2px border in a low-opacity accent color, `border-radius: 16px`, `backdrop-filter: blur(10px)`
 
 If asked to add a new page, copy the nav/header/footer markup and CSS variables from `tracker.html` or `index.html` rather than inventing new tokens.
 
-**Every page's nav must stay in sync.** If you add/rename/remove a nav link on one page, update it on all three.
+**The nav bar must be byte-for-byte identical across all three pages — markup and CSS, including the mobile `@media (max-width: 768px)` breakpoint.** `index.html` is the source of truth. The only permitted difference is which link carries `class="active"`. Nav links (in order): Home, Projects, Research (external link, `target="_blank" rel="noopener"`, points to `avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html` — a separate repo, not a local page), Download Resume. `tracker.html` additionally carries its own "Tracker" link (active) after Research — that one link is the sole permitted addition, since `tracker.html` is deliberately not linked from the other two pages' nav. If you change one page's nav, copy the change to the other two verbatim.
 
 ## Tracker data schema (`tracker-data/applications.json`)
 
@@ -71,13 +75,11 @@ Array of objects:
 
 Don't invent statuses outside the five listed above — `tracker.html`'s `STATUS_CONFIG` object only knows those five and anything else silently won't render into a column.
 
-## Resume data (`master_resume_data.json`)
+## Resume files
 
-Single source of truth for Avi's real work history — every bullet is tagged with its real metric and which industries it's relevant to. This exists so that any future resume-tailoring script never fabricates a metric: it should only ever select and reword from what's in this file.
+`AvinashResume.pdf` is the one linked from the nav "Download Resume" button on all three pages — treat it as the live, public-facing resume. `Avinash_Resume_2026.pdf` is a fuller/more current version (includes the Computer Vision Research Intern role) that isn't linked anywhere yet.
 
-**Never invent or embellish a metric, title, or date in this file or in any resume generated from it.** If something is uncertain, add it to the file's `unresolved_conflicts_for_avi_to_confirm` array instead of guessing. Check that array before treating any entry as fully settled.
-
-The `formatting_preferences` field in this JSON documents that Avi wants his existing resume .docx formatting (fonts, margins, spacing) preserved exactly — tailored resumes should be produced by editing a copy of his real .docx in place (unzip → edit `word/document.xml` → rezip), not by generating a new document from scratch.
+**Never invent or embellish a metric, title, or date when writing resume content or site copy derived from it.** If Avi's actual work history needs to be pulled for a task (e.g. writing the About Me section), read it directly from these PDFs — there is no separate structured JSON source of truth in this repo.
 
 ## Conventions
 

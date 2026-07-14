@@ -8,11 +8,11 @@ Avi Ravishankar's personal site — portfolio, projects, and a live application 
 
 | File | What it is |
 |---|---|
-| `index.html` | Home page — bio, experience, skills |
+| `index.html` | Home page — bio (computer vision research, product background), experience, skills |
 | `projects.html` | Project showcase (TaskTag, Mesos, daytum, etc.) |
-| `tracker.html` | Live job/PhD application tracker — see below |
+| `tracker.html` | Live job/PhD application tracker — see below. Deliberately **not linked from the nav bar**; only reachable if you know to type the URL. |
 
-All three share the same design system (CSS variables defined inline in each file's `<style>` block — see `CLAUDE.md` for the token reference) and the same nav bar. If you edit one page's nav, update the other two to match.
+All three share the same design system (CSS variables defined inline in each file's `<style>` block — see `CLAUDE.md` for the token reference) and a byte-for-byte identical nav bar, sourced from `index.html`. The only allowed difference between pages is which link carries the `active` class. Nav links: Home, Projects, Research (external — points to the dataset viewer in the separate `surgical-robotics-tissue-sim` repo, opens in a new tab), Download Resume. `tracker.html` additionally has its own "Tracker" link (active) that the other two pages don't carry. If you edit the nav on one page, update the other two to match exactly.
 
 ## Application Tracker
 
@@ -66,9 +66,14 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Resume data
+## Resume files
 
-`master_resume_data.json` (repo root) is the single source of truth for Avi's real work history, bullets, and metrics — used as input for generating tailored resumes per job application. See that file's own `unresolved_conflicts_for_avi_to_confirm` field for open questions before it's treated as fully authoritative.
+Two PDFs live at the repo root:
+
+- `AvinashResume.pdf` — the one actually linked from the "Download Resume" button on all three pages.
+- `Avinash_Resume_2026.pdf` — a fuller/more current version (includes the Computer Vision Research Intern role), not currently linked from any page.
+
+There is no `master_resume_data.json` in this repo despite earlier docs referencing one — if you're looking for a structured source-of-truth for resume bullets/metrics, it doesn't exist here yet.
 
 ## Working with Claude Code
 
