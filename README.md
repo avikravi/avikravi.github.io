@@ -66,14 +66,13 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Resume files
+## Resume data
 
-Two PDFs live at the repo root:
+`master_resume_data.json` (repo root) is the single source of truth for Avi's real work history, bullets, and metrics — used as input for generating tailored resumes per job application. It documents a handful of open conflicts between past resume versions (team sizes, dates, metric framing, etc.) in its own `unresolved_conflicts_for_avi_to_confirm` field — check that field before treating any entry it references as fully settled.
 
-- `AvinashResume.pdf` — the one actually linked from the "Download Resume" button on all three pages.
-- `Avinash_Resume_2026.pdf` — a fuller/more current version (includes the Computer Vision Research Intern role), not currently linked from any page.
+Its `formatting_preferences` field names `MASTERResume.docx` as the canonical formatting template (matching the live `AvinashResume.pdf` linked from the site) — tailored resumes should be produced by editing a copy of that .docx in place, not by generating a new one from scratch.
 
-There is no `master_resume_data.json` in this repo despite earlier docs referencing one — if you're looking for a structured source-of-truth for resume bullets/metrics, it doesn't exist here yet.
+Two resume PDFs also live at the repo root: `AvinashResume.pdf` (linked from the "Download Resume" button on all three pages) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
 
 ## Working with Claude Code
 

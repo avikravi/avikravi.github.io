@@ -17,13 +17,12 @@ tracker-data/
   applications.json     The tracker's actual data — see schema below
 scripts/
   add_application.py    CLI helper to append a new application entry
+master_resume_data.json Source-of-truth for Avi's real resume content (see below)
 AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
 Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```
-
-Note: there is no `master_resume_data.json` in this repo. If a future task references one, it doesn't exist yet — don't assume it does.
 
 ## Design system — DO NOT change without being asked
 
@@ -75,11 +74,15 @@ Array of objects:
 
 Don't invent statuses outside the five listed above — `tracker.html`'s `STATUS_CONFIG` object only knows those five and anything else silently won't render into a column.
 
-## Resume files
+## Resume data (`master_resume_data.json`)
 
-`AvinashResume.pdf` is the one linked from the nav "Download Resume" button on all three pages — treat it as the live, public-facing resume. `Avinash_Resume_2026.pdf` is a fuller/more current version (includes the Computer Vision Research Intern role) that isn't linked anywhere yet.
+Single source of truth for Avi's real work history — every bullet is tagged with its real metric and which industries it's relevant to. This exists so that any future resume-tailoring script never fabricates a metric: it should only ever select and reword from what's in this file.
 
-**Never invent or embellish a metric, title, or date when writing resume content or site copy derived from it.** If Avi's actual work history needs to be pulled for a task (e.g. writing the About Me section), read it directly from these PDFs — there is no separate structured JSON source of truth in this repo.
+**Never invent or embellish a metric, title, or date in this file or in any resume generated from it.** The file's own `unresolved_conflicts_for_avi_to_confirm` array currently documents a handful of open conflicts (e.g. team sizes, start dates, metric framing) between different past versions of Avi's resume — check that array before treating any entry it references as fully settled, and add to it rather than silently guessing if you find a new discrepancy.
+
+The `formatting_preferences` field documents that `MASTERResume.docx` (matching the live `AvinashResume.pdf` linked from the site) is the canonical formatting template — tailored resumes should be produced by editing a copy of that .docx's `word/document.xml` in place (unzip → edit → rezip), not by generating a new document from scratch or restyling it. Only the content (which roles/bullets are included, and their wording) should change per job description; the visual template stays constant.
+
+Two resume PDFs also live at the repo root: `AvinashResume.pdf` (the one actually linked from the nav) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
 
 ## Conventions
 
