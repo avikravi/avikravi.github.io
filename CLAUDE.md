@@ -13,10 +13,15 @@ index.html              Home page (bio, experience, skills)
 projects.html           Project showcase
 tracker.html            Live application tracker (reads tracker-data/applications.json)
                          Not linked from the nav bar on purpose — direct-URL-only.
+                         Also hosts the "Tailor a Resume" tool — see below.
 tracker-data/
   applications.json     The tracker's actual data — see schema below
 scripts/
   add_application.py    CLI helper to append a new application entry
+tailor/
+  matching-engine.js    Scores master_resume_data.json entries against a pasted job description
+  doc-builder.js        Builds the resume/cover-letter docx.Document objects from selected entries
+  app.js                Wires the tracker.html "Tailor a Resume" form to the two scripts above
 master_resume_data.json Source-of-truth for Avi's real resume content (see below)
 AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
 Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
@@ -83,6 +88,18 @@ Single source of truth for Avi's real work history — every bullet is tagged wi
 The `formatting_preferences` field documents that `MASTERResume.docx` (matching the live `AvinashResume.pdf` linked from the site) is the canonical formatting template — tailored resumes should be produced by editing a copy of that .docx's `word/document.xml` in place (unzip → edit → rezip), not by generating a new document from scratch or restyling it. Only the content (which roles/bullets are included, and their wording) should change per job description; the visual template stays constant.
 
 Two resume PDFs also live at the repo root: `AvinashResume.pdf` (the one actually linked from the nav) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
+
+## Resume Tailoring Tool (`tailor/`, embedded in `tracker.html`)
+
+A client-side-only feature: paste a company, role, and job description into the form in `tracker.html`'s "Tailor a Resume" section, and it generates a matched `.docx` resume and cover letter, downloaded directly in the browser. No backend, no build step.
+
+- `tailor/matching-engine.js` scores each `master_resume_data.json` experience entry by keyword overlap against the pasted JD (industry tags count double), picks the top 5, and falls back to the 3 most recent roles if nothing scores. It deliberately excludes the Black Swan Yoga entry unless the JD mentions marketing/retail/in-person keywords — preserve that conditional-inclusion behavior if you touch this file.
+- `tailor/doc-builder.js` builds `docx.Document` objects for the resume and cover letter from the selected entries. It skips any bullet flagged `NEEDS_DETAIL`/`NEEDS_VERIFICATION` — never remove that filter, since it's what stops unverified content from reaching a real generated resume.
+- `tailor/app.js` wires the button, calls the above, and downloads both `.docx` files via `docx.Packer.toBlob`.
+
+The `docx` library is loaded from a CDN `<script>` tag in `tracker.html`'s `<head>` (before any other script), pinned to a specific version — currently `https://unpkg.com/docx@8.5.0/build/index.umd.js`. **That exact path matters**: `docx@8.5.0`'s package.json points `main` at `build/index.umd.js`, not `build/index.js` — the latter 404s. If you ever bump the pinned version, re-check the package's actual `main`/`unpkg` field on unpkg before assuming the path still works, and confirm the loaded bundle still attaches `window.docx` (check that it's a UMD build, not an ESM-only one — newer `docx` versions dropped the UMD global build entirely).
+
+`tailor/app.js` fetches `master_resume_data.json` with a plain relative `fetch()`, so this feature only works when `tracker.html` is served over HTTP(S) — opening it directly as a `file://` URL will fail the fetch (browsers block `file://` XHR/fetch to local files). Test locally with a static HTTP server, not by double-clicking the file.
 
 ## Conventions
 

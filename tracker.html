@@ -268,7 +268,93 @@
             .search-wrap input { width: 100%; }
             header.page-header { padding: 120px 0 32px; }
         }
+
+        .section-header {
+            text-align: left;
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 18px;
+        }
+
+        .tailor-section {
+          margin-bottom: 60px;
+        }
+        .tailor-form {
+          background: rgba(26, 26, 46, 0.6);
+          border: 2px solid rgba(139, 92, 246, 0.3);
+          border-radius: 16px;
+          padding: 32px;
+          backdrop-filter: blur(10px);
+        }
+        .tailor-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+        .tailor-field {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          margin-bottom: 16px;
+        }
+        .tailor-field label {
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-dim);
+          font-weight: 600;
+        }
+        .tailor-field input,
+        .tailor-field textarea {
+          background: rgba(10, 10, 15, 0.6);
+          border: 2px solid rgba(0, 245, 255, 0.2);
+          color: var(--text);
+          font-size: 14px;
+          font-family: inherit;
+          padding: 10px 14px;
+          border-radius: 8px;
+          outline: none;
+          resize: vertical;
+          transition: border-color 0.2s;
+        }
+        .tailor-field input:focus,
+        .tailor-field textarea:focus {
+          border-color: var(--neon-blue);
+        }
+        .tailor-status {
+          margin-top: 16px;
+          font-size: 13px;
+          color: var(--text-dim);
+          line-height: 1.5;
+        }
+        #tailorGenerateBtn {
+          cursor: pointer;
+          border: 2px solid var(--neon-pink);
+          font-size: 13px;
+        }
+        #tailorGenerateBtn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        @media (max-width: 640px) {
+          .tailor-row { grid-template-columns: 1fr; }
+        }
     </style>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
 </head>
 <body>
     <nav>
@@ -289,6 +375,37 @@
             <h1>Application Tracker</h1>
             <p>Every Summer 2026 internship application, tracked in the open — company, role, status, and date, updated as it happens.</p>
         </header>
+
+        <section class="tailor-section" aria-label="Resume tailoring tool">
+          <div class="section-header" style="margin-bottom: 20px;">
+            <h2 style="font-size: 28px;">Tailor a Resume</h2>
+            <p class="section-subtitle" style="font-size: 15px;">Paste a job description — get a matched resume and cover letter, built from real experience only.</p>
+          </div>
+
+          <div class="tailor-form">
+            <div class="tailor-row">
+              <div class="tailor-field">
+                <label for="tailorCompany">Company</label>
+                <input type="text" id="tailorCompany" placeholder="e.g. Voleon" autocomplete="off">
+              </div>
+              <div class="tailor-field">
+                <label for="tailorRole">Role Title</label>
+                <input type="text" id="tailorRole" placeholder="e.g. Data Scientist" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="tailor-field">
+              <label for="tailorJD">Job Description</label>
+              <textarea id="tailorJD" rows="10" placeholder="Paste the full job description here..."></textarea>
+            </div>
+
+            <button id="tailorGenerateBtn" class="nav-resume-btn" style="margin-left: 0;">
+              Generate Resume &amp; Cover Letter
+            </button>
+
+            <p id="tailorStatus" class="tailor-status"></p>
+          </div>
+        </section>
 
         <section class="stats" id="stats" aria-label="Application statistics"></section>
 
@@ -439,5 +556,8 @@ function escapeHtml(str) {
 document.getElementById("searchInput").addEventListener("input", renderBoard);
 loadData();
 </script>
+<script src="tailor/matching-engine.js"></script>
+<script src="tailor/doc-builder.js"></script>
+<script src="tailor/app.js"></script>
 </body>
 </html>

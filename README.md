@@ -56,6 +56,19 @@ git push
 
 GitHub Pages rebuilds automatically within a minute or two of a push to `master`.
 
+## Resume Tailoring Tool
+
+`tracker.html` also has a "Tailor a Resume" section (right below the page header, above the stats board): paste a company, role title, and job description, and it generates a matched `.docx` resume and cover letter, built entirely client-side from `master_resume_data.json`.
+
+How it works:
+- `tailor/matching-engine.js` — tokenizes the job description and scores each `master_resume_data.json` experience entry by keyword overlap (industry tags count double), selecting the top 5 most relevant roles. Falls back to the 3 most recent roles if nothing scores. Includes the Black Swan Yoga entry only if the JD mentions marketing/retail/in-person keywords.
+- `tailor/doc-builder.js` — builds the resume and cover letter as `docx.Document` objects from the selected entries, using the [docx](https://docx.js.org) library.
+- `tailor/app.js` — wires the button, calls the above, and triggers both `.docx` downloads in the browser via `docx.Packer.toBlob`.
+
+The `docx` library itself is loaded from a CDN (`<script>` tag in `tracker.html`'s `<head>`, pinned to `docx@8.5.0`) rather than bundled — no build step needed. It exposes a global `docx` object once loaded.
+
+Nothing here calls a backend — all matching and document generation happens in the visitor's browser, and `master_resume_data.json` is fetched with a plain relative `fetch()` call, so this only works when the page is served over HTTP(S) (not opened directly as a `file://` URL).
+
 ## Local preview
 
 No build step needed:
