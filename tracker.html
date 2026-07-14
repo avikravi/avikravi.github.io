@@ -37,9 +37,12 @@
             position: relative;
         }
 
+        /* Navigation */
         nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             background: rgba(10, 10, 15, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -48,34 +51,74 @@
             padding: 20px 0;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
         }
+
         .nav-content {
-            max-width: 1200px; margin: 0 auto; padding: 0 24px;
-            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
         .nav-logo {
-            font-size: 16px; font-weight: 700;
+            font-size: 16px;
+            font-weight: 700;
             background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text; text-decoration: none;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
         }
-        .nav-links { display: flex; gap: 32px; align-items: center; }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
         .nav-links a {
-            color: var(--text-dim); text-decoration: none; font-size: 13px;
-            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: color 0.3s;
         }
-        .nav-links a:hover { color: var(--neon-blue); }
-        .nav-links a.active { color: var(--neon-pink); }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links a.active {
+            color: var(--neon-pink);
+        }
+
         .nav-resume-btn {
             padding: 7px 14px;
             background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
-            border: 2px solid var(--neon-pink); border-radius: 6px;
-            color: white !important; text-decoration: none; font-size: 11px;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-            transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
-            display: flex; align-items: center; gap: 6px; margin-left: 16px;
+            border: 2px solid var(--neon-pink);
+            border-radius: 6px;
+            color: white !important;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 16px;
         }
-        .nav-resume-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(255, 0, 110, 0.6); }
+
+        .nav-resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 110, 0.6);
+        }
+
 
         body::before {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -205,6 +248,22 @@
         footer a { color: var(--neon-blue); }
         .footer-glow { color: var(--neon-pink); font-weight: 700; }
 
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 11px;
+            }
+
+            .nav-resume-btn {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+        }
+
         @media (max-width: 640px) {
             .search-wrap input { width: 100%; }
             header.page-header { padding: 120px 0 32px; }
@@ -218,6 +277,7 @@
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="projects.html">Projects</a>
+                <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" target="_blank" rel="noopener">Research</a>
                 <a href="tracker.html" class="active">Tracker</a>
                 <a href="AvinashResume.pdf" download class="nav-resume-btn">Download Resume</a>
             </div>

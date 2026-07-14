@@ -404,21 +404,24 @@
             transform: translateX(3px);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
             .nav-links {
-                gap: 16px;
+                gap: 12px;
             }
 
             .nav-links a {
-                font-size: 12px;
+                font-size: 11px;
             }
 
             .nav-resume-btn {
-                font-size: 11px;
-                padding: 8px 14px;
+                font-size: 10px;
+                padding: 6px 12px;
             }
+        }
 
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
             .projects-grid {
                 grid-template-columns: 1fr;
             }
@@ -439,15 +442,6 @@
                 flex-wrap: wrap;
                 gap: 20px;
             }
-
-            .nav-links {
-                gap: 16px;
-            }
-
-            .nav-links a {
-                font-size: 12px;
-            }
-        }
 
         @media (max-width: 640px) {
             .hero h1 {
@@ -471,7 +465,7 @@
 <body>
     <nav>
         <div class="nav-content">
-            <a href="index.html" class="nav-logo">AVINASH RAVISHANKAR</a>
+            <a href="index.html" class="nav-logo">AR</a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="projects.html" class="active">Projects</a>
