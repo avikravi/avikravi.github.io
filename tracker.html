@@ -335,6 +335,28 @@
         .tailor-field textarea:focus {
           border-color: var(--neon-blue);
         }
+        .tailor-actions {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        .tailor-btn-secondary {
+          padding: 7px 16px;
+          background: transparent;
+          border: 2px solid var(--neon-blue);
+          border-radius: 6px;
+          color: var(--neon-blue);
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .tailor-btn-secondary:hover {
+          background: rgba(0, 245, 255, 0.1);
+        }
         .tailor-status {
           margin-top: 16px;
           font-size: 13px;
@@ -399,10 +421,14 @@
               <textarea id="tailorJD" rows="10" placeholder="Paste the full job description here..."></textarea>
             </div>
 
-            <button id="tailorGenerateBtn" class="nav-resume-btn" style="margin-left: 0;">
-              Generate Resume &amp; Cover Letter
-            </button>
+            <div class="tailor-actions">
+              <button id="tailorCheckScoreBtn" class="tailor-btn-secondary" type="button">Check Match Score</button>
+              <button id="tailorGenerateBtn" class="nav-resume-btn" style="margin-left: 0;">
+                Generate Resume &amp; Cover Letter
+              </button>
+            </div>
 
+            <p id="tailorScoreResult" class="tailor-status"></p>
             <p id="tailorStatus" class="tailor-status"></p>
           </div>
         </section>
@@ -557,6 +583,7 @@ document.getElementById("searchInput").addEventListener("input", renderBoard);
 loadData();
 </script>
 <script src="tailor/matching-engine.js"></script>
+<script src="tailor/scoring-engine.js"></script>
 <script src="tailor/doc-builder.js"></script>
 <script src="tailor/app.js"></script>
 </body>

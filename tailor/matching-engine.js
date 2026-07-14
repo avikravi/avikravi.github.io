@@ -46,11 +46,13 @@ function countTokens(tokens) {
   return counts;
 }
 
-const BLACKSWAN_TRIGGER_WORDS = ["marketing", "sales", "retail", "brick-and-mortar", "storefront", "studio",
-  "in-person", "customer-facing", "physical location", "brick and mortar", "franchise", "wellness"];
+const BLACKSWAN_TRIGGER_WORDS = ["yoga", "fitness studio", "brick-and-mortar", "brick and mortar", "storefront",
+  "in-store", "retail store", "franchise", "wellness studio", "studio manager"];
 
 function shouldIncludeBlackSwan(jdText) {
   const lower = jdText.toLowerCase();
+  // Require a genuinely specific signal, not generic business terms like "sales" or "customer-facing"
+  // that show up in plenty of unrelated technical job descriptions (e.g. "pre-sales discussions").
   return BLACKSWAN_TRIGGER_WORDS.some(w => lower.includes(w));
 }
 

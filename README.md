@@ -58,12 +58,13 @@ GitHub Pages rebuilds automatically within a minute or two of a push to `master`
 
 ## Resume Tailoring Tool
 
-`tracker.html` also has a "Tailor a Resume" section (right below the page header, above the stats board): paste a company, role title, and job description, and it generates a matched `.docx` resume and cover letter, built entirely client-side from `master_resume_data.json`.
+`tracker.html` also has a "Tailor a Resume" section (right below the page header, above the stats board): paste a company, role title, and job description, and it generates a matched `.docx` resume and cover letter, built entirely client-side from `master_resume_data.json`. A second "Check Match Score" button runs the same job description against your resume data and shows a 0–100 fit score without generating any documents.
 
 How it works:
-- `tailor/matching-engine.js` — tokenizes the job description and scores each `master_resume_data.json` experience entry by keyword overlap (industry tags count double), selecting the top 5 most relevant roles. Falls back to the 3 most recent roles if nothing scores. Includes the Black Swan Yoga entry only if the JD mentions marketing/retail/in-person keywords.
-- `tailor/doc-builder.js` — builds the resume and cover letter as `docx.Document` objects from the selected entries, using the [docx](https://docx.js.org) library.
-- `tailor/app.js` — wires the button, calls the above, and triggers both `.docx` downloads in the browser via `docx.Packer.toBlob`.
+- `tailor/matching-engine.js` — tokenizes the job description and scores each `master_resume_data.json` experience entry by keyword overlap (industry tags count double), selecting the top 5 most relevant roles. Falls back to the 3 most recent roles if nothing scores. Includes the Black Swan Yoga entry only if the JD mentions a specific yoga/fitness-studio signal (narrowed from generic business terms like "sales" or "customer-facing", which showed up in unrelated technical JDs).
+- `tailor/scoring-engine.js` — powers the "Check Match Score" button. Blends structured tag/skill overlap (reusing `matching-engine.js`'s scoring, weighted 70%) with raw text cosine similarity (weighted 30%) into a single 0–100 score, labeled Strong/Partial/Weak match. It's a keyword/text-similarity heuristic, not a reasoning model — the UI says so explicitly. Must load after `matching-engine.js` (reuses its `tokenize`/`scoreEntry`/`shouldIncludeBlackSwan`) and before `doc-builder.js`/`app.js`.
+- `tailor/doc-builder.js` — builds the resume and cover letter as `docx.Document` objects from the selected entries, using the [docx](https://docx.js.org) library. Also skips any bullet whose text looks like leftover internal metadata (e.g. contains "NEEDS_", "PLACEHOLDER", "unresolved") as a second safety net beyond the `NEEDS_DETAIL`/`NEEDS_VERIFICATION` flag filter.
+- `tailor/app.js` — wires both buttons: "Generate Resume & Cover Letter" calls into `doc-builder.js` and triggers both `.docx` downloads via `docx.Packer.toBlob`; "Check Match Score" calls `scoring-engine.js` and renders the score inline.
 
 The `docx` library itself is loaded from a CDN (`<script>` tag in `tracker.html`'s `<head>`, pinned to `docx@8.5.0`) rather than bundled — no build step needed. It exposes a global `docx` object once loaded.
 

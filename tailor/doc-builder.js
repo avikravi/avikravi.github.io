@@ -78,10 +78,16 @@ function buildResumeDoc(masterData, selectedEntries, companyName, roleTitle) {
 
   children.push(sectionHeader("Relevant Experience"));
 
+  const SUSPICIOUS_PATTERNS = /conflict|NEEDS_|PLACEHOLDER|see .*_note|unresolved/i;
+
   selectedEntries.forEach(entry => {
     children.push(entryHeader(`${entry.title} — ${entry.org}`, entry.dates));
     (entry.bullets || []).forEach(b => {
       if (b.flag === "NEEDS_DETAIL" || b.flag === "NEEDS_VERIFICATION") return; // never surface unverified content
+      if (SUSPICIOUS_PATTERNS.test(b.text)) {
+        console.warn(`Skipped a bullet for ${entry.id} — looked like it contained internal metadata:`, b.text);
+        return;
+      }
       children.push(bullet(b.text));
     });
   });
@@ -115,7 +121,7 @@ function buildCoverLetterDoc(masterData, selectedEntries, companyName, roleTitle
   const top = selectedEntries.slice(0, 2);
   const bulletMentions = top.map(e => {
     const firstBullet = (e.bullets || []).find(b => !b.flag);
-    return firstBullet ? `As ${e.title} at ${e.org}, ${firstBullet.text.charAt(0).toLowerCase() + firstBullet.text.slice(1)}` : null;
+    return firstBullet ? `As ${e.title} at ${e.org}, I ${firstBullet.text.charAt(0).toLowerCase() + firstBullet.text.slice(1)}` : null;
   }).filter(Boolean);
 
   const children = [

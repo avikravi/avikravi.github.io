@@ -20,8 +20,9 @@ scripts/
   add_application.py    CLI helper to append a new application entry
 tailor/
   matching-engine.js    Scores master_resume_data.json entries against a pasted job description
+  scoring-engine.js     Computes the 0-100 "Check Match Score" fit score (reuses matching-engine.js)
   doc-builder.js        Builds the resume/cover-letter docx.Document objects from selected entries
-  app.js                Wires the tracker.html "Tailor a Resume" form to the two scripts above
+  app.js                Wires the tracker.html "Tailor a Resume" form to the three scripts above
 master_resume_data.json Source-of-truth for Avi's real resume content (see below)
 AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
 Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
@@ -91,11 +92,14 @@ Two resume PDFs also live at the repo root: `AvinashResume.pdf` (the one actuall
 
 ## Resume Tailoring Tool (`tailor/`, embedded in `tracker.html`)
 
-A client-side-only feature: paste a company, role, and job description into the form in `tracker.html`'s "Tailor a Resume" section, and it generates a matched `.docx` resume and cover letter, downloaded directly in the browser. No backend, no build step.
+A client-side-only feature: paste a company, role, and job description into the form in `tracker.html`'s "Tailor a Resume" section, and it generates a matched `.docx` resume and cover letter, downloaded directly in the browser. A second "Check Match Score" button scores the pasted JD against `master_resume_data.json` and shows a 0–100 fit score inline, without generating any documents. No backend, no build step.
 
-- `tailor/matching-engine.js` scores each `master_resume_data.json` experience entry by keyword overlap against the pasted JD (industry tags count double), picks the top 5, and falls back to the 3 most recent roles if nothing scores. It deliberately excludes the Black Swan Yoga entry unless the JD mentions marketing/retail/in-person keywords — preserve that conditional-inclusion behavior if you touch this file.
-- `tailor/doc-builder.js` builds `docx.Document` objects for the resume and cover letter from the selected entries. It skips any bullet flagged `NEEDS_DETAIL`/`NEEDS_VERIFICATION` — never remove that filter, since it's what stops unverified content from reaching a real generated resume.
-- `tailor/app.js` wires the button, calls the above, and downloads both `.docx` files via `docx.Packer.toBlob`.
+- `tailor/matching-engine.js` scores each `master_resume_data.json` experience entry by keyword overlap against the pasted JD (industry tags count double), picks the top 5, and falls back to the 3 most recent roles if nothing scores. It deliberately excludes the Black Swan Yoga entry unless the JD mentions a specific yoga/fitness-studio signal (`BLACKSWAN_TRIGGER_WORDS`, deliberately narrow — generic business terms like "sales" or "customer-facing" were removed because they false-positived on unrelated technical JDs) — preserve that conditional-inclusion behavior if you touch this file.
+- `tailor/scoring-engine.js` powers "Check Match Score". It blends `matching-engine.js`'s structured tag/skill overlap (70% weight) with raw-text cosine similarity (30% weight) into a single score, labeled Strong (≥65) / Partial (≥40) / Weak match. It reuses `tokenize`, `countTokens`, `scoreEntry`, and `shouldIncludeBlackSwan` from `matching-engine.js` — it has no module import, so `matching-engine.js` must be loaded first via a preceding `<script>` tag. The UI copy explicitly calls this a keyword/text-similarity heuristic, not a reasoning model — preserve that framing if you touch the score display.
+- `tailor/doc-builder.js` builds `docx.Document` objects for the resume and cover letter from the selected entries. It skips any bullet flagged `NEEDS_DETAIL`/`NEEDS_VERIFICATION` — never remove that filter, since it's what stops unverified content from reaching a real generated resume. It also skips any bullet whose text matches a `SUSPICIOUS_PATTERNS` regex (`NEEDS_`, `PLACEHOLDER`, `unresolved`, etc.) as a second safety net in case unverified/internal-note text ever reaches this stage without the flag being set, logging a console warning when it does.
+- `tailor/app.js` wires both buttons: "Generate Resume & Cover Letter" calls into `doc-builder.js` and downloads both `.docx` files via `docx.Packer.toBlob`; "Check Match Score" calls `computeMatchScore` from `scoring-engine.js` and renders the score inline.
+
+Script load order in `tracker.html` matters and must stay: `matching-engine.js` → `scoring-engine.js` → `doc-builder.js` → `app.js`.
 
 The `docx` library is loaded from a CDN `<script>` tag in `tracker.html`'s `<head>` (before any other script), pinned to a specific version — currently `https://unpkg.com/docx@8.5.0/build/index.umd.js`. **That exact path matters**: `docx@8.5.0`'s package.json points `main` at `build/index.umd.js`, not `build/index.js` — the latter 404s. If you ever bump the pinned version, re-check the package's actual `main`/`unpkg` field on unpkg before assuming the path still works, and confirm the loaded bundle still attaches `window.docx` (check that it's a UMD build, not an ESM-only one — newer `docx` versions dropped the UMD global build entirely).
 

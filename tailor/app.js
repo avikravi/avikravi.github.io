@@ -9,6 +9,38 @@ async function loadMasterData() {
   return MASTER_DATA;
 }
 
+function scoreLabel(score) {
+  if (score >= 65) return { text: "Strong match", color: "var(--neon-blue, #00f5ff)" };
+  if (score >= 40) return { text: "Partial match", color: "var(--gold, #ffd166)" };
+  return { text: "Weak match", color: "var(--danger, #ff4d5e)" };
+}
+
+async function handleCheckScoreClick() {
+  const jdInput = document.getElementById("tailorJD");
+  const scoreEl = document.getElementById("tailorScoreResult");
+  const jdText = jdInput.value.trim();
+
+  if (!jdText) {
+    scoreEl.textContent = "Paste a job description first.";
+    scoreEl.style.color = "var(--danger, #ff4d5e)";
+    return;
+  }
+
+  scoreEl.textContent = "Scoring...";
+  scoreEl.style.color = "var(--text-dim)";
+
+  const masterData = await loadMasterData();
+  const result = computeMatchScore(masterData, jdText);
+  const label = scoreLabel(result.score);
+
+  scoreEl.style.color = label.color;
+  scoreEl.innerHTML = `<strong style="font-size: 22px;">${result.score}/100</strong> — ${label.text}
+    <span style="display:block; font-size: 11px; color: var(--text-dim); margin-top: 4px;">
+      Keyword/skill-tag overlap: ${Math.round(result.structured * 100)}% · Text similarity: ${Math.round(result.cosine * 100)}%
+      — this is a keyword/text-similarity algorithm, not a reasoning model; treat it as a rough signal, not a verdict.
+    </span>`;
+}
+
 function slugifyFilename(text) {
   return (text || "").replace(/[^a-z0-9]+/gi, "_").replace(/^_+|_+$/g, "");
 }
@@ -79,4 +111,6 @@ async function handleGenerateClick() {
 document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("tailorGenerateBtn");
   if (btn) btn.addEventListener("click", handleGenerateClick);
+  const scoreBtn = document.getElementById("tailorCheckScoreBtn");
+  if (scoreBtn) scoreBtn.addEventListener("click", handleCheckScoreClick);
 });
