@@ -1,0 +1,14 @@
+[
+  {
+    "id": "example-001",
+    "company": "Example Corp",
+    "role": "Data Science Intern",
+    "dateApplied": "2026-01-15",
+    "status": "applied",
+    "industry": "tech",
+    "location": "Remote",
+    "link": "",
+    "notes": "This is a placeholder example — replace or delete it, then add your real applications below.",
+    "isExample": true
+  }
+]

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Tracker | Avi Ravishankar</title>
+    <meta name="description" content="Live tracker of internship applications — Avi Ravishankar's Summer 2026 search.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --neon-pink: #ff006e;
+            --neon-blue: #00f5ff;
+            --neon-purple: #8b5cf6;
+            --hot-pink: #ff0080;
+            --electric-blue: #0066ff;
+            --bg-dark: #0a0a0f;
+            --bg-surface: #1a1a2e;
+            --text: #ffffff;
+            --text-dim: #a8b2d1;
+            --grid-color: rgba(0, 245, 255, 0.1);
+            --gold: #ffd166;
+            --danger: #ff4d5e;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+            z-index: 1000;
+            padding: 20px 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        }
+        .nav-content {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo {
+            font-size: 16px; font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none; font-size: 13px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--neon-blue); }
+        .nav-links a.active { color: var(--neon-pink); }
+        .nav-resume-btn {
+            padding: 7px 14px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
+            border: 2px solid var(--neon-pink); border-radius: 6px;
+            color: white !important; text-decoration: none; font-size: 11px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+            transition: all 0.3s; box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+            display: flex; align-items: center; gap: 6px; margin-left: 16px;
+        }
+        .nav-resume-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(255, 0, 110, 0.6); }
+        .nav-resume-btn::before { content: '↓'; font-size: 13px; }
+
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                               linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px; animation: gridMove 20s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom, rgba(255, 0, 110, 0.15) 0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        header.page-header { padding: 140px 0 40px; }
+        header.page-header h1 {
+            font-size: 42px; font-weight: 800; margin-bottom: 12px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        header.page-header p { color: var(--text-dim); font-size: 17px; max-width: 640px; }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 32px 0 40px;
+        }
+        .stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--accent, var(--neon-blue));
+        }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--accent, var(--neon-blue)); line-height: 1; }
+        .stat-label { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-top: 8px; }
+
+        /* Controls */
+        .controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 32px; }
+        .search-wrap input {
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 245, 255, 0.2);
+            color: var(--text); font-size: 14px; padding: 10px 16px;
+            border-radius: 8px; width: 260px; outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-wrap input:focus { border-color: var(--neon-blue); }
+        .search-wrap input::placeholder { color: var(--text-dim); }
+        .filter-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+        .filter-chip {
+            font-size: 12px; letter-spacing: 0.04em; padding: 8px 14px;
+            border-radius: 999px; border: 2px solid rgba(0, 245, 255, 0.2);
+            background: transparent; color: var(--text-dim); cursor: pointer;
+            transition: all 0.2s; text-transform: uppercase; font-weight: 600;
+        }
+        .filter-chip:hover { border-color: var(--neon-blue); color: var(--text); }
+        .filter-chip.active { background: var(--neon-blue); border-color: var(--neon-blue); color: var(--bg-dark); }
+
+        /* Board */
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            align-items: start;
+            margin-bottom: 60px;
+        }
+        .column {
+            background: rgba(26, 26, 46, 0.4);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            min-height: 120px;
+        }
+        .column-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px; padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .column-title { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--col-color, var(--text)); font-weight: 700; }
+        .column-count {
+            font-size: 12px; background: var(--col-color, var(--neon-blue)); color: var(--bg-dark);
+            border-radius: 999px; padding: 2px 10px; font-weight: 800;
+        }
+
+        .card {
+            background: rgba(26, 26, 46, 0.7);
+            border: 2px solid rgba(0, 245, 255, 0.15);
+            border-left: 4px solid var(--col-color, var(--neon-blue));
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px var(--col-color, var(--neon-blue));
+        }
+        .card-company { font-weight: 700; font-size: 16px; }
+        .card-role { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+        .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+        .card-date { font-size: 11px; color: var(--text-dim); }
+        .card-tag {
+            font-size: 10px; letter-spacing: 0.03em; text-transform: uppercase;
+            padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,0.07); color: var(--text-dim);
+        }
+        .card-notes { font-size: 12px; color: var(--text-dim); margin-top: 8px; font-style: italic; line-height: 1.4; }
+        .card-link { display: inline-block; margin-top: 8px; font-size: 12px; color: var(--neon-blue); text-decoration: none; font-weight: 600; }
+        .card-link:hover { text-decoration: underline; }
+        .empty-column { font-size: 12px; color: var(--text-dim); padding: 14px 4px; opacity: 0.6; }
+
+        footer {
+            text-align: center; padding: 60px 24px 40px;
+            color: var(--text-dim); font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        footer a { color: var(--neon-blue); }
+        .footer-glow { color: var(--neon-pink); font-weight: 700; }
+
+        @media (max-width: 640px) {
+            .search-wrap input { width: 100%; }
+            header.page-header { padding: 120px 0 32px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">AR</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="projects.html">Projects</a>
+                <a href="tracker.html" class="active">Tracker</a>
+                <a href="Avi_Resume.pdf" download class="nav-resume-btn">Download Resume</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1>Application Tracker</h1>
+            <p>Every Summer 2026 internship application, tracked in the open — company, role, status, and date, updated as it happens.</p>
+        </header>
+
+        <section class="stats" id="stats" aria-label="Application statistics"></section>
+
+        <section class="controls">
+            <div class="search-wrap">
+                <input type="text" id="searchInput" placeholder="Search company or role..." autocomplete="off">
+            </div>
+            <div class="filter-wrap" id="industryFilters" role="group" aria-label="Filter by industry"></div>
+        </section>
+
+        <section class="board" id="board" aria-label="Applications by status"></section>
+
+        <footer>
+            <p>© 2026 Avi Ravishankar</p>
+            <p>Data lives in <a href="tracker-data/applications.json">tracker-data/applications.json</a> — built with <span class="footer-glow">Claude</span></p>
+        </footer>
+    </div>
+
+<script>
+const STATUS_CONFIG = {
+  applied:      { label: "Applied",      color: "var(--neon-blue)",   order: 1 },
+  interviewing: { label: "Interviewing", color: "var(--neon-purple)", order: 2 },
+  offer:        { label: "Offer",        color: "var(--gold)",        order: 3 },
+  rejected:     { label: "Rejected",     color: "var(--danger)",      order: 4 },
+  ghosted:      { label: "No Response",  color: "var(--text-dim)",    order: 5 },
+};
+
+let allApps = [];
+let activeIndustry = "all";
+
+async function loadData() {
+  try {
+    const res = await fetch("tracker-data/applications.json", { cache: "no-store" });
+    allApps = await res.json();
+  } catch (err) {
+    console.error("Failed to load applications.json", err);
+    allApps = [];
+  }
+  renderStats();
+  renderFilters();
+  renderBoard();
+}
+
+function renderStats() {
+  const total = allApps.length;
+  const counts = {};
+  Object.keys(STATUS_CONFIG).forEach(k => counts[k] = 0);
+  allApps.forEach(a => { if (counts[a.status] !== undefined) counts[a.status]++; });
+  const respondedCount = counts.interviewing + counts.offer + counts.rejected;
+  const responseRate = total > 0 ? Math.round((respondedCount / total) * 100) : 0;
+
+  const stats = [
+    { label: "Total Applied", value: total, color: "var(--neon-blue)" },
+    { label: "Interviewing", value: counts.interviewing, color: "var(--neon-purple)" },
+    { label: "Offers", value: counts.offer, color: "var(--gold)" },
+    { label: "Response Rate", value: `${responseRate}%`, color: "var(--neon-pink)" },
+  ];
+
+  document.getElementById("stats").innerHTML = stats.map(s => `
+    <div class="stat-card" style="--accent:${s.color}">
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join("");
+}
+
+function renderFilters() {
+  const industries = Array.from(new Set(allApps.map(a => a.industry).filter(Boolean))).sort();
+  const el = document.getElementById("industryFilters");
+  const chips = ["all", ...industries];
+  el.innerHTML = chips.map(ind => `
+    <button class="filter-chip ${ind === activeIndustry ? "active" : ""}" data-industry="${ind}">
+      ${ind === "all" ? "All Industries" : ind}
+    </button>
+  `).join("");
+  el.querySelectorAll(".filter-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeIndustry = btn.dataset.industry;
+      renderFilters();
+      renderBoard();
+    });
+  });
+}
+
+function getFilteredApps() {
+  const query = document.getElementById("searchInput").value.trim().toLowerCase();
+  return allApps.filter(a => {
+    const matchesIndustry = activeIndustry === "all" || a.industry === activeIndustry;
+    const matchesSearch = !query ||
+      (a.company || "").toLowerCase().includes(query) ||
+      (a.role || "").toLowerCase().includes(query);
+    return matchesIndustry && matchesSearch;
+  });
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr + "T00:00:00");
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function renderBoard() {
+  const filtered = getFilteredApps();
+  const board = document.getElementById("board");
+  const columns = Object.entries(STATUS_CONFIG).sort((a, b) => a[1].order - b[1].order);
+
+  board.innerHTML = columns.map(([statusKey, cfg]) => {
+    const apps = filtered.filter(a => a.status === statusKey)
+      .sort((a, b) => new Date(b.dateApplied) - new Date(a.dateApplied));
+    const cardsHtml = apps.length ? apps.map(a => cardTemplate(a, cfg.color)).join("")
+      : `<div class="empty-column">Nothing here yet.</div>`;
+    return `
+      <div class="column" style="--col-color:${cfg.color}">
+        <div class="column-header">
+          <span class="column-title">${cfg.label}</span>
+          <span class="column-count">${apps.length}</span>
+        </div>
+        ${cardsHtml}
+      </div>
+    `;
+  }).join("");
+}
+
+function cardTemplate(app, color) {
+  const exampleTag = app.isExample ? `<span class="card-tag" style="color:var(--gold)">EXAMPLE</span>` : "";
+  return `
+    <div class="card" style="--col-color:${color}">
+      <div class="card-company">${escapeHtml(app.company || "Unknown")}</div>
+      <div class="card-role">${escapeHtml(app.role || "")}</div>
+      <div class="card-meta">
+        <span class="card-date">${formatDate(app.dateApplied)}</span>
+        ${app.industry ? `<span class="card-tag">${escapeHtml(app.industry)}</span>` : ""}
+        ${exampleTag}
+      </div>
+      ${app.notes ? `<div class="card-notes">${escapeHtml(app.notes)}</div>` : ""}
+      ${app.link ? `<a class="card-link" href="${app.link}" target="_blank" rel="noopener">View listing →</a>` : ""}
+    </div>
+  `;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+document.getElementById("searchInput").addEventListener("input", renderBoard);
+loadData();
+</script>
+</body>
+</html>
