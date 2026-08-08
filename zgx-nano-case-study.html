@@ -88,6 +88,47 @@
             color: var(--ink-faint);
         }
 
+        .index-label {
+            margin-top: 32px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+        }
+
+        .box-index {
+            margin-top: 10px;
+        }
+
+        .box-index-item {
+            display: flex;
+            gap: 16px;
+            padding: 14px 0;
+            border-top: 1px solid var(--line);
+            max-width: 760px;
+        }
+
+        .box-index-item .num {
+            flex-shrink: 0;
+            width: 20px;
+            padding-top: 1px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink-faint);
+        }
+
+        .box-index-item p {
+            font-size: 14px;
+            color: var(--ink-soft);
+            line-height: 1.6;
+        }
+
+        .box-index-item .name {
+            color: #000;
+            font-weight: 700;
+        }
+
         /* Dashboard grid */
         .dashboard {
             display: grid;
@@ -126,12 +167,6 @@
             font-size: 15px;
             font-weight: 700;
             color: #000;
-        }
-
-        .box-head .box-sub {
-            font-size: 12.5px;
-            color: var(--ink-faint);
-            margin-top: 3px;
         }
 
         .box-body {
@@ -367,16 +402,38 @@
         <header class="page-header">
             <div class="eyebrow">Category Strategy &amp; GTM Research</div>
             <h1>HP ZGX Nano</h1>
-            <p class="dek">A working look at where ZGX Nano stands today &mdash; what needs fixing, what's earning trust, how it compares to similar products, and where it might fit.</p>
+            <p class="dek">An objective, unfiltered look at the ZGX Nano &mdash; built to understand not just the product itself, but the sentiment around it: what tech nerds and casual users across the internet are actually saying, what the buzz is, and where the real opportunity and friction points are.</p>
             <p class="meta-line">Compiled by Avinash Ravishankar &middot; live draft, updated continuously</p>
+
+            <div class="index-label">What's in this dashboard</div>
+            <div class="box-index">
+                <div class="box-index-item">
+                    <span class="num">01</span>
+                    <p><span class="name">Feedback Scraper</span> &mdash; a scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer.</p>
+                </div>
+                <div class="box-index-item">
+                    <span class="num">02</span>
+                    <p><span class="name">Positive Review Scraper</span> &mdash; the same approach run in reverse. It surfaces what reviewers and early users are consistently praising, ranked by how many independent sources agree, to separate real earned trust from marketing claims.</p>
+                </div>
+                <div class="box-index-item">
+                    <span class="num">03</span>
+                    <p><span class="name">Personal Research &amp; Interviews</span> &mdash; where firsthand research lives: ideas to test with real customers, plus actual interviews and reviews as they happen, ordered most recent first.</p>
+                </div>
+                <div class="box-index-item">
+                    <span class="num">04</span>
+                    <p><span class="name">Potential Use Cases</span> &mdash; candidate audiences and scenarios this product could realistically serve, built from the evidence gathered above rather than assumed from HP's own marketing.</p>
+                </div>
+                <div class="box-index-item">
+                    <span class="num">05</span>
+                    <p><span class="name">Competitor Tracker</span> &mdash; a running scrape of recent news on competing products built on the same underlying chip, tracking how the competitive landscape is moving, newest first.</p>
+                </div>
+            </div>
         </header>
 
         <div class="dashboard">
             <div class="box box-feedback">
                 <div class="box-head">
-                    <div class="box-title">1. Feedback Scraper</div>
-                    <div class="box-sub">Problems and complaints pulled from public reviews and developer discussion, ranked by how much they'd matter to a buyer</div>
-                </div>
+                    <div class="box-title">1. Feedback Scraper</div>                </div>
                 <div class="box-body scrollable">
                     <div class="fitem">
                         <div class="fitem-head">
@@ -458,9 +515,7 @@
 
             <div class="box box-positive">
                 <div class="box-head">
-                    <div class="box-title">2. Positive Review Scraper</div>
-                    <div class="box-sub">What reviewers and early users consistently praise, ranked by how many independent sources agree</div>
-                </div>
+                    <div class="box-title">2. Positive Review Scraper</div>                </div>
                 <div class="box-body scrollable">
                     <p class="balance-note context-note">The other side of Box 1 &mdash; what people say is working well, independent of HP's own marketing claims.</p>
 
@@ -540,9 +595,7 @@
 
             <div class="box box-research">
                 <div class="box-head">
-                    <div class="box-title">3. Personal Research &amp; Interviews</div>
-                    <div class="box-sub">1 idea to test &middot; 2 interviews logged so far</div>
-                </div>
+                    <div class="box-title">3. Personal Research &amp; Interviews</div>                </div>
                 <div class="box-body scrollable">
                     <p class="balance-note context-note">Two kinds of entries here: ideas from personal observation, written up as questions to ask customers &mdash; and actual interviews/reviews with real people, once they happen. Idea status moves from "To Validate" to "Validated" (or gets dropped) as real interview data comes in.</p>
 
@@ -565,17 +618,6 @@
                         <div class="fitem-head">
                             <span class="frank">01</span>
                             <span class="priority strong">Validated</span>
-                            <span class="tag-co">Video Review</span>
-                        </div>
-                        <h3>The size-to-power contrast genuinely surprises people</h3>
-                        <p>A YouTube channel focused on home tech setups reviewed the ZGX Nano very favorably, drawn to the "tiny titan" contrast: same footprint as a Mac Mini, but with server-class AI performance, powered entirely over USB-C. A specs-literate, size-conscious audience that isn't who HP's own marketing seems to target &mdash; worth probing in future interviews whether this reaction is common.</p>
-                        <p class="cite">"Tiny Home Tech" (YouTube, Nov 2025)</p>
-                    </div>
-
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">02</span>
-                            <span class="priority strong">Validated</span>
                             <span class="tag-co">1:1 Interview</span>
                         </div>
                         <h3>Neutral on premium packaging, but real friction opening it</h3>
@@ -584,15 +626,24 @@
                         <p class="cite">Thomas Plunkett, 1:1 interview &mdash; logged Aug 7, 2026</p>
                     </div>
 
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">02</span>
+                            <span class="priority strong">Validated</span>
+                            <span class="tag-co">Video Review</span>
+                        </div>
+                        <h3>The size-to-power contrast genuinely surprises people</h3>
+                        <p>A YouTube channel focused on home tech setups reviewed the ZGX Nano very favorably, drawn to the "tiny titan" contrast: same footprint as a Mac Mini, but with server-class AI performance, powered entirely over USB-C. A specs-literate, size-conscious audience that isn't who HP's own marketing seems to target &mdash; worth probing in future interviews whether this reaction is common.</p>
+                        <p class="cite">"Tiny Home Tech" (YouTube, Nov 2025)</p>
+                    </div>
+
                     <div class="scroll-fade"></div>
                 </div>
             </div>
 
             <div class="box box-usecases empty">
                 <div class="box-head">
-                    <div class="box-title">4. Potential Use Cases</div>
-                    <div class="box-sub">Who this product could realistically serve, and for what &mdash; beyond HP's own marketing copy</div>
-                </div>
+                    <div class="box-title">4. Potential Use Cases</div>                </div>
                 <div class="box-body">
                     <span class="empty-tag">Not started</span>
                 </div>
@@ -600,9 +651,7 @@
 
             <div class="box box-competitor">
                 <div class="box-head">
-                    <div class="box-title">5. Competitor Tracker</div>
-                    <div class="box-sub">Recent news about competing products built on the same underlying chip, newest first &mdash; as of Aug 7, 2026</div>
-                </div>
+                    <div class="box-title">5. Competitor Tracker</div>                </div>
                 <div class="box-body scrollable">
                     <p class="balance-note context-note">Worth noting: most of these aren't fully separate competitors &mdash; HP, ASUS, Dell, Lenovo, MSI, and Supermicro are all building on the <em>same</em> NVIDIA GB10 reference chip, just in different chassis. That suggests differentiation may come down to chassis quality, support, and price as much as raw specs.</p>
 
