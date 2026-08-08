@@ -44,7 +44,34 @@
         }
 
         header.page-header {
+            position: relative;
             padding: 44px 0 0;
+            overflow: hidden;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-art {
+            position: absolute;
+            z-index: 0;
+            top: -6%;
+            right: -3%;
+            width: 400px;
+            max-width: 40%;
+            height: auto;
+            opacity: 0.09;
+            filter: grayscale(1);
+            mask-image: radial-gradient(ellipse at center, black 0%, black 30%, transparent 72%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 0%, black 30%, transparent 72%);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @media (max-width: 700px) {
+            .header-art { display: none; }
         }
 
         .eyebrow {
@@ -468,18 +495,21 @@
 <body>
     <div class="wrap">
         <header class="page-header">
-            <div class="eyebrow">A Case Study</div>
-            <h1>HP ZGX Nano</h1>
-            <p class="dek">A closer, unfiltered look at the ZGX Nano &mdash; not just the spec sheet, but the real conversation around it. I wanted to understand what tech enthusiasts and everyday users are actually saying, where the buzz is genuine, and where the product still creates friction.</p>
-            <p class="meta-line">Compiled by Avinash Ravishankar &middot; live draft, updated continuously</p>
+            <img class="header-art" src="nano-header.png" alt="">
+            <div class="header-content">
+                <div class="eyebrow">A Case Study</div>
+                <h1>HP ZGX Nano</h1>
+                <p class="dek">A closer, unfiltered look at the ZGX Nano &mdash; not just the spec sheet, but the real conversation around it. I wanted to understand what tech enthusiasts and everyday users are actually saying, where the buzz is genuine, and where the product still creates friction.</p>
+                <p class="meta-line">Compiled by Avinash Ravishankar &middot; live draft, updated continuously</p>
 
-            <nav class="tabs">
-                <button class="tab-btn active" data-panel="panel-feedback">Feedback</button>
-                <button class="tab-btn" data-panel="panel-positive">Positive Reviews</button>
-                <button class="tab-btn" data-panel="panel-research">Research &amp; Interviews</button>
-                <button class="tab-btn" data-panel="panel-usecases">Use Cases</button>
-                <button class="tab-btn" data-panel="panel-competitor">Competitor Tracker</button>
-            </nav>
+                <nav class="tabs">
+                    <button class="tab-btn active" data-panel="panel-feedback">Feedback</button>
+                    <button class="tab-btn" data-panel="panel-positive">Positive Reviews</button>
+                    <button class="tab-btn" data-panel="panel-research">Research &amp; Interviews</button>
+                    <button class="tab-btn" data-panel="panel-usecases">Use Cases</button>
+                    <button class="tab-btn" data-panel="panel-competitor">Competitor Tracker</button>
+                </nav>
+            </div>
         </header>
 
         <div class="tab-panels">
