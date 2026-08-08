@@ -17,11 +17,14 @@
             --line: #e5e5e5;
             --blue: #1967b1;
             --high: #b3261e;
-            --med: #8a5a00;
-            --low: #4b4b4b;
+            --med: #a8461f;
+            --low: #8a6200;
             --strong: #1e7145;
             --notable: #1a7a72;
             --mentioned: #4b4b4b;
+            --bar-high: #d03b3b;
+            --bar-med: #ec835a;
+            --bar-low: #fab219;
         }
 
         body {
@@ -282,6 +285,169 @@
         .sources a { color: var(--blue); text-decoration: none; }
         .sources a:hover { text-decoration: underline; }
 
+        /* Source favicons */
+        .cite img {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            vertical-align: -2px;
+            margin-right: 2px;
+        }
+
+        .sources li {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .sources li img {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .sources li::before {
+            position: static;
+            flex-shrink: 0;
+        }
+
+        /* Timeline (Competitor Tracker) */
+        .timeline {
+            position: relative;
+            padding-left: 22px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            bottom: 6px;
+            width: 1.5px;
+            background: var(--line);
+        }
+
+        .t-item {
+            position: relative;
+            padding-bottom: 26px;
+        }
+
+        .t-item:last-child { padding-bottom: 0; }
+
+        .t-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 5px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--ink);
+        }
+
+        .t-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            margin-bottom: 4px;
+        }
+
+        .t-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+
+        .t-head img {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .t-item h3 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .t-item h3 a { color: inherit; text-decoration: none; }
+        .t-item h3 a:hover { text-decoration: underline; }
+
+        .t-item p {
+            font-size: 13px;
+            color: var(--ink-soft);
+            max-width: 560px;
+        }
+
+        /* Severity bar */
+        .bar-summary { margin-bottom: 26px; }
+
+        .bar-track {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: var(--line);
+            margin-bottom: 14px;
+        }
+
+        .bar-seg { position: relative; height: 100%; }
+        .bar-seg + .bar-seg { margin-left: 2px; }
+        .bar-seg[data-tone="high"] { background: var(--bar-high); }
+        .bar-seg[data-tone="med"] { background: var(--bar-med); }
+        .bar-seg[data-tone="low"] { background: var(--bar-low); }
+
+        .bar-seg .tip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--ink);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 5px 9px;
+            border-radius: 5px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.12s;
+        }
+
+        .bar-seg .tip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: var(--ink);
+        }
+
+        .bar-seg:hover .tip { opacity: 1; }
+
+        .bar-legend { display: flex; gap: 22px; flex-wrap: wrap; }
+
+        .bar-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+
+        .swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .swatch[data-tone="high"] { background: var(--bar-high); }
+        .swatch[data-tone="med"] { background: var(--bar-med); }
+        .swatch[data-tone="low"] { background: var(--bar-low); }
+
+        .bar-legend-item .count { font-weight: 700; color: #000; }
+
         footer {
             padding: 28px 0 48px;
             border-top: 1px solid var(--line);
@@ -320,6 +486,19 @@
                 <h2 class="panel-title">1. Feedback Scraper</h2>
                 <p class="panel-desc">A scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer.</p>
                 <div class="panel-body">
+                    <div class="bar-summary">
+                        <div class="bar-track">
+                            <div class="bar-seg" data-tone="high" style="width: 50%;"><span class="tip">3 High</span></div>
+                            <div class="bar-seg" data-tone="med" style="width: 33.3%;"><span class="tip">2 Medium</span></div>
+                            <div class="bar-seg" data-tone="low" style="width: 16.7%;"><span class="tip">1 Low</span></div>
+                        </div>
+                        <div class="bar-legend">
+                            <div class="bar-legend-item"><span class="swatch" data-tone="high"></span><span class="count">3</span>&nbsp;High</div>
+                            <div class="bar-legend-item"><span class="swatch" data-tone="med"></span><span class="count">2</span>&nbsp;Medium</div>
+                            <div class="bar-legend-item"><span class="swatch" data-tone="low"></span><span class="count">1</span>&nbsp;Low</div>
+                        </div>
+                    </div>
+
                     <div class="fitem">
                         <div class="fitem-head">
                             <span class="frank">01</span>
@@ -327,7 +506,7 @@
                         </div>
                         <h3>Setup docs don't match the "ready to build" promise</h3>
                         <p>HP markets the ZGX Toolkit as pre-configured and ready to go. Reviewers hit outdated, broken setup instructions in hands-on testing.</p>
-                        <p class="cite">Notebookcheck: "Some instructions were outdated and simply unusable." — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "Some instructions were outdated and simply unusable." — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
@@ -337,7 +516,7 @@
                         </div>
                         <h3>Price doesn't match the perceived build quality</h3>
                         <p>At roughly $4,800&ndash;$7,400 depending on configuration, reviewers expected premium fit and finish and got a plastic chassis instead.</p>
-                        <p class="cite">Notebookcheck: "Simple plastic chassis does not do justice to the price." — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "Simple plastic chassis does not do justice to the price." — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
@@ -367,7 +546,7 @@
                         </div>
                         <h3>Idle power draw undercuts the efficiency pitch</h3>
                         <p>30&ndash;50W at idle is high for a device positioned as an always-on, sustainability-minded desk appliance.</p>
-                        <p class="cite">Notebookcheck: <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
@@ -377,7 +556,7 @@
                         </div>
                         <h3>Networking tops out below its own spec</h3>
                         <p>The dual 200Gbps QSFP ports can't be fully fed &mdash; GB10 only exposes a PCIe 5.0 x4 root port per NIC. Only matters for multi-node clustering.</p>
-                        <p class="cite">ServeTheHome: <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt="">ServeTheHome: <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
                     </div>
 
                     <p class="balance-note">For balance: consistently praised for quiet, cool operation (22 dBA idle, 27.6 dBA under load) and strong security posture (TPM 2.0 in FIPS 140-2 mode, Common Criteria EAL4+).</p>
@@ -385,13 +564,13 @@
                     <div class="sources">
                         <h4>Sources</h4>
                         <ol>
-                            <li><a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">Notebookcheck &mdash; HP ZGX Nano G1n AI Station review</a></li>
-                            <li><a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">ServeTheHome &mdash; HP ZGX Nano G1n Review</a></li>
-                            <li><a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">StorageReview &mdash; HP ZGX Nano G1n AI Station Review</a></li>
-                            <li><a href="https://www.tomshardware.com/pc-components/gpus/nvidia-dgx-spark-review" target="_blank" rel="noopener">Tom's Hardware &mdash; NVIDIA DGX Spark Review (shared GB10 platform)</a></li>
-                            <li><a href="https://forums.developer.nvidia.com/t/reflections-on-the-memory-data-rate-of-rtx-spark/372475" target="_blank" rel="noopener">NVIDIA Developer Forums &mdash; memory bandwidth thread</a></li>
-                            <li><a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">Global Nerdy &mdash; hands-on developer endorsement</a></li>
-                            <li><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page (baseline specs)</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt=""><a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">Notebookcheck &mdash; HP ZGX Nano G1n AI Station review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt=""><a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">ServeTheHome &mdash; HP ZGX Nano G1n Review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt=""><a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">StorageReview &mdash; HP ZGX Nano G1n AI Station Review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=tomshardware.com" alt=""><a href="https://www.tomshardware.com/pc-components/gpus/nvidia-dgx-spark-review" target="_blank" rel="noopener">Tom's Hardware &mdash; NVIDIA DGX Spark Review (shared GB10 platform)</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=nvidia.com" alt=""><a href="https://forums.developer.nvidia.com/t/reflections-on-the-memory-data-rate-of-rtx-spark/372475" target="_blank" rel="noopener">NVIDIA Developer Forums &mdash; memory bandwidth thread</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=globalnerdy.com" alt=""><a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">Global Nerdy &mdash; hands-on developer endorsement</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt=""><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page (baseline specs)</a></li>
                         </ol>
                     </div>
                 </div>
@@ -408,7 +587,7 @@
                         </div>
                         <h3>Real local compute for genuinely large models</h3>
                         <p>128GB of unified memory running models up to 200B parameters, on your desk, with no cloud bill and no data leaving the building. This is the headline reason people are excited &mdash; it's simply not possible on a consumer GPU or laptop.</p>
-                        <p class="cite">Notebookcheck: 128GB memory "enables loading and processing of massive AI models that wouldn't fit on consumer cards" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: 128GB memory "enables loading and processing of massive AI models that wouldn't fit on consumer cards" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
@@ -418,7 +597,7 @@
                         </div>
                         <h3>Blackwell's FP4 support is a real, not marketing, advantage</h3>
                         <p>Native FP4/NVFP4 support lets models run faster while using meaningfully less VRAM &mdash; a genuine architectural edge that's currently unique to NVIDIA silicon, not just a spec-sheet bullet.</p>
-                        <p class="cite">Notebookcheck: "the biggest asset is the Blackwell architecture" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "the biggest asset is the Blackwell architecture" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
@@ -428,7 +607,7 @@
                         </div>
                         <h3>Quiet and cool enough to actually sit on a desk</h3>
                         <p>22 dBA at idle, 27.6 dBA under full load, with thermals that ran cooler than competing GB10 systems in testing. For a device pitched as an "AI supercomputer," reviewers consistently note it doesn't behave like one.</p>
-                        <p class="cite">One developer's hands-on take: "definitely quiet enough for office use... even under full load it's barely audible" — <a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">globalnerdy.com</a> &middot; thermals: <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=globalnerdy.com" alt="">One developer's hands-on take: "definitely quiet enough for office use... even under full load it's barely audible" — <a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">globalnerdy.com</a> &middot; thermals: <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt=""><a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
                     </div>
 
                     <div class="fitem">
@@ -438,7 +617,7 @@
                         </div>
                         <h3>Security posture rare at this size and price</h3>
                         <p>TPM 2.0 running in FIPS 140-2 certified mode, Common Criteria EAL4+, self-encrypting OPAL drives, and a wireless-free "Secure &amp; Regulated" variant. Reviewers flag this as genuinely enterprise-grade, not just checkbox compliance.</p>
-                        <p class="cite">StorageReview &mdash; <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview &mdash; <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
                     </div>
 
                     <div class="fitem">
@@ -448,7 +627,7 @@
                         </div>
                         <h3>It genuinely fits in your hand, and feels considered</h3>
                         <p>150 &times; 150 &times; 51mm, built from up to 75% recycled aluminum, with a visible power LED through the mesh front &mdash; a small detail reviewers called out since most GB10 boxes give no clear at-a-glance power indication.</p>
-                        <p class="cite">ServeTheHome: "you can see an LED inside that clearly shows the unit is on" — <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt="">ServeTheHome: "you can see an LED inside that clearly shows the unit is on" — <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
                     </div>
 
                     <div class="fitem">
@@ -458,17 +637,17 @@
                         </div>
                         <h3>The pre-configured software actually saves time, once it works</h3>
                         <p>The ZGX Toolkit (a VS Code extension) plus baked-in Jupyter, Docker, MLflow, and Ollama meant less setup friction than expected for reviewers who got past the documentation issues logged in Box 1.</p>
-                        <p class="cite">HP claims ~45% setup time savings vs. manual configuration — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP claims ~45% setup time savings vs. manual configuration — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
                     </div>
 
                     <div class="sources">
                         <h4>Sources</h4>
                         <ol>
-                            <li><a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">Notebookcheck &mdash; HP ZGX Nano G1n AI Station review</a></li>
-                            <li><a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">ServeTheHome &mdash; HP ZGX Nano G1n Review</a></li>
-                            <li><a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">StorageReview &mdash; HP ZGX Nano G1n AI Station Review</a></li>
-                            <li><a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">Global Nerdy &mdash; hands-on developer endorsement</a></li>
-                            <li><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt=""><a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">Notebookcheck &mdash; HP ZGX Nano G1n AI Station review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt=""><a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">ServeTheHome &mdash; HP ZGX Nano G1n Review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt=""><a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">StorageReview &mdash; HP ZGX Nano G1n AI Station Review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=globalnerdy.com" alt=""><a href="https://www.globalnerdy.com/2025/10/31/one-last-endorsement-for-the-zgx-nano-ai-workstation/" target="_blank" rel="noopener">Global Nerdy &mdash; hands-on developer endorsement</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt=""><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page</a></li>
                         </ol>
                     </div>
                 </div>
@@ -488,7 +667,7 @@
                         <h3>Rethink packaging as a luxury, collectible unboxing experience</h3>
                         <p>At $4,800&ndash;$7,400, the unboxing should match the price &mdash; but reviewers already call the chassis "plastic" for the money (see Box 1, item 02). Idea: limited print runs with visible unit numbering (e.g. "Machine #43," "Machine #87") to make ownership feel exclusive and collectible, and to drive organic unboxing-video sharing.</p>
                         <p>Extended with a luxury-car parallel &mdash; Rolls-Royce's Bespoke program frames a purchase as a <em>commission</em>, not a transaction: by-appointment private consultations, personalization tied to the owner's actual life (not just aesthetics), and a real relationship with a specialist rather than a checkout flow. Applied here: "commission" language for the flagship config, a pre-shipment technical concierge call (which can double as real config guidance, since these buyers are technical), and personalization tied to the buyer's actual project.</p>
-                        <p class="cite">Avi's field notes, informed by Rolls-Royce Bespoke research — <a href="https://www.insidehook.com/autos/e-rolls-royce-commissioning-suite-explainer" target="_blank" rel="noopener">insidehook.com</a> &middot; <a href="https://www.themanual.com/auto/designing-a-custom-rolls-royce-is-the-bespoke-experience-at-its-finest/" target="_blank" rel="noopener">themanual.com</a></p>
+                        <p class="cite">Avi's field notes, informed by Rolls-Royce Bespoke research — <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=insidehook.com" alt=""><a href="https://www.insidehook.com/autos/e-rolls-royce-commissioning-suite-explainer" target="_blank" rel="noopener">insidehook.com</a> &middot; <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=themanual.com" alt=""><a href="https://www.themanual.com/auto/designing-a-custom-rolls-royce-is-the-bespoke-experience-at-its-finest/" target="_blank" rel="noopener">themanual.com</a></p>
                     </div>
 
                     <div class="subhead">Interviews &amp; Reviews</div>
@@ -513,7 +692,7 @@
                         </div>
                         <h3>The size-to-power contrast genuinely surprises people</h3>
                         <p>A YouTube channel focused on home tech setups reviewed the ZGX Nano very favorably, drawn to the "tiny titan" contrast: same footprint as a Mac Mini, but with server-class AI performance, powered entirely over USB-C. A specs-literate, size-conscious audience that isn't who HP's own marketing seems to target &mdash; worth probing in future interviews whether this reaction is common.</p>
-                        <p class="cite">"Tiny Home Tech" (YouTube, Nov 2025)</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=youtube.com" alt="">"Tiny Home Tech" (YouTube, Nov 2025)</p>
                     </div>
                 </div>
             </section>
@@ -534,64 +713,66 @@
                 <div class="panel-body">
                     <p class="balance-note">Worth noting: most of these aren't fully separate competitors &mdash; HP, ASUS, Dell, Lenovo, MSI, and Supermicro are all building on the <em>same</em> NVIDIA GB10 reference chip, just in different chassis. That suggests differentiation may come down to chassis quality, support, and price as much as raw specs.</p>
 
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">May 31, 2026</span>
-                            <span class="tag-co">NVIDIA</span>
+                    <div class="timeline">
+                        <div class="t-item">
+                            <div class="t-date">May 31, 2026</div>
+                            <div class="t-head">
+                                <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=nvidia.com" alt="">
+                                <h3><a href="https://www.nvidia.com/en-gb/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/" target="_blank" rel="noopener">NVIDIA unveils "RTX Spark" at Computex 2026</a></h3>
+                                <span class="tag-co">NVIDIA</span>
+                            </div>
+                            <p>Splits the Spark brand in two: DGX Spark stays the pro/dev "supercomputer on your desk," RTX Spark targets mainstream consumers and creators in laptops and compact desktops. Watch for buyer confusion between the two names.</p>
                         </div>
-                        <h3><a href="https://www.nvidia.com/en-gb/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/" target="_blank" rel="noopener">NVIDIA unveils "RTX Spark" at Computex 2026</a></h3>
-                        <p>Splits the Spark brand in two: DGX Spark stays the pro/dev "supercomputer on your desk," RTX Spark targets mainstream consumers and creators in laptops and compact desktops. Watch for buyer confusion between the two names.</p>
-                        <p class="cite">nvidia.com</p>
-                    </div>
 
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">Apr 23, 2026</span>
-                            <span class="tag-co">Dell</span>
+                        <div class="t-item">
+                            <div class="t-date">Apr 23, 2026</div>
+                            <div class="t-head">
+                                <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hothardware.com" alt="">
+                                <h3><a href="https://hothardware.com/reviews/dell-pro-max-with-gb10-review" target="_blank" rel="noopener">HotHardware reviews Dell Pro Max GB10</a></h3>
+                                <span class="tag-co">Dell</span>
+                            </div>
+                            <p>Better cooling than DGX Spark, but the $3,999 MSRP ($5,780 as tested) was called "prohibitively expensive" amid shortages &mdash; and it loses to Apple's Mac Studio for everyday local LLM use.</p>
                         </div>
-                        <h3><a href="https://hothardware.com/reviews/dell-pro-max-with-gb10-review" target="_blank" rel="noopener">HotHardware reviews Dell Pro Max GB10</a></h3>
-                        <p>Better cooling than DGX Spark, but the $3,999 MSRP ($5,780 as tested) was called "prohibitively expensive" amid shortages &mdash; and it loses to Apple's Mac Studio for everyday local LLM use.</p>
-                        <p class="cite">hothardware.com</p>
-                    </div>
 
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">Oct 2025</span>
-                            <span class="tag-co">MSI</span>
+                        <div class="t-item">
+                            <div class="t-date">Oct 2025</div>
+                            <div class="t-head">
+                                <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=msi.com" alt="">
+                                <h3><a href="https://www.msi.com/blog/the-5-surprising-secrets-of-this-ai-supercomputer-why-msi-edgexpert-outperforms-reference-design" target="_blank" rel="noopener">MSI EdgeXpert benchmarks beat NVIDIA's own reference design</a></h3>
+                                <span class="tag-co">MSI</span>
+                            </div>
+                            <p>1,729 tok/s vs. ~1,600 tok/s on GPT-OSS-120B &mdash; a ~10% out-of-the-box edge. Proof that OEM cooling/tuning choices on the same chip create real performance gaps, not just chassis differences.</p>
                         </div>
-                        <h3><a href="https://www.msi.com/blog/the-5-surprising-secrets-of-this-ai-supercomputer-why-msi-edgexpert-outperforms-reference-design" target="_blank" rel="noopener">MSI EdgeXpert benchmarks beat NVIDIA's own reference design</a></h3>
-                        <p>1,729 tok/s vs. ~1,600 tok/s on GPT-OSS-120B &mdash; a ~10% out-of-the-box edge. Proof that OEM cooling/tuning choices on the same chip create real performance gaps, not just chassis differences.</p>
-                        <p class="cite">msi.com</p>
-                    </div>
 
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">Oct 15, 2025</span>
-                            <span class="tag-co">ASUS</span>
+                        <div class="t-item">
+                            <div class="t-date">Oct 15, 2025</div>
+                            <div class="t-head">
+                                <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=asus.com" alt="">
+                                <h3><a href="https://press.asus.com/news/press-releases/asus-ascent-gx10-ai-supercomputer/" target="_blank" rel="noopener">ASUS Ascent GX10 goes on sale</a></h3>
+                                <span class="tag-co">ASUS</span>
+                            </div>
+                            <p>Framed by press coverage as NVIDIA's "entry into the desktop CPU market" via a third-party OEM &mdash; one of the earliest GB10 boxes to actually ship.</p>
                         </div>
-                        <h3><a href="https://press.asus.com/news/press-releases/asus-ascent-gx10-ai-supercomputer/" target="_blank" rel="noopener">ASUS Ascent GX10 goes on sale</a></h3>
-                        <p>Framed by press coverage as NVIDIA's "entry into the desktop CPU market" via a third-party OEM &mdash; one of the earliest GB10 boxes to actually ship.</p>
-                        <p class="cite">press.asus.com</p>
-                    </div>
 
-                    <div class="fitem">
-                        <div class="fitem-head">
-                            <span class="frank">2025</span>
-                            <span class="tag-co">Lenovo</span>
+                        <div class="t-item">
+                            <div class="t-date">2025</div>
+                            <div class="t-head">
+                                <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=tomshardware.com" alt="">
+                                <h3><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/lenovo-unveils-compact-ai-workstation-equipped-with-nvidia-gb10-and-128-gb-of-system-memory" target="_blank" rel="noopener">Lenovo announces ThinkStation PGX</a></h3>
+                                <span class="tag-co">Lenovo</span>
+                            </div>
+                            <p>Another GB10 entrant, joining Dell, ASUS, MSI, and Supermicro as OEM partners &mdash; underscoring that this is fast becoming a commodity reference-design market, not an HP exclusive.</p>
                         </div>
-                        <h3><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/lenovo-unveils-compact-ai-workstation-equipped-with-nvidia-gb10-and-128-gb-of-system-memory" target="_blank" rel="noopener">Lenovo announces ThinkStation PGX</a></h3>
-                        <p>Another GB10 entrant, joining Dell, ASUS, MSI, and Supermicro as OEM partners &mdash; underscoring that this is fast becoming a commodity reference-design market, not an HP exclusive.</p>
-                        <p class="cite">tomshardware.com</p>
                     </div>
 
                     <div class="sources">
                         <h4>Sources</h4>
                         <ol>
-                            <li><a href="https://www.nvidia.com/en-gb/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/" target="_blank" rel="noopener">NVIDIA &mdash; Computex 2026 RTX/Spark announcements</a></li>
-                            <li><a href="https://hothardware.com/reviews/dell-pro-max-with-gb10-review" target="_blank" rel="noopener">HotHardware &mdash; Dell Pro Max GB10 Review</a></li>
-                            <li><a href="https://www.msi.com/blog/the-5-surprising-secrets-of-this-ai-supercomputer-why-msi-edgexpert-outperforms-reference-design" target="_blank" rel="noopener">MSI &mdash; EdgeXpert benchmark blog post</a></li>
-                            <li><a href="https://press.asus.com/news/press-releases/asus-ascent-gx10-ai-supercomputer/" target="_blank" rel="noopener">ASUS Pressroom &mdash; Ascent GX10 availability</a></li>
-                            <li><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/lenovo-unveils-compact-ai-workstation-equipped-with-nvidia-gb10-and-128-gb-of-system-memory" target="_blank" rel="noopener">Tom's Hardware &mdash; Lenovo ThinkStation PGX</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=nvidia.com" alt=""><a href="https://www.nvidia.com/en-gb/geforce/news/computex-2026-nvidia-geforce-rtx-announcements/" target="_blank" rel="noopener">NVIDIA &mdash; Computex 2026 RTX/Spark announcements</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hothardware.com" alt=""><a href="https://hothardware.com/reviews/dell-pro-max-with-gb10-review" target="_blank" rel="noopener">HotHardware &mdash; Dell Pro Max GB10 Review</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=msi.com" alt=""><a href="https://www.msi.com/blog/the-5-surprising-secrets-of-this-ai-supercomputer-why-msi-edgexpert-outperforms-reference-design" target="_blank" rel="noopener">MSI &mdash; EdgeXpert benchmark blog post</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=asus.com" alt=""><a href="https://press.asus.com/news/press-releases/asus-ascent-gx10-ai-supercomputer/" target="_blank" rel="noopener">ASUS Pressroom &mdash; Ascent GX10 availability</a></li>
+                            <li><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=tomshardware.com" alt=""><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/lenovo-unveils-compact-ai-workstation-equipped-with-nvidia-gb10-and-128-gb-of-system-memory" target="_blank" rel="noopener">Tom's Hardware &mdash; Lenovo ThinkStation PGX</a></li>
                         </ol>
                     </div>
                 </div>
