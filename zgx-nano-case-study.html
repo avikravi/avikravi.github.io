@@ -55,7 +55,7 @@
         }
 
         header.page-header {
-            padding: 44px 0 32px;
+            padding: 44px 0 0;
         }
 
         .eyebrow {
@@ -88,99 +88,70 @@
             color: var(--ink-faint);
         }
 
-        .index-label {
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
             margin-top: 32px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-        }
-
-        .box-index {
-            margin-top: 10px;
-        }
-
-        .box-index-item {
-            display: flex;
-            gap: 16px;
-            padding: 14px 0;
-            border-top: 1px solid var(--line);
-            max-width: 760px;
-        }
-
-        .box-index-item .num {
-            flex-shrink: 0;
-            width: 20px;
-            padding-top: 1px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ink-faint);
-        }
-
-        .box-index-item p {
-            font-size: 14px;
-            color: var(--ink-soft);
-            line-height: 1.6;
-        }
-
-        .box-index-item .name {
-            color: #000;
-            font-weight: 700;
-        }
-
-        /* Dashboard grid */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-areas:
-                "feedback positive"
-                "research usecases"
-                "research competitor";
-            gap: 20px;
-            padding-bottom: 64px;
-        }
-
-        .box {
-            border: 1.5px solid #d6d6d6;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: #fff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.05);
-        }
-
-        .box-feedback { grid-area: feedback; }
-        .box-positive { grid-area: positive; }
-        .box-research { grid-area: research; }
-        .box-usecases { grid-area: usecases; }
-        .box-competitor { grid-area: competitor; }
-
-        .box-head {
-            padding: 16px 20px;
             border-bottom: 1.5px solid #d6d6d6;
-            background: #fafafa;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .box-head .box-title {
-            font-size: 15px;
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--ink-faint);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1.5px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tab-btn:hover { color: var(--ink); }
+
+        .tab-btn.active {
+            color: #000;
+            border-bottom-color: #000;
+        }
+
+        .tab-panels {
+            padding: 32px 0 64px;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .panel-title {
+            font-size: 22px;
             font-weight: 700;
             color: #000;
+            margin-bottom: 8px;
         }
 
-        .box-body {
-            padding: 18px 20px 20px;
-            flex: 1;
+        .panel-desc {
+            font-size: 14.5px;
+            color: var(--ink-faint);
+            max-width: 720px;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line);
         }
 
-        /* Empty state boxes */
-        .box.empty { min-height: 220px; }
-        .box.empty .box-body {
+        .panel-body { max-width: 780px; }
+
+        .panel-empty {
+            padding: 48px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
         }
 
         .empty-tag {
@@ -192,44 +163,6 @@
             border: 1px dashed var(--line);
             border-radius: 3px;
             padding: 6px 12px;
-        }
-
-        /* Scrollable box body — condensed content, with a visible scroll affordance */
-        .box-body.scrollable {
-            max-height: 560px;
-            overflow-y: auto;
-            padding: 0 20px 16px;
-            scrollbar-width: thin;
-            scrollbar-color: #c6c6c6 transparent;
-        }
-
-        .box-body.scrollable::-webkit-scrollbar {
-            width: 7px;
-        }
-
-        .box-body.scrollable::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .box-body.scrollable::-webkit-scrollbar-thumb {
-            background: #c6c6c6;
-            border-radius: 4px;
-        }
-
-        .box-body.scrollable::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-
-        /* Sticky fade at the bottom, hints there's more to scroll */
-        .scroll-fade {
-            position: sticky;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            margin-top: -30px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.92) 75%);
-            pointer-events: none;
         }
 
         .fitem {
@@ -267,7 +200,7 @@
         .priority.mentioned { color: var(--mentioned); }
 
         .fitem h3 {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: #000;
             margin: 2px 0 5px;
@@ -302,14 +235,14 @@
         }
 
         .fitem p {
-            font-size: 13px;
+            font-size: 13.5px;
             color: var(--ink-soft);
             margin-bottom: 5px;
-            line-height: 1.55;
+            line-height: 1.6;
         }
 
         .fitem .cite {
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--ink-faint);
         }
 
@@ -317,23 +250,19 @@
         .fitem .cite a:hover { text-decoration: underline; }
 
         .balance-note {
-            font-size: 12.5px;
+            font-size: 13px;
             color: var(--ink-faint);
             padding: 12px 14px;
             border-left: 2px solid var(--line);
-            margin: 14px 0 4px;
-            line-height: 1.55;
-        }
-
-        .balance-note.context-note {
-            margin: 14px 0 4px;
+            margin: 16px 0 4px;
+            line-height: 1.6;
         }
 
         .balance-note em { color: var(--ink-soft); font-style: italic; }
 
         .sources {
-            margin-top: 16px;
-            padding-top: 14px;
+            margin-top: 20px;
+            padding-top: 16px;
             border-top: 1px solid var(--line);
         }
 
@@ -350,7 +279,7 @@
 
         .sources li {
             counter-increment: src;
-            font-size: 12px;
+            font-size: 12.5px;
             color: var(--ink-faint);
             margin-bottom: 6px;
             padding-left: 18px;
@@ -374,22 +303,11 @@
             color: var(--ink-faint);
         }
 
-        @media (max-width: 900px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-                grid-template-areas:
-                    "feedback"
-                    "positive"
-                    "research"
-                    "usecases"
-                    "competitor";
-            }
-            .box-body.scrollable { max-height: 480px; }
-        }
-
         @media (max-width: 600px) {
             h1 { font-size: 28px; }
-            header.page-header { padding: 32px 0 24px; }
+            header.page-header { padding: 32px 0 0; }
+            .tab-btn { padding: 10px 12px; font-size: 12px; }
+            .panel-title { font-size: 19px; }
         }
     </style>
 </head>
@@ -405,36 +323,21 @@
             <p class="dek">An objective, unfiltered look at the ZGX Nano &mdash; built to understand not just the product itself, but the sentiment around it: what tech nerds and casual users across the internet are actually saying, what the buzz is, and where the real opportunity and friction points are.</p>
             <p class="meta-line">Compiled by Avinash Ravishankar &middot; live draft, updated continuously</p>
 
-            <div class="index-label">What's in this dashboard</div>
-            <div class="box-index">
-                <div class="box-index-item">
-                    <span class="num">01</span>
-                    <p><span class="name">Feedback Scraper</span> &mdash; a scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer.</p>
-                </div>
-                <div class="box-index-item">
-                    <span class="num">02</span>
-                    <p><span class="name">Positive Review Scraper</span> &mdash; the same approach run in reverse. It surfaces what reviewers and early users are consistently praising, ranked by how many independent sources agree, to separate real earned trust from marketing claims.</p>
-                </div>
-                <div class="box-index-item">
-                    <span class="num">03</span>
-                    <p><span class="name">Personal Research &amp; Interviews</span> &mdash; where firsthand research lives: ideas to test with real customers, plus actual interviews and reviews as they happen, ordered most recent first.</p>
-                </div>
-                <div class="box-index-item">
-                    <span class="num">04</span>
-                    <p><span class="name">Potential Use Cases</span> &mdash; candidate audiences and scenarios this product could realistically serve, built from the evidence gathered above rather than assumed from HP's own marketing.</p>
-                </div>
-                <div class="box-index-item">
-                    <span class="num">05</span>
-                    <p><span class="name">Competitor Tracker</span> &mdash; a running scrape of recent news on competing products built on the same underlying chip, tracking how the competitive landscape is moving, newest first.</p>
-                </div>
-            </div>
+            <nav class="tabs">
+                <button class="tab-btn active" data-panel="panel-feedback">1. Feedback Scraper</button>
+                <button class="tab-btn" data-panel="panel-positive">2. Positive Review Scraper</button>
+                <button class="tab-btn" data-panel="panel-research">3. Personal Research &amp; Interviews</button>
+                <button class="tab-btn" data-panel="panel-usecases">4. Potential Use Cases</button>
+                <button class="tab-btn" data-panel="panel-competitor">5. Competitor Tracker</button>
+            </nav>
         </header>
 
-        <div class="dashboard">
-            <div class="box box-feedback">
-                <div class="box-head">
-                    <div class="box-title">1. Feedback Scraper</div>                </div>
-                <div class="box-body scrollable">
+        <div class="tab-panels">
+
+            <section class="tab-panel active" id="panel-feedback">
+                <h2 class="panel-title">1. Feedback Scraper</h2>
+                <p class="panel-desc">A scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer.</p>
+                <div class="panel-body">
                     <div class="fitem">
                         <div class="fitem-head">
                             <span class="frank">01</span>
@@ -509,16 +412,13 @@
                             <li><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page (baseline specs)</a></li>
                         </ol>
                     </div>
-                    <div class="scroll-fade"></div>
                 </div>
-            </div>
+            </section>
 
-            <div class="box box-positive">
-                <div class="box-head">
-                    <div class="box-title">2. Positive Review Scraper</div>                </div>
-                <div class="box-body scrollable">
-                    <p class="balance-note context-note">The other side of Box 1 &mdash; what people say is working well, independent of HP's own marketing claims.</p>
-
+            <section class="tab-panel" id="panel-positive">
+                <h2 class="panel-title">2. Positive Review Scraper</h2>
+                <p class="panel-desc">The same approach run in reverse. It surfaces what reviewers and early users are consistently praising, ranked by how many independent sources agree, to separate real earned trust from marketing claims.</p>
+                <div class="panel-body">
                     <div class="fitem">
                         <div class="fitem-head">
                             <span class="frank">01</span>
@@ -589,16 +489,13 @@
                             <li><a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">HP.com &mdash; official product page</a></li>
                         </ol>
                     </div>
-                    <div class="scroll-fade"></div>
                 </div>
-            </div>
+            </section>
 
-            <div class="box box-research">
-                <div class="box-head">
-                    <div class="box-title">3. Personal Research &amp; Interviews</div>                </div>
-                <div class="box-body scrollable">
-                    <p class="balance-note context-note">Two kinds of entries here: ideas from personal observation, written up as questions to ask customers &mdash; and actual interviews/reviews with real people, once they happen. Idea status moves from "To Validate" to "Validated" (or gets dropped) as real interview data comes in.</p>
-
+            <section class="tab-panel" id="panel-research">
+                <h2 class="panel-title">3. Personal Research &amp; Interviews</h2>
+                <p class="panel-desc">Where firsthand research lives: ideas to test with real customers, plus actual interviews and reviews as they happen, ordered most recent first.</p>
+                <div class="panel-body">
                     <div class="subhead">Ideas to Test</div>
 
                     <div class="fitem">
@@ -636,24 +533,24 @@
                         <p>A YouTube channel focused on home tech setups reviewed the ZGX Nano very favorably, drawn to the "tiny titan" contrast: same footprint as a Mac Mini, but with server-class AI performance, powered entirely over USB-C. A specs-literate, size-conscious audience that isn't who HP's own marketing seems to target &mdash; worth probing in future interviews whether this reaction is common.</p>
                         <p class="cite">"Tiny Home Tech" (YouTube, Nov 2025)</p>
                     </div>
-
-                    <div class="scroll-fade"></div>
                 </div>
-            </div>
+            </section>
 
-            <div class="box box-usecases empty">
-                <div class="box-head">
-                    <div class="box-title">4. Potential Use Cases</div>                </div>
-                <div class="box-body">
-                    <span class="empty-tag">Not started</span>
+            <section class="tab-panel" id="panel-usecases">
+                <h2 class="panel-title">4. Potential Use Cases</h2>
+                <p class="panel-desc">Candidate audiences and scenarios this product could realistically serve, built from the evidence gathered above rather than assumed from HP's own marketing.</p>
+                <div class="panel-body">
+                    <div class="panel-empty">
+                        <span class="empty-tag">Not started</span>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="box box-competitor">
-                <div class="box-head">
-                    <div class="box-title">5. Competitor Tracker</div>                </div>
-                <div class="box-body scrollable">
-                    <p class="balance-note context-note">Worth noting: most of these aren't fully separate competitors &mdash; HP, ASUS, Dell, Lenovo, MSI, and Supermicro are all building on the <em>same</em> NVIDIA GB10 reference chip, just in different chassis. That suggests differentiation may come down to chassis quality, support, and price as much as raw specs.</p>
+            <section class="tab-panel" id="panel-competitor">
+                <h2 class="panel-title">5. Competitor Tracker</h2>
+                <p class="panel-desc">A running scrape of recent news on competing products built on the same underlying chip, tracking how the competitive landscape is moving, newest first.</p>
+                <div class="panel-body">
+                    <p class="balance-note">Worth noting: most of these aren't fully separate competitors &mdash; HP, ASUS, Dell, Lenovo, MSI, and Supermicro are all building on the <em>same</em> NVIDIA GB10 reference chip, just in different chassis. That suggests differentiation may come down to chassis quality, support, and price as much as raw specs.</p>
 
                     <div class="fitem">
                         <div class="fitem-head">
@@ -715,14 +612,25 @@
                             <li><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/lenovo-unveils-compact-ai-workstation-equipped-with-nvidia-gb10-and-128-gb-of-system-memory" target="_blank" rel="noopener">Tom's Hardware &mdash; Lenovo ThinkStation PGX</a></li>
                         </ol>
                     </div>
-                    <div class="scroll-fade"></div>
                 </div>
-            </div>
+            </section>
+
         </div>
 
         <footer>
             Working draft, not for external distribution yet.
         </footer>
     </div>
+
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+                document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.panel).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
