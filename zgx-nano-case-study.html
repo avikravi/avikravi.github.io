@@ -80,17 +80,15 @@
         /* Tabs */
         .tabs {
             display: flex;
-            gap: 4px;
             margin-top: 32px;
-            border-bottom: 1.5px solid #d6d6d6;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            border-bottom: 1.5px solid #e5e5e5;
         }
 
         .tab-btn {
-            flex-shrink: 0;
-            padding: 12px 16px;
-            font-size: 13px;
+            flex: 1 1 0;
+            min-width: 0;
+            padding: 13px 6px;
+            font-size: 12.5px;
             font-weight: 600;
             font-family: inherit;
             color: var(--ink-faint);
@@ -100,10 +98,14 @@
             margin-bottom: -1.5px;
             cursor: pointer;
             white-space: nowrap;
-            transition: color 0.15s, border-color 0.15s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            letter-spacing: 0.01em;
+            transition: color 0.15s, border-color 0.15s, background-color 0.15s;
         }
 
-        .tab-btn:hover { color: var(--ink); }
+        .tab-btn:hover { color: var(--ink); background-color: #fafafa; }
 
         .tab-btn.active {
             color: #000;
@@ -458,7 +460,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 28px; }
             header.page-header { padding: 32px 0 0; }
-            .tab-btn { padding: 10px 12px; font-size: 12px; }
+            .tab-btn { padding: 11px 4px; font-size: 10.5px; }
             .panel-title { font-size: 19px; }
         }
     </style>
@@ -472,11 +474,11 @@
             <p class="meta-line">Compiled by Avinash Ravishankar &middot; live draft, updated continuously</p>
 
             <nav class="tabs">
-                <button class="tab-btn active" data-panel="panel-feedback">1. Feedback Scraper</button>
-                <button class="tab-btn" data-panel="panel-positive">2. Positive Review Scraper</button>
-                <button class="tab-btn" data-panel="panel-research">3. Personal Research &amp; Interviews</button>
-                <button class="tab-btn" data-panel="panel-usecases">4. Potential Use Cases</button>
-                <button class="tab-btn" data-panel="panel-competitor">5. Competitor Tracker</button>
+                <button class="tab-btn active" data-panel="panel-feedback">Feedback</button>
+                <button class="tab-btn" data-panel="panel-positive">Positive Reviews</button>
+                <button class="tab-btn" data-panel="panel-research">Research &amp; Interviews</button>
+                <button class="tab-btn" data-panel="panel-usecases">Use Cases</button>
+                <button class="tab-btn" data-panel="panel-competitor">Competitor Tracker</button>
             </nav>
         </header>
 
@@ -484,18 +486,18 @@
 
             <section class="tab-panel active" id="panel-feedback">
                 <h2 class="panel-title">1. Feedback Scraper</h2>
-                <p class="panel-desc">A scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer.</p>
+                <p class="panel-desc">A scraper built to surface the critical areas people are complaining about. It pulls from public reviews, developer forums, and technical discussion across the internet, then ranks each issue by how much it would actually matter to a buyer. Top 10, ranked by severity.</p>
                 <div class="panel-body">
                     <div class="bar-summary">
                         <div class="bar-track">
-                            <div class="bar-seg" data-tone="high" style="width: 50%;"><span class="tip">3 High</span></div>
-                            <div class="bar-seg" data-tone="med" style="width: 33.3%;"><span class="tip">2 Medium</span></div>
-                            <div class="bar-seg" data-tone="low" style="width: 16.7%;"><span class="tip">1 Low</span></div>
+                            <div class="bar-seg" data-tone="high" style="width: 40%;"><span class="tip">4 High</span></div>
+                            <div class="bar-seg" data-tone="med" style="width: 40%;"><span class="tip">4 Medium</span></div>
+                            <div class="bar-seg" data-tone="low" style="width: 20%;"><span class="tip">2 Low</span></div>
                         </div>
                         <div class="bar-legend">
-                            <div class="bar-legend-item"><span class="swatch" data-tone="high"></span><span class="count">3</span>&nbsp;High</div>
-                            <div class="bar-legend-item"><span class="swatch" data-tone="med"></span><span class="count">2</span>&nbsp;Medium</div>
-                            <div class="bar-legend-item"><span class="swatch" data-tone="low"></span><span class="count">1</span>&nbsp;Low</div>
+                            <div class="bar-legend-item"><span class="swatch" data-tone="high"></span><span class="count">4</span>&nbsp;High</div>
+                            <div class="bar-legend-item"><span class="swatch" data-tone="med"></span><span class="count">4</span>&nbsp;Medium</div>
+                            <div class="bar-legend-item"><span class="swatch" data-tone="low"></span><span class="count">2</span>&nbsp;Low</div>
                         </div>
                     </div>
 
@@ -532,6 +534,16 @@
                     <div class="fitem">
                         <div class="fitem-head">
                             <span class="frank">04</span>
+                            <span class="priority high">High</span>
+                        </div>
+                        <h3>Long load times and a hard context-length cliff</h3>
+                        <p>The benchmark numbers everywhere else assume you stay well inside a ceiling that's easy to hit in real use: loading a large model can take minutes, and throughput falls off a cliff once conversation context fills up.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "It took up to three minutes for the system to be ready when starting the GPT-OSS:120B model," and performance "collapsed drastically... falling below the usable threshold of 5 tokens per second" as context filled — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">05</span>
                             <span class="priority med">Medium</span>
                         </div>
                         <h3>Zero upgradability, and storage lock-in is expensive</h3>
@@ -541,22 +553,52 @@
 
                     <div class="fitem">
                         <div class="fitem-head">
-                            <span class="frank">05</span>
+                            <span class="frank">06</span>
                             <span class="priority med">Medium</span>
                         </div>
                         <h3>Idle power draw undercuts the efficiency pitch</h3>
-                        <p>30&ndash;50W at idle is high for a device positioned as an always-on, sustainability-minded desk appliance.</p>
+                        <p>30&ndash;50W at idle is high for a device positioned as an always-on, sustainability-minded desk appliance. (StorageReview reads a similar number more favorably &mdash; see Box 2, item 10.)</p>
                         <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
                     </div>
 
                     <div class="fitem">
                         <div class="fitem-head">
-                            <span class="frank">06</span>
+                            <span class="frank">07</span>
+                            <span class="priority med">Medium</span>
+                        </div>
+                        <h3>It's Linux-only, and that will rule out some buyers outright</h3>
+                        <p>The ZGX Nano runs NVIDIA's DGX OS, a Linux distribution &mdash; there's no Windows option. Two independent reviews flagged this as a real limitation for buyers coming from a standard corporate IT stack.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "no Windows support (pure Linux system)" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a> &middot; <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "This product does not support Microsoft Windows." — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">08</span>
+                            <span class="priority med">Medium</span>
+                        </div>
+                        <h3>The ready-made AI templates aren't all ready</h3>
+                        <p>Beyond the outdated setup docs (item 01), the pre-built "AI Blueprints" meant to jumpstart projects have their own reliability problems &mdash; some wouldn't even install.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "not all templates worked right away; some instructions were outdated and simply unusable... 'Multi-modal Inference' could not be installed at all in our test." — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">09</span>
                             <span class="priority low">Low</span>
                         </div>
                         <h3>Networking tops out below its own spec</h3>
                         <p>The dual 200Gbps QSFP ports can't be fully fed &mdash; GB10 only exposes a PCIe 5.0 x4 root port per NIC. Only matters for multi-node clustering.</p>
                         <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt="">ServeTheHome: <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">10</span>
+                            <span class="priority low">Low</span>
+                        </div>
+                        <h3>Bring the right charger, or risk instability</h3>
+                        <p>Power comes via a specific 240W USB-C adapter, and HP warns that swapping it for a third-party one is a real risk &mdash; a minor but real accessory lock-in for a device pitched as USB-C powered.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "HP delivers power via a standard NVIDIA-recommended 240W USB-C adapter and warns that third-party adapters may cause degraded performance or instability." — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
                     </div>
 
                     <p class="balance-note">For balance: consistently praised for quiet, cool operation (22 dBA idle, 27.6 dBA under load) and strong security posture (TPM 2.0 in FIPS 140-2 mode, Common Criteria EAL4+).</p>
@@ -578,7 +620,7 @@
 
             <section class="tab-panel" id="panel-positive">
                 <h2 class="panel-title">2. Positive Review Scraper</h2>
-                <p class="panel-desc">The same approach run in reverse. It surfaces what reviewers and early users are consistently praising, ranked by how many independent sources agree, to separate real earned trust from marketing claims.</p>
+                <p class="panel-desc">The same approach run in reverse. It surfaces what reviewers and early users are consistently praising, ranked by how many independent sources agree, to separate real earned trust from marketing claims. Top 10, ranked by strength of independent corroboration.</p>
                 <div class="panel-body">
                     <p class="balance-note">Sourcing rule for this box: HP's own channels (hp.com, HP press materials) are usable for objective specs only, never as evidence of a quality or performance claim &mdash; a vendor saying its own product is fast or well-received isn't independent praise. Sources include independent hands-on tech press and verified end-user/owner reviews. Verified against the outlets below: Notebookcheck discloses that HP loaned them the test unit (with an editorial-independence statement) and runs Amazon/HP affiliate links &mdash; flagged per item below since a direct loan from the vendor is the closer relationship. ServeTheHome and StorageReview carry standard Amazon-Associates-style affiliate links, boilerplate common to nearly the entire review industry &mdash; noted here rather than re-flagged on every item. Global Nerdy carries no sponsorship or affiliate disclosure found.</p>
 
@@ -617,6 +659,17 @@
                     <div class="fitem">
                         <div class="fitem-head">
                             <span class="frank">04</span>
+                            <span class="priority strong">Strong Praise</span>
+                            <span class="tag-co">Vendor-Loaned Unit</span>
+                        </div>
+                        <h3>When it's inside its comfort zone, it's genuinely fast</h3>
+                        <p>Within normal context limits, prompt processing measured 40&ndash;55 tokens per second &mdash; genuinely fast for a desk-side box. The caveat: that speed depends on staying inside the context ceiling flagged in Box 1, item 04.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "prompt processing is impressively fast" at 40&ndash;55 tokens/second — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">05</span>
                             <span class="priority notable">Notable</span>
                         </div>
                         <h3>Security posture rare at this size and price</h3>
@@ -626,12 +679,52 @@
 
                     <div class="fitem">
                         <div class="fitem-head">
-                            <span class="frank">05</span>
+                            <span class="frank">06</span>
                             <span class="priority notable">Notable</span>
                         </div>
                         <h3>It genuinely fits in your hand, and feels considered</h3>
                         <p>150 &times; 150 &times; 51mm, built from up to 75% recycled aluminum, with a visible power LED through the mesh front &mdash; a small detail reviewers called out since most GB10 boxes give no clear at-a-glance power indication.</p>
                         <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=servethehome.com" alt="">ServeTheHome: "you can see an LED inside that clearly shows the unit is on" — <a href="https://www.servethehome.com/hp-zgx-nano-g1n-review-the-hp-take-on-the-nvidia-gb10/" target="_blank" rel="noopener">servethehome.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">07</span>
+                            <span class="priority notable">Notable</span>
+                        </div>
+                        <h3>The sustainability pitch checks out under independent testing</h3>
+                        <p>Two independent reviews corroborate specific recycled-content numbers rather than repeating a vague marketing line &mdash; chassis aluminum, steel content, and packaging were each cited independently.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=notebookcheck.net" alt="">Notebookcheck: "up to 40% recycled plastic, up to 75% recycled aluminum, and at least 20% recycled steel" — <a href="https://www.notebookcheck.net/HP-ZGX-Nano-G1n-AI-Station-review-Compact-server-power-with-Nvidia-DGX-Spark.1229276.0.html" target="_blank" rel="noopener">notebookcheck.net</a> &middot; <img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "chassis built from up to 75% recycled aluminum and 20% recycled steel, with packaging that carries up to 93% recycled content" — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">08</span>
+                            <span class="priority notable">Notable</span>
+                        </div>
+                        <h3>GPU Direct Storage throughput is a quiet strength</h3>
+                        <p>Independent benchmarking found a storage pipeline that's genuinely fast, not just the memory and compute &mdash; the kind of detail that matters for large-model workflows but rarely shows up on a spec sheet.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "GPU Direct Storage read throughput reached 4.6 GiB/s at 16K and 5.5 GiB/s at 1M block sizes." — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">09</span>
+                            <span class="priority notable">Notable</span>
+                        </div>
+                        <h3>Performance holds up as workloads scale, not just in the demo case</h3>
+                        <p>Benchmarking across six different models found the strongest results weren't a one-off best-case number &mdash; scaling stayed clean through higher batch sizes, which is what actually matters for real workloads.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "vLLM performance was strongest in Prefill Heavy workloads across all six models we tested, with scaling that held cleanly through higher batch sizes." — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
+                    </div>
+
+                    <div class="fitem">
+                        <div class="fitem-head">
+                            <span class="frank">10</span>
+                            <span class="priority mentioned">Mentioned</span>
+                        </div>
+                        <h3>One outlet calls the same idle draw "efficient"</h3>
+                        <p>Box 1, item 06 flags 30&ndash;50W idle draw as high for an always-on device. StorageReview measured a similar range and read it the opposite way. Same rough number, different verdict &mdash; logging both rather than picking a side.</p>
+                        <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=storagereview.com" alt="">StorageReview: "idle power draw remains low at approximately 36&ndash;38W, which indicates efficient power scaling" — <a href="https://www.storagereview.com/review/hp-zgx-nano-g1n-ai-station-review-a-secure-sustainable-desk-side-ai-node" target="_blank" rel="noopener">storagereview.com</a></p>
                     </div>
 
                     <div class="sources">
