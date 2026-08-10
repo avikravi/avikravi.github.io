@@ -32,12 +32,14 @@ zgx-nano-case-study.html Working case study on the HP ZGX Nano AI Station (feedb
                          nav) — direct-URL-only. Uses its own light-editorial design system, deliberately
                          independent of the neon dark tokens below.
 nano.png / nano-header.png  Source and resized product photos used in the case study header.
-hp-pmm-worksheet.html    Personal job-fit worksheet itemizing every skill/requirement/responsibility
+hp-pmm-worksheet.html    Static reference table itemizing every skill/requirement/responsibility
                          from a specific HP job posting (Principal Technical Product Marketing
-                         Manager, AI Solutions), each with a fill-in textarea for Avi's own
-                         experience. Answers persist client-side only, via localStorage keyed
-                         `hp-pmm-worksheet:<item-key>` — nothing is sent anywhere. Unlisted, own
-                         design system (light, single blue accent), not linked from nav.
+                         Manager, AI Solutions) as one row each. No JS, no localStorage, no
+                         edit UI — the right-hand "How I Qualify" column is plain HTML that
+                         Claude Code updates directly as Avi describes his experience in chat
+                         and it's mapped to the matching row(s). Unlisted, styled in HP's
+                         actual brand blue (#0096D6) rather than the neon dark tokens below,
+                         not linked from nav.
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```

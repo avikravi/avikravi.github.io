@@ -95,7 +95,7 @@ Not linked from the nav bar, direct-URL-only, each with its own independent desi
 | File | What it is |
 |---|---|
 | `zgx-nano-case-study.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, a 10-industry potential-use-case review, and a competitor tracker. |
-| `hp-pmm-worksheet.html` | Job-fit worksheet for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — every skill/requirement/responsibility itemized with a fill-in box for Avi's own experience. Saves to the browser's `localStorage` only; nothing leaves the page. Use "Export as text" to get a portable copy. |
+| `hp-pmm-worksheet.html` | Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. No JS, no local storage, no edit form. |
 
 ## Working with Claude Code
 

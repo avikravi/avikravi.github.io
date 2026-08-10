@@ -3,56 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Fit Worksheet — HP Principal TPMM, AI Solutions | Avi Ravishankar</title>
-    <meta name="description" content="Item-by-item worksheet against the HP Principal Technical Product Marketing Manager, AI Solutions job posting.">
+    <title>Job Fit Table — HP Principal TPMM, AI Solutions | Avi Ravishankar</title>
+    <meta name="description" content="Requirement-by-requirement fit table against the HP Principal Technical Product Marketing Manager, AI Solutions job posting.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #ffffff;
-            --surface: #f7f8fa;
+            --hp-blue: #0096D6;
+            --hp-blue-dark: #006FA6;
+            --hp-blue-tint: #EAF7FD;
             --ink: #16181d;
             --ink-soft: #40454d;
             --ink-faint: #80868f;
             --line: #e4e6ea;
-            --accent: #0096D6;
-            --accent-dark: #006FA6;
-            --accent-soft: #EAF7FD;
-            --done: #1e7145;
-            --done-soft: #eaf5ef;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
+            background: #ffffff;
             color: var(--ink-soft);
-            line-height: 1.6;
+            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
 
+        .brandbar { height: 6px; background: var(--hp-blue); }
+
         .wrap {
-            max-width: 880px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 24px 80px;
         }
 
         header {
-            padding: 44px 0 28px;
+            padding: 36px 0 24px;
             border-bottom: 1px solid var(--line);
         }
 
         .eyebrow {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: var(--ink-faint);
+            color: var(--hp-blue-dark);
             margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 30px;
+            font-size: 27px;
             font-weight: 700;
             letter-spacing: -0.02em;
             color: #000;
@@ -66,325 +64,25 @@
             margin-bottom: 4px;
         }
 
-        .meta-line a { color: var(--accent); text-decoration: none; }
+        .meta-line a { color: var(--hp-blue-dark); text-decoration: none; }
         .meta-line a:hover { text-decoration: underline; }
 
         .instructions {
             font-size: 13.5px;
             color: var(--ink-soft);
-            max-width: 640px;
-            margin-top: 14px;
+            max-width: 720px;
+            margin-top: 12px;
             line-height: 1.6;
         }
 
-        /* Progress + actions bar */
-        .toolbar {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background: rgba(255,255,255,0.94);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--line);
-            padding: 14px 0;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .progress-block { display: flex; align-items: center; gap: 10px; }
-
-        .progress-track {
-            width: 160px;
-            height: 7px;
-            background: var(--line);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--done);
-            width: 0%;
-            transition: width 0.2s ease;
-        }
-
-        .progress-label {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--ink-soft);
-            white-space: nowrap;
-        }
-
-        .toolbar-actions { display: flex; gap: 8px; }
-
-        .btn {
-            font-family: inherit;
-            font-size: 12.5px;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--line);
-            background: #fff;
-            color: var(--ink-soft);
-            cursor: pointer;
-            transition: border-color 0.15s, color 0.15s, background-color 0.15s;
-        }
-
-        .btn:hover { border-color: #c9c9c9; color: var(--ink); }
-
-        .btn.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
-
-        .btn.primary:hover { background: var(--accent-dark); }
-
-        .save-indicator {
-            font-size: 11.5px;
-            color: var(--done);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            margin-left: 4px;
-        }
-
-        .save-indicator.show { opacity: 1; }
-
-        /* Category groups */
-        .category {
-            margin-top: 36px;
-        }
-
-        .category-head {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        .category-count {
-            font-size: 12px;
-            color: var(--ink-faint);
-            margin-bottom: 14px;
-        }
-
-        .item {
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            transition: border-color 0.15s, background-color 0.15s;
-        }
-
-        .item.answered {
-            border-color: var(--done);
-            background: var(--done-soft);
-        }
-
-        .item-head {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .item-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: #000;
-        }
-
-        .item-sub {
-            font-size: 12.5px;
-            color: var(--ink-faint);
-            font-weight: 400;
-            display: block;
-            margin-top: 2px;
-        }
-
-        .item-status {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .item.answered .item-status { color: var(--done); }
-
-        .item-answer {
-            width: 100%;
-            min-height: 56px;
-            resize: vertical;
-            font-family: inherit;
-            font-size: 13.5px;
-            color: var(--ink);
-            background: #fff;
-            border: 1px solid var(--line);
-            border-radius: 7px;
-            padding: 10px 12px;
-            line-height: 1.55;
-        }
-
-        .item.answered .item-answer { background: #fff; }
-
-        .item-answer:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .item-answer::placeholder { color: #b0b5bc; }
-
-        footer {
-            margin-top: 56px;
-            padding-top: 20px;
-            border-top: 1px solid var(--line);
-            font-size: 12.5px;
-            color: var(--ink-faint);
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 24px; }
-            .toolbar { flex-direction: column; align-items: flex-start; }
-            .progress-track { width: 120px; }
-        }
-
-        /* ==========================================================
-           Present Mode — succinct, HP-branded boardroom overlay.
-           One table per section, not one slide per item. Light
-           theme in official HP colors (HP Blue #0096D6 + black on
-           white). Hidden by default.
-           ========================================================== */
-        :root {
-            --hp-blue: #0096D6;
-            --hp-blue-dark: #006FA6;
-            --hp-blue-tint: #EAF7FD;
-        }
-
-        .present-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            background: #ffffff;
-            color: #1a1a1a;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .present-overlay.open { display: flex; flex-direction: column; }
-
-        .present-brandbar {
-            height: 6px;
-            background: var(--hp-blue);
-            flex-shrink: 0;
-        }
-
-        .present-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 40px 0;
-            flex-shrink: 0;
-        }
-
-        .present-rail {
-            display: flex;
-            gap: 22px;
-            flex-wrap: wrap;
-        }
-
-        .present-rail-item {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            color: #9096a0;
-            background: none;
-            border: none;
-            font-family: inherit;
-            cursor: pointer;
-            padding: 4px 0;
-            border-bottom: 2px solid transparent;
-            transition: color 0.15s, border-color 0.15s;
-        }
-
-        .present-rail-item:hover { color: #40454d; }
-        .present-rail-item.current { color: var(--hp-blue-dark); border-bottom-color: var(--hp-blue); }
-
-        .present-exit {
-            font-size: 12px;
-            font-weight: 600;
-            color: #5f6368;
-            background: none;
-            border: 1px solid #d7dae0;
-            border-radius: 6px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-family: inherit;
-            flex-shrink: 0;
-        }
-
-        .present-exit:hover { color: #1a1a1a; border-color: var(--hp-blue); }
-
-        .present-stage {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 28px 48px;
-            overflow: hidden;
-        }
-
-        .present-slide {
-            max-width: 920px;
-            width: 100%;
-            max-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .present-slide .p-eyebrow {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--hp-blue-dark);
-            margin-bottom: 6px;
-            flex-shrink: 0;
-        }
-
-        .present-slide .p-heading {
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            color: #000;
-            margin-bottom: 10px;
-            padding-bottom: 14px;
-            border-bottom: 3px solid var(--hp-blue);
-            flex-shrink: 0;
-        }
-
-        .p-table-wrap {
-            overflow-y: auto;
-            flex: 1;
-            margin-top: 16px;
-        }
-
-        .p-table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
+            margin-top: 28px;
+            font-size: 14px;
         }
 
-        .p-table thead th {
+        thead th {
             position: sticky;
             top: 0;
             background: var(--hp-blue);
@@ -394,498 +92,160 @@
             letter-spacing: 0.06em;
             text-transform: uppercase;
             text-align: left;
-            padding: 10px 18px;
+            padding: 11px 18px;
             z-index: 1;
         }
 
-        .p-table thead th:first-child { width: 34%; }
+        thead th:first-child { width: 30%; }
 
-        .p-table tbody tr:nth-child(even) { background: var(--hp-blue-tint); }
+        tbody tr.item-row:nth-of-type(even) { background: var(--hp-blue-tint); }
 
-        .p-table tbody td {
-            padding: 14px 18px;
-            vertical-align: top;
-            border-bottom: 1px solid #e4e6ea;
+        tbody tr.category-row td {
+            background: #16181d;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 8px 18px;
         }
 
-        .p-table .p-req-label {
-            font-size: 15px;
+        tbody tr.item-row td {
+            padding: 12px 18px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .req-label {
+            font-size: 14px;
             font-weight: 700;
             color: #000;
         }
 
-        .p-table .p-req-sub {
-            font-size: 12px;
-            color: #6b7178;
+        .req-sub {
+            font-size: 11.5px;
+            color: var(--ink-faint);
             font-style: italic;
             margin-top: 3px;
         }
 
-        .p-table .p-req-answer {
-            font-size: 14.5px;
+        .fit-text {
+            font-size: 13.5px;
             line-height: 1.55;
             color: #24272c;
-            white-space: pre-wrap;
         }
 
-        /* Cover slide */
-        .present-cover { text-align: center; align-items: center; }
-        .present-cover .p-kicker {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--hp-blue-dark);
-            margin-bottom: 20px;
-        }
-        .present-cover .p-title {
-            font-size: 38px;
-            font-weight: 700;
-            color: #000;
-            line-height: 1.25;
-            margin-bottom: 18px;
-        }
-        .present-cover .p-rule {
-            width: 64px;
-            height: 4px;
-            background: var(--hp-blue);
-            margin: 0 auto 18px;
-        }
-        .present-cover .p-company {
-            font-size: 16px;
-            color: #5f6368;
-            margin-bottom: 44px;
-        }
-        .present-cover .p-hint {
-            font-size: 13px;
-            color: #9096a0;
+        .fit-text.pending {
+            color: #b0b5bc;
+            font-style: italic;
         }
 
-        /* Empty state */
-        .present-empty {
-            text-align: center;
-            color: #5f6368;
-            font-size: 16px;
-            max-width: 420px;
-        }
-
-        .present-bottombar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            padding: 0 32px 28px;
-            flex-shrink: 0;
-        }
-
-        .present-nav-btn {
-            font-size: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #d7dae0;
-            background: #fff;
-            color: #40454d;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: border-color 0.15s, background-color 0.15s, color 0.15s;
-        }
-
-        .present-nav-btn:hover { border-color: var(--hp-blue); color: var(--hp-blue-dark); background: var(--hp-blue-tint); }
-        .present-nav-btn:disabled { opacity: 0.3; cursor: default; }
-        .present-nav-btn:disabled:hover { border-color: #d7dae0; color: #40454d; background: #fff; }
-
-        .present-counter {
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
             font-size: 12.5px;
-            font-weight: 700;
-            color: #5f6368;
-            min-width: 90px;
-            text-align: center;
+            color: var(--ink-faint);
         }
 
-        @media (max-width: 700px) {
-            .present-slide .p-heading { font-size: 21px; }
-            .present-cover .p-title { font-size: 26px; }
-            .p-table .p-req-label { font-size: 13px; }
-            .p-table .p-req-answer { font-size: 13px; }
-            .present-rail { display: none; }
-            .present-stage { padding: 20px; }
+        @media (max-width: 640px) {
+            h1 { font-size: 21px; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+            tbody tr.item-row {
+                border-bottom: 1px solid var(--line);
+                padding: 12px 0;
+            }
+            tbody tr.item-row td { padding: 4px 0; border-bottom: none; }
+            tbody tr.category-row td { padding: 8px 12px; margin-top: 8px; }
         }
     </style>
 </head>
 <body>
+    <div class="brandbar"></div>
     <div class="wrap">
         <header>
-            <div class="eyebrow">Job Fit Worksheet</div>
+            <div class="eyebrow">Job Fit Table</div>
             <h1>Principal Technical Product Marketing Manager, AI Solutions</h1>
             <p class="meta-line">HP Inc. &middot; Fort Collins, CO / Spring, TX &middot; Full-time &middot; Req #3166789</p>
             <p class="meta-line">Source: <a href="https://hp.wd5.myworkdayjobs.com/ExternalCareerSite/job/Fort-Collins-Colorado-United-States-of-America/Principal-Technical-Product-Marketing-Manager--AI-Solutions_3166789-1" target="_blank" rel="noopener">HP Careers (Workday)</a></p>
-            <p class="instructions">Every skill, requirement, and responsibility from the posting, broken out one at a time. Fill in what you've actually done for each &mdash; a project, a number, a story you'd tell in an interview. Answers save automatically in this browser as you type. When you're ready to walk through it live, hit <strong>Present</strong> for a succinct, HP-branded view &mdash; one section per screen, requirements and your experience side by side in a table (arrow keys or click to navigate, click a section up top to jump); use Export if you want a portable text copy.</p>
+            <p class="instructions">Every requirement from the posting, one row at a time. The right-hand column is filled in over time as Avi's real experience gets mapped to each row.</p>
         </header>
 
-        <div class="toolbar">
-            <div class="progress-block">
-                <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-                <span class="progress-label" id="progressLabel">0 / 0 answered</span>
-                <span class="save-indicator" id="saveIndicator">Saved</span>
-            </div>
-            <div class="toolbar-actions">
-                <button class="btn primary" id="presentBtn">▶ Present</button>
-                <button class="btn" id="exportBtn">Export as text</button>
-                <button class="btn" id="clearBtn">Clear all</button>
-            </div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>How I Qualify</th>
+                </tr>
+            </thead>
+            <tbody>
 
-        <div id="worksheet">
+                <tr class="category-row"><td colspan="2">Core Languages</td></tr>
+                <tr class="item-row"><td><div class="req-label">Python</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">SQL</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">JSON</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">YAML</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Core Languages">
-                <div class="category-head">Core Languages</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="lang-python"><div class="item-head"><div class="item-label">Python</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="What you've built or done with Python..."></textarea></div>
-                <div class="item" data-key="lang-sql"><div class="item-head"><div class="item-label">SQL</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've used SQL..."></textarea></div>
-                <div class="item" data-key="lang-json"><div class="item-head"><div class="item-label">JSON</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've worked with JSON..."></textarea></div>
-                <div class="item" data-key="lang-yaml"><div class="item-head"><div class="item-label">YAML</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've worked with YAML..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Systems &amp; Environments</td></tr>
+                <tr class="item-row"><td><div class="req-label">GPU/CPU concepts</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Windows</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Linux</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Docker</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Git</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Systems &amp; Environments">
-                <div class="category-head">Systems &amp; Environments</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="sys-gpu-cpu"><div class="item-head"><div class="item-label">GPU/CPU concepts</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with GPU/CPU architecture concepts..."></textarea></div>
-                <div class="item" data-key="sys-windows"><div class="item-head"><div class="item-label">Windows</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Windows environment experience..."></textarea></div>
-                <div class="item" data-key="sys-linux"><div class="item-head"><div class="item-label">Linux</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Linux environment experience..."></textarea></div>
-                <div class="item" data-key="sys-docker"><div class="item-head"><div class="item-label">Docker</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've used Docker..."></textarea></div>
-                <div class="item" data-key="sys-git"><div class="item-head"><div class="item-label">Git</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Git / version control workflow experience..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Open-Source Foundation Models</td></tr>
+                <tr class="item-row"><td><div class="req-label">Llama</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Mistral</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">DeepSeek</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Gemma</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Qwen</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Open-Source Foundation Models">
-                <div class="category-head">Open-Source Foundation Models</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="model-llama"><div class="item-head"><div class="item-label">Llama</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Llama models..."></textarea></div>
-                <div class="item" data-key="model-mistral"><div class="item-head"><div class="item-label">Mistral</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Mistral models..."></textarea></div>
-                <div class="item" data-key="model-deepseek"><div class="item-head"><div class="item-label">DeepSeek</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with DeepSeek models..."></textarea></div>
-                <div class="item" data-key="model-gemma"><div class="item-head"><div class="item-label">Gemma</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Gemma models..."></textarea></div>
-                <div class="item" data-key="model-qwen"><div class="item-head"><div class="item-label">Qwen</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Qwen models..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">AI Dev Frameworks &amp; Platforms</td></tr>
+                <tr class="item-row"><td><div class="req-label">LangChain</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">LangGraph</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Semantic Kernel</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Hugging Face</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Ollama</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">vLLM</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">OpenAI APIs</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="AI Dev Frameworks &amp; Platforms">
-                <div class="category-head">AI Dev Frameworks &amp; Platforms</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="fw-langchain"><div class="item-head"><div class="item-label">LangChain</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with LangChain..."></textarea></div>
-                <div class="item" data-key="fw-langgraph"><div class="item-head"><div class="item-label">LangGraph</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with LangGraph..."></textarea></div>
-                <div class="item" data-key="fw-semantic-kernel"><div class="item-head"><div class="item-label">Semantic Kernel</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Semantic Kernel..."></textarea></div>
-                <div class="item" data-key="fw-hugging-face"><div class="item-head"><div class="item-label">Hugging Face</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Hugging Face..."></textarea></div>
-                <div class="item" data-key="fw-ollama"><div class="item-head"><div class="item-label">Ollama</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Ollama..."></textarea></div>
-                <div class="item" data-key="fw-vllm"><div class="item-head"><div class="item-label">vLLM</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with vLLM..."></textarea></div>
-                <div class="item" data-key="fw-openai-api"><div class="item-head"><div class="item-label">OpenAI APIs</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with OpenAI APIs..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Expert-Level Concept Areas</td></tr>
+                <tr class="item-row"><td><div class="req-label">Generative AI</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Agentic AI</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Retrieval-Augmented Generation (RAG)</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Multi-Agent Systems</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Prompt Engineering</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Model Fine-Tuning &amp; Optimization</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">AI Inference &amp; Model Serving</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Model Evaluation &amp; Deployment</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">AI Orchestration Frameworks</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Expert-Level Concept Areas">
-                <div class="category-head">Expert-Level Concept Areas</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="concept-genai"><div class="item-head"><div class="item-label">Generative AI</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-agentic"><div class="item-head"><div class="item-label">Agentic AI</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-rag"><div class="item-head"><div class="item-label">Retrieval-Augmented Generation (RAG)</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-multiagent"><div class="item-head"><div class="item-label">Multi-Agent Systems</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-prompt"><div class="item-head"><div class="item-label">Prompt Engineering</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-finetune"><div class="item-head"><div class="item-label">Model Fine-Tuning &amp; Optimization</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-inference"><div class="item-head"><div class="item-label">AI Inference &amp; Model Serving</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-evaldeploy"><div class="item-head"><div class="item-label">Model Evaluation &amp; Deployment</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-                <div class="item" data-key="concept-orchestration"><div class="item-head"><div class="item-label">AI Orchestration Frameworks</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Experience Requirements</td></tr>
+                <tr class="item-row"><td><div class="req-label">8+ years</div><div class="req-sub">Product Marketing, Product Management, Solutions Marketing, Developer Marketing, Solutions Architecture, AI Consulting, or AI Engineering</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Hands-on AI build/deploy experience</div><div class="req-sub">Building, testing, deploying, or evaluating AI apps, copilots, agents, or ML solutions</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Presenting to technical + executive audiences</div><div class="req-sub">Workshops, briefings, conference talks</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Track record launching complex B2B tech</div><div class="req-sub">Proven adoption outcomes</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Experience Requirements">
-                <div class="category-head">Experience Requirements</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="exp-years"><div class="item-head"><div class="item-label">8+ years<span class="item-sub">Product Marketing, Product Management, Solutions Marketing, Developer Marketing, Solutions Architecture, AI Consulting, or AI Engineering</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your years and roles that count toward this..."></textarea></div>
-                <div class="item" data-key="exp-handson"><div class="item-head"><div class="item-label">Hands-on AI build/deploy experience<span class="item-sub">Building, testing, deploying, or evaluating AI apps, copilots, agents, or ML solutions</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Specific projects..."></textarea></div>
-                <div class="item" data-key="exp-presenting"><div class="item-head"><div class="item-label">Presenting to technical + executive audiences<span class="item-sub">Workshops, briefings, conference talks</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Talks, briefings, workshops you've delivered..."></textarea></div>
-                <div class="item" data-key="exp-trackrecord"><div class="item-head"><div class="item-label">Track record launching complex B2B tech<span class="item-sub">Proven adoption outcomes</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Launches you've driven and the outcome..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Education</td></tr>
+                <tr class="item-row"><td><div class="req-label">Bachelor's degree (required)</div><div class="req-sub">CS, Computer Engineering, Software Engineering, Data Science, AI, or related &mdash; or equivalent practical experience</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Advanced technical degree (preferred)</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Education">
-                <div class="category-head">Education</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="edu-bachelors"><div class="item-head"><div class="item-label">Bachelor's degree (required)<span class="item-sub">CS, Computer Engineering, Software Engineering, Data Science, AI, or related &mdash; or equivalent practical experience</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your degree / equivalent experience..."></textarea></div>
-                <div class="item" data-key="edu-advanced"><div class="item-head"><div class="item-label">Advanced technical degree (preferred)</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="If applicable..."></textarea></div>
-            </div>
+                <tr class="category-row"><td colspan="2">Core Responsibility Areas</td></tr>
+                <tr class="item-row"><td><div class="req-label">Positioning &amp; Messaging</div><div class="req-sub">Differentiated positioning and audience-specific messaging</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Go-to-Market Strategy &amp; Execution</div><div class="req-sub">Launch plans, readiness programs, market activation</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Technical Leadership &amp; Customer Engagement</div><div class="req-sub">Trusted advisor to customers, partners, sales</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Technical Marketing &amp; Thought Leadership</div><div class="req-sub">White papers, benchmarks, competitive analysis, content</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Customer &amp; Market Insights</div><div class="req-sub">Voice-of-customer, competitive intelligence</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Sales &amp; Partner Enablement</div><div class="req-sub">Battlecards, ROI frameworks, reference architectures</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
+                <tr class="item-row"><td><div class="req-label">Cross-Functional Leadership</div><div class="req-sub">Alignment across Product, Engineering, Sales, Marketing</div></td><td><span class="fit-text pending">Not yet provided</span></td></tr>
 
-            <div class="category" data-category="Core Responsibility Areas">
-                <div class="category-head">Core Responsibility Areas</div>
-                <div class="category-count"></div>
-                <div class="item" data-key="resp-positioning"><div class="item-head"><div class="item-label">Positioning &amp; Messaging<span class="item-sub">Differentiated positioning and audience-specific messaging</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Positioning/messaging work you've owned..."></textarea></div>
-                <div class="item" data-key="resp-gtm"><div class="item-head"><div class="item-label">Go-to-Market Strategy &amp; Execution<span class="item-sub">Launch plans, readiness programs, market activation</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="GTM work you've led..."></textarea></div>
-                <div class="item" data-key="resp-techlead"><div class="item-head"><div class="item-label">Technical Leadership &amp; Customer Engagement<span class="item-sub">Trusted advisor to customers, partners, sales</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Technical advisory / customer engagement examples..."></textarea></div>
-                <div class="item" data-key="resp-techmarketing"><div class="item-head"><div class="item-label">Technical Marketing &amp; Thought Leadership<span class="item-sub">White papers, benchmarks, competitive analysis, content</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Content/thought leadership you've produced..."></textarea></div>
-                <div class="item" data-key="resp-insights"><div class="item-head"><div class="item-label">Customer &amp; Market Insights<span class="item-sub">Voice-of-customer, competitive intelligence</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Research/insights work..."></textarea></div>
-                <div class="item" data-key="resp-enablement"><div class="item-head"><div class="item-label">Sales &amp; Partner Enablement<span class="item-sub">Battlecards, ROI frameworks, reference architectures</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Enablement assets/programs you've built..."></textarea></div>
-                <div class="item" data-key="resp-crossfunctional"><div class="item-head"><div class="item-label">Cross-Functional Leadership<span class="item-sub">Alignment across Product, Engineering, Sales, Marketing</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Cross-functional work you've driven..."></textarea></div>
-            </div>
-
-        </div>
+            </tbody>
+        </table>
 
         <footer>
-            Personal worksheet &mdash; not for external distribution. Answers are stored only in this browser's local storage.
+            Personal reference table &mdash; not for external distribution.
         </footer>
     </div>
-
-    <div class="present-overlay" id="presentOverlay">
-        <div class="present-brandbar"></div>
-        <div class="present-topbar">
-            <div class="present-rail" id="presentRail"></div>
-            <button class="present-exit" id="presentExit">Esc &middot; Exit</button>
-        </div>
-        <div class="present-stage" id="presentStage"></div>
-        <div class="present-bottombar">
-            <button class="present-nav-btn" id="presentPrev">&larr;</button>
-            <span class="present-counter" id="presentCounter"></span>
-            <button class="present-nav-btn" id="presentNext">&rarr;</button>
-        </div>
-    </div>
-
-    <script>
-        var STORAGE_PREFIX = 'hp-pmm-worksheet:';
-        var items = Array.from(document.querySelectorAll('.item'));
-        var saveTimer = null;
-
-        function updateItemState(item) {
-            var textarea = item.querySelector('.item-answer');
-            var status = item.querySelector('.item-status');
-            var filled = textarea.value.trim().length > 0;
-            item.classList.toggle('answered', filled);
-            status.textContent = filled ? 'Answered' : 'Not started';
-        }
-
-        function updateCategoryCounts() {
-            document.querySelectorAll('.category').forEach(function (cat) {
-                var catItems = Array.from(cat.querySelectorAll('.item'));
-                var answered = catItems.filter(function (i) { return i.classList.contains('answered'); }).length;
-                cat.querySelector('.category-count').textContent = answered + ' / ' + catItems.length + ' answered';
-            });
-        }
-
-        function updateProgress() {
-            var answered = items.filter(function (i) { return i.classList.contains('answered'); }).length;
-            var total = items.length;
-            var pct = total ? Math.round((answered / total) * 100) : 0;
-            document.getElementById('progressFill').style.width = pct + '%';
-            document.getElementById('progressLabel').textContent = answered + ' / ' + total + ' answered';
-            updateCategoryCounts();
-        }
-
-        function flashSaved() {
-            var el = document.getElementById('saveIndicator');
-            el.classList.add('show');
-            clearTimeout(saveTimer);
-            saveTimer = setTimeout(function () { el.classList.remove('show'); }, 1200);
-        }
-
-        function loadAll() {
-            items.forEach(function (item) {
-                var key = item.dataset.key;
-                var textarea = item.querySelector('.item-answer');
-                var saved = localStorage.getItem(STORAGE_PREFIX + key);
-                if (saved) textarea.value = saved;
-                updateItemState(item);
-            });
-            updateProgress();
-        }
-
-        items.forEach(function (item) {
-            var key = item.dataset.key;
-            var textarea = item.querySelector('.item-answer');
-            var debounce = null;
-            textarea.addEventListener('input', function () {
-                updateItemState(item);
-                updateProgress();
-                clearTimeout(debounce);
-                debounce = setTimeout(function () {
-                    localStorage.setItem(STORAGE_PREFIX + key, textarea.value);
-                    flashSaved();
-                }, 350);
-            });
-        });
-
-        document.getElementById('exportBtn').addEventListener('click', function () {
-            var lines = ['Principal Technical Product Marketing Manager, AI Solutions — HP Inc.', 'Job Fit Worksheet — exported ' + new Date().toLocaleDateString(), ''];
-            document.querySelectorAll('.category').forEach(function (cat) {
-                var catItems = Array.from(cat.querySelectorAll('.item'));
-                var answeredItems = catItems.filter(function (i) { return i.classList.contains('answered'); });
-                if (!answeredItems.length) return;
-                lines.push('== ' + cat.dataset.category.replace(/&amp;/g, '&') + ' ==');
-                answeredItems.forEach(function (item) {
-                    var label = item.querySelector('.item-label').childNodes[0].textContent.trim();
-                    var answer = item.querySelector('.item-answer').value.trim();
-                    lines.push('- ' + label + ':');
-                    lines.push('  ' + answer.replace(/\n/g, '\n  '));
-                    lines.push('');
-                });
-            });
-            var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'hp-pmm-worksheet.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-
-        document.getElementById('clearBtn').addEventListener('click', function () {
-            if (!confirm('Clear every answer on this worksheet? This cannot be undone.')) return;
-            items.forEach(function (item) {
-                var key = item.dataset.key;
-                localStorage.removeItem(STORAGE_PREFIX + key);
-                item.querySelector('.item-answer').value = '';
-                updateItemState(item);
-            });
-            updateProgress();
-        });
-
-        loadAll();
-
-        /* ---------------- Present Mode ---------------- */
-        var presentOverlay = document.getElementById('presentOverlay');
-        var presentStage = document.getElementById('presentStage');
-        var presentRail = document.getElementById('presentRail');
-        var presentCounter = document.getElementById('presentCounter');
-        var presentPrev = document.getElementById('presentPrev');
-        var presentNext = document.getElementById('presentNext');
-        var slides = [];
-        var slideIndex = -1; // -1 = cover slide
-
-        function itemLabelText(item) {
-            return item.querySelector('.item-label').childNodes[0].textContent.trim();
-        }
-
-        function itemSubText(item) {
-            var sub = item.querySelector('.item-sub');
-            return sub ? sub.textContent.trim() : '';
-        }
-
-        function buildSlides() {
-            slides = [];
-            document.querySelectorAll('.category').forEach(function (cat) {
-                var categoryName = cat.dataset.category;
-                var rows = [];
-                Array.from(cat.querySelectorAll('.item')).forEach(function (item) {
-                    var answer = item.querySelector('.item-answer').value.trim();
-                    if (!answer) return;
-                    rows.push({
-                        label: itemLabelText(item),
-                        sub: itemSubText(item),
-                        answer: answer
-                    });
-                });
-                if (rows.length) slides.push({ category: categoryName, rows: rows });
-            });
-        }
-
-        function buildRail() {
-            presentRail.innerHTML = '';
-            slides.forEach(function (s, idx) {
-                var btn = document.createElement('button');
-                btn.className = 'present-rail-item';
-                btn.textContent = s.category;
-                btn.addEventListener('click', function () { slideIndex = idx; render(); });
-                presentRail.appendChild(btn);
-            });
-        }
-
-        function render() {
-            if (!slides.length) {
-                presentStage.innerHTML = '<div class="present-empty">No items have answers yet. Go back and fill in at least one item, then hit Present again.</div>';
-                presentCounter.textContent = '';
-                presentPrev.disabled = true;
-                presentNext.disabled = true;
-                return;
-            }
-
-            if (slideIndex === -1) {
-                var totalAnswered = slides.reduce(function (sum, s) { return sum + s.rows.length; }, 0);
-                presentStage.innerHTML =
-                    '<div class="present-slide present-cover">' +
-                    '<div class="p-kicker">Job Fit Review</div>' +
-                    '<div class="p-title">Principal Technical Product Marketing Manager, AI Solutions</div>' +
-                    '<div class="p-rule"></div>' +
-                    '<div class="p-company">HP Inc. &middot; prepared by Avi Ravishankar</div>' +
-                    '<div class="p-hint">&rarr; to begin &middot; ' + slides.length + ' section' + (slides.length === 1 ? '' : 's') + ' &middot; ' + totalAnswered + ' requirement' + (totalAnswered === 1 ? '' : 's') + ' covered</div>' +
-                    '</div>';
-                presentCounter.textContent = 'Cover';
-            } else {
-                var s = slides[slideIndex];
-                presentStage.innerHTML =
-                    '<div class="present-slide">' +
-                    '<div class="p-eyebrow">Section ' + (slideIndex + 1) + ' of ' + slides.length + '</div>' +
-                    '<div class="p-heading">' + s.category + '</div>' +
-                    '<div class="p-table-wrap"><table class="p-table"><thead><tr><th>Requirement</th><th>My Experience</th></tr></thead><tbody></tbody></table></div>' +
-                    '</div>';
-                var tbody = presentStage.querySelector('tbody');
-                s.rows.forEach(function (row) {
-                    var tr = document.createElement('tr');
-
-                    var tdReq = document.createElement('td');
-                    var reqLabel = document.createElement('div');
-                    reqLabel.className = 'p-req-label';
-                    reqLabel.textContent = row.label;
-                    tdReq.appendChild(reqLabel);
-                    if (row.sub) {
-                        var reqSub = document.createElement('div');
-                        reqSub.className = 'p-req-sub';
-                        reqSub.textContent = row.sub;
-                        tdReq.appendChild(reqSub);
-                    }
-
-                    var tdAns = document.createElement('td');
-                    tdAns.className = 'p-req-answer';
-                    tdAns.textContent = row.answer;
-
-                    tr.appendChild(tdReq);
-                    tr.appendChild(tdAns);
-                    tbody.appendChild(tr);
-                });
-                presentCounter.textContent = (slideIndex + 1) + ' / ' + slides.length;
-            }
-
-            presentPrev.disabled = slideIndex === -1;
-            presentNext.disabled = slideIndex >= slides.length - 1;
-
-            Array.from(presentRail.children).forEach(function (btn, idx) {
-                btn.classList.toggle('current', idx === slideIndex);
-            });
-        }
-
-        function goNext() { if (slideIndex < slides.length - 1) { slideIndex++; render(); } }
-        function goPrev() { if (slideIndex > -1) { slideIndex--; render(); } }
-
-        function openPresent() {
-            buildSlides();
-            buildRail();
-            slideIndex = -1;
-            render();
-            presentOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-            document.addEventListener('keydown', onPresentKeydown);
-        }
-
-        function closePresent() {
-            presentOverlay.classList.remove('open');
-            document.body.style.overflow = '';
-            document.removeEventListener('keydown', onPresentKeydown);
-        }
-
-        function onPresentKeydown(e) {
-            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goNext(); }
-            else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goPrev(); }
-            else if (e.key === 'Escape') { closePresent(); }
-        }
-
-        document.getElementById('presentBtn').addEventListener('click', openPresent);
-        document.getElementById('presentExit').addEventListener('click', closePresent);
-        presentNext.addEventListener('click', goNext);
-        presentPrev.addEventListener('click', goPrev);
-    </script>
 </body>
 </html>
