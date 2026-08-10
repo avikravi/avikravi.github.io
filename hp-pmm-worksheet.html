@@ -255,6 +255,195 @@
             .toolbar { flex-direction: column; align-items: flex-start; }
             .progress-track { width: 120px; }
         }
+
+        /* ==========================================================
+           Present Mode — full-screen keynote-style overlay for live
+           walkthroughs. Own dark palette, large type, click/keyboard
+           navigation. Hidden by default.
+           ========================================================== */
+        .present-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: #0c0d10;
+            color: #f2f0eb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .present-overlay.open { display: flex; flex-direction: column; }
+
+        .present-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 32px 0;
+            flex-shrink: 0;
+        }
+
+        .present-rail {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .present-rail-item {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #565b62;
+            background: none;
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 4px 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .present-rail-item:hover { color: #a8adb5; }
+        .present-rail-item.current { color: #f5b942; border-bottom-color: #f5b942; }
+
+        .present-exit {
+            font-size: 12px;
+            font-weight: 600;
+            color: #80868f;
+            background: none;
+            border: 1px solid #2a2f36;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            flex-shrink: 0;
+        }
+
+        .present-exit:hover { color: #f2f0eb; border-color: #4a5058; }
+
+        .present-stage {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 48px;
+            overflow: hidden;
+        }
+
+        .present-slide {
+            max-width: 820px;
+            width: 100%;
+        }
+
+        .present-slide .p-eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #f5b942;
+            margin-bottom: 18px;
+        }
+
+        .present-slide .p-label {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .present-slide .p-sub {
+            font-size: 16px;
+            color: #8a9099;
+            font-style: italic;
+            margin-bottom: 32px;
+        }
+
+        .present-slide .p-answer {
+            font-size: 23px;
+            line-height: 1.6;
+            color: #d8d6d0;
+            white-space: pre-wrap;
+        }
+
+        /* Cover slide */
+        .present-cover { text-align: center; }
+        .present-cover .p-kicker {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #f5b942;
+            margin-bottom: 20px;
+        }
+        .present-cover .p-title {
+            font-size: 44px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .present-cover .p-company {
+            font-size: 17px;
+            color: #9096a0;
+            margin-bottom: 40px;
+        }
+        .present-cover .p-hint {
+            font-size: 13px;
+            color: #565b62;
+        }
+
+        /* Empty state */
+        .present-empty {
+            text-align: center;
+            color: #9096a0;
+            font-size: 16px;
+            max-width: 420px;
+        }
+
+        .present-bottombar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 0 32px 32px;
+            flex-shrink: 0;
+        }
+
+        .present-nav-btn {
+            font-size: 22px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid #2a2f36;
+            background: #15181c;
+            color: #d8d6d0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+
+        .present-nav-btn:hover { border-color: #f5b942; color: #f5b942; }
+        .present-nav-btn:disabled { opacity: 0.3; cursor: default; }
+        .present-nav-btn:disabled:hover { border-color: #2a2f36; color: #d8d6d0; }
+
+        .present-counter {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7178;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .present-slide .p-label { font-size: 28px; }
+            .present-slide .p-answer { font-size: 18px; }
+            .present-cover .p-title { font-size: 30px; }
+            .present-rail { display: none; }
+            .present-stage { padding: 24px; }
+        }
     </style>
 </head>
 <body>
@@ -264,7 +453,7 @@
             <h1>Principal Technical Product Marketing Manager, AI Solutions</h1>
             <p class="meta-line">HP Inc. &middot; Fort Collins, CO / Spring, TX &middot; Full-time &middot; Req #3166789</p>
             <p class="meta-line">Source: <a href="https://hp.wd5.myworkdayjobs.com/ExternalCareerSite/job/Fort-Collins-Colorado-United-States-of-America/Principal-Technical-Product-Marketing-Manager--AI-Solutions_3166789-1" target="_blank" rel="noopener">HP Careers (Workday)</a></p>
-            <p class="instructions">Every skill, requirement, and responsibility from the posting, broken out one at a time. Fill in what you've actually done for each &mdash; a project, a number, a story you'd tell in an interview. Answers save automatically in this browser as you type; use Export if you want a portable copy.</p>
+            <p class="instructions">Every skill, requirement, and responsibility from the posting, broken out one at a time. Fill in what you've actually done for each &mdash; a project, a number, a story you'd tell in an interview. Answers save automatically in this browser as you type. When you're ready to walk through it live, hit <strong>Present</strong> for a full-screen, one-item-at-a-time view (arrow keys or click to navigate, click a category up top to jump); use Export if you want a portable text copy.</p>
         </header>
 
         <div class="toolbar">
@@ -274,6 +463,7 @@
                 <span class="save-indicator" id="saveIndicator">Saved</span>
             </div>
             <div class="toolbar-actions">
+                <button class="btn primary" id="presentBtn">▶ Present</button>
                 <button class="btn" id="exportBtn">Export as text</button>
                 <button class="btn" id="clearBtn">Clear all</button>
             </div>
@@ -369,6 +559,19 @@
         <footer>
             Personal worksheet &mdash; not for external distribution. Answers are stored only in this browser's local storage.
         </footer>
+    </div>
+
+    <div class="present-overlay" id="presentOverlay">
+        <div class="present-topbar">
+            <div class="present-rail" id="presentRail"></div>
+            <button class="present-exit" id="presentExit">Esc &middot; Exit</button>
+        </div>
+        <div class="present-stage" id="presentStage"></div>
+        <div class="present-bottombar">
+            <button class="present-nav-btn" id="presentPrev">&larr;</button>
+            <span class="present-counter" id="presentCounter"></span>
+            <button class="present-nav-btn" id="presentNext">&rarr;</button>
+        </div>
     </div>
 
     <script>
@@ -472,6 +675,128 @@
         });
 
         loadAll();
+
+        /* ---------------- Present Mode ---------------- */
+        var presentOverlay = document.getElementById('presentOverlay');
+        var presentStage = document.getElementById('presentStage');
+        var presentRail = document.getElementById('presentRail');
+        var presentCounter = document.getElementById('presentCounter');
+        var presentPrev = document.getElementById('presentPrev');
+        var presentNext = document.getElementById('presentNext');
+        var slides = [];
+        var slideIndex = -1; // -1 = cover slide
+
+        function itemLabelText(item) {
+            return item.querySelector('.item-label').childNodes[0].textContent.trim();
+        }
+
+        function itemSubText(item) {
+            var sub = item.querySelector('.item-sub');
+            return sub ? sub.textContent.trim() : '';
+        }
+
+        function buildSlides() {
+            slides = [];
+            document.querySelectorAll('.category').forEach(function (cat) {
+                var categoryName = cat.dataset.category;
+                Array.from(cat.querySelectorAll('.item')).forEach(function (item) {
+                    var answer = item.querySelector('.item-answer').value.trim();
+                    if (!answer) return;
+                    slides.push({
+                        category: categoryName,
+                        label: itemLabelText(item),
+                        sub: itemSubText(item),
+                        answer: answer
+                    });
+                });
+            });
+        }
+
+        function buildRail() {
+            var seen = [];
+            slides.forEach(function (s) { if (seen.indexOf(s.category) === -1) seen.push(s.category); });
+            presentRail.innerHTML = '';
+            seen.forEach(function (cat) {
+                var btn = document.createElement('button');
+                btn.className = 'present-rail-item';
+                btn.textContent = cat;
+                btn.addEventListener('click', function () {
+                    var firstIdx = slides.findIndex(function (s) { return s.category === cat; });
+                    if (firstIdx !== -1) { slideIndex = firstIdx; render(); }
+                });
+                presentRail.appendChild(btn);
+            });
+        }
+
+        function render() {
+            if (!slides.length) {
+                presentStage.innerHTML = '<div class="present-empty">No items have answers yet. Go back and fill in at least one item, then hit Present again.</div>';
+                presentCounter.textContent = '';
+                presentPrev.disabled = true;
+                presentNext.disabled = true;
+                return;
+            }
+
+            if (slideIndex === -1) {
+                presentStage.innerHTML =
+                    '<div class="present-slide present-cover">' +
+                    '<div class="p-kicker">Job Fit Presentation</div>' +
+                    '<div class="p-title">Principal Technical Product Marketing Manager, AI Solutions</div>' +
+                    '<div class="p-company">HP Inc. &middot; prepared by Avi Ravishankar</div>' +
+                    '<div class="p-hint">&rarr; to begin &middot; ' + slides.length + ' items ready</div>' +
+                    '</div>';
+                presentCounter.textContent = 'Cover';
+            } else {
+                var s = slides[slideIndex];
+                presentStage.innerHTML =
+                    '<div class="present-slide">' +
+                    '<div class="p-eyebrow">' + s.category + '</div>' +
+                    '<div class="p-label">' + s.label + '</div>' +
+                    (s.sub ? '<div class="p-sub">' + s.sub + '</div>' : '') +
+                    '<div class="p-answer"></div>' +
+                    '</div>';
+                presentStage.querySelector('.p-answer').textContent = s.answer;
+                presentCounter.textContent = (slideIndex + 1) + ' / ' + slides.length;
+            }
+
+            presentPrev.disabled = slideIndex === -1;
+            presentNext.disabled = slideIndex >= slides.length - 1;
+
+            Array.from(presentRail.children).forEach(function (btn) {
+                var current = slideIndex >= 0 && slides[slideIndex].category === btn.textContent;
+                btn.classList.toggle('current', current);
+            });
+        }
+
+        function goNext() { if (slideIndex < slides.length - 1) { slideIndex++; render(); } }
+        function goPrev() { if (slideIndex > -1) { slideIndex--; render(); } }
+
+        function openPresent() {
+            buildSlides();
+            buildRail();
+            slideIndex = -1;
+            render();
+            presentOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            document.addEventListener('keydown', onPresentKeydown);
+        }
+
+        function closePresent() {
+            presentOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', onPresentKeydown);
+        }
+
+        function onPresentKeydown(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goNext(); }
+            else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goPrev(); }
+            else if (e.key === 'Escape') { closePresent(); }
+        }
+
+        document.getElementById('presentBtn').addEventListener('click', openPresent);
+        document.getElementById('presentExit').addEventListener('click', closePresent);
+        presentNext.addEventListener('click', goNext);
+        presentPrev.addEventListener('click', goPrev);
     </script>
 </body>
 </html>
