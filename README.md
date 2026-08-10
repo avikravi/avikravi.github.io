@@ -88,6 +88,15 @@ Its `formatting_preferences` field names `MASTERResume.docx` as the canonical fo
 
 Two resume PDFs also live at the repo root: `AvinashResume.pdf` (linked from the "Download Resume" button on all three pages) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
 
+## Unlisted / working pages
+
+Not linked from the nav bar, direct-URL-only, each with its own independent design system (not the shared tokens above):
+
+| File | What it is |
+|---|---|
+| `zgx-nano-case-study.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, a 10-industry potential-use-case review, and a competitor tracker. |
+| `hp-pmm-worksheet.html` | Job-fit worksheet for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — every skill/requirement/responsibility itemized with a fill-in box for Avi's own experience. Saves to the browser's `localStorage` only; nothing leaves the page. Use "Export as text" to get a portable copy. |
+
 ## Working with Claude Code
 
 This repo has a `CLAUDE.md` file with the design system, data schemas, and conventions Claude Code should follow automatically. Keep it updated when you add pages, change the schema, or change the design system — see the instructions inside `CLAUDE.md` itself.

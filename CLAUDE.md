@@ -26,6 +26,18 @@ tailor/
 master_resume_data.json Source-of-truth for Avi's real resume content (see below)
 AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
 Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
+zgx-nano-case-study.html Working case study on the HP ZGX Nano AI Station (feedback/positive-review
+                         scraper boxes, personal research, potential-use-case industry reviews,
+                         competitor tracker). Unlisted (meta robots noindex,nofollow, not linked from
+                         nav) — direct-URL-only. Uses its own light-editorial design system, deliberately
+                         independent of the neon dark tokens below.
+nano.png / nano-header.png  Source and resized product photos used in the case study header.
+hp-pmm-worksheet.html    Personal job-fit worksheet itemizing every skill/requirement/responsibility
+                         from a specific HP job posting (Principal Technical Product Marketing
+                         Manager, AI Solutions), each with a fill-in textarea for Avi's own
+                         experience. Answers persist client-side only, via localStorage keyed
+                         `hp-pmm-worksheet:<item-key>` — nothing is sent anywhere. Unlisted, own
+                         design system (light, single blue accent), not linked from nav.
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```

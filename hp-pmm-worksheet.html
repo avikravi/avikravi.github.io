@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Fit Worksheet — HP Principal TPMM, AI Solutions | Avi Ravishankar</title>
+    <meta name="description" content="Item-by-item worksheet against the HP Principal Technical Product Marketing Manager, AI Solutions job posting.">
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --surface: #f7f8fa;
+            --ink: #16181d;
+            --ink-soft: #40454d;
+            --ink-faint: #80868f;
+            --line: #e4e6ea;
+            --accent: #2554c7;
+            --accent-soft: #eef2fc;
+            --done: #1e7145;
+            --done-soft: #eaf5ef;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        header {
+            padding: 44px 0 28px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .meta-line {
+            font-size: 13.5px;
+            color: var(--ink-faint);
+            margin-bottom: 4px;
+        }
+
+        .meta-line a { color: var(--accent); text-decoration: none; }
+        .meta-line a:hover { text-decoration: underline; }
+
+        .instructions {
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            max-width: 640px;
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+
+        /* Progress + actions bar */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--line);
+            padding: 14px 0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .progress-block { display: flex; align-items: center; gap: 10px; }
+
+        .progress-track {
+            width: 160px;
+            height: 7px;
+            background: var(--line);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--done);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+
+        .progress-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+
+        .toolbar-actions { display: flex; gap: 8px; }
+
+        .btn {
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+        }
+
+        .btn:hover { border-color: #c9c9c9; color: var(--ink); }
+
+        .btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .btn.primary:hover { background: #1e46ac; }
+
+        .save-indicator {
+            font-size: 11.5px;
+            color: var(--done);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            margin-left: 4px;
+        }
+
+        .save-indicator.show { opacity: 1; }
+
+        /* Category groups */
+        .category {
+            margin-top: 36px;
+        }
+
+        .category-head {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .category-count {
+            font-size: 12px;
+            color: var(--ink-faint);
+            margin-bottom: 14px;
+        }
+
+        .item {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+
+        .item.answered {
+            border-color: var(--done);
+            background: var(--done-soft);
+        }
+
+        .item-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .item-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .item-sub {
+            font-size: 12.5px;
+            color: var(--ink-faint);
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .item-status {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .item.answered .item-status { color: var(--done); }
+
+        .item-answer {
+            width: 100%;
+            min-height: 56px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            padding: 10px 12px;
+            line-height: 1.55;
+        }
+
+        .item.answered .item-answer { background: #fff; }
+
+        .item-answer:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .item-answer::placeholder { color: #b0b5bc; }
+
+        footer {
+            margin-top: 56px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-faint);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 24px; }
+            .toolbar { flex-direction: column; align-items: flex-start; }
+            .progress-track { width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <div class="eyebrow">Job Fit Worksheet</div>
+            <h1>Principal Technical Product Marketing Manager, AI Solutions</h1>
+            <p class="meta-line">HP Inc. &middot; Fort Collins, CO / Spring, TX &middot; Full-time &middot; Req #3166789</p>
+            <p class="meta-line">Source: <a href="https://hp.wd5.myworkdayjobs.com/ExternalCareerSite/job/Fort-Collins-Colorado-United-States-of-America/Principal-Technical-Product-Marketing-Manager--AI-Solutions_3166789-1" target="_blank" rel="noopener">HP Careers (Workday)</a></p>
+            <p class="instructions">Every skill, requirement, and responsibility from the posting, broken out one at a time. Fill in what you've actually done for each &mdash; a project, a number, a story you'd tell in an interview. Answers save automatically in this browser as you type; use Export if you want a portable copy.</p>
+        </header>
+
+        <div class="toolbar">
+            <div class="progress-block">
+                <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                <span class="progress-label" id="progressLabel">0 / 0 answered</span>
+                <span class="save-indicator" id="saveIndicator">Saved</span>
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn" id="exportBtn">Export as text</button>
+                <button class="btn" id="clearBtn">Clear all</button>
+            </div>
+        </div>
+
+        <div id="worksheet">
+
+            <div class="category" data-category="Core Languages">
+                <div class="category-head">Core Languages</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="lang-python"><div class="item-head"><div class="item-label">Python</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="What you've built or done with Python..."></textarea></div>
+                <div class="item" data-key="lang-sql"><div class="item-head"><div class="item-label">SQL</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've used SQL..."></textarea></div>
+                <div class="item" data-key="lang-json"><div class="item-head"><div class="item-label">JSON</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've worked with JSON..."></textarea></div>
+                <div class="item" data-key="lang-yaml"><div class="item-head"><div class="item-label">YAML</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've worked with YAML..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Systems &amp; Environments">
+                <div class="category-head">Systems &amp; Environments</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="sys-gpu-cpu"><div class="item-head"><div class="item-label">GPU/CPU concepts</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with GPU/CPU architecture concepts..."></textarea></div>
+                <div class="item" data-key="sys-windows"><div class="item-head"><div class="item-label">Windows</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Windows environment experience..."></textarea></div>
+                <div class="item" data-key="sys-linux"><div class="item-head"><div class="item-label">Linux</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Linux environment experience..."></textarea></div>
+                <div class="item" data-key="sys-docker"><div class="item-head"><div class="item-label">Docker</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Where you've used Docker..."></textarea></div>
+                <div class="item" data-key="sys-git"><div class="item-head"><div class="item-label">Git</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Git / version control workflow experience..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Open-Source Foundation Models">
+                <div class="category-head">Open-Source Foundation Models</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="model-llama"><div class="item-head"><div class="item-label">Llama</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Llama models..."></textarea></div>
+                <div class="item" data-key="model-mistral"><div class="item-head"><div class="item-label">Mistral</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Mistral models..."></textarea></div>
+                <div class="item" data-key="model-deepseek"><div class="item-head"><div class="item-label">DeepSeek</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with DeepSeek models..."></textarea></div>
+                <div class="item" data-key="model-gemma"><div class="item-head"><div class="item-label">Gemma</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Gemma models..."></textarea></div>
+                <div class="item" data-key="model-qwen"><div class="item-head"><div class="item-label">Qwen</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Qwen models..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="AI Dev Frameworks &amp; Platforms">
+                <div class="category-head">AI Dev Frameworks &amp; Platforms</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="fw-langchain"><div class="item-head"><div class="item-label">LangChain</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with LangChain..."></textarea></div>
+                <div class="item" data-key="fw-langgraph"><div class="item-head"><div class="item-label">LangGraph</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with LangGraph..."></textarea></div>
+                <div class="item" data-key="fw-semantic-kernel"><div class="item-head"><div class="item-label">Semantic Kernel</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Semantic Kernel..."></textarea></div>
+                <div class="item" data-key="fw-hugging-face"><div class="item-head"><div class="item-label">Hugging Face</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Hugging Face..."></textarea></div>
+                <div class="item" data-key="fw-ollama"><div class="item-head"><div class="item-label">Ollama</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with Ollama..."></textarea></div>
+                <div class="item" data-key="fw-vllm"><div class="item-head"><div class="item-label">vLLM</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with vLLM..."></textarea></div>
+                <div class="item" data-key="fw-openai-api"><div class="item-head"><div class="item-label">OpenAI APIs</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your experience with OpenAI APIs..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Expert-Level Concept Areas">
+                <div class="category-head">Expert-Level Concept Areas</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="concept-genai"><div class="item-head"><div class="item-label">Generative AI</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-agentic"><div class="item-head"><div class="item-label">Agentic AI</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-rag"><div class="item-head"><div class="item-label">Retrieval-Augmented Generation (RAG)</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-multiagent"><div class="item-head"><div class="item-label">Multi-Agent Systems</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-prompt"><div class="item-head"><div class="item-label">Prompt Engineering</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-finetune"><div class="item-head"><div class="item-label">Model Fine-Tuning &amp; Optimization</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-inference"><div class="item-head"><div class="item-label">AI Inference &amp; Model Serving</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-evaldeploy"><div class="item-head"><div class="item-label">Model Evaluation &amp; Deployment</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+                <div class="item" data-key="concept-orchestration"><div class="item-head"><div class="item-label">AI Orchestration Frameworks</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your depth here..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Experience Requirements">
+                <div class="category-head">Experience Requirements</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="exp-years"><div class="item-head"><div class="item-label">8+ years<span class="item-sub">Product Marketing, Product Management, Solutions Marketing, Developer Marketing, Solutions Architecture, AI Consulting, or AI Engineering</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your years and roles that count toward this..."></textarea></div>
+                <div class="item" data-key="exp-handson"><div class="item-head"><div class="item-label">Hands-on AI build/deploy experience<span class="item-sub">Building, testing, deploying, or evaluating AI apps, copilots, agents, or ML solutions</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Specific projects..."></textarea></div>
+                <div class="item" data-key="exp-presenting"><div class="item-head"><div class="item-label">Presenting to technical + executive audiences<span class="item-sub">Workshops, briefings, conference talks</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Talks, briefings, workshops you've delivered..."></textarea></div>
+                <div class="item" data-key="exp-trackrecord"><div class="item-head"><div class="item-label">Track record launching complex B2B tech<span class="item-sub">Proven adoption outcomes</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Launches you've driven and the outcome..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Education">
+                <div class="category-head">Education</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="edu-bachelors"><div class="item-head"><div class="item-label">Bachelor's degree (required)<span class="item-sub">CS, Computer Engineering, Software Engineering, Data Science, AI, or related &mdash; or equivalent practical experience</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Your degree / equivalent experience..."></textarea></div>
+                <div class="item" data-key="edu-advanced"><div class="item-head"><div class="item-label">Advanced technical degree (preferred)</div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="If applicable..."></textarea></div>
+            </div>
+
+            <div class="category" data-category="Core Responsibility Areas">
+                <div class="category-head">Core Responsibility Areas</div>
+                <div class="category-count"></div>
+                <div class="item" data-key="resp-positioning"><div class="item-head"><div class="item-label">Positioning &amp; Messaging<span class="item-sub">Differentiated positioning and audience-specific messaging</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Positioning/messaging work you've owned..."></textarea></div>
+                <div class="item" data-key="resp-gtm"><div class="item-head"><div class="item-label">Go-to-Market Strategy &amp; Execution<span class="item-sub">Launch plans, readiness programs, market activation</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="GTM work you've led..."></textarea></div>
+                <div class="item" data-key="resp-techlead"><div class="item-head"><div class="item-label">Technical Leadership &amp; Customer Engagement<span class="item-sub">Trusted advisor to customers, partners, sales</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Technical advisory / customer engagement examples..."></textarea></div>
+                <div class="item" data-key="resp-techmarketing"><div class="item-head"><div class="item-label">Technical Marketing &amp; Thought Leadership<span class="item-sub">White papers, benchmarks, competitive analysis, content</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Content/thought leadership you've produced..."></textarea></div>
+                <div class="item" data-key="resp-insights"><div class="item-head"><div class="item-label">Customer &amp; Market Insights<span class="item-sub">Voice-of-customer, competitive intelligence</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Research/insights work..."></textarea></div>
+                <div class="item" data-key="resp-enablement"><div class="item-head"><div class="item-label">Sales &amp; Partner Enablement<span class="item-sub">Battlecards, ROI frameworks, reference architectures</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Enablement assets/programs you've built..."></textarea></div>
+                <div class="item" data-key="resp-crossfunctional"><div class="item-head"><div class="item-label">Cross-Functional Leadership<span class="item-sub">Alignment across Product, Engineering, Sales, Marketing</span></div><div class="item-status">Not started</div></div><textarea class="item-answer" placeholder="Cross-functional work you've driven..."></textarea></div>
+            </div>
+
+        </div>
+
+        <footer>
+            Personal worksheet &mdash; not for external distribution. Answers are stored only in this browser's local storage.
+        </footer>
+    </div>
+
+    <script>
+        var STORAGE_PREFIX = 'hp-pmm-worksheet:';
+        var items = Array.from(document.querySelectorAll('.item'));
+        var saveTimer = null;
+
+        function updateItemState(item) {
+            var textarea = item.querySelector('.item-answer');
+            var status = item.querySelector('.item-status');
+            var filled = textarea.value.trim().length > 0;
+            item.classList.toggle('answered', filled);
+            status.textContent = filled ? 'Answered' : 'Not started';
+        }
+
+        function updateCategoryCounts() {
+            document.querySelectorAll('.category').forEach(function (cat) {
+                var catItems = Array.from(cat.querySelectorAll('.item'));
+                var answered = catItems.filter(function (i) { return i.classList.contains('answered'); }).length;
+                cat.querySelector('.category-count').textContent = answered + ' / ' + catItems.length + ' answered';
+            });
+        }
+
+        function updateProgress() {
+            var answered = items.filter(function (i) { return i.classList.contains('answered'); }).length;
+            var total = items.length;
+            var pct = total ? Math.round((answered / total) * 100) : 0;
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressLabel').textContent = answered + ' / ' + total + ' answered';
+            updateCategoryCounts();
+        }
+
+        function flashSaved() {
+            var el = document.getElementById('saveIndicator');
+            el.classList.add('show');
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(function () { el.classList.remove('show'); }, 1200);
+        }
+
+        function loadAll() {
+            items.forEach(function (item) {
+                var key = item.dataset.key;
+                var textarea = item.querySelector('.item-answer');
+                var saved = localStorage.getItem(STORAGE_PREFIX + key);
+                if (saved) textarea.value = saved;
+                updateItemState(item);
+            });
+            updateProgress();
+        }
+
+        items.forEach(function (item) {
+            var key = item.dataset.key;
+            var textarea = item.querySelector('.item-answer');
+            var debounce = null;
+            textarea.addEventListener('input', function () {
+                updateItemState(item);
+                updateProgress();
+                clearTimeout(debounce);
+                debounce = setTimeout(function () {
+                    localStorage.setItem(STORAGE_PREFIX + key, textarea.value);
+                    flashSaved();
+                }, 350);
+            });
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', function () {
+            var lines = ['Principal Technical Product Marketing Manager, AI Solutions — HP Inc.', 'Job Fit Worksheet — exported ' + new Date().toLocaleDateString(), ''];
+            document.querySelectorAll('.category').forEach(function (cat) {
+                var catItems = Array.from(cat.querySelectorAll('.item'));
+                var answeredItems = catItems.filter(function (i) { return i.classList.contains('answered'); });
+                if (!answeredItems.length) return;
+                lines.push('== ' + cat.dataset.category.replace(/&amp;/g, '&') + ' ==');
+                answeredItems.forEach(function (item) {
+                    var label = item.querySelector('.item-label').childNodes[0].textContent.trim();
+                    var answer = item.querySelector('.item-answer').value.trim();
+                    lines.push('- ' + label + ':');
+                    lines.push('  ' + answer.replace(/\n/g, '\n  '));
+                    lines.push('');
+                });
+            });
+            var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'hp-pmm-worksheet.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            if (!confirm('Clear every answer on this worksheet? This cannot be undone.')) return;
+            items.forEach(function (item) {
+                var key = item.dataset.key;
+                localStorage.removeItem(STORAGE_PREFIX + key);
+                item.querySelector('.item-answer').value = '';
+                updateItemState(item);
+            });
+            updateProgress();
+        });
+
+        loadAll();
+    </script>
+</body>
+</html>
