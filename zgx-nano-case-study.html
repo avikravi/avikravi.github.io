@@ -570,6 +570,120 @@
             .tab-btn { padding: 11px 4px; font-size: 10.5px; }
             .panel-title { font-size: 19px; }
         }
+
+        /* ==========================================================
+           Job Description Analyzer — intentionally separate design
+           system from the case study above. Dark, monospace,
+           spec-sheet styling. All rules prefixed .jda to avoid any
+           collision with the case-study's classes.
+           ========================================================== */
+        .jda {
+            background: #0b0d10;
+            padding: 72px 24px 88px;
+        }
+
+        .jda-wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            font-family: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+        }
+
+        .jda-eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #f5a623;
+            margin-bottom: 14px;
+        }
+
+        .jda-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: #f2f0eb;
+            line-height: 1.25;
+            margin-bottom: 10px;
+        }
+
+        .jda-meta {
+            font-size: 13px;
+            color: #9096a0;
+            margin-bottom: 6px;
+        }
+
+        .jda-source {
+            font-size: 12px;
+            color: #6b7178;
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #22262b;
+        }
+
+        .jda-source a { color: #f5a623; text-decoration: none; }
+        .jda-source a:hover { text-decoration: underline; }
+
+        .jda-table-block { margin-bottom: 36px; }
+
+        .jda-h3 {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #f5a623;
+            margin-bottom: 12px;
+        }
+
+        .jda-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #22262b;
+            font-size: 13px;
+        }
+
+        .jda-table tr { border-top: 1px solid #22262b; }
+        .jda-table tr:first-child { border-top: none; }
+
+        .jda-table th, .jda-table td {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 400;
+            vertical-align: top;
+            line-height: 1.55;
+        }
+
+        .jda-table th {
+            width: 220px;
+            color: #9096a0;
+            background: #101317;
+            font-weight: 600;
+        }
+
+        .jda-table td { color: #d8d6d0; background: #0e1013; }
+
+        .jda-chip {
+            display: inline-block;
+            font-size: 11.5px;
+            color: #d8d6d0;
+            background: #191d22;
+            border: 1px solid #2a2f36;
+            border-radius: 4px;
+            padding: 3px 8px;
+            margin: 2px 6px 2px 0;
+        }
+
+        .jda-footnote {
+            font-size: 11.5px;
+            color: #565b62;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .jda { padding: 56px 18px 64px; }
+            .jda-title { font-size: 21px; }
+            .jda-table th { width: 130px; font-size: 12px; }
+            .jda-table th, .jda-table td { padding: 10px 12px; }
+        }
     </style>
 </head>
 <body>
@@ -1069,6 +1183,89 @@
             Working draft, not for external distribution yet.
         </footer>
     </div>
+
+    <section class="jda">
+        <div class="jda-wrap">
+            <div class="jda-eyebrow">Job Requirements Breakdown</div>
+            <h2 class="jda-title">Principal Technical Product Marketing Manager, AI Solutions</h2>
+            <p class="jda-meta">HP Inc. &middot; Fort Collins, CO / Spring, TX &middot; Full-time</p>
+            <p class="jda-source">Condensed and reorganized from the original posting for quick scanning. Source: <a href="https://hp.wd5.myworkdayjobs.com/ExternalCareerSite/job/Fort-Collins-Colorado-United-States-of-America/Principal-Technical-Product-Marketing-Manager--AI-Solutions_3166789-1" target="_blank" rel="noopener">HP Careers (Workday) &mdash; Req #3166789</a></p>
+
+            <div class="jda-table-block">
+                <h3 class="jda-h3">Role Overview</h3>
+                <table class="jda-table">
+                    <tbody>
+                        <tr><th>Locations</th><td>Fort Collins, CO &middot; Spring, TX</td></tr>
+                        <tr><th>Employment Type</th><td>Full-time</td></tr>
+                        <tr><th>Job Family</th><td>Software</td></tr>
+                        <tr><th>Travel</th><td>25%</td></tr>
+                        <tr><th>Relocation</th><td>Offered</td></tr>
+                        <tr><th>Pay Range</th><td>$147,050 &ndash; $216,900 USD/yr, plus bonus and/or equity eligibility (US candidates)</td></tr>
+                        <tr><th>Requisition ID</th><td>3166789</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="jda-table-block">
+                <h3 class="jda-h3">Required Skills &amp; Technical Competencies</h3>
+                <table class="jda-table">
+                    <tbody>
+                        <tr>
+                            <th>Core Languages</th>
+                            <td><span class="jda-chip">Python</span><span class="jda-chip">SQL</span><span class="jda-chip">JSON</span><span class="jda-chip">YAML</span></td>
+                        </tr>
+                        <tr>
+                            <th>Systems &amp; Environments</th>
+                            <td><span class="jda-chip">GPU/CPU concepts</span><span class="jda-chip">Windows</span><span class="jda-chip">Linux</span><span class="jda-chip">Docker</span><span class="jda-chip">Git</span></td>
+                        </tr>
+                        <tr>
+                            <th>Open-Source Foundation Models</th>
+                            <td><span class="jda-chip">Llama</span><span class="jda-chip">Mistral</span><span class="jda-chip">DeepSeek</span><span class="jda-chip">Gemma</span><span class="jda-chip">Qwen</span></td>
+                        </tr>
+                        <tr>
+                            <th>AI Dev Frameworks &amp; Platforms</th>
+                            <td><span class="jda-chip">LangChain</span><span class="jda-chip">LangGraph</span><span class="jda-chip">Semantic Kernel</span><span class="jda-chip">Hugging Face</span><span class="jda-chip">Ollama</span><span class="jda-chip">vLLM</span><span class="jda-chip">OpenAI APIs</span></td>
+                        </tr>
+                        <tr>
+                            <th>Expert-Level Concept Areas</th>
+                            <td><span class="jda-chip">Generative AI</span><span class="jda-chip">Agentic AI</span><span class="jda-chip">RAG</span><span class="jda-chip">Multi-Agent Systems</span><span class="jda-chip">Prompt Engineering</span><span class="jda-chip">Fine-Tuning &amp; Optimization</span><span class="jda-chip">Inference &amp; Model Serving</span><span class="jda-chip">Model Evaluation &amp; Deployment</span><span class="jda-chip">AI Orchestration</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="jda-table-block">
+                <h3 class="jda-h3">Experience &amp; Education</h3>
+                <table class="jda-table">
+                    <tbody>
+                        <tr><th>Years of Experience</th><td>8+ years in product/solutions marketing, product management, developer marketing, solutions architecture, AI consulting, or AI engineering</td></tr>
+                        <tr><th>Hands-On AI Work</th><td>Practical experience building, testing, deploying, or evaluating AI apps, copilots, agents, or ML solutions</td></tr>
+                        <tr><th>Customer-Facing Skill</th><td>Presenting technical concepts to developers, engineers, and executives &mdash; workshops, briefings, conference talks</td></tr>
+                        <tr><th>Track Record</th><td>Proven launch and adoption of complex B2B technology solutions</td></tr>
+                        <tr><th>Education (Required)</th><td>Bachelor's in Computer Science, Computer Engineering, Software Engineering, Data Science, AI, or related &mdash; or equivalent practical experience</td></tr>
+                        <tr><th>Education (Preferred)</th><td>Advanced technical degree</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="jda-table-block">
+                <h3 class="jda-h3">Core Responsibility Areas</h3>
+                <table class="jda-table">
+                    <tbody>
+                        <tr><th>Positioning &amp; Messaging</th><td>Differentiated positioning and audience-specific messaging for ZGX AI Stations and Agentic AI offerings</td></tr>
+                        <tr><th>Go-to-Market</th><td>Launch strategy, readiness programs, and market activation from concept through adoption</td></tr>
+                        <tr><th>Technical Leadership</th><td>Trusted advisor to customers, partners, and sales on AI architecture, inference, and agentic deployment; mentors junior staff</td></tr>
+                        <tr><th>Technical Marketing</th><td>White papers, benchmark summaries, competitive analysis, conference and webinar content</td></tr>
+                        <tr><th>Market Insights</th><td>Voice-of-customer research and competitive intelligence feeding roadmap priorities</td></tr>
+                        <tr><th>Sales &amp; Partner Enablement</th><td>Battlecards, ROI frameworks, reference architectures, partner/SI enablement</td></tr>
+                        <tr><th>Cross-Functional Leadership</th><td>Alignment across Product, Engineering, Sales, and Marketing in a matrixed org</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="jda-footnote">Built for quick scanning against a resume or interview prep &mdash; not a verbatim copy of the posting. Full posting linked above.</p>
+        </div>
+    </section>
 
     <script>
         document.querySelectorAll('.tab-btn').forEach(function (btn) {
