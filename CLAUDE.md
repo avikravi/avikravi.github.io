@@ -39,7 +39,9 @@ hp-pmm-worksheet.html    Static reference table itemizing every skill/requiremen
                          Claude Code updates directly as Avi describes his experience in chat
                          and it's mapped to the matching row(s). Unlisted, styled in HP's
                          actual brand blue (#0096D6) rather than the neon dark tokens below,
-                         not linked from nav.
+                         not linked from nav. Writing style for the "How I Qualify" column:
+                         short, complete sentences. Never use a dash (em dash or "--") to
+                         join two clauses; split into separate sentences instead.
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```
