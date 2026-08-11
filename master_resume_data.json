@@ -5,13 +5,13 @@
     "email": "avikravi@gmail.com",
     "phone": "832-600-2398",
     "linkedin": "https://www.linkedin.com/in/avikravi",
-    "linkedin_conflict_note": "Earlier version of this file used '/in/avinashravishankar/'. MASTERResume.docx and the LinkedIn experience-edit URLs Avi pasted earlier both point to '/in/avikravi', so that's now treated as correct. Confirm if this is wrong.",
+    "linkedin_conflict_note": "Earlier version of this file used '/in/avinashravishankar/'. AvinashResume2026.pdf and the LinkedIn experience-edit URLs Avi pasted earlier both point to '/in/avikravi', so that's now treated as correct. Confirm if this is wrong.",
     "website": "https://avikravi.github.io",
     "github": "https://github.com/avikravi",
     "github_io": "http://avikravi.github.io"
   },
   "overview_statement": "Data scientist, mechanical engineer, and product manager with experience scaling technology teams, launching software products, and translating data into decisions. Currently pursuing a Masters in Data Science at Rice University with interests in Bayesian methods, machine learning, spatial-temporal modeling, and image/video processing, with the goal of building statistical tools that solve real-world problems.",
-  "overview_statement_note": "This summary line does not appear in MASTERResume.docx itself (that resume has no summary paragraph) — kept here since it's useful for cover letters and longer-form bios, not for the one-page resume template.",
+  "overview_statement_note": "This summary line does not appear in AvinashResume2026.pdf itself (that resume has no summary paragraph) — kept here since it's useful for cover letters and longer-form bios, not for the one-page resume template.",
   "education": [
     {
       "school": "Rice University",
@@ -19,7 +19,7 @@
       "degree": "M.S. Data Science",
       "dates": "Expected December 2026",
       "status": "current",
-      "coursework": ["Machine Learning", "Computer Vision", "Deep Learning", "Bayesian Methods", "Big Data (PySpark/AWS EMR)", "DevOps Tools"],
+      "coursework": ["Machine Learning", "Computer Vision", "Bayesian Methods", "Big Data (PySpark/AWS EMR)", "DevOps Tools"],
       "teaching_assistant": "COMP 665 Data Visualization — Python (matplotlib, Plotly, seaborn), Tableau, Power BI, time series analysis",
       "data_competitions": ["Hex Data Hackathon", "NCL Cybersecurity CTF (log forensics, network analysis, data challenges)"]
     },
@@ -45,11 +45,11 @@
       "dates": "May 2026 – Present",
       "tagline": "Tissue material characterization for autonomous surgical robots",
       "bullets": [
-        {"text": "Developed 500 GPU-accelerated soft-body physics simulations using the Genesis simulator in Python to model tissue deformation and material properties relevant to autonomous robotic surgery. Built and debugged simulation workflows.", "metric": "500 simulations"},
-        {"text": "Studied and implemented 5 research papers including NVIDIA's DiSECt, GIC (NeurIPS 2024), and MASIV to understand differentiable simulation techniques for estimating material properties using video processing tools (OpenCV and FFmpeg).", "metric": "5 research papers"},
-        {"text": "Exploring a machine learning pipeline to identify tissue material characteristics (stiffness, elasticity) from RGB video using physics-based simulation with NVIDIA's IsaacSIM, including applications in surgical robotics and haptic feedback systems.", "metric": null}
+        {"text": "Developed 500 GPU-accelerated soft-body physics simulations on an NVIDIA Titan X Pascal using the Genesis simulator in Python to model tissue deformation for autonomous robotic surgery.", "metric": "500 simulations"},
+        {"text": "Studied and implemented 5 research papers, including NVIDIA Research's DiSECt and Uniphy, to understand differentiable simulation techniques for estimating material properties with video processing.", "metric": "5 research papers"},
+        {"text": "Building a PyTorch-based machine learning pipeline to identify tissue material characteristics (stiffness, elasticity) from RGB video using GPU-accelerated physics simulation with NVIDIA's Isaac Sim, targeting surgical robotics and haptic feedback applications.", "metric": null}
       ],
-      "skills": ["Python", "Genesis simulator", "OpenCV", "FFmpeg", "NVIDIA IsaacSIM", "differentiable simulation", "computer vision", "physics-based simulation"],
+      "skills": ["Python", "PyTorch", "Genesis simulator", "NVIDIA Titan X Pascal", "NVIDIA Isaac Sim", "differentiable simulation", "computer vision", "physics-based simulation"],
       "industry_tags": ["healthcare", "digital health", "computer vision", "research", "robotics"]
     },
     {
@@ -74,7 +74,7 @@
       "bullets": [
         {"text": "Managed distributed engineering team (12 engineers, 2 QA across 8 countries) to launch mobile/web application acquiring 2,000+ users within 3 months; built SQL analytics dashboards and conducted A/B testing to optimize product features.", "metric": "12 engineers, 2 QA, 8 countries, 2,000+ users"}
       ],
-      "additional_detail_available": "Earlier resume versions also mentioned managing 2 product managers, 2 designers, and 5 MBA interns, and listed 9 specific countries/regions rather than 8. MASTERResume.docx's simplified 'team of 12 engineers, 2 QA across 8 countries' is now the primary version — the more detailed breakdown is available if a specific job description calls for showing broader team-management scope.",
+      "additional_detail_available": "Earlier resume versions also mentioned managing 2 product managers, 2 designers, and 5 MBA interns, and listed 9 specific countries/regions rather than 8. AvinashResume2026.pdf's simplified 'team of 12 engineers, 2 QA across 8 countries' is the current, authoritative version — the more detailed breakdown is available if a specific job description calls for showing broader team-management scope.",
       "skills": ["Agile development", "SQL analytics dashboards", "A/B testing", "sprint planning", "product release and launch", "product roadmapping", "Figma"],
       "industry_tags": ["product management", "construction tech", "B2B SaaS", "data analytics"]
     },
@@ -83,13 +83,12 @@
       "title": "Sr. Product Manager",
       "org": "Mesos",
       "dates": "Mar 2021 – Aug 2022",
-      "team_size_conflict_note": "Avi confirmed in conversation that Mesos was a 2-engineer team. MASTERResume.docx, however, says 'Led 3-person team.' This is a direct conflict between what Avi told me directly and his own master document — flagging rather than picking one silently. Confirm which is correct before using either in a new resume.",
       "tagline": "Autonomous stratospheric drone and aerial imagery with computer vision and machine learning",
       "bullets": [
-        {"text": "Led a small team (2-3 engineers — see team_size_conflict_note) designing stratospheric UAVs with autonomous imaging systems integrating camera, GPS, and barometric altitude sensors for real-time navigation and asset tracking.", "metric": "team size unconfirmed — see conflict note"},
-        {"text": "Developed computer vision algorithms using CNNs in Python (TensorFlow) for automated object detection from aerial platforms, saving customers average $10,000 annually.", "metric": "$10,000/year customer savings"}
+        {"text": "Led a 2-person engineering team designing stratospheric UAVs with autonomous onboard imaging systems, integrating cameras, GPS, and barometric sensors for real-time embedded navigation and tracking.", "metric": "2-person team"},
+        {"text": "Developed computer vision algorithms using CNNs (Python, TensorFlow) for real-time object detection on edge hardware, reducing customer operating costs by an average of $10,000 annually.", "metric": "$10,000/year customer savings"}
       ],
-      "skills": ["Hardware product management", "Computer vision", "CNNs", "TensorFlow", "Product Roadmapping", "VC Fundraising"],
+      "skills": ["Hardware product management", "Computer vision", "CNNs", "TensorFlow", "Edge inference", "Product Roadmapping", "VC Fundraising"],
       "industry_tags": ["hardware", "robotics/UAV", "computer vision", "energy"]
     },
     {
@@ -101,7 +100,6 @@
       "bullets": [
         {"text": "Built Learning Management System in Anaconda (Jupyterhub, Postgres, Docker) serving 500+ engineers across 12 energy companies. Designed curriculum alongside technical team, spanning topics from linear regression to neural networks and PyTorch. Recorded and distributed 50+ hours of data science education content.", "metric": "500+ engineers, 12 companies, 50+ hours of content"}
       ],
-      "metric_conflict_note": "Earlier version of this file said '1000+ individual customers.' MASTERResume.docx instead frames this as '500+ engineers across 12 energy companies' — a more specific but numerically different claim. Treating MASTERResume.docx as current/authoritative; flagging in case '1000+ customers' was meant to describe something broader (e.g. platform-wide) than the engineer count.",
       "skills": ["Data science curriculum design", "Anaconda", "Jupyterhub", "Docker", "Postgres", "PyTorch", "Product Launch", "Product Roadmapping"],
       "industry_tags": ["edtech", "energy", "data science", "product management"]
     },
@@ -110,7 +108,6 @@
       "title": "Product Manager",
       "org": "Muvve",
       "dates": "May 2016 – Jan 2019",
-      "dates_conflict_note": "LinkedIn showed a Sep 2015 start date (used in a prior version of this file); MASTERResume.docx says May 2016. Reverting to MASTERResume.docx's May 2016 as the more authoritative, deliberately-maintained source — confirm which is correct.",
       "tagline": "Fitness events marketplace. B2B2C product connecting fitness enthusiasts to local fitness events",
       "bullets": [
         {"text": "Managed 2 engineers and 1 designer to launch an iOS marketplace with 1,000+ downloads.", "metric": "1,000+ downloads"},
@@ -126,7 +123,7 @@
       "title": "Marketing Director",
       "org": "Black Swan Yoga",
       "dates": "Aug 2016 – Jul 2017",
-      "usage_rule": "CONDITIONAL — nice-to-have. Only include this role if the job description calls for marketing experience, sales experience, brick-and-mortar/retail operations, or integrating technology into a physical studio/location setting. Otherwise omit entirely from tailored resumes. Note: this role does not appear in MASTERResume.docx at all, consistent with it being conditional/optional rather than a core resume item.",
+      "usage_rule": "CONDITIONAL — nice-to-have. Only include this role if the job description calls for marketing experience, sales experience, brick-and-mortar/retail operations, or integrating technology into a physical studio/location setting. Otherwise omit entirely from tailored resumes. Note: this role does not appear in AvinashResume2026.pdf at all, consistent with it being conditional/optional rather than a core resume item.",
       "tagline": "Austin-based yoga studio and on-demand yoga app",
       "bullets": [
         {"text": "Created email, web, and print marketing reaching 25k+ contacts.", "metric": "25k+ contacts"},
@@ -143,9 +140,9 @@
       "dates": "Jun 2009 – Aug 2015",
       "tagline": "Oil and Gas E&P Upstream (Permian Basin, Bogota, Bakersfield)",
       "bullets": [
-        {"text": "Applied risk modeling software and sensor data analysis across 200+ miles of pipeline infrastructure and 50 well sites; managed large-scale corrosion datasets for predictive maintenance and failure prevention.", "metric": "200+ miles pipeline, 50 well sites"}
+        {"text": "Managed large-scale sensor and corrosion datasets across 200+ miles of pipeline infrastructure and 50 well sites, applying risk modeling software and data analysis for predictive maintenance and failure prevention.", "metric": "200+ miles pipeline, 50 well sites"}
       ],
-      "additional_detail_available": "Earlier resume versions included more specific sub-projects: Risk Modeling Software using CredoSoft, API 579-certified Corrosion Modeling and Facility Risk Assessments in the San Joaquin Valley Basin, an H2S Monitor Program, and a 1-year HSE rotational training program with a Near Miss Incidents risk-matrix capstone. MASTERResume.docx consolidates these into the single bullet above. The detailed version is preserved here in case a specific oil & gas or risk-modeling-focused application wants that level of specificity.",
+      "additional_detail_available": "Earlier resume versions included more specific sub-projects: Risk Modeling Software using CredoSoft, API 579-certified Corrosion Modeling and Facility Risk Assessments in the San Joaquin Valley Basin, an H2S Monitor Program, and a 1-year HSE rotational training program with a Near Miss Incidents risk-matrix capstone. AvinashResume2026.pdf consolidates these into the single bullet above. The detailed version is preserved here in case a specific oil & gas or risk-modeling-focused application wants that level of specificity.",
       "skills": ["Risk modeling", "Corrosion data analysis", "Sensor data analysis", "Data Visualization", "Regulatory compliance"],
       "industry_tags": ["oil and gas", "mechanical engineering", "risk modeling"]
     }
@@ -164,14 +161,11 @@
     "other": ["Adobe Photoshop", "Premiere Pro"]
   },
   "formatting_preferences": {
-    "instruction": "MASTERResume.docx (uploaded by Avi, matching the live AvinashResume.pdf on the site) is now the canonical formatting template. Tailor future resumes by editing a copy of this file's word/document.xml in place — do not redesign or restyle. Only content (which roles/bullets are included, and their wording) should change per job description; the visual template stays constant.",
-    "template_source": "MASTERResume.docx"
+    "instruction": "AvinashResume2026.pdf (uploaded by Avi, replacing the earlier AvinashResume.pdf and Avinash_Resume_2026.pdf) is the single, ultimate source of truth for both content and visual formatting as of 2026-08-10. Only this file's wording and figures should be treated as authoritative; older docs are deleted from the repo. No source .docx is currently on file for this version, so tailored resumes should match this PDF's layout and content as closely as possible until a source document is provided.",
+    "template_source": "AvinashResume2026.pdf"
   },
   "unresolved_conflicts_for_avi_to_confirm": [
-    "Mesos team size: you told me directly it was 2 engineers, but MASTERResume.docx says 'Led 3-person team.' Which is correct?",
-    "Muvve start date: MASTERResume.docx says May 2016; a prior LinkedIn-sourced version of this file said Sep 2015. Which is correct?",
-    "daytum metric framing: MASTERResume.docx says '500+ engineers across 12 energy companies' — replacing the older '1000+ individual customers' framing. Confirm this is the version you want used going forward.",
-    "LinkedIn URL: now set to linkedin.com/in/avikravi (matching MASTERResume.docx and the experience-edit links you pasted earlier) rather than the previously-used /in/avinashravishankar/. Confirm this is correct.",
+    "LinkedIn URL: now set to linkedin.com/in/avikravi (matching AvinashResume2026.pdf and the experience-edit links you pasted earlier) rather than the previously-used /in/avinashravishankar/. Confirm this is correct.",
     "Ongoing Black Swan Yoga teacher/studio manager role (separate from the 2016-2017 Marketing Director role) — still not added to master data. Want this added as its own entry?"
   ]
 }

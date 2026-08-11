@@ -84,9 +84,7 @@ Then open `http://localhost:8000`.
 
 `master_resume_data.json` (repo root) is the single source of truth for Avi's real work history, bullets, and metrics — used as input for generating tailored resumes per job application. It documents a handful of open conflicts between past resume versions (team sizes, dates, metric framing, etc.) in its own `unresolved_conflicts_for_avi_to_confirm` field — check that field before treating any entry it references as fully settled.
 
-Its `formatting_preferences` field names `MASTERResume.docx` as the canonical formatting template (matching the live `AvinashResume.pdf` linked from the site) — tailored resumes should be produced by editing a copy of that .docx in place, not by generating a new one from scratch.
-
-Two resume PDFs also live at the repo root: `AvinashResume.pdf` (linked from the "Download Resume" button on all three pages) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
+As of 2026-08-10, `AvinashResume2026.pdf` (repo root, linked from "Download Resume" on all three main pages) is the single, ultimate source of truth for both content and formatting — it replaced the previous two-PDF setup and the earlier `MASTERResume.docx` concept. No source `.docx` is currently on file for it.
 
 ## Unlisted / working pages
 

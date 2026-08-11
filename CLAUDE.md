@@ -24,8 +24,11 @@ tailor/
   doc-builder.js        Builds the resume/cover-letter docx.Document objects from selected entries
   app.js                Wires the tracker.html "Tailor a Resume" form to the three scripts above
 master_resume_data.json Source-of-truth for Avi's real resume content (see below)
-AvinashResume.pdf        The resume actually linked from the "Download Resume" nav button
-Avinash_Resume_2026.pdf  Fuller/more current resume (not linked from any page)
+AvinashResume2026.pdf   The single, canonical resume — linked from the "Download Resume" nav
+                         button on all three main pages. As of 2026-08-10, Avi consolidated
+                         what used to be two separate resume PDFs (AvinashResume.pdf and
+                         Avinash_Resume_2026.pdf, both now deleted) into this one file, which
+                         is the ultimate source of truth for both content and formatting.
 zgx-nano-case-study.html Working case study on the HP ZGX Nano AI Station (feedback/positive-review
                          scraper boxes, personal research, potential-use-case industry reviews,
                          competitor tracker). Unlisted (meta robots noindex,nofollow, not linked from
@@ -102,9 +105,7 @@ Single source of truth for Avi's real work history — every bullet is tagged wi
 
 **Never invent or embellish a metric, title, or date in this file or in any resume generated from it.** The file's own `unresolved_conflicts_for_avi_to_confirm` array currently documents a handful of open conflicts (e.g. team sizes, start dates, metric framing) between different past versions of Avi's resume — check that array before treating any entry it references as fully settled, and add to it rather than silently guessing if you find a new discrepancy.
 
-The `formatting_preferences` field documents that `MASTERResume.docx` (matching the live `AvinashResume.pdf` linked from the site) is the canonical formatting template — tailored resumes should be produced by editing a copy of that .docx's `word/document.xml` in place (unzip → edit → rezip), not by generating a new document from scratch or restyling it. Only the content (which roles/bullets are included, and their wording) should change per job description; the visual template stays constant.
-
-Two resume PDFs also live at the repo root: `AvinashResume.pdf` (the one actually linked from the nav) and `Avinash_Resume_2026.pdf` (a fuller/more current version, not currently linked from any page).
+As of 2026-08-10, `AvinashResume2026.pdf` (repo root, linked from the nav on all three main pages) is the single, ultimate source of truth for both content and formatting — it replaces the previous two-PDF setup (`AvinashResume.pdf` / `Avinash_Resume_2026.pdf`, both deleted) and the earlier `MASTERResume.docx` concept. No source `.docx` is currently on file for it, so the `formatting_preferences` field notes that tailored resumes should match this PDF's layout and content as closely as possible until Avi provides a source document to edit in place.
 
 ## Resume Tailoring Tool (`tailor/`, embedded in `tracker.html`)
 
