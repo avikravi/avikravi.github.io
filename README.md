@@ -12,7 +12,7 @@ Avi Ravishankar's personal site — portfolio, projects, and a live application 
 | `projects.html` | Project showcase (TaskTag, Mesos, daytum, etc.) |
 | `tracker.html` | Live job/PhD application tracker — see below. Deliberately **not linked from the nav bar**; only reachable if you know to type the URL. |
 
-All three share the same design system (CSS variables defined inline in each file's `<style>` block — see `CLAUDE.md` for the token reference) and a byte-for-byte identical nav bar, sourced from `index.html`. The only allowed difference between pages is which link carries the `active` class. Nav links: Home, Projects, Research (external — points to the dataset viewer in the separate `surgical-robotics-tissue-sim` repo, opens in a new tab), Download Resume. `tracker.html` additionally has its own "Tracker" link (active) that the other two pages don't carry. If you edit the nav on one page, update the other two to match exactly.
+As of 2026-08-21, `index.html` and `projects.html` use a light-editorial design system (matching `zgx-nano-case-study.html` — see `CLAUDE.md` for the token reference), while `tracker.html` remains on the original neon dark design (its interactive UI would need separate rework to restyle safely). `index.html` and `projects.html` share a byte-for-byte identical nav bar, sourced from `index.html` — the only allowed difference between the two is which link carries the `active` class. Nav links: Home, Projects, Research (external — points to the dataset viewer in the separate `surgical-robotics-tissue-sim` repo, opens in a new tab), Download Resume. `tracker.html` keeps its own nav in the dark design system, with its own "Tracker" link (active), and is no longer expected to match the other two visually. If you edit the nav on `index.html` or `projects.html`, update the other of those two to match exactly.
 
 ## Application Tracker
 
@@ -88,12 +88,12 @@ As of 2026-08-10, `AvinashResume2026.pdf` (repo root, linked from "Download Resu
 
 ## Unlisted / working pages
 
-Not linked from the nav bar, direct-URL-only, each with its own independent design system (not the shared tokens above):
+Not linked from the nav bar, direct-URL-only:
 
 | File | What it is |
 |---|---|
-| `zgx-nano-case-study.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, a 10-industry potential-use-case review, and a competitor tracker. |
-| `hp-pmm-worksheet.html` | Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. No JS, no local storage, no edit form. |
+| `zgx-nano-case-study.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, a 10-industry potential-use-case review, and a competitor tracker. Originator of the light-editorial design system now also used by `index.html`/`projects.html`. |
+| `hp-pmm-worksheet.html` | Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. No JS, no local storage, no edit form. Its own independent design system (HP brand blue), not the tokens above. |
 
 ## Working with Claude Code
 

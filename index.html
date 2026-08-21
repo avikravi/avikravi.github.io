@@ -6,75 +6,37 @@
     <title>Avi Ravishankar | Data Scientist</title>
     <meta name="description" content="Data Science Master's student at Rice University specializing in sports analytics and machine learning.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --neon-pink: #ff006e;
-            --neon-blue: #00f5ff;
-            --neon-purple: #8b5cf6;
-            --hot-pink: #ff0080;
-            --electric-blue: #0066ff;
-            --bg-dark: #0a0a0f;
-            --bg-surface: #1a1a2e;
-            --text: #ffffff;
-            --text-dim: #a8b2d1;
-            --grid-color: rgba(0, 245, 255, 0.1);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes glow {
-            0%, 100% { 
-                text-shadow: 0 0 10px var(--neon-blue),
-                            0 0 20px var(--neon-blue),
-                            0 0 30px var(--neon-blue);
-            }
-            50% { 
-                text-shadow: 0 0 20px var(--neon-blue),
-                            0 0 30px var(--neon-blue),
-                            0 0 40px var(--neon-blue),
-                            0 0 50px var(--neon-pink);
-            }
-        }
-
-        @keyframes gridMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(50px); }
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace;
-            background: var(--bg-dark);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
             line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
-            z-index: 1000;
-            padding: 20px 0;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+        a { color: var(--blue); }
+
+        .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+        /* Nav */
+        nav.site-nav {
+            border-bottom: 1px solid var(--line);
+            padding: 18px 0;
         }
 
         .nav-content {
-            max-width: 1200px;
+            max-width: 1180px;
             margin: 0 auto;
             padding: 0 24px;
             display: flex;
@@ -83,768 +45,250 @@
         }
 
         .nav-logo {
-            font-size: 16px;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #000;
             text-decoration: none;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
+        .nav-links { display: flex; gap: 26px; align-items: center; }
 
         .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s;
+            color: var(--ink-faint);
+            text-decoration: none;
+            padding-bottom: 3px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
         }
 
-        .nav-links a:hover {
-            color: var(--neon-blue);
-        }
-
-        .nav-links a.active {
-            color: var(--neon-pink);
-        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a.active { color: #000; border-bottom-color: #000; }
 
         .nav-resume-btn {
-            padding: 7px 14px;
-            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
-            border: 2px solid var(--neon-pink);
+            padding: 8px 16px;
+            background: #191919;
             border-radius: 6px;
-            color: white !important;
-            text-decoration: none;
-            font-size: 11px;
+            color: #fff !important;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            border-bottom: none !important;
+            transition: background 0.15s;
+        }
+
+        .nav-resume-btn:hover { background: #000; }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 14px; }
+            .nav-links a { font-size: 10.5px; }
+            .nav-resume-btn { font-size: 10px; padding: 7px 12px; }
+        }
+
+        /* Page header */
+        header.page-header { padding: 48px 0 0; }
+
+        .identity-row {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-left: 16px;
+            gap: 20px;
+            margin-bottom: 14px;
         }
 
-        .nav-resume-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(255, 0, 110, 0.6);
-        }
-
-
-        /* Animated grid background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Gradient overlay */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at bottom, rgba(255, 0, 110, 0.15) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        header {
-            padding: 140px 0 60px;
-            text-align: left;
-            position: relative;
-        }
-
-        .avatar-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .header-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
+        .avatar-photo {
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue), var(--neon-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: 900;
-            color: white;
-            position: relative;
+            object-fit: cover;
+            border: 1px solid var(--line);
             flex-shrink: 0;
-            box-shadow: 0 0 30px rgba(255, 0, 110, 0.4),
-                        0 0 60px rgba(0, 102, 255, 0.2);
-        }
-
-        .avatar::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue), var(--neon-purple));
-            filter: blur(8px);
-            z-index: -1;
-            opacity: 0.6;
         }
 
         h1 {
-            font-size: 48px;
-            font-weight: 900;
-            margin-bottom: 0;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-            line-height: 1;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 8px;
+            line-height: 1.15;
         }
 
-        h1 .last-name {
-            display: block;
-        }
+        .dek { font-size: 16px; color: var(--ink-faint); max-width: 640px; }
 
-        .tagline {
-            font-size: 18px;
-            color: var(--text-dim);
-            margin-bottom: 0;
-            font-weight: 300;
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(34, 197, 94, 0.1);
-            border: 1.5px solid #22c55e;
-            border-radius: 20px;
-            font-size: 11px;
-            color: #22c55e;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
-        }
-
-        .status::before {
-            content: '';
-            width: 7px;
-            height: 7px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: glow 2s ease-in-out infinite;
-            box-shadow: 0 0 10px #22c55e;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 16px;
-            justify-content: flex-start;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
+        .social-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
 
         .social-links a {
-            padding: 11.4px 22.8px;
-            background: rgba(0, 245, 255, 0.05);
-            border: 2px solid var(--neon-blue);
-            border-radius: 8px;
-            color: var(--neon-blue);
-            text-decoration: none;
-            font-size: 13.3px;
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 12.5px;
             font-weight: 600;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.95px;
+            color: var(--ink-soft);
+            background: #fafafa;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s;
         }
 
-        .social-links a:hover {
-            background: rgba(0, 245, 255, 0.1);
-            transform: translateY(-4px);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.5),
-                        0 10px 20px rgba(0, 0, 0, 0.3);
+        .social-links a:hover { border-color: #c9c9c9; color: #000; }
+
+        /* Sections */
+        section.content-section { padding: 44px 0; }
+        section.content-section:first-of-type { padding-top: 40px; }
+
+        .panel-title { font-size: 22px; font-weight: 700; color: #000; margin-bottom: 8px; }
+
+        .panel-desc {
+            font-size: 14.5px;
+            color: var(--ink-faint);
+            max-width: 720px;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line);
         }
 
-        section {
-            padding: 80px 0;
-            position: relative;
-        }
+        .panel-body { max-width: 780px; }
 
-        .section-header {
-            text-align: left;
-            margin-bottom: 60px;
-        }
-
-        h2 {
-            font-size: 42px;
-            font-weight: 800;
+        .panel-body p {
+            font-size: 15px;
+            color: var(--ink-soft);
             margin-bottom: 16px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            line-height: 1.75;
         }
 
-        .section-subtitle {
-            color: var(--text-dim);
-            font-size: 18px;
+        .panel-body p:last-child { margin-bottom: 0; }
+
+        .hl { color: #000; font-weight: 700; }
+
+        /* About card */
+        .about-card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 32px;
         }
 
-        .about-content {
-            background: rgba(26, 26, 46, 0.6);
-            border: 2px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .about-content p {
-            font-size: 18px;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-
-        .projects-grid {
+        /* Tiling cards */
+        .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 22px;
         }
 
-        /* Projects Showcase Section */
-        .projects-showcase {
-            padding: 80px 0;
-            position: relative;
-        }
-
-        .showcase-grid {
-            display: grid;
-            gap: 40px;
-        }
-
-        .showcase-card {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 32px;
-            background: rgba(26, 26, 46, 0.6);
-            border: 2px solid rgba(0, 245, 255, 0.2);
-            border-radius: 16px;
-            padding: 32px;
-            transition: all 0.4s;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .showcase-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
-            transform: scaleX(0);
-            transition: transform 0.4s;
-        }
-
-        .showcase-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .showcase-card:hover {
-            border-color: var(--neon-blue);
-            transform: translateY(-4px);
-            box-shadow: 0 0 40px rgba(0, 245, 255, 0.3),
-                        0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .showcase-image {
-            width: 200px;
-            height: 200px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(0, 102, 255, 0.1));
-            border: 2px solid rgba(139, 92, 246, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .showcase-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .placeholder-image {
-            font-size: 64px;
-            opacity: 0.5;
-        }
-
-        .showcase-content {
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
 
-        .showcase-content h3 {
-            font-size: 24px;
-            color: var(--text);
-            font-weight: 700;
+        .card:hover {
+            border-color: #c9c9c9;
+            box-shadow: 0 10px 28px rgba(25, 25, 25, 0.07);
+            transform: translateY(-3px);
         }
 
-        .showcase-content > p {
-            color: var(--text-dim);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .showcase-metrics {
+        .card-head {
             display: flex;
-            gap: 32px;
-            padding: 16px 0;
-        }
-
-        .metric {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--neon-blue);
-        }
-
-        .metric-label {
-            font-size: 12px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .showcase-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .showcase-link-btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .showcase-link-btn.primary {
-            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
-            color: white;
-            border: none;
-        }
-
-        .showcase-link-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
-        }
-
-        .showcase-link-btn.secondary {
-            background: transparent;
-            color: var(--neon-blue);
-            border: 2px solid var(--neon-blue);
-        }
-
-        .showcase-link-btn.secondary:hover {
-            background: rgba(0, 245, 255, 0.1);
-        }
-
-        /* End Projects Showcase */
-
-        .project-card {
-            background: rgba(26, 26, 46, 0.6);
-            border: 2px solid rgba(0, 245, 255, 0.2);
-            border-radius: 16px;
-            padding: 32px;
-            transition: all 0.4s;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
-            transform: scaleX(0);
-            transition: transform 0.4s;
-        }
-
-        .project-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .project-card:hover {
-            border-color: var(--neon-pink);
-            transform: translateY(-8px);
-            box-shadow: 0 0 40px rgba(255, 0, 110, 0.4),
-                        0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 16px;
-        }
-
-        .project-card h3 {
-            font-size: 22px;
-            color: var(--text);
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .project-year {
-            font-size: 13px;
-            color: var(--neon-blue);
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .project-badge {
-            padding: 4px 8px;
-            background: linear-gradient(135deg, var(--neon-pink), var(--electric-blue));
-            border-radius: 4px;
-            font-size: 9px;
-            color: white;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .project-card p {
-            color: var(--text-dim);
-            font-size: 15px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .tech-tags {
-            display: flex;
+            align-items: baseline;
+            gap: 9px;
+            margin-bottom: 5px;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
         }
 
-        .tech-tag {
-            padding: 6px 12px;
-            background: rgba(0, 245, 255, 0.1);
-            border: 1px solid var(--neon-blue);
-            border-radius: 6px;
-            font-size: 12px;
-            color: var(--neon-blue);
-            font-weight: 500;
+        .frank { font-size: 11.5px; font-weight: 700; color: var(--ink-faint); }
+
+        .tag-co {
+            display: inline-block;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 3px;
+            border: 1px solid var(--ink-faint);
+            color: var(--ink-faint);
         }
 
-        .project-link {
+        .card h3 { font-size: 16px; font-weight: 700; color: #000; margin: 2px 0 8px; }
+        .card h3 a { color: inherit; text-decoration: none; }
+        .card h3 a:hover { text-decoration: underline; }
+
+        .card p { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.6; flex-grow: 1; }
+
+        .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+
+        .chip {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 4px;
+            background: #fafafa;
+            border: 1px solid var(--line);
+            color: var(--ink-soft);
+        }
+
+        .card-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            color: var(--neon-pink);
-            text-decoration: none;
-            font-size: 14px;
+            gap: 5px;
+            font-size: 12.5px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--blue);
+            text-decoration: none;
+            margin-top: auto;
         }
 
-        .project-link:hover {
-            text-shadow: 0 0 10px var(--neon-pink);
-        }
+        .card-link:hover { text-decoration: underline; }
+        .card-link::after { content: '\2192'; }
 
-        .project-link::after {
-            content: '→';
-            transition: transform 0.3s;
-        }
-
-        .project-link:hover::after {
-            transform: translateX(4px);
-        }
-
-        .skills-visual {
+        /* Skills */
+        .skill-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 28px;
+            gap: 20px;
         }
 
         .skill-group {
-            background: rgba(26, 26, 46, 0.6);
-            border: 2px solid rgba(0, 245, 255, 0.2);
-            border-radius: 12px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 14px;
             padding: 24px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
         }
 
-        .skill-group:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .skill-group-title {
-            font-size: 18px;
-            color: var(--neon-blue);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .math-group .skill-group-title {
-            color: var(--neon-purple);
-        }
-
-        .domain-group .skill-group-title {
-            color: var(--neon-pink);
-        }
-
-        .tools-group .skill-group-title {
-            color: #ffa500;
-        }
-
-        .skill-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .skill-chip {
-            padding: 4px 10px;
-            background: rgba(0, 245, 255, 0.1);
-            border: 1px solid var(--neon-blue);
-            border-radius: 12px;
-            color: var(--neon-blue);
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.3s;
-            cursor: default;
-            white-space: nowrap;
-        }
-
-        .software-group .skill-chip {
-            background: rgba(0, 245, 255, 0.1);
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-        }
-
-        .software-group .skill-chip:hover {
-            background: rgba(0, 245, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
-        }
-
-        .math-group .skill-chip {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: var(--neon-purple);
-            color: var(--neon-purple);
-        }
-
-        .math-group .skill-chip:hover {
-            background: rgba(139, 92, 246, 0.2);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .domain-group .skill-chip {
-            background: rgba(255, 0, 110, 0.1);
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-        }
-
-        .domain-group .skill-chip:hover {
-            background: rgba(255, 0, 110, 0.2);
-            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
-        }
-
-        .tools-group .skill-chip {
-            background: rgba(255, 165, 0, 0.1);
-            border-color: #ffa500;
-            color: #ffa500;
-        }
-
-        .tools-group .skill-chip:hover {
-            background: rgba(255, 165, 0, 0.2);
-            box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
-        }
-
-        .skill-chip:hover {
-            background: rgba(0, 245, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
-            transform: translateY(-2px);
-        }
+        .skill-group h3 { font-size: 13.5px; font-weight: 700; color: #000; margin-bottom: 12px; }
+        .skill-group .chip-row { margin-bottom: 0; }
 
         footer {
-            padding: 60px 0 40px;
-            text-align: left;
-            color: var(--text-dim);
-            font-size: 14px;
-            border-top: 1px solid rgba(0, 245, 255, 0.2);
+            padding: 28px 0 48px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-faint);
         }
 
-        footer p {
-            margin-bottom: 10px;
-        }
+        footer p { margin-bottom: 6px; }
+        .footer-highlight { color: #000; font-weight: 700; }
 
-        .footer-glow {
-            color: var(--neon-pink);
-            font-weight: 700;
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 12px;
-            }
-
-            .nav-links a {
-                font-size: 11px;
-            }
-
-            .nav-resume-btn {
-                font-size: 10px;
-                padding: 6px 12px;
-            }
-
-            .avatar-container {
-                flex-direction: row;
-                gap: 16px;
-            }
-
-            .avatar {
-                width: 70px;
-                height: 70px;
-                font-size: 28px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .tagline {
-                font-size: 14px;
-            }
-
-            .showcase-card {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .showcase-image {
-                width: 100%;
-                height: 180px;
-            }
-
-            .showcase-metrics {
-                flex-wrap: wrap;
-                gap: 16px;
-            }
-
-            .showcase-links {
-                flex-direction: column;
-            }
-
-            .showcase-link-btn {
-                text-align: center;
-                justify-content: center;
-            }
-
-            h2 {
-                font-size: 32px;
-            }
-
-            section {
-                padding: 60px 0;
-            }
-
-            .about-content {
-                padding: 28px;
-            }
-
-            .project-card {
-                padding: 24px;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .skills-visual {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 600px) {
+            h1 { font-size: 28px; }
+            header.page-header { padding: 32px 0 0; }
+            .panel-title { font-size: 19px; }
+            .identity-row { flex-direction: column; align-items: flex-start; gap: 14px; }
         }
     </style>
 </head>
 <body>
-    <nav>
+    <nav class="site-nav">
         <div class="nav-content">
             <a href="index.html" class="nav-logo">AR</a>
             <div class="nav-links">
@@ -856,15 +300,13 @@
         </div>
     </nav>
 
-    <div class="container">
-        <header>
-            <div class="avatar-container">
-                <div class="avatar">
-                    <img src="headshot.jpg" alt="Avi Ravishankar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                </div>
-                <div class="header-info">
-                    <h1>AVINASH <span class="last-name">RAVISHANKAR</span></h1>
-                    <p class="tagline">Data Scientist | Product Manager | Mechanical Engineer</p>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="identity-row">
+                <img class="avatar-photo" src="headshot.jpg" alt="Avinash Ravishankar">
+                <div>
+                    <h1>AVINASH RAVISHANKAR</h1>
+                    <p class="dek">Data Scientist | Product Manager | Mechanical Engineer</p>
                 </div>
             </div>
             <div class="social-links">
@@ -875,12 +317,10 @@
             </div>
         </header>
 
-        <section class="about">
-            <div class="section-header">
-                <h2>About Me</h2>
-                <p class="section-subtitle">Mechanical engineer turned computer vision researcher. A decade of product in between.</p>
-            </div>
-            <div class="about-content">
+        <section class="content-section">
+            <h2 class="panel-title">About Me</h2>
+            <p class="panel-desc">Mechanical engineer turned computer vision researcher. A decade of product in between.</p>
+            <div class="about-card panel-body">
                 <p>
                     I started my career as a mechanical engineer at Oxy Oil &amp; Gas. I built pipeline integrity risk
                     models for assets in the Permian Basin and Colombia. That work made me curious about the software
@@ -891,196 +331,197 @@
                     lead global teams, and how to build products people actually use.
                 </p>
                 <p>
-                    Now I'm back at Rice, pursuing a <span style="color: #00f5ff; font-weight: 700;">Master's in Data Science</span>,
+                    Now I'm back at Rice, pursuing a <span class="hl">Master's in Data Science</span>,
                     expected December 2026. I'm combining my engineering background, my product experience, and my
                     technical depth in machine learning. This summer I completed a
-                    <span style="color: #00f5ff; font-weight: 700;">Computer Vision Research Internship with the Digital Health Institute at Rice University</span>.
+                    <span class="hl">Computer Vision Research Internship with the Digital Health Institute at Rice University</span>.
                     I built AI pipelines that estimate tissue stiffness from video. This work supports autonomous
                     surgical robots.
                 </p>
             </div>
         </section>
 
-        <section class="projects">
-            <div class="section-header">
-                <h2>Career</h2>
-                <p class="section-subtitle">Projects that combine technical depth with real impact</p>
-            </div>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Houston Texans</h3>
-                        <span class="project-badge">Sports</span>
+        <section class="content-section">
+            <h2 class="panel-title">Career</h2>
+            <p class="panel-desc">Projects that combine technical depth with real impact</p>
+            <div class="card-grid">
+
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2025</span>
+                        <span class="tag-co">Sports</span>
                     </div>
-                    <div class="project-year">2025</div>
+                    <h3>Houston Texans</h3>
                     <p>
-                        Conducted 4-week analytics project defining Explosive Plays using 2024 Texans play data. 
-                        Engineered features and analyzed 600+ plays to identify offensive trends, presenting findings 
+                        Conducted 4-week analytics project defining Explosive Plays using 2024 Texans play data.
+                        Engineered features and analyzed 600+ plays to identify offensive trends, presenting findings
                         with four actionable recommendations to football operations staff.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">PowerBI</span>
-                        <span class="tech-tag">Data Analysis</span>
-                        <span class="tech-tag">NFL Analytics</span>
+                    <div class="chip-row">
+                        <span class="chip">Python</span>
+                        <span class="chip">PowerBI</span>
+                        <span class="chip">Data Analysis</span>
+                        <span class="chip">NFL Analytics</span>
                     </div>
-                    <a href="#" class="project-link">View Details</a>
+                    <a href="#" class="card-link">View Details</a>
                 </div>
 
-                <a href="https://tasktag.com" target="_blank" class="project-card" style="text-decoration: none; color: inherit;">
-                    <div class="project-header">
-                        <h3>TaskTag</h3>
-                        <span class="project-badge">Construction</span>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2022 - 2025</span>
+                        <span class="tag-co">Construction</span>
                     </div>
-                    <div class="project-year">2022 - 2025</div>
+                    <h3><a href="https://tasktag.com" target="_blank" rel="noopener">TaskTag</a></h3>
                     <p>
-                        Led product management for construction project management platform. Managed teams of 20+ 
-                        distributed across 9 countries, launched mobile and web app, acquired 2000+ users in 3 months. 
+                        Led product management for construction project management platform. Managed teams of 20+
+                        distributed across 9 countries, launched mobile and web app, acquired 2000+ users in 3 months.
                         Built custom metrics dashboard for business KPIs.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Product Management</span>
-                        <span class="tech-tag">Agile</span>
-                        <span class="tech-tag">B2B</span>
-                        <span class="tech-tag">Mobile/Web</span>
+                    <div class="chip-row">
+                        <span class="chip">Product Management</span>
+                        <span class="chip">Agile</span>
+                        <span class="chip">B2B</span>
+                        <span class="chip">Mobile/Web</span>
                     </div>
-                    <span class="project-link">Learn More</span>
-                </a>
+                    <a href="https://tasktag.com" target="_blank" rel="noopener" class="card-link">Learn More</a>
+                </div>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Mesos</h3>
-                        <span class="project-badge">Drones & AI</span>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2021 - 2022</span>
+                        <span class="tag-co">Drones &amp; AI</span>
                     </div>
-                    <div class="project-year">2021 - 2022</div>
+                    <h3>Mesos</h3>
                     <p>
-                        VP of Product for stratospheric drone and aerial imagery company. Managed engineering team 
-                        building imaging systems, oversaw software development for image detection and cataloging of 
+                        VP of Product for stratospheric drone and aerial imagery company. Managed engineering team
+                        building imaging systems, oversaw software development for image detection and cataloging of
                         1+ petabyte data. Led B2B partnerships and investor relations.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Hardware</span>
-                        <span class="tech-tag">Image Recognition</span>
-                        <span class="tech-tag">Product</span>
-                        <span class="tech-tag">VC Fundraising</span>
+                    <div class="chip-row">
+                        <span class="chip">Hardware</span>
+                        <span class="chip">Image Recognition</span>
+                        <span class="chip">Product</span>
+                        <span class="chip">VC Fundraising</span>
                     </div>
-                    <a href="#" class="project-link">View Details</a>
+                    <a href="#" class="card-link">View Details</a>
                 </div>
 
-                <a href="https://daytum.io" target="_blank" class="project-card" style="text-decoration: none; color: inherit;">
-                    <div class="project-header">
-                        <h3>daytum</h3>
-                        <span class="project-badge">Oil & Gas ML</span>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2019 - 2021</span>
+                        <span class="tag-co">Oil &amp; Gas ML</span>
                     </div>
-                    <div class="project-year">2019 - 2021</div>
+                    <h3><a href="https://daytum.io" target="_blank" rel="noopener">daytum</a></h3>
                     <p>
-                        Built online Learning Management System (LMS) in Anaconda (Jupyterhub with Postgres) to teach 
-                        data science and machine learning to 1000+ energy professionals. Led customer discovery and 
+                        Built online Learning Management System (LMS) in Anaconda (Jupyterhub with Postgres) to teach
+                        data science and machine learning to 1000+ energy professionals. Led customer discovery and
                         feature development in fast-paced startup environment.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Data Science</span>
-                        <span class="tech-tag">Jupyterhub</span>
-                        <span class="tech-tag">Product Launch</span>
-                        <span class="tech-tag">EdTech</span>
+                    <div class="chip-row">
+                        <span class="chip">Data Science</span>
+                        <span class="chip">Jupyterhub</span>
+                        <span class="chip">Product Launch</span>
+                        <span class="chip">EdTech</span>
                     </div>
-                    <span class="project-link">Learn More</span>
-                </a>
+                    <a href="https://daytum.io" target="_blank" rel="noopener" class="card-link">Learn More</a>
+                </div>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>muvve</h3>
-                        <span class="project-badge">Fitness</span>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2016 - 2019</span>
+                        <span class="tag-co">Fitness</span>
                     </div>
-                    <div class="project-year">2016 - 2019</div>
+                    <h3>muvve</h3>
                     <p>
-                        Co-founded fitness events marketplace connecting enthusiasts to local events. Managed team of 
-                        4, built iPhone app with 1000+ downloads, partnered with 20+ fitness companies to increase 
+                        Co-founded fitness events marketplace connecting enthusiasts to local events. Managed team of
+                        4, built iPhone app with 1000+ downloads, partnered with 20+ fitness companies to increase
                         revenue by 10%. Managed sales funnel of 20,000+ contacts.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Mobile App</span>
-                        <span class="tech-tag">B2B2C</span>
-                        <span class="tech-tag">Product Design</span>
-                        <span class="tech-tag">Sales</span>
+                    <div class="chip-row">
+                        <span class="chip">Mobile App</span>
+                        <span class="chip">B2B2C</span>
+                        <span class="chip">Product Design</span>
+                        <span class="chip">Sales</span>
                     </div>
-                    <a href="#" class="project-link">View App</a>
+                    <a href="#" class="card-link">View App</a>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-header">
-                        <h3>Oxy Oil & Gas</h3>
-                        <span class="project-badge">Energy</span>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="frank">2009 - 2015</span>
+                        <span class="tag-co">Energy</span>
                     </div>
-                    <div class="project-year">2009 - 2015</div>
+                    <h3>Oxy Oil &amp; Gas</h3>
                     <p>
-                        Mechanical Engineer working on pipeline integrity risk modeling software for Permian Basin and 
-                        Colombia assets. Implemented H2S monitoring programs and conducted risk matrix analysis of 
+                        Mechanical Engineer working on pipeline integrity risk modeling software for Permian Basin and
+                        Colombia assets. Implemented H2S monitoring programs and conducted risk matrix analysis of
                         near-miss incidents.
                     </p>
-                    <div class="tech-tags">
-                        <span class="tech-tag">Risk Modeling</span>
-                        <span class="tech-tag">Data Analysis</span>
-                        <span class="tech-tag">Engineering</span>
-                        <span class="tech-tag">Compliance</span>
+                    <div class="chip-row">
+                        <span class="chip">Risk Modeling</span>
+                        <span class="chip">Data Analysis</span>
+                        <span class="chip">Engineering</span>
+                        <span class="chip">Compliance</span>
                     </div>
-                    <a href="#" class="project-link">View Details</a>
+                    <a href="#" class="card-link">View Details</a>
                 </div>
+
             </div>
         </section>
 
-        <section class="skills">
-            <div class="section-header">
-                <h2>Technical Arsenal</h2>
-                <p class="section-subtitle">Core competencies for modern data science</p>
-            </div>
-            <div class="skills-visual">
-                <div class="skill-group software-group">
-                    <h3 class="skill-group-title">💻 Software Engineering</h3>
-                    <div class="skill-chips">
-                        <span class="skill-chip">Python</span>
-                        <span class="skill-chip">SQL</span>
-                        <span class="skill-chip">R</span>
-                        <span class="skill-chip">Git</span>
-                        <span class="skill-chip">GitHub</span>
-                        <span class="skill-chip">Pandas</span>
-                        <span class="skill-chip">NumPy</span>
+        <section class="content-section">
+            <h2 class="panel-title">Technical Arsenal</h2>
+            <p class="panel-desc">Core competencies for modern data science</p>
+            <div class="skill-grid">
+                <div class="skill-group">
+                    <h3>&#128187; Software Engineering</h3>
+                    <div class="chip-row">
+                        <span class="chip">Python</span>
+                        <span class="chip">SQL</span>
+                        <span class="chip">R</span>
+                        <span class="chip">Git</span>
+                        <span class="chip">GitHub</span>
+                        <span class="chip">Pandas</span>
+                        <span class="chip">NumPy</span>
                     </div>
                 </div>
-                <div class="skill-group math-group">
-                    <h3 class="skill-group-title">📐 Mathematics & Statistics</h3>
-                    <div class="skill-chips">
-                        <span class="skill-chip">Statistical Modeling</span>
-                        <span class="skill-chip">Regression Analysis</span>
-                        <span class="skill-chip">Hypothesis Testing</span>
-                        <span class="skill-chip">Bayesian Methods</span>
-                        <span class="skill-chip">Linear Algebra</span>
-                        <span class="skill-chip">Probability</span>
-                        <span class="skill-chip">Causal Inference</span>
+                <div class="skill-group">
+                    <h3>&#128209; Mathematics &amp; Statistics</h3>
+                    <div class="chip-row">
+                        <span class="chip">Statistical Modeling</span>
+                        <span class="chip">Regression Analysis</span>
+                        <span class="chip">Hypothesis Testing</span>
+                        <span class="chip">Bayesian Methods</span>
+                        <span class="chip">Linear Algebra</span>
+                        <span class="chip">Probability</span>
+                        <span class="chip">Causal Inference</span>
                     </div>
                 </div>
-                <div class="skill-group domain-group">
-                    <h3 class="skill-group-title">🎯 Domain Expertise</h3>
-                    <div class="skill-chips">
-                        <span class="skill-chip">Sports Analytics</span>
-                        <span class="skill-chip">Oil & Gas</span>
-                        <span class="skill-chip">Mechanical Engineering</span>
-                        <span class="skill-chip">B2C Apps</span>
-                        <span class="skill-chip">Product Management</span>
+                <div class="skill-group">
+                    <h3>&#127919; Domain Expertise</h3>
+                    <div class="chip-row">
+                        <span class="chip">Sports Analytics</span>
+                        <span class="chip">Oil &amp; Gas</span>
+                        <span class="chip">Mechanical Engineering</span>
+                        <span class="chip">B2C Apps</span>
+                        <span class="chip">Product Management</span>
                     </div>
                 </div>
-                <div class="skill-group tools-group">
-                    <h3 class="skill-group-title">🛠️ Tech Tools</h3>
-                    <div class="skill-chips">
-                        <span class="skill-chip">Jira</span>
-                        <span class="skill-chip">Anaconda & Jupyter</span>
-                        <span class="skill-chip">Excel</span>
+                <div class="skill-group">
+                    <h3>&#128295; Tech Tools</h3>
+                    <div class="chip-row">
+                        <span class="chip">Jira</span>
+                        <span class="chip">Anaconda &amp; Jupyter</span>
+                        <span class="chip">Excel</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <footer>
-            <p>© 2026 Avi Ravishankar</p>
-            <p>This website was built without even opening a code editor LOL thanks <span class="footer-glow">claude</span></p>
+            <p>&copy; 2026 Avi Ravishankar</p>
+            <p>This website was built without even opening a code editor LOL thanks <span class="footer-highlight">claude</span></p>
         </footer>
+    </div>
+</body>
+</html>

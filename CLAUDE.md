@@ -9,10 +9,16 @@ Avi Ravishankar's personal site, hosted on GitHub Pages at `avikravi.github.io`.
 ## Files
 
 ```
-index.html              Home page (bio, experience, skills)
-projects.html           Project showcase
+index.html              Home page (bio, experience, skills). As of 2026-08-21, uses the
+                         light-editorial design system (see below), not the neon dark one.
+projects.html           Project showcase. As of 2026-08-21, uses the light-editorial design
+                         system (see below), not the neon dark one.
 tracker.html            Live application tracker (reads tracker-data/applications.json)
-                         Not linked from the nav bar on purpose — direct-URL-only.
+                         Not linked from the nav bar on purpose — direct-URL-only. Still uses
+                         the original neon dark design system — intentionally not converted
+                         when index.html/projects.html were redesigned, since its interactive
+                         UI (stats grid, status columns, filter chips, resume-tailoring tool)
+                         would need separate rework to restyle safely.
                          Also hosts the "Tailor a Resume" tool — see below.
 tracker-data/
   applications.json     The tracker's actual data — see schema below
@@ -32,8 +38,9 @@ AvinashResume2026.pdf   The single, canonical resume — linked from the "Downlo
 zgx-nano-case-study.html Working case study on the HP ZGX Nano AI Station (feedback/positive-review
                          scraper boxes, personal research, potential-use-case industry reviews,
                          competitor tracker). Unlisted (meta robots noindex,nofollow, not linked from
-                         nav) — direct-URL-only. Uses its own light-editorial design system, deliberately
-                         independent of the neon dark tokens below.
+                         nav) — direct-URL-only. Originator of the light-editorial design system:
+                         as of 2026-08-21, index.html and projects.html were redesigned to match this
+                         page's tokens, typography, and flat divided-list layout (see below).
 nano.png / nano-header.png  Source and resized product photos used in the case study header.
 hp-pmm-worksheet.html    Static reference table itemizing every skill/requirement/responsibility
                          from a specific HP job posting (Principal Technical Product Marketing
@@ -51,7 +58,36 @@ CLAUDE.md               This file
 
 ## Design system — DO NOT change without being asked
 
-All three HTML pages use the same inline `<style>` tokens. Preserve these exactly when editing any page:
+**Two design systems now coexist in this repo, split by page.** Don't mix their tokens.
+
+### Light-editorial system (`index.html`, `projects.html`, `zgx-nano-case-study.html`)
+
+As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `zgx-nano-case-study.html`'s clean, light, editorial look, at the user's explicit request — all original wording/content was preserved, only the visual system changed. `zgx-nano-case-study.html` remains the source of truth for these tokens:
+
+```css
+--bg: #ffffff;
+--ink: #191919;
+--ink-soft: #3d3d3d;
+--ink-faint: #767676;
+--line: #e5e5e5;
+--blue: #1967b1;
+```
+
+Font stack: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`
+
+Shared conventions across these three pages:
+- Flat, thin-bordered nav (`border-bottom: 1px solid var(--line)`) — black wordmark logo, uppercase nav links in `--ink-faint`, black underline "active" state, solid black "Download Resume" pill button
+- No background animation, no gradients, no glow/blur effects — plain white background throughout
+- Page header pattern: optional `.eyebrow` (small uppercase label), bold black `h1`, `.dek` subtitle in `--ink-faint`
+- Section pattern: `.panel-title` (bold black `h2`-equivalent) + `.panel-desc` (faint subtitle with a bottom border divider)
+- Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below
+- Small pill tags (`.tag-co`, `.chip`) for categories/tech stacks: subtle border, no fill or a very light `#fafafa` fill, never a colored gradient
+
+If asked to add a new page or extend `index.html`/`projects.html`, copy tokens and conventions from `zgx-nano-case-study.html` or these two pages — not from `tracker.html`.
+
+### Neon dark system (`tracker.html` only)
+
+`tracker.html` was intentionally left on the original dark neon design when `index.html`/`projects.html` were converted (2026-08-21) — its interactive UI (stats grid, status columns, filter chips, the resume-tailoring tool) would need separate rework to restyle safely, and it's unlinked from nav anyway. Preserve these tokens exactly when editing `tracker.html`:
 
 ```css
 --neon-pink: #ff006e;
@@ -67,15 +103,11 @@ All three HTML pages use the same inline `<style>` tokens. Preserve these exactl
 
 Font stack: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', monospace`
 
-Shared conventions:
-- Fixed nav bar with blurred background, gradient logo text ("AR"), uppercase nav links, pink "active" state, gradient "Download Resume" button (no icon — the arrow was removed)
-- Animated grid background (`body::before`) + radial gradient overlay (`body::after`)
-- Section headers: gradient `h2` (pink → blue), `.section-subtitle` in `--text-dim`
-- Cards: `rgba(26,26,46,0.6)` background, 2px border in a low-opacity accent color, `border-radius: 16px`, `backdrop-filter: blur(10px)`
+Conventions: fixed nav bar with blurred background, gradient logo text ("AR"), uppercase nav links, pink "active" state, gradient "Download Resume" button; animated grid background (`body::before`) + radial gradient overlay (`body::after`); gradient `h2` (pink → blue) section headers; cards with `rgba(26,26,46,0.6)` background, 2px low-opacity-accent border, `border-radius: 16px`, `backdrop-filter: blur(10px)`.
 
-If asked to add a new page, copy the nav/header/footer markup and CSS variables from `tracker.html` or `index.html` rather than inventing new tokens.
+### Nav bar consistency (now split by design system)
 
-**The nav bar must be byte-for-byte identical across all three pages — markup and CSS, including the mobile `@media (max-width: 768px)` breakpoint.** `index.html` is the source of truth. The only permitted difference is which link carries `class="active"`. Nav links (in order): Home, Projects, Research (external link, `target="_blank" rel="noopener"`, points to `avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html` — a separate repo, not a local page), Download Resume. `tracker.html` additionally carries its own "Tracker" link (active) after Research — that one link is the sole permitted addition, since `tracker.html` is deliberately not linked from the other two pages' nav. If you change one page's nav, copy the change to the other two verbatim.
+The **byte-for-byte-identical nav rule now applies within each design system, not across both**: `index.html` and `projects.html` must keep identical nav markup/CSS (light-editorial system, `index.html` is the source of truth for that pair); `tracker.html` keeps its own nav in the neon dark system, unlinked from the other two — it is no longer expected to match them visually. Nav links on `index.html`/`projects.html` (in order): Home, Projects, Research (external link, `target="_blank" rel="noopener"`, points to `avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html` — a separate repo, not a local page), Download Resume. The only permitted difference between `index.html` and `projects.html` navs is which link carries `class="active"`. If you change one of those two pages' nav, copy the change to the other verbatim. `tracker.html`'s own nav (with its extra "Tracker" link) can be updated independently.
 
 ## Tracker data schema (`tracker-data/applications.json`)
 
