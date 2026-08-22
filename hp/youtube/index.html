@@ -63,34 +63,32 @@
             max-width: 620px;
         }
 
-        .panel-empty {
-            margin-top: 40px;
-            padding: 64px 24px;
-            border: 1px dashed var(--line);
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-top: 32px;
+            background: #000;
             border-radius: 10px;
-            text-align: center;
+            overflow: hidden;
         }
 
-        .empty-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            border: 1px dashed var(--line);
-            border-radius: 3px;
-            padding: 6px 12px;
-            margin-bottom: 14px;
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
-        .panel-empty p {
-            font-size: 14.5px;
+        .video-note {
+            margin-top: 14px;
+            font-size: 13px;
             color: var(--ink-faint);
-            max-width: 440px;
-            margin: 0 auto;
-            line-height: 1.6;
         }
+
+        .video-note a { color: var(--blue); text-decoration: none; }
+        .video-note a:hover { text-decoration: underline; }
 
         footer {
             padding: 28px 0 48px;
@@ -157,10 +155,6 @@
         .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
         .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
 
-        .hp-sidenav-foot { margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); }
-        .hp-nav-back { font-size: 11.5px; color: #8a8f98; text-decoration: none; }
-        .hp-nav-back:hover { color: #fff; }
-
         .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
         .hp-nav-scrim.open { display: block; }
 
@@ -206,9 +200,6 @@
                 <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
                 <a href="/hp/youtube" class="hp-nav-link active">Youtube</a>
             </nav>
-            <div class="hp-sidenav-foot">
-                <a href="/" class="hp-nav-back">&larr; Main site</a>
-            </div>
         </aside>
         <div class="hp-nav-scrim" id="hpNavScrim"></div>
 
@@ -224,10 +215,10 @@
             <p class="dek">A video companion to the case study &mdash; walkthroughs, hands-on reactions, and use-case demos.</p>
         </header>
 
-        <div class="panel-empty">
-            <div class="empty-tag">Coming Soon</div>
-            <p>The playlist embed goes here once it's ready. Check back soon.</p>
+        <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
+        <p class="video-note">Playlist updates as new videos are added &mdash; <a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">open on Youtube</a>.</p>
 
         <footer>
             Working draft, not for external distribution yet.
