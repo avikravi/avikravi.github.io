@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube Playlist — HP ZGX Nano | Avi Ravishankar</title>
+    <meta name="description" content="Youtube playlist companion to the HP ZGX Nano case study.">
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --hp-blue: #0096D6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px 64px;
+        }
+
+        header.page-header {
+            padding: 44px 0 0;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .dek {
+            font-size: 15.5px;
+            color: var(--ink-faint);
+            max-width: 620px;
+        }
+
+        .panel-empty {
+            margin-top: 40px;
+            padding: 64px 24px;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .empty-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            border: 1px dashed var(--line);
+            border-radius: 3px;
+            padding: 6px 12px;
+            margin-bottom: 14px;
+        }
+
+        .panel-empty p {
+            font-size: 14.5px;
+            color: var(--ink-faint);
+            max-width: 440px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-faint);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 25px; }
+            header.page-header { padding: 32px 0 0; }
+        }
+
+        /* HP section nav (shared across /hp pages) */
+        .hp-shell { display: flex; align-items: flex-start; min-height: 100vh; }
+
+        .hp-sidenav {
+            width: 232px;
+            flex-shrink: 0;
+            background: #14161b;
+            color: #fff;
+            padding: 26px 18px;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            overflow-y: auto;
+            z-index: 110;
+        }
+
+        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+
+        .hp-brand {
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            color: #fff;
+            text-decoration: none;
+        }
+        .hp-brand span { color: var(--hp-blue, #0096D6); }
+
+        .hp-nav-close {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .hp-sidenav-links { display: flex; flex-direction: column; gap: 2px; }
+
+        .hp-nav-link {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #b7bcc4;
+            text-decoration: none;
+            transition: background-color 0.15s, color 0.15s;
+        }
+        .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+        .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
+
+        .hp-sidenav-foot { margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); }
+        .hp-nav-back { font-size: 11.5px; color: #8a8f98; text-decoration: none; }
+        .hp-nav-back:hover { color: #fff; }
+
+        .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
+        .hp-nav-scrim.open { display: block; }
+
+        .hp-nav-open {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            background: #fff;
+            border: none;
+            border-bottom: 1px solid var(--line, #e5e5e5);
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--hp-blue, #0096D6);
+            cursor: pointer;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .hp-main { flex: 1; min-width: 0; margin-left: 232px; }
+
+        @media (max-width: 880px) {
+            .hp-sidenav { transform: translateX(-100%); width: 76%; max-width: 300px; box-shadow: 4px 0 28px rgba(0,0,0,0.25); transition: transform 0.22s ease; }
+            .hp-sidenav.open { transform: translateX(0); }
+            .hp-nav-close { display: block; }
+            .hp-main { margin-left: 0; }
+            .hp-nav-open { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hp-shell">
+        <aside class="hp-sidenav" id="hpSidenav">
+            <div class="hp-sidenav-head">
+                <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
+                <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
+            </div>
+            <nav class="hp-sidenav-links">
+                <a href="/hp" class="hp-nav-link">Home</a>
+                <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
+                <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
+                <a href="/hp/youtube" class="hp-nav-link active">Youtube</a>
+            </nav>
+            <div class="hp-sidenav-foot">
+                <a href="/" class="hp-nav-back">&larr; Main site</a>
+            </div>
+        </aside>
+        <div class="hp-nav-scrim" id="hpNavScrim"></div>
+
+        <div class="hp-main">
+            <button type="button" class="hp-nav-open" id="hpNavOpen" aria-label="Open menu" aria-expanded="false">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
+                Menu
+            </button>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="eyebrow">HP ZGX Nano</div>
+            <h1>Youtube Playlist</h1>
+            <p class="dek">A video companion to the case study &mdash; walkthroughs, hands-on reactions, and use-case demos.</p>
+        </header>
+
+        <div class="panel-empty">
+            <div class="empty-tag">Coming Soon</div>
+            <p>The playlist embed goes here once it's ready. Check back soon.</p>
+        </div>
+
+        <footer>
+            Working draft, not for external distribution yet.
+        </footer>
+    </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var openBtn = document.getElementById('hpNavOpen');
+            var closeBtn = document.getElementById('hpNavClose');
+            var sidenav = document.getElementById('hpSidenav');
+            var scrim = document.getElementById('hpNavScrim');
+            function openNav() { sidenav.classList.add('open'); scrim.classList.add('open'); openBtn.setAttribute('aria-expanded', 'true'); }
+            function closeNav() { sidenav.classList.remove('open'); scrim.classList.remove('open'); openBtn.setAttribute('aria-expanded', 'false'); }
+            if (openBtn) openBtn.addEventListener('click', openNav);
+            if (closeBtn) closeBtn.addEventListener('click', closeNav);
+            if (scrim) scrim.addEventListener('click', closeNav);
+        })();
+    </script>
+</body>
+</html>

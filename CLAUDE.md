@@ -35,23 +35,49 @@ AvinashResume2026.pdf   The single, canonical resume — linked from the "Downlo
                          what used to be two separate resume PDFs (AvinashResume.pdf and
                          Avinash_Resume_2026.pdf, both now deleted) into this one file, which
                          is the ultimate source of truth for both content and formatting.
-zgx-nano-case-study.html Working case study on the HP ZGX Nano AI Station (feedback/positive-review
-                         scraper boxes, personal research, potential-use-case industry reviews,
-                         competitor tracker). Unlisted (meta robots noindex,nofollow, not linked from
-                         nav) — direct-URL-only. Originator of the light-editorial design system:
-                         as of 2026-08-21, index.html and projects.html were redesigned to match this
-                         page's tokens, typography, and flat divided-list layout (see below).
-nano.png / nano-header.png  Source and resized product photos used in the case study header.
-hp-pmm-worksheet.html    Static reference table itemizing every skill/requirement/responsibility
-                         from a specific HP job posting (Principal Technical Product Marketing
-                         Manager, AI Solutions) as one row each. No JS, no localStorage, no
-                         edit UI — the right-hand "How I Qualify" column is plain HTML that
-                         Claude Code updates directly as Avi describes his experience in chat
-                         and it's mapped to the matching row(s). Unlisted, styled in HP's
-                         actual brand blue (#0096D6) rather than the neon dark tokens below,
-                         not linked from nav. Writing style for the "How I Qualify" column:
-                         short, complete sentences. Never use a dash (em dash or "--") to
-                         join two clauses; split into separate sentences instead.
+nano.png / nano-header.png  Source and resized product photos used in the case study header
+                         (nano-header.png is referenced with an absolute /nano-header.png path
+                         from hp/case-study/index.html, which lives two directories deep).
+hp/                      All of Avi's HP application material, as of 2026-08-22. Every page here
+                         shares one persistent left sidebar nav (see "The /hp section" below).
+  index.html             URL: /hp — Home. Static reference table itemizing every skill/
+                         requirement/responsibility from a specific HP job posting (Principal
+                         Technical Product Marketing Manager, AI Solutions) as one row each.
+                         No JS beyond the shared sidenav toggle, no localStorage, no edit UI —
+                         the right-hand "How I Qualify" column is plain HTML that Claude Code
+                         updates directly as Avi describes his experience in chat and it's
+                         mapped to the matching row(s). Styled in HP's actual brand blue
+                         (#0096D6) rather than the light-editorial tokens below. Writing style
+                         for the "How I Qualify" column: short, complete sentences. Never use a
+                         dash (em dash or "--") to join two clauses; split into separate
+                         sentences instead.
+  case-study/index.html  URL: /hp/case-study. Working case study on the HP ZGX Nano AI Station
+                         (feedback/positive-review scraper boxes, personal research, competitor
+                         tracker). Originator of the light-editorial design system: as of
+                         2026-08-21, index.html and projects.html were redesigned to match this
+                         page's tokens, typography, and flat divided-list layout (see below). As
+                         of 2026-08-22 its "Use Cases" tab was split out to hp/use-cases/ — this
+                         page now has 4 tabs (Feedback, Positive Reviews, Research & Interviews,
+                         Competitor Tracker), numbered 1-4; don't reuse "Box 4" for anything else
+                         here since Use Cases' own text still refers to itself as Box 4 on its
+                         own page, and this page's avi-review text references "Box 1"/"Box 2"
+                         (Feedback/Positive Reviews) by number in several places — keep those two
+                         numbers stable if you ever reorder tabs again.
+  use-cases/index.html   URL: /hp/use-cases. 10-industry potential-use-case review for the ZGX
+                         Nano (industry chip switcher, one panel per industry), split out from
+                         case-study/index.html into its own page on 2026-08-22 so it could get
+                         its own sidebar nav entry. Uses the same light-editorial tokens and
+                         industry-panel/evidence-tag/strength-meter CSS as the case study — keep
+                         both in sync if you touch that CSS. Its text references "Box 1, item NN"
+                         and "Box 2, item NN" throughout, meaning specific numbered findings on
+                         the case-study page; the panel-desc links to /hp/case-study for context.
+  youtube/index.html     URL: /hp/youtube. Placeholder for a Youtube playlist companion to the
+                         case study — content not added yet, just an empty-state page matching
+                         the light-editorial tokens.
+hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
+                         any existing links don't 404).
+zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
+                         URL, kept so any existing links don't 404).
 README.md               Human-facing docs
 CLAUDE.md               This file
 ```
@@ -60,9 +86,9 @@ CLAUDE.md               This file
 
 **Two design systems now coexist in this repo, split by page.** Don't mix their tokens.
 
-### Light-editorial system (`index.html`, `projects.html`, `zgx-nano-case-study.html`)
+### Light-editorial system (`index.html`, `projects.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, `hp/youtube/index.html`)
 
-As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `zgx-nano-case-study.html`'s clean, light, editorial look, at the user's explicit request — all original wording/content was preserved, only the visual system changed. `zgx-nano-case-study.html` remains the source of truth for these tokens:
+As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `hp/case-study/index.html`'s (formerly `zgx-nano-case-study.html`) clean, light, editorial look, at the user's explicit request — all original wording/content was preserved, only the visual system changed. `hp/case-study/index.html` remains the source of truth for these tokens:
 
 ```css
 --bg: #ffffff;
@@ -83,7 +109,17 @@ Shared conventions across these three pages:
 - Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below
 - Small pill tags (`.tag-co`, `.chip`) for categories/tech stacks: subtle border, no fill or a very light `#fafafa` fill, never a colored gradient
 
-If asked to add a new page or extend `index.html`/`projects.html`, copy tokens and conventions from `zgx-nano-case-study.html` or these two pages — not from `tracker.html`.
+If asked to add a new page or extend `index.html`/`projects.html`, copy tokens and conventions from `hp/case-study/index.html` or these two pages — not from `tracker.html`.
+
+## The `/hp` section (`hp/`)
+
+As of 2026-08-22, `hp/index.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, and `hp/youtube/index.html` share one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This is deliberately its own third design layer, sitting *outside* whichever content design system a given page uses (HP-blue for the worksheet, light-editorial for the other three): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color. Links: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), plus a "← Main site" link back to `/`.
+
+Mobile (`max-width: 880px`): the sidebar becomes an off-canvas drawer (`transform: translateX(-100%)` by default, `.open` slides it in), triggered by a sticky "Menu" hamburger button (`#hpNavOpen`) that appears at the top of `.hp-main`, with a dark scrim (`#hpNavScrim`) behind it and a close button (`#hpNavClose`) in the drawer header. The toggle JS is a small inline `<script>` block at the end of each page's `<body>`, using those three element IDs plus `#hpSidenav` — keep the IDs consistent if you copy this block to a new `/hp` page.
+
+If you add a fifth `/hp` page, copy the entire `.hp-shell`/`.hp-sidenav`/etc. CSS block and the matching HTML structure + toggle `<script>` from `hp/youtube/index.html` (the simplest of the four), add a new `<a class="hp-nav-link">` row to the nav list on **all** `/hp` pages (including the new one, marked `active`), and use an absolute path (`/hp/whatever`) for its URL and for any cross-page links, since these pages live at different folder depths.
+
+Since GitHub Pages serves a directory's `index.html` for both `/hp` and `/hp/` (no Jekyll pretty-permalink magic needed), every `/hp` page is a folder (`hp/case-study/index.html`, not `hp/case-study.html`) so its clean URL works. The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin `<meta http-equiv="refresh">` redirect stubs pointing at `/hp` and `/hp/case-study` respectively — update those stubs' targets if a `/hp` page's URL ever changes again.
 
 ### Neon dark system (`tracker.html` only)
 

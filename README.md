@@ -12,7 +12,7 @@ Avi Ravishankar's personal site — portfolio, projects, and a live application 
 | `projects.html` | Project showcase (TaskTag, Mesos, daytum, etc.) |
 | `tracker.html` | Live job/PhD application tracker — see below. Deliberately **not linked from the nav bar**; only reachable if you know to type the URL. |
 
-As of 2026-08-21, `index.html` and `projects.html` use a light-editorial design system (matching `zgx-nano-case-study.html` — see `CLAUDE.md` for the token reference), while `tracker.html` remains on the original neon dark design (its interactive UI would need separate rework to restyle safely). `index.html` and `projects.html` share a byte-for-byte identical nav bar, sourced from `index.html` — the only allowed difference between the two is which link carries the `active` class. Nav links: Home, Projects, Research (external — points to the dataset viewer in the separate `surgical-robotics-tissue-sim` repo, opens in a new tab), Download Resume. `tracker.html` keeps its own nav in the dark design system, with its own "Tracker" link (active), and is no longer expected to match the other two visually. If you edit the nav on `index.html` or `projects.html`, update the other of those two to match exactly.
+As of 2026-08-21, `index.html` and `projects.html` use a light-editorial design system (matching `hp/case-study/index.html` — see `CLAUDE.md` for the token reference), while `tracker.html` remains on the original neon dark design (its interactive UI would need separate rework to restyle safely). `index.html` and `projects.html` share a byte-for-byte identical nav bar, sourced from `index.html` — the only allowed difference between the two is which link carries the `active` class. Nav links: Home, Projects, Research (external — points to the dataset viewer in the separate `surgical-robotics-tissue-sim` repo, opens in a new tab), Download Resume. `tracker.html` keeps its own nav in the dark design system, with its own "Tracker" link (active), and is no longer expected to match the other two visually. If you edit the nav on `index.html` or `projects.html`, update the other of those two to match exactly.
 
 ## Application Tracker
 
@@ -86,14 +86,18 @@ Then open `http://localhost:8000`.
 
 As of 2026-08-10, `AvinashResume2026.pdf` (repo root, linked from "Download Resume" on all three main pages) is the single, ultimate source of truth for both content and formatting — it replaced the previous two-PDF setup and the earlier `MASTERResume.docx` concept. No source `.docx` is currently on file for it.
 
-## Unlisted / working pages
+## Unlisted / working pages: the `/hp` section
 
-Not linked from the nav bar, direct-URL-only:
+Not linked from the main nav bar, direct-URL-only. As of 2026-08-22, all of Avi's HP application material lives under `/hp`, sharing one persistent left sidebar nav (dark, HP-brand-blue accent, off-canvas/hamburger on mobile — see `CLAUDE.md`). Each page keeps its own existing internal design system inside the sidebar shell.
 
-| File | What it is |
-|---|---|
-| `zgx-nano-case-study.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, a 10-industry potential-use-case review, and a competitor tracker. Originator of the light-editorial design system now also used by `index.html`/`projects.html`. |
-| `hp-pmm-worksheet.html` | Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. No JS, no local storage, no edit form. Its own independent design system (HP brand blue), not the tokens above. |
+| URL | File | What it is |
+|---|---|---|
+| `/hp` | `hp/index.html` | **Home.** Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. Its own independent design system (HP brand blue). |
+| `/hp/case-study` | `hp/case-study/index.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, and a competitor tracker. Originator of the light-editorial design system now also used by `index.html`/`projects.html`. The Use Cases tab that used to live here moved to its own page (below). |
+| `/hp/use-cases` | `hp/use-cases/index.html` | 10-industry potential-use-case review for the ZGX Nano, split out from the case study into its own page. Same industry-chip switcher UI, cross-links back to the case study's "Box 1"/"Box 2" evidence it references. |
+| `/hp/youtube` | `hp/youtube/index.html` | Placeholder for a Youtube playlist companion to the case study — content not added yet. |
+
+The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin meta-refresh redirect stubs pointing at `/hp` and `/hp/case-study`, in case any old links are still floating around.
 
 ## Working with Claude Code
 
