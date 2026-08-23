@@ -75,13 +75,23 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          both in sync if you touch that CSS. Its text references "Box 1, item NN"
                          and "Box 2, item NN" throughout, meaning specific numbered findings on
                          the case-study page; the panel-desc links to /hp/case-study for context.
-  youtube/index.html     URL: /hp/youtube. Youtube playlist companion to the case study — a
-                         "now playing" iframe embed (playlist ID PL7jVMm9XS9Px7BLSKPi3yaR7Zy_
-                         dcHKXo) plus a responsive thumbnail grid below it, one card per video,
-                         built from hp/youtube/videos.json (see below). Clicking a card swaps
-                         the top iframe's src to that video (autoplay) and highlights the active
-                         card; it doesn't navigate away. No embedded YouTube Data API/key — see
-                         "The /hp section" below for why.
+  youtube/index.html     URL: /hp/youtube. Youtube playlist of Avi's AI/ML project videos — a
+                         two-column layout (`.yt-layout`) at >=760px: a vertical "All Videos"
+                         list (`.yt-list`, 300px wide) on the left, one mini card per video
+                         (thumbnail + title, stacked top-to-bottom, scrolls internally past
+                         640px tall), and the "now playing" iframe player (`.yt-player-col`)
+                         filling the rest of the row on the right — deliberately much bigger
+                         than the list, since that's the whole point of the layout (2026-08-23,
+                         per Avi: put the list in what used to be dead white space next to a
+                         small player, then let the player use the space that frees up). Below
+                         760px both columns collapse to a single column via `flex-direction:
+                         column`, with the player showing first (CSS `order`, not DOM order, so
+                         markup order is list-then-player but visual order flips per breakpoint
+                         — keep that in mind if you edit the HTML, since it no longer matches
+                         reading order 1:1). List built from hp/youtube/videos.json (see below);
+                         clicking an item swaps the iframe's src (autoplay) and highlights the
+                         active item. No embedded YouTube Data API/key — see "The /hp section"
+                         below for why.
   youtube/videos.json    Manually maintained list of {id, title} for the /hp/youtube thumbnail
                          grid, fetched client-side with a plain relative fetch() (same file://
                          caveat as tailor/app.js — serve over HTTP(S) to test locally). Update
@@ -140,7 +150,9 @@ If asked to add a new page or extend `index.html`/`projects.html`, copy tokens a
 
 ## The `/hp` section (`hp/`)
 
-As of 2026-08-22, every page under `hp/` (`index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, and `ai-research/index.html` as of 2026-08-23) shares one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This sidebar is deliberately its own design layer, sitting *outside* the light-editorial system every `/hp` page's content area now uses (see above): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color — this is the only place `--hp-blue` still appears; the content area of every `/hp` page uses `--blue` (#1967b1) like `index.html`/`projects.html`. Links, in order: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), AI Research (`/hp/ai-research`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
+As of 2026-08-22, every page under `hp/` (`index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, and `ai-research/index.html` as of 2026-08-23) shares one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This sidebar is deliberately its own design layer, sitting *outside* the light-editorial system every `/hp` page's content area now uses (see above): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color — this is the only place `--hp-blue` still appears; the content area of every `/hp` page uses `--blue` (#1967b1) like `index.html`/`projects.html`. Links, in order: "Home - Job Fit" (`/hp` — relabeled from plain "Home" on 2026-08-23 so the sidebar itself hints at what that page is), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), AI Research (`/hp/ai-research`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
+
+Every `/hp` page's `.wrap` uses the same `max-width: 1180px; margin: 0 auto; padding: 0 24px;` as of 2026-08-23 (matching `index.html`/`projects.html`) — before that, the four pages had drifted to three different widths (1100px, 1180px, 900px) as they were built one at a time. `h1` is `32px` / `line-height: 1.15` and `.dek` is `15.5px` / `max-width: 620px` on every `/hp` page too, for the same reason. `hp/use-cases/index.html`'s prose content is wrapped in a `.panel-body { max-width: 780px; }` div (matching `hp/case-study/index.html`'s existing convention) so its paragraphs don't stretch edge-to-edge now that `.wrap` is wider — the `industry-nav` chip grid and `balance-note` are inside that same wrapper. If you touch any `/hp` page's header typography or `.wrap`, check the other four match.
 
 Mobile (`max-width: 880px`): the sidebar becomes an off-canvas drawer (`transform: translateX(-100%)` by default, `.open` slides it in), triggered by a sticky "Menu" hamburger button (`#hpNavOpen`) that appears at the top of `.hp-main`, with a dark scrim (`#hpNavScrim`) behind it and a close button (`#hpNavClose`) in the drawer header. The toggle JS is a small inline `<script>` block at the end of each page's `<body>`, using those three element IDs plus `#hpSidenav` — keep the IDs consistent if you copy this block to a new `/hp` page.
 

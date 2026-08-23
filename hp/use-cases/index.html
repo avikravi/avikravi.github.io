@@ -32,9 +32,9 @@
         a { color: var(--blue); }
 
         .wrap {
-            max-width: 900px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 0 24px 64px;
+            padding: 0 24px;
         }
 
         header.page-header {
@@ -85,6 +85,8 @@
 
         .panel-desc a { color: var(--blue); text-decoration: none; }
         .panel-desc a:hover { text-decoration: underline; }
+
+        .panel-body { max-width: 780px; }
 
         .balance-note {
             font-size: 13px;
@@ -333,7 +335,7 @@
                 <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
             </div>
             <nav class="hp-sidenav-links">
-                <a href="/hp" class="hp-nav-link">Home</a>
+                <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
                 <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
                 <a href="/hp/use-cases" class="hp-nav-link active">Use Cases</a>
                 <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
@@ -355,6 +357,7 @@
         </header>
 
         <section>
+          <div class="panel-body">
             <p class="panel-desc">Starting from what HP itself already claims, industry by industry &mdash; then reviewing whether that claim holds up against everything verified in the <a href="/hp/case-study">case study's</a> Feedback Scraper (Box 1) and Positive Review Scraper (Box 2). Where HP hasn't made a claim at all, that's stated plainly rather than invented.</p>
 
             <p class="balance-note">Pattern worth naming up front: of the 10 industries reviewed, HP's actual marketing clusters almost entirely around regulated, security-sensitive verticals &mdash; healthcare, federal government, education &mdash; which lines up with the FIPS 140-2 / Common Criteria EAL4+ posture verified in Box 2, item 05. For the other seven, HP either mentions the vertical in passing or hasn't addressed it at all.</p>
@@ -484,6 +487,7 @@
                 <p class="avi-review"><strong>Avi's review</strong>Same shape as energy: an air-gapped device with no cloud dependency has an obvious theoretical appeal on a ship, but there's zero evidence HP has pursued this, and none of the physical certifications &mdash; vibration, humidity, salt-air resistance &mdash; that maritime deployment would actually require have ever been mentioned.</p>
                 <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or marketing language mentioning maritime use turned up anywhere in HP's ZGX Nano materials.</p>
             </div>
+          </div>
         </section>
 
         <footer>

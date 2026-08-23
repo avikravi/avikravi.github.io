@@ -30,9 +30,9 @@
         a { color: var(--blue); }
 
         .wrap {
-            max-width: 900px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 0 24px 64px;
+            padding: 0 24px;
         }
 
         header.page-header {
@@ -63,37 +63,16 @@
             max-width: 620px;
         }
 
-        .video-embed {
-            position: relative;
-            width: 50%;
-            min-width: 220px;
-            aspect-ratio: 16 / 9;
+        .yt-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
             margin-top: 32px;
-            margin-right: auto;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
         }
 
-        .video-embed iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+        .yt-list { order: 2; }
 
-        .video-note {
-            margin-top: 14px;
-            font-size: 13px;
-            color: var(--ink-faint);
-        }
-
-        .video-note a { color: var(--blue); text-decoration: none; }
-        .video-note a:hover { text-decoration: underline; }
-
-        .video-grid-title {
-            margin-top: 40px;
+        .yt-list-title {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.06em;
@@ -101,33 +80,41 @@
             color: var(--ink-faint);
             padding-bottom: 14px;
             border-bottom: 1px solid var(--line);
+            margin-bottom: 14px;
         }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
-            margin-top: 18px;
+        .yt-list-items {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .video-card {
-            display: block;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
             cursor: pointer;
             text-align: left;
             background: none;
             border: none;
-            padding: 0;
+            padding: 6px;
+            border-radius: 8px;
             font: inherit;
-            border-radius: 10px;
+            transition: background-color 0.15s;
         }
+
+        .video-card:hover { background: #fafafa; }
+        .video-card.active { background: #f2f7fc; }
 
         .video-thumb {
             display: block;
             position: relative;
-            width: 100%;
+            width: 130px;
+            flex-shrink: 0;
             aspect-ratio: 16 / 9;
             background: #000;
-            border-radius: 10px;
+            border-radius: 6px;
             overflow: hidden;
             border: 1px solid var(--line);
             transition: border-color 0.15s;
@@ -162,15 +149,15 @@
         }
 
         .play-badge svg {
-            width: 40px;
-            height: 40px;
+            width: 26px;
+            height: 26px;
             filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
         }
 
         .video-card-title {
             display: block;
-            margin-top: 9px;
-            font-size: 13px;
+            padding-top: 2px;
+            font-size: 12.5px;
             font-weight: 600;
             color: var(--ink);
             line-height: 1.4;
@@ -179,9 +166,42 @@
         .video-card.active .video-card-title { color: var(--hp-blue, #0096D6); }
 
         .video-grid-empty {
-            margin-top: 18px;
             font-size: 13.5px;
             color: var(--ink-faint);
+        }
+
+        .yt-player-col { order: 1; min-width: 0; }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-note {
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--ink-faint);
+        }
+
+        .video-note a { color: var(--blue); text-decoration: none; }
+        .video-note a:hover { text-decoration: underline; }
+
+        @media (min-width: 760px) {
+            .yt-layout { flex-direction: row; align-items: flex-start; }
+            .yt-list { order: 1; width: 300px; flex-shrink: 0; max-height: 640px; overflow-y: auto; }
+            .yt-player-col { order: 2; flex: 1; }
         }
 
         footer {
@@ -289,7 +309,7 @@
                 <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
             </div>
             <nav class="hp-sidenav-links">
-                <a href="/hp" class="hp-nav-link">Home</a>
+                <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
                 <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
                 <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
                 <a href="/hp/youtube" class="hp-nav-link active">Youtube</a>
@@ -310,13 +330,18 @@
             <p class="dek">A running log of AI/ML project walkthroughs and reviews &mdash; from sports-prediction modeling to hands-on hardware demos.</p>
         </header>
 
-        <div class="video-embed">
-            <iframe id="ytPlayer" src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <div class="yt-layout">
+            <div class="yt-list">
+                <div class="yt-list-title">All Videos</div>
+                <div class="yt-list-items" id="ytGrid"></div>
+            </div>
+            <div class="yt-player-col">
+                <div class="video-embed">
+                    <iframe id="ytPlayer" src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+                <p class="video-note"><a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">Open the full playlist on Youtube</a>.</p>
+            </div>
         </div>
-        <p class="video-note"><a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">Open the full playlist on Youtube</a>.</p>
-
-        <div class="video-grid-title">All Videos</div>
-        <div class="video-grid" id="ytGrid"></div>
 
         <footer>
             Working draft, not for external distribution yet.
