@@ -95,7 +95,7 @@ Not linked from the main nav bar, direct-URL-only. As of 2026-08-22, all of Avi'
 | `/hp` | `hp/index.html` | **Home.** Static two-column job-fit table for a specific HP posting (Principal Technical Product Marketing Manager, AI Solutions) — one row per requirement, left column from the posting, right column ("How I Qualify") maintained directly by Claude Code as Avi describes his experience in chat. Its own independent design system (HP brand blue). |
 | `/hp/case-study` | `hp/case-study/index.html` | Working case study on the HP ZGX Nano AI Station — feedback/positive-review scraper boxes, personal research & interviews, and a competitor tracker. Originator of the light-editorial design system now also used by `index.html`/`projects.html`. The Use Cases tab that used to live here moved to its own page (below). |
 | `/hp/use-cases` | `hp/use-cases/index.html` | 10-industry potential-use-case review for the ZGX Nano, split out from the case study into its own page. Same industry-chip switcher UI, cross-links back to the case study's "Box 1"/"Box 2" evidence it references. |
-| `/hp/youtube` | `hp/youtube/index.html` | Placeholder for a Youtube playlist companion to the case study — content not added yet. |
+| `/hp/youtube` | `hp/youtube/index.html` | Youtube playlist companion to the case study — a "now playing" embed plus a thumbnail grid (one card per video, click to switch). The video list (`hp/youtube/videos.json`) is manually maintained, not live-synced — see `CLAUDE.md` for why. |
 
 The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin meta-refresh redirect stubs pointing at `/hp` and `/hp/case-study`, in case any old links are still floating around.
 

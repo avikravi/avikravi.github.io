@@ -71,9 +71,20 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          both in sync if you touch that CSS. Its text references "Box 1, item NN"
                          and "Box 2, item NN" throughout, meaning specific numbered findings on
                          the case-study page; the panel-desc links to /hp/case-study for context.
-  youtube/index.html     URL: /hp/youtube. Placeholder for a Youtube playlist companion to the
-                         case study — content not added yet, just an empty-state page matching
-                         the light-editorial tokens.
+  youtube/index.html     URL: /hp/youtube. Youtube playlist companion to the case study — a
+                         "now playing" iframe embed (playlist ID PL7jVMm9XS9Px7BLSKPi3yaR7Zy_
+                         dcHKXo) plus a responsive thumbnail grid below it, one card per video,
+                         built from hp/youtube/videos.json (see below). Clicking a card swaps
+                         the top iframe's src to that video (autoplay) and highlights the active
+                         card; it doesn't navigate away. No embedded YouTube Data API/key — see
+                         "The /hp section" below for why.
+  youtube/videos.json    Manually maintained list of {id, title} for the /hp/youtube thumbnail
+                         grid, fetched client-side with a plain relative fetch() (same file://
+                         caveat as tailor/app.js — serve over HTTP(S) to test locally). Update
+                         this file yourself whenever Avi says he's added a video to the actual
+                         Youtube playlist; there's no automatic sync (see below). Thumbnails are
+                         rendered via YouTube's public https://img.youtube.com/vi/{id}/hqdefault.jpg
+                         — no API key needed for that part.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -113,13 +124,17 @@ If asked to add a new page or extend `index.html`/`projects.html`, copy tokens a
 
 ## The `/hp` section (`hp/`)
 
-As of 2026-08-22, `hp/index.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, and `hp/youtube/index.html` share one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This is deliberately its own third design layer, sitting *outside* whichever content design system a given page uses (HP-blue for the worksheet, light-editorial for the other three): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color. Links: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), plus a "← Main site" link back to `/`.
+As of 2026-08-22, `hp/index.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, and `hp/youtube/index.html` share one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This is deliberately its own third design layer, sitting *outside* whichever content design system a given page uses (HP-blue for the worksheet, light-editorial for the other three): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color. Links: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
 
 Mobile (`max-width: 880px`): the sidebar becomes an off-canvas drawer (`transform: translateX(-100%)` by default, `.open` slides it in), triggered by a sticky "Menu" hamburger button (`#hpNavOpen`) that appears at the top of `.hp-main`, with a dark scrim (`#hpNavScrim`) behind it and a close button (`#hpNavClose`) in the drawer header. The toggle JS is a small inline `<script>` block at the end of each page's `<body>`, using those three element IDs plus `#hpSidenav` — keep the IDs consistent if you copy this block to a new `/hp` page.
 
 If you add a fifth `/hp` page, copy the entire `.hp-shell`/`.hp-sidenav`/etc. CSS block and the matching HTML structure + toggle `<script>` from `hp/youtube/index.html` (the simplest of the four), add a new `<a class="hp-nav-link">` row to the nav list on **all** `/hp` pages (including the new one, marked `active`), and use an absolute path (`/hp/whatever`) for its URL and for any cross-page links, since these pages live at different folder depths.
 
 Since GitHub Pages serves a directory's `index.html` for both `/hp` and `/hp/` (no Jekyll pretty-permalink magic needed), every `/hp` page is a folder (`hp/case-study/index.html`, not `hp/case-study.html`) so its clean URL works. The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin `<meta http-equiv="refresh">` redirect stubs pointing at `/hp` and `/hp/case-study` respectively — update those stubs' targets if a `/hp` page's URL ever changes again.
+
+### `/hp/youtube`'s video list is manually maintained, not live-synced
+
+`hp/youtube/videos.json` is a plain hand-maintained array — it is **not** kept in sync with the real Youtube playlist automatically. This was a deliberate tradeoff, not an oversight: a client-side `fetch()` of Youtube's own playlist RSS feed (`https://www.youtube.com/feeds/videos.xml?playlist_id=...`) is blocked by CORS from a page hosted on `avikravi.github.io` (tested directly — `fetch` throws `Failed to fetch`), and the only way to enumerate a playlist's contents live from the browser is the Youtube Data API v3, which needs an API key. A referrer-restricted key is a common pattern for static sites but adds setup (Google Cloud project, quota risk if the key leaks) that wasn't worth it for a two-video personal playlist. So: when Avi says he's added a video to the playlist, fetch its title (`WebFetch` on the playlist's RSS feed URL works fine for reading, just not for a same-origin browser `fetch()`) and append a `{ "id": "...", "title": "..." }` entry to `hp/youtube/videos.json` yourself, in playlist order. Thumbnails need no maintenance — they're pulled live from Youtube's public `https://img.youtube.com/vi/{id}/hqdefault.jpg`, which works for any public video ID with no key.
 
 ### Neon dark system (`tracker.html` only)
 

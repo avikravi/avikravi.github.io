@@ -90,6 +90,98 @@
         .video-note a { color: var(--blue); text-decoration: none; }
         .video-note a:hover { text-decoration: underline; }
 
+        .video-grid-title {
+            margin-top: 40px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .video-card {
+            display: block;
+            cursor: pointer;
+            text-align: left;
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            border-radius: 10px;
+        }
+
+        .video-thumb {
+            display: block;
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            transition: border-color 0.15s;
+        }
+
+        .video-card:hover .video-thumb,
+        .video-card.active .video-thumb {
+            border-color: var(--hp-blue, #0096D6);
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-thumb .play-badge {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .video-card:hover .play-badge,
+        .video-card.active .play-badge {
+            opacity: 1;
+        }
+
+        .play-badge svg {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+        }
+
+        .video-card-title {
+            display: block;
+            margin-top: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.4;
+        }
+
+        .video-card.active .video-card-title { color: var(--hp-blue, #0096D6); }
+
+        .video-grid-empty {
+            margin-top: 18px;
+            font-size: 13.5px;
+            color: var(--ink-faint);
+        }
+
         footer {
             padding: 28px 0 48px;
             border-top: 1px solid var(--line);
@@ -216,9 +308,12 @@
         </header>
 
         <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe id="ytPlayer" src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-        <p class="video-note">Playlist updates as new videos are added &mdash; <a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">open on Youtube</a>.</p>
+        <p class="video-note"><a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">Open the full playlist on Youtube</a>.</p>
+
+        <div class="video-grid-title">All Videos</div>
+        <div class="video-grid" id="ytGrid"></div>
 
         <footer>
             Working draft, not for external distribution yet.
@@ -239,6 +334,43 @@
             if (closeBtn) closeBtn.addEventListener('click', closeNav);
             if (scrim) scrim.addEventListener('click', closeNav);
         })();
+
+        var PLAYLIST_ID = 'PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo';
+
+        function playVideo(id) {
+            var player = document.getElementById('ytPlayer');
+            player.src = 'https://www.youtube.com/embed/' + id + '?list=' + PLAYLIST_ID + '&autoplay=1';
+            document.querySelectorAll('.video-card').forEach(function (c) {
+                c.classList.toggle('active', c.dataset.id === id);
+            });
+        }
+
+        fetch('videos.json')
+            .then(function (r) { return r.json(); })
+            .then(function (videos) {
+                var grid = document.getElementById('ytGrid');
+                if (!videos.length) {
+                    grid.outerHTML = '<p class="video-grid-empty">No videos listed yet.</p>';
+                    return;
+                }
+                videos.forEach(function (v, i) {
+                    var card = document.createElement('button');
+                    card.type = 'button';
+                    card.className = 'video-card' + (i === 0 ? ' active' : '');
+                    card.dataset.id = v.id;
+                    card.innerHTML =
+                        '<span class="video-thumb">' +
+                            '<img src="https://img.youtube.com/vi/' + v.id + '/hqdefault.jpg" alt="" loading="lazy">' +
+                            '<span class="play-badge"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></span>' +
+                        '</span>' +
+                        '<span class="video-card-title">' + v.title.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>';
+                    card.addEventListener('click', function () { playVideo(v.id); });
+                    grid.appendChild(card);
+                });
+            })
+            .catch(function () {
+                document.getElementById('ytGrid').outerHTML = '<p class="video-grid-empty">Couldn\'t load the video list — <a href="https://www.youtube.com/playlist?list=' + PLAYLIST_ID + '" target="_blank" rel="noopener">view the playlist on Youtube</a> instead.</p>';
+            });
     </script>
 </body>
 </html>
