@@ -72,7 +72,20 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          case-study/index.html into its own page on 2026-08-22 so it could get
                          its own sidebar nav entry. Uses the same light-editorial tokens and
                          industry-panel/evidence-tag/strength-meter CSS as the case study — keep
-                         both in sync if you touch that CSS. Its text references "Box 1, item NN"
+                         both in sync if you touch that CSS. As of 2026-08-23, each industry
+                         panel's "Avi's review" and "HP's claim" paragraphs are each wrapped in
+                         their own `.example-card` (bordered, rounded, white for `.avi`, light
+                         gray `#fafafa` for `.hp`) instead of flowing as plain divided text — a
+                         deliberate one-off exception to the site's usual "flat divided list, no
+                         boxed cards" rule (see Design system below), scoped to this page only,
+                         per Avi's explicit request. Where a `<p class="cite">` follows a
+                         `<p class="hp-claim">`, it's nested inside that same `.hp` card as a
+                         footer (small text, divider line above) rather than floating on its own
+                         — if you add a new industry with a citation, wrap it the same way.
+                         Energy is the first chip/panel (reordered from Healthcare on
+                         2026-08-23, also per Avi) — both the `industry-nav` button order and the
+                         `industry-panel` div order were changed, and `ind-energy` carries the
+                         initial `active` class on both. Its text references "Box 1, item NN"
                          and "Box 2, item NN" throughout, meaning specific numbered findings on
                          the case-study page; the panel-desc links to /hp/case-study for context.
   youtube/index.html     URL: /hp/youtube. Youtube playlist of Avi's AI/ML project videos — a
@@ -143,7 +156,7 @@ Shared conventions across these pages:
 - No background animation, no gradients, no glow/blur effects — plain white background throughout
 - Page header pattern: optional `.eyebrow` (small uppercase label, `--ink-faint`, 13px, letter-spacing 0.04em), bold black `h1`, `.dek` subtitle in `--ink-faint` (15.5-16px)
 - Section pattern: `.panel-title` (bold black `h2`-equivalent) + `.panel-desc` (faint subtitle with a bottom border divider)
-- Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below. `hp/index.html`'s table follows the same instinct: no zebra-striped row backgrounds, just `border-bottom: 1px solid var(--line)` between rows
+- Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below. `hp/index.html`'s table follows the same instinct: no zebra-striped row backgrounds, just `border-bottom: 1px solid var(--line)` between rows. **Exception:** `hp/use-cases/index.html`'s `.example-card` boxes (added 2026-08-23, per Avi's explicit request) — bordered, rounded, white/light-gray cards for each "Avi's review"/"HP's claim" block. This is a deliberate one-off, not a precedent for adding cards elsewhere in the light-editorial system.
 - Small pill tags (`.tag-co`, `.chip`) for categories/tech stacks: subtle border, no fill or a very light `#fafafa` fill, never a colored gradient
 
 If asked to add a new page or extend `index.html`/`projects.html`, copy tokens and conventions from `hp/case-study/index.html` or these two pages — not from `tracker.html`.

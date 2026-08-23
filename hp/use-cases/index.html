@@ -208,11 +208,23 @@
         .strength-meter.tone-low .seg.on { background: var(--low); }
         .strength-meter.tone-faint .seg.on { background: var(--ink-faint); }
 
+        .example-card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .example-card:last-child { margin-bottom: 0; }
+
+        .example-card.hp { background: #fafafa; }
+
         .industry-panel .hp-claim, .industry-panel .avi-review {
             font-size: 13.5px;
             color: var(--ink-soft);
             line-height: 1.6;
-            margin-bottom: 12px;
         }
 
         .industry-panel .hp-claim strong, .industry-panel .avi-review strong {
@@ -223,6 +235,15 @@
             text-transform: uppercase;
             color: var(--ink-faint);
             margin-bottom: 4px;
+        }
+
+        .example-card .cite {
+            display: block;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--line);
+            font-size: 11.5px;
+            color: var(--ink-faint);
         }
 
         footer {
@@ -363,8 +384,8 @@
             <p class="balance-note">Pattern worth naming up front: of the 10 industries reviewed, HP's actual marketing clusters almost entirely around regulated, security-sensitive verticals &mdash; healthcare, federal government, education &mdash; which lines up with the FIPS 140-2 / Common Criteria EAL4+ posture verified in Box 2, item 05. For the other seven, HP either mentions the vertical in passing or hasn't addressed it at all.</p>
 
             <nav class="industry-nav">
-                <button class="industry-chip active" data-industry="ind-health">Healthcare</button>
-                <button class="industry-chip" data-industry="ind-energy">Energy</button>
+                <button class="industry-chip active" data-industry="ind-energy">Energy</button>
+                <button class="industry-chip" data-industry="ind-health">Healthcare</button>
                 <button class="industry-chip" data-industry="ind-mfg">Manufacturing &amp; Robotics</button>
                 <button class="industry-chip" data-industry="ind-aviation">Aviation</button>
                 <button class="industry-chip" data-industry="ind-education">Education</button>
@@ -375,25 +396,33 @@
                 <button class="industry-chip" data-industry="ind-maritime">Maritime</button>
             </nav>
 
-            <div class="industry-panel active" id="ind-health">
-                <h3><svg class="industry-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z"/></svg>Medical &amp; Healthcare</h3>
-                <div class="ev-row">
-                    <span class="evidence-tag demo">HP Demo Video</span>
-                    <span class="strength-meter tone-notable" title="Evidence strength: 3 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span>
-                </div>
-                <p class="avi-review"><strong>Avi's review</strong>The local-inference story genuinely fits here: 128GB of on-device memory (Box 2, item 01) and the FIPS 140-2 / Common Criteria EAL4+ posture (Box 2, item 05) are real, checkable reasons a hospital IT team could take this seriously for PHI-sensitive workloads. But "complex patient care" implies long clinical histories as context &mdash; and that's exactly where Box 1, item 04 showed throughput collapsing below 5 tokens/second once context fills up. A demo video built for a five-minute pitch doesn't tell you what happens three hours into a shift.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "Clinical Risk Analysis for Complex Patient Care," and separately markets a scenario where hospital rooms use private LLMs to interact with patients "without leaking PHI." Neither is a named hospital deployment &mdash; it's HP's own illustrative scenario, not a confirmed customer story.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "Clinical Risk Analysis for Complex Patient Care" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
-            </div>
-
-            <div class="industry-panel" id="ind-energy">
+            <div class="industry-panel active" id="ind-energy">
                 <h3><svg class="industry-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>Energy &mdash; Oil/Gas, Nuclear, Renewables</h3>
                 <div class="ev-row">
                     <span class="evidence-tag none">Not Marketed by HP</span>
                     <span class="strength-meter tone-faint" title="Evidence strength: 0 of 4"><i class="seg"></i><i class="seg"></i><i class="seg"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>There's a plausible independent argument for it &mdash; air-gapped, no-cloud-dependency inference could suit an offshore rig or a nuclear control room where connectivity is restricted by policy, not choice. But that's my own speculation, not anything HP has validated. Two real specs cut against it: Linux-only (Box 1, item 07) is a real obstacle in an industry where a lot of industrial/SCADA software assumes Windows, and the memory-bandwidth ceiling (Box 1, item 03) matters more for the large simulation workloads energy companies actually run.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or vertical-specific marketing language for energy, oil &amp; gas, nuclear, or renewables turned up anywhere in HP's ZGX Nano materials.</p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>There's a plausible independent argument for it &mdash; air-gapped, no-cloud-dependency inference could suit an offshore rig or a nuclear control room where connectivity is restricted by policy, not choice. But that's my own speculation, not anything HP has validated. Two real specs cut against it: Linux-only (Box 1, item 07) is a real obstacle in an industry where a lot of industrial/SCADA software assumes Windows, and the memory-bandwidth ceiling (Box 1, item 03) matters more for the large simulation workloads energy companies actually run.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or vertical-specific marketing language for energy, oil &amp; gas, nuclear, or renewables turned up anywhere in HP's ZGX Nano materials.</p>
+                </div>
+            </div>
+
+            <div class="industry-panel" id="ind-health">
+                <h3><svg class="industry-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7z"/></svg>Medical &amp; Healthcare</h3>
+                <div class="ev-row">
+                    <span class="evidence-tag demo">HP Demo Video</span>
+                    <span class="strength-meter tone-notable" title="Evidence strength: 3 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span>
+                </div>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>The local-inference story genuinely fits here: 128GB of on-device memory (Box 2, item 01) and the FIPS 140-2 / Common Criteria EAL4+ posture (Box 2, item 05) are real, checkable reasons a hospital IT team could take this seriously for PHI-sensitive workloads. But "complex patient care" implies long clinical histories as context &mdash; and that's exactly where Box 1, item 04 showed throughput collapsing below 5 tokens/second once context fills up. A demo video built for a five-minute pitch doesn't tell you what happens three hours into a shift.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "Clinical Risk Analysis for Complex Patient Care," and separately markets a scenario where hospital rooms use private LLMs to interact with patients "without leaking PHI." Neither is a named hospital deployment &mdash; it's HP's own illustrative scenario, not a confirmed customer story.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "Clinical Risk Analysis for Complex Patient Care" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-mfg">
@@ -402,9 +431,13 @@
                     <span class="evidence-tag mentioned">Mentioned Only</span>
                     <span class="strength-meter tone-low" title="Evidence strength: 2 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>The develop-on-the-desk, deploy-at-the-edge pitch is real and matches how a QA vision system actually gets built. But zero upgradability (Box 1, item 05) and the proprietary power adapter (Box 1, item 10) are real friction if you're racking up more than one of these on a shop floor, and HP hasn't published any ruggedization spec or IP rating &mdash; nothing here says this survives an actual factory floor.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>HP's own copy repeatedly name-checks "factory floor," "warehouse automation," and "real-time vision systems" as edge-deployment scenarios &mdash; but there's no dedicated manufacturing case study or demo. It's generic language, not a customer story.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>The develop-on-the-desk, deploy-at-the-edge pitch is real and matches how a QA vision system actually gets built. But zero upgradability (Box 1, item 05) and the proprietary power adapter (Box 1, item 10) are real friction if you're racking up more than one of these on a shop floor, and HP hasn't published any ruggedization spec or IP rating &mdash; nothing here says this survives an actual factory floor.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>HP's own copy repeatedly name-checks "factory floor," "warehouse automation," and "real-time vision systems" as edge-deployment scenarios &mdash; but there's no dedicated manufacturing case study or demo. It's generic language, not a customer story.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-aviation">
@@ -413,9 +446,13 @@
                     <span class="evidence-tag demo">HP Demo Video</span>
                     <span class="strength-meter tone-notable" title="Evidence strength: 3 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>Plausible for a ground-ops or dispatch-center use case &mdash; data sovereignty and no cloud dependency for comms processing is a real argument. But HP has never mentioned any aviation environmental certification (nothing like a DO-160 equivalent). If "at the edge" is meant to imply anywhere near flight-line or onboard equipment, that's an unanswered question, not a demonstrated capability.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "AI-Powered Airline Communications at the Edge." No named airline, no confirmed deployment &mdash; another illustrative scenario.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "AI-Powered Airline Communications at the Edge" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>Plausible for a ground-ops or dispatch-center use case &mdash; data sovereignty and no cloud dependency for comms processing is a real argument. But HP has never mentioned any aviation environmental certification (nothing like a DO-160 equivalent). If "at the edge" is meant to imply anywhere near flight-line or onboard equipment, that's an unanswered question, not a demonstrated capability.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "AI-Powered Airline Communications at the Edge." No named airline, no confirmed deployment &mdash; another illustrative scenario.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "AI-Powered Airline Communications at the Edge" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-education">
@@ -424,9 +461,13 @@
                     <span class="evidence-tag case-study">HP Case Study</span>
                     <span class="strength-meter tone-strong" title="Evidence strength: 4 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>This is a genuinely credible, concrete deployment &mdash; a real institution, a named person, a specific workflow, not a marketing demo. The fast in-context prompt processing verified in Box 2, item 04 is exactly what a live, iterative classroom code-review workflow needs. Worth flagging the limit of this evidence too: it's one lecturer's account of one program, not proof this scales to a whole university's compute needs.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>The strongest evidence of any industry reviewed here. EPITA, a French engineering school, is a named real customer &mdash; a lecturer, Christian Chabrerie, described using the ZGX Nano with Mistral Codestral via LM Studio to teach beginner developers, commenting on generated code at each step.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=professional-workstation.com" alt="">Professional Workstation: "HP ZGX Nano: AI development in the palm of your hand" (EPITA case study) — <a href="https://www.professional-workstation.com/en/technology/workstations/132-ai-workstations/559-hp-zgx-nano-ai-development-in-the-palm-of-your-hand" target="_blank" rel="noopener">professional-workstation.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>This is a genuinely credible, concrete deployment &mdash; a real institution, a named person, a specific workflow, not a marketing demo. The fast in-context prompt processing verified in Box 2, item 04 is exactly what a live, iterative classroom code-review workflow needs. Worth flagging the limit of this evidence too: it's one lecturer's account of one program, not proof this scales to a whole university's compute needs.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>The strongest evidence of any industry reviewed here. EPITA, a French engineering school, is a named real customer &mdash; a lecturer, Christian Chabrerie, described using the ZGX Nano with Mistral Codestral via LM Studio to teach beginner developers, commenting on generated code at each step.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=professional-workstation.com" alt="">Professional Workstation: "HP ZGX Nano: AI development in the palm of your hand" (EPITA case study) — <a href="https://www.professional-workstation.com/en/technology/workstations/132-ai-workstations/559-hp-zgx-nano-ai-development-in-the-palm-of-your-hand" target="_blank" rel="noopener">professional-workstation.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-sports">
@@ -437,12 +478,20 @@
                     <span class="evidence-tag own-project">Avi's Original Project</span>
                 </div>
 
-                <p class="avi-review"><strong>The project: F1 Markov Pit Stop Decision Model</strong>I'm building a Python model that treats a Formula 1 pit stop as a Markov decision problem &mdash; at every lap, an agent decides stay-out or pit based on tyre degradation, track position, gap to the car ahead, and safety-car status. It's built on real data: the FastF1 API for the full 2023 season, encoded into a discrete state space (lap number &times; compound &times; tyre-age bin &times; position bin &times; race state &times; gap bin), currently 23,259 lap-states across 22 races after cleaning. The pipeline (pull &rarr; encode &rarr; explore) is built and running; the transition-probability estimation and decision-quality backtest are the next layer, not yet built. The pitch this project exists to make: a team like Ferrari or the F1 organization itself should be able to run race-strategy modeling entirely on hardware they own, not a shared cloud tenant &mdash; strategy math is exactly the kind of IP a team doesn't want leaving the garage.</p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>The project: F1 Markov Pit Stop Decision Model</strong>I'm building a Python model that treats a Formula 1 pit stop as a Markov decision problem &mdash; at every lap, an agent decides stay-out or pit based on tyre degradation, track position, gap to the car ahead, and safety-car status. It's built on real data: the FastF1 API for the full 2023 season, encoded into a discrete state space (lap number &times; compound &times; tyre-age bin &times; position bin &times; race state &times; gap bin), currently 23,259 lap-states across 22 races after cleaning. The pipeline (pull &rarr; encode &rarr; explore) is built and running; the transition-probability estimation and decision-quality backtest are the next layer, not yet built. The pitch this project exists to make: a team like Ferrari or the F1 organization itself should be able to run race-strategy modeling entirely on hardware they own, not a shared cloud tenant &mdash; strategy math is exactly the kind of IP a team doesn't want leaving the garage.</p>
+                </div>
 
-                <p class="avi-review"><strong>Where the scale &mdash; and the Nano &mdash; come in</strong>One season on a laptop is trivial. The plan is to grow this the way a real strategy group would need it to grow: every season back through the hybrid era, lap-by-lap telemetry instead of lap-summary rows, and a state space that stops being tens of thousands of rows and starts being sparse transition matrices in the millions of cells. That's the point where 128GB of unified memory to hold the full model in RAM without a cloud round-trip (Box 2, item 01) stops being a nice-to-have and starts being the reason the hardware gets chosen at all &mdash; along with the GPU Direct Storage throughput independently benchmarked in Box 2, item 08, for streaming multi-season parquet files off local disk. The natural next layer on top, once the core model is validated, is a natural-language race-engineer assistant &mdash; "why did we pit on lap 18 and not 20" &mdash; running against the Markov engine locally, which is where the FP4 support (Box 2, item 02) and the 40&ndash;55 tok/s in-context prompt processing (Box 2, item 04) actually start to matter. That layer is a planned architecture, not a built one yet.</p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Where the scale &mdash; and the Nano &mdash; come in</strong>One season on a laptop is trivial. The plan is to grow this the way a real strategy group would need it to grow: every season back through the hybrid era, lap-by-lap telemetry instead of lap-summary rows, and a state space that stops being tens of thousands of rows and starts being sparse transition matrices in the millions of cells. That's the point where 128GB of unified memory to hold the full model in RAM without a cloud round-trip (Box 2, item 01) stops being a nice-to-have and starts being the reason the hardware gets chosen at all &mdash; along with the GPU Direct Storage throughput independently benchmarked in Box 2, item 08, for streaming multi-season parquet files off local disk. The natural next layer on top, once the core model is validated, is a natural-language race-engineer assistant &mdash; "why did we pit on lap 18 and not 20" &mdash; running against the Markov engine locally, which is where the FP4 support (Box 2, item 02) and the 40&ndash;55 tok/s in-context prompt processing (Box 2, item 04) actually start to matter. That layer is a planned architecture, not a built one yet.</p>
+                </div>
 
-                <p class="avi-review"><strong>Staying honest about the pitch</strong>The core Markov chain math today &mdash; pandas, parquet, a state space in the tens of thousands &mdash; doesn't need GB10-class silicon; it runs fine on a laptop, and I'm not going to claim otherwise to make the story bigger. What actually justifies the Nano here is data sovereignty, not raw compute: a team that will never let proprietary strategy data touch a third-party cloud, backed by the same FIPS 140-2 / Common Criteria EAL4+ posture (Box 2, item 05) that's the strongest thread running through every regulated vertical in this box. Two real constraints to flag rather than bury: the memory-bandwidth ceiling (Box 1, item 03) becomes the limiting factor once transition matrices get large enough to be bandwidth-bound rather than capacity-bound, and if a full multi-decade dataset ever needed more than one Nano clustered together, the networking ceiling flagged in Box 1, item 09 caps that path. This is a personal, in-progress project &mdash; not a claim that any F1 team is using it &mdash; but it's a real, running pipeline built specifically to demonstrate the on-prem argument with something checkable, not a slide.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or marketing language mentioning sports turned up anywhere in HP's ZGX Nano materials. Rather than speculate about a generic "player tracking" use case with nothing behind it, this box is filled with an actual project of mine that's a concrete, checkable stand-in for what an on-prem sports-analytics pitch would look like.</p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Staying honest about the pitch</strong>The core Markov chain math today &mdash; pandas, parquet, a state space in the tens of thousands &mdash; doesn't need GB10-class silicon; it runs fine on a laptop, and I'm not going to claim otherwise to make the story bigger. What actually justifies the Nano here is data sovereignty, not raw compute: a team that will never let proprietary strategy data touch a third-party cloud, backed by the same FIPS 140-2 / Common Criteria EAL4+ posture (Box 2, item 05) that's the strongest thread running through every regulated vertical in this box. Two real constraints to flag rather than bury: the memory-bandwidth ceiling (Box 1, item 03) becomes the limiting factor once transition matrices get large enough to be bandwidth-bound rather than capacity-bound, and if a full multi-decade dataset ever needed more than one Nano clustered together, the networking ceiling flagged in Box 1, item 09 caps that path. This is a personal, in-progress project &mdash; not a claim that any F1 team is using it &mdash; but it's a real, running pipeline built specifically to demonstrate the on-prem argument with something checkable, not a slide.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or marketing language mentioning sports turned up anywhere in HP's ZGX Nano materials. Rather than speculate about a generic "player tracking" use case with nothing behind it, this box is filled with an actual project of mine that's a concrete, checkable stand-in for what an on-prem sports-analytics pitch would look like.</p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-retail">
@@ -451,9 +500,13 @@
                     <span class="evidence-tag mentioned">Mentioned Only</span>
                     <span class="strength-meter tone-low" title="Evidence strength: 2 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>Computer-vision loss-prevention or inventory-counting use cases are a believable generic fit for local inference, but HP hasn't built out anything retail-specific, and none of the throughput or context-length findings from Box 1 have been tested against an actual retail workload.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>"Retail locations" appears once, in the same generic edge-deployment sentence as factory floors and warehouses &mdash; no dedicated retail case study or demo.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>Computer-vision loss-prevention or inventory-counting use cases are a believable generic fit for local inference, but HP hasn't built out anything retail-specific, and none of the throughput or context-length findings from Box 1 have been tested against an actual retail workload.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>"Retail locations" appears once, in the same generic edge-deployment sentence as factory floors and warehouses &mdash; no dedicated retail case study or demo.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-logistics">
@@ -462,9 +515,13 @@
                     <span class="evidence-tag mentioned">Mentioned Only</span>
                     <span class="strength-meter tone-low" title="Evidence strength: 2 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>Similar story to retail: plausible in theory (robotics or vision at a warehouse), but genuinely untested by anything cited so far. The soldered-memory, zero-upgradability finding (Box 1, item 05) matters more here than in most verticals, since logistics fleets are exactly the kind of multi-unit deployment where non-upgradable hardware becomes an expensive constraint at scale.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>"Warehouse automation" appears in that same generic sentence, alongside factory floors and retail &mdash; again, no dedicated case study.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>Similar story to retail: plausible in theory (robotics or vision at a warehouse), but genuinely untested by anything cited so far. The soldered-memory, zero-upgradability finding (Box 1, item 05) matters more here than in most verticals, since logistics fleets are exactly the kind of multi-unit deployment where non-upgradable hardware becomes an expensive constraint at scale.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>"Warehouse automation" appears in that same generic sentence, alongside factory floors and retail &mdash; again, no dedicated case study.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: general edge-deployment marketing copy — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-defense">
@@ -473,9 +530,13 @@
                     <span class="evidence-tag demo">HP Demo Video</span>
                     <span class="strength-meter tone-notable" title="Evidence strength: 3 of 4"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>This is the one case where the marketing is backed by more than just a demo script. The FIPS 140-2 certified TPM, Common Criteria EAL4+, and a wireless-free "Secure &amp; Regulated" configuration variant (all independently verified in Box 2, item 05) are real, checkable procurement-grade credentials. That's a meaningfully stronger case than the healthcare or aviation demos, even though "mission-critical federal workflows" doesn't specify defense over any other federal agency.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "Rapid AI Prototyping for Mission-Critical Federal Workflows" &mdash; federal government broadly, not confirmed defense/military specifically, and no named agency.</p>
-                <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "Rapid AI Prototyping for Mission-Critical Federal Workflows" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>This is the one case where the marketing is backed by more than just a demo script. The FIPS 140-2 certified TPM, Common Criteria EAL4+, and a wireless-free "Secure &amp; Regulated" configuration variant (all independently verified in Box 2, item 05) are real, checkable procurement-grade credentials. That's a meaningfully stronger case than the healthcare or aviation demos, even though "mission-critical federal workflows" doesn't specify defense over any other federal agency.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>HP produced a demo video titled "Rapid AI Prototyping for Mission-Critical Federal Workflows" &mdash; federal government broadly, not confirmed defense/military specifically, and no named agency.</p>
+                    <p class="cite"><img src="https://www.google.com/s2/favicons?sz=32&amp;domain=hp.com" alt="">HP.com: "Rapid AI Prototyping for Mission-Critical Federal Workflows" demo video — <a href="https://www.hp.com/us-en/workstations/zgx-nano-ai-station.html" target="_blank" rel="noopener">hp.com</a></p>
+                </div>
             </div>
 
             <div class="industry-panel" id="ind-maritime">
@@ -484,8 +545,12 @@
                     <span class="evidence-tag none">Not Marketed by HP</span>
                     <span class="strength-meter tone-faint" title="Evidence strength: 0 of 4"><i class="seg"></i><i class="seg"></i><i class="seg"></i><i class="seg"></i></span>
                 </div>
-                <p class="avi-review"><strong>Avi's review</strong>Same shape as energy: an air-gapped device with no cloud dependency has an obvious theoretical appeal on a ship, but there's zero evidence HP has pursued this, and none of the physical certifications &mdash; vibration, humidity, salt-air resistance &mdash; that maritime deployment would actually require have ever been mentioned.</p>
-                <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or marketing language mentioning maritime use turned up anywhere in HP's ZGX Nano materials.</p>
+                <div class="example-card avi">
+                    <p class="avi-review"><strong>Avi's review</strong>Same shape as energy: an air-gapped device with no cloud dependency has an obvious theoretical appeal on a ship, but there's zero evidence HP has pursued this, and none of the physical certifications &mdash; vibration, humidity, salt-air resistance &mdash; that maritime deployment would actually require have ever been mentioned.</p>
+                </div>
+                <div class="example-card hp">
+                    <p class="hp-claim"><strong>HP's claim</strong>None found. No case study, demo video, or marketing language mentioning maritime use turned up anywhere in HP's ZGX Nano materials.</p>
+                </div>
             </div>
           </div>
         </section>
