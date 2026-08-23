@@ -131,15 +131,18 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          prediction, fleet risk dashboard, ASME/API standards reference) from
                          github.com/avikravi/p66-vessel-integrity — explicitly NOT affiliated with
                          Phillips 66, built on synthetic data only; keep that disclaimer visible if
-                         you edit this page's copy. Currently a "Not Yet Deployed" placeholder
-                         (matching the `panel-empty`/`empty-tag` pattern originally used on
-                         hp/youtube before its playlist existed) linking out to the GitHub repo,
-                         not a live embed — that repo is a Next.js app with no `output: 'export'`
-                         config and no live deployment (verified via WebFetch on its next.config.ts
-                         and README), so it can't be iframed like hp/ai-research's static GitHub
-                         Pages embed. Swap the `.panel-empty` block for a `.sim-embed`-style
-                         iframe (copy the pattern from hp/ai-research/index.html) once Avi deploys
-                         it somewhere public and gives you the URL.
+                         you edit this page's copy (the embedded app repeats its own version of
+                         this disclaimer in a banner at the top, so it's stated twice by design).
+                         The repo is a Next.js app with no `output: 'export'` config, so it can't
+                         be a static GitHub Pages embed like hp/ai-research's — instead, as of
+                         2026-08-23 Avi deployed it to Vercel (`.app-embed` iframe pointed at
+                         https://p66-vessel-integrity.vercel.app, the stable production domain —
+                         not the per-deployment `*-<hash>-avikravi-gmailcoms-projects.vercel.app`
+                         URL Vercel also shows, which changes on every deploy). Verified via
+                         `curl -sI` that Vercel doesn't send X-Frame-Options/CSP frame-ancestors,
+                         so it frames fine. If Avi redeploys under a different Vercel project/team
+                         and the domain changes, update the iframe `src` and the two `.app-note`
+                         links (same URL, three places in this file) together.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22

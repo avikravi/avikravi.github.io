@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P66 Example | Avi Ravishankar</title>
-    <meta name="description" content="An independent pressure-vessel integrity management prototype — ML corrosion prediction, fleet risk dashboards, and ASME/API standards reference.">
+    <meta name="description" content="A live, independent pressure-vessel integrity management prototype — ML corrosion prediction, fleet risk dashboards, and ASME/API standards reference.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -72,48 +72,30 @@
             border-left: 2px solid var(--line);
         }
 
-        .panel-empty {
+        .app-embed {
             margin-top: 32px;
-            padding: 56px 24px;
-            border: 1px dashed var(--line);
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .empty-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            border: 1px dashed var(--line);
-            border-radius: 3px;
-            padding: 6px 12px;
-            margin-bottom: 14px;
-        }
-
-        .panel-empty p {
-            font-size: 14.5px;
-            color: var(--ink-faint);
-            max-width: 460px;
-            margin: 0 auto 20px;
-            line-height: 1.6;
-        }
-
-        .repo-link {
-            display: inline-block;
-            font-size: 13.5px;
-            font-weight: 600;
-            color: var(--ink);
-            text-decoration: none;
+            height: 760px;
+            background: #0a0a0f;
             border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 10px 18px;
-            transition: border-color 0.15s, background-color 0.15s;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        .repo-link:hover { border-color: #c9c9c9; background: #fafafa; }
+        .app-embed iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .app-note {
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--ink-faint);
+        }
+
+        .app-note a { color: var(--blue); text-decoration: none; }
+        .app-note a:hover { text-decoration: underline; }
 
         .feature-list {
             margin-top: 32px;
@@ -158,6 +140,7 @@
         @media (max-width: 600px) {
             h1 { font-size: 25px; }
             header.page-header { padding: 32px 0 0; }
+            .app-embed { height: 560px; }
         }
 
         /* HP section nav (shared across /hp pages) */
@@ -279,14 +262,13 @@
             <div class="eyebrow">Independent Prototype</div>
             <h1>Pressure Vessel Integrity</h1>
             <p class="dek">A pressure-vessel integrity management prototype combining ML-based corrosion prediction, fleet risk dashboards, and ASME/API standards reference &mdash; built end-to-end, from a synthetic 360-vessel fleet through to a Next.js frontend.</p>
-            <p class="disclaimer">Independent prototype built on synthetic data only &mdash; explicitly unaffiliated with Phillips 66.</p>
+            <p class="disclaimer">Independent prototype built on synthetic data only &mdash; explicitly unaffiliated with Phillips 66. The app itself repeats this disclaimer in its own header banner.</p>
         </header>
 
-        <div class="panel-empty">
-            <div class="empty-tag">Not Yet Deployed</div>
-            <p>The live app isn't hosted publicly yet &mdash; it currently runs locally. In the meantime, browse the source and README on GitHub.</p>
-            <a class="repo-link" href="https://github.com/avikravi/p66-vessel-integrity" target="_blank" rel="noopener">View the repo on GitHub &rarr;</a>
+        <div class="app-embed">
+            <iframe src="https://p66-vessel-integrity.vercel.app" title="Pressure Vessel Integrity — Fleet Overview" loading="lazy"></iframe>
         </div>
+        <p class="app-note"><a href="https://p66-vessel-integrity.vercel.app" target="_blank" rel="noopener">Open the app in its own tab</a> &middot; <a href="https://github.com/avikravi/p66-vessel-integrity" target="_blank" rel="noopener">view the source on GitHub</a>.</p>
 
         <div class="feature-list">
             <h2>What's in it</h2>
