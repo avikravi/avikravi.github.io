@@ -10,70 +10,70 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
             --hp-blue: #0096D6;
-            --hp-blue-dark: #006FA6;
-            --hp-blue-tint: #EAF7FD;
-            --ink: #16181d;
-            --ink-soft: #40454d;
-            --ink-faint: #80868f;
-            --line: #e4e6ea;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #ffffff;
+            background: var(--bg);
             color: var(--ink-soft);
-            line-height: 1.5;
+            line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
 
-        .brandbar { height: 6px; background: var(--hp-blue); }
+        a { color: var(--blue); }
 
         .wrap {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 0 24px 80px;
+            padding: 0 24px 64px;
         }
 
-        header {
-            padding: 36px 0 24px;
+        header.page-header {
+            padding: 44px 0 28px;
             border-bottom: 1px solid var(--line);
         }
 
         .eyebrow {
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            color: var(--hp-blue-dark);
+            color: var(--ink-faint);
             margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 27px;
+            font-size: 30px;
             font-weight: 700;
             letter-spacing: -0.02em;
             color: #000;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             line-height: 1.2;
         }
 
-        .meta-line {
-            font-size: 13.5px;
+        .dek {
+            font-size: 15.5px;
             color: var(--ink-faint);
-            margin-bottom: 4px;
+            max-width: 680px;
         }
 
-        .meta-line a { color: var(--hp-blue-dark); text-decoration: none; }
+        .meta-line {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--ink-faint);
+        }
+
+        .meta-line a { color: var(--blue); text-decoration: none; }
         .meta-line a:hover { text-decoration: underline; }
 
-        .instructions {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            max-width: 720px;
-            margin-top: 12px;
-            line-height: 1.6;
-        }
+        .meta-line + .meta-line { margin-top: 4px; }
 
         table {
             width: 100%;
@@ -85,11 +85,11 @@
         thead th {
             position: sticky;
             top: 0;
-            background: var(--hp-blue);
+            background: var(--blue);
             color: #fff;
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
             text-align: left;
             padding: 11px 18px;
@@ -98,10 +98,8 @@
 
         thead th:first-child { width: 30%; }
 
-        tbody tr.item-row:nth-of-type(even) { background: var(--hp-blue-tint); }
-
         tbody tr.category-row td {
-            background: #16181d;
+            background: var(--ink);
             color: #fff;
             font-size: 11px;
             font-weight: 700;
@@ -131,25 +129,26 @@
 
         .fit-text {
             font-size: 13.5px;
-            line-height: 1.55;
-            color: #24272c;
+            line-height: 1.6;
+            color: var(--ink-soft);
         }
 
         .fit-text.pending {
-            color: #b0b5bc;
+            color: var(--ink-faint);
             font-style: italic;
         }
 
         footer {
-            margin-top: 40px;
-            padding-top: 20px;
+            padding: 28px 0 48px;
             border-top: 1px solid var(--line);
-            font-size: 12.5px;
+            font-size: 13px;
             color: var(--ink-faint);
+            margin-top: 24px;
         }
 
-        @media (max-width: 640px) {
-            h1 { font-size: 21px; }
+        @media (max-width: 600px) {
+            h1 { font-size: 24px; }
+            header.page-header { padding: 32px 0 24px; }
             table, thead, tbody, th, td, tr { display: block; }
             thead { display: none; }
             tbody tr.item-row {
@@ -256,6 +255,7 @@
                 <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
                 <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
                 <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
+                <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
             </nav>
         </aside>
         <div class="hp-nav-scrim" id="hpNavScrim"></div>
@@ -265,14 +265,13 @@
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
                 Menu
             </button>
-    <div class="brandbar"></div>
     <div class="wrap">
-        <header>
+        <header class="page-header">
             <div class="eyebrow">Job Fit Table</div>
             <h1>Principal Technical Product Marketing Manager, AI Solutions</h1>
+            <p class="dek">Every requirement from the posting, one row at a time. The right-hand column is filled in over time as Avi's real experience gets mapped to each row.</p>
             <p class="meta-line">HP Inc. &middot; Fort Collins, CO / Spring, TX &middot; Full-time &middot; Req #3166789</p>
             <p class="meta-line">Source: <a href="https://hp.wd5.myworkdayjobs.com/ExternalCareerSite/job/Fort-Collins-Colorado-United-States-of-America/Principal-Technical-Product-Marketing-Manager--AI-Solutions_3166789-1" target="_blank" rel="noopener">HP Careers (Workday)</a></p>
-            <p class="instructions">Every requirement from the posting, one row at a time. The right-hand column is filled in over time as Avi's real experience gets mapped to each row.</p>
         </header>
 
         <table>

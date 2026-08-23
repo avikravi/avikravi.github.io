@@ -46,8 +46,12 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          No JS beyond the shared sidenav toggle, no localStorage, no edit UI —
                          the right-hand "How I Qualify" column is plain HTML that Claude Code
                          updates directly as Avi describes his experience in chat and it's
-                         mapped to the matching row(s). Styled in HP's actual brand blue
-                         (#0096D6) rather than the light-editorial tokens below. Writing style
+                         mapped to the matching row(s). As of 2026-08-23 this page was converted
+                         from its own separate HP-brand-blue design to the shared light-editorial
+                         tokens below (same as the other /hp pages) — the table's sticky header
+                         and requirement links now use `--blue` (#1967b1) instead of HP's
+                         #0096D6, and the old top brandbar strip was removed. HP-blue lives on
+                         only in the persistent sidebar shared by every /hp page. Writing style
                          for the "How I Qualify" column: short, complete sentences. Never use a
                          dash (em dash or "--") to join two clauses; split into separate
                          sentences instead.
@@ -85,6 +89,18 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          Youtube playlist; there's no automatic sync (see below). Thumbnails are
                          rendered via YouTube's public https://img.youtube.com/vi/{id}/hqdefault.jpg
                          — no API key needed for that part.
+  ai-research/index.html URL: /hp/ai-research. Added 2026-08-23. Embeds Avi's summer 2026 Rice
+                         University surgical-robotics research (a synthetic soft-tissue
+                         deformation dataset/viewer) directly in-page via an <iframe> pointed at
+                         https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html
+                         — a live page in a separate repo, same GitHub Pages account, so no
+                         X-Frame-Options/CSP block (verified: `curl -sI` on that URL returns no
+                         framing-restriction headers). The iframe'd page keeps its own dark
+                         teal design system; don't try to reskin it from here. A "sim-note" link
+                         below the iframe opens the same URL in a new tab as a fallback. This is
+                         the same project index.html/projects.html already link to externally
+                         under "Research" in their own nav (see "Nav bar consistency" below) —
+                         this page just embeds it instead of linking out.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -97,9 +113,9 @@ CLAUDE.md               This file
 
 **Two design systems now coexist in this repo, split by page.** Don't mix their tokens.
 
-### Light-editorial system (`index.html`, `projects.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, `hp/youtube/index.html`)
+### Light-editorial system (`index.html`, `projects.html`, and every page under `hp/`)
 
-As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `hp/case-study/index.html`'s (formerly `zgx-nano-case-study.html`) clean, light, editorial look, at the user's explicit request — all original wording/content was preserved, only the visual system changed. `hp/case-study/index.html` remains the source of truth for these tokens:
+As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `hp/case-study/index.html`'s (formerly `zgx-nano-case-study.html`) clean, light, editorial look, at the user's explicit request — all original wording/content was preserved, only the visual system changed. As of 2026-08-23, `hp/index.html` (the worksheet) was converted to the same tokens too — every page under `hp/` now shares this system, not just three of the five. `hp/case-study/index.html` remains the source of truth for these tokens:
 
 ```css
 --bg: #ffffff;
@@ -112,23 +128,23 @@ As of 2026-08-21, `index.html` and `projects.html` were redesigned to match `hp/
 
 Font stack: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`
 
-Shared conventions across these three pages:
-- Flat, thin-bordered nav (`border-bottom: 1px solid var(--line)`) — black wordmark logo, uppercase nav links in `--ink-faint`, black underline "active" state, solid black "Download Resume" pill button
+Shared conventions across these pages:
+- Flat, thin-bordered nav (`border-bottom: 1px solid var(--line)`) — black wordmark logo, uppercase nav links in `--ink-faint`, black underline "active" state, solid black "Download Resume" pill button (`index.html`/`projects.html` only — the `hp/` pages use the persistent left sidebar instead, see below)
 - No background animation, no gradients, no glow/blur effects — plain white background throughout
-- Page header pattern: optional `.eyebrow` (small uppercase label), bold black `h1`, `.dek` subtitle in `--ink-faint`
+- Page header pattern: optional `.eyebrow` (small uppercase label, `--ink-faint`, 13px, letter-spacing 0.04em), bold black `h1`, `.dek` subtitle in `--ink-faint` (15.5-16px)
 - Section pattern: `.panel-title` (bold black `h2`-equivalent) + `.panel-desc` (faint subtitle with a bottom border divider)
-- Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below
+- Content is flat divided lists (`.fitem` — `border-top: 1px solid var(--line)` between entries), not boxed/shadowed cards — this is the key visual difference from the dark system below. `hp/index.html`'s table follows the same instinct: no zebra-striped row backgrounds, just `border-bottom: 1px solid var(--line)` between rows
 - Small pill tags (`.tag-co`, `.chip`) for categories/tech stacks: subtle border, no fill or a very light `#fafafa` fill, never a colored gradient
 
 If asked to add a new page or extend `index.html`/`projects.html`, copy tokens and conventions from `hp/case-study/index.html` or these two pages — not from `tracker.html`.
 
 ## The `/hp` section (`hp/`)
 
-As of 2026-08-22, `hp/index.html`, `hp/case-study/index.html`, `hp/use-cases/index.html`, and `hp/youtube/index.html` share one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This is deliberately its own third design layer, sitting *outside* whichever content design system a given page uses (HP-blue for the worksheet, light-editorial for the other three): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color. Links: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
+As of 2026-08-22, every page under `hp/` (`index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, and `ai-research/index.html` as of 2026-08-23) shares one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This sidebar is deliberately its own design layer, sitting *outside* the light-editorial system every `/hp` page's content area now uses (see above): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color — this is the only place `--hp-blue` still appears; the content area of every `/hp` page uses `--blue` (#1967b1) like `index.html`/`projects.html`. Links, in order: Home (`/hp`), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), AI Research (`/hp/ai-research`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
 
 Mobile (`max-width: 880px`): the sidebar becomes an off-canvas drawer (`transform: translateX(-100%)` by default, `.open` slides it in), triggered by a sticky "Menu" hamburger button (`#hpNavOpen`) that appears at the top of `.hp-main`, with a dark scrim (`#hpNavScrim`) behind it and a close button (`#hpNavClose`) in the drawer header. The toggle JS is a small inline `<script>` block at the end of each page's `<body>`, using those three element IDs plus `#hpSidenav` — keep the IDs consistent if you copy this block to a new `/hp` page.
 
-If you add a fifth `/hp` page, copy the entire `.hp-shell`/`.hp-sidenav`/etc. CSS block and the matching HTML structure + toggle `<script>` from `hp/youtube/index.html` (the simplest of the four), add a new `<a class="hp-nav-link">` row to the nav list on **all** `/hp` pages (including the new one, marked `active`), and use an absolute path (`/hp/whatever`) for its URL and for any cross-page links, since these pages live at different folder depths.
+If you add another `/hp` page, copy the entire `.hp-shell`/`.hp-sidenav`/etc. CSS block and the matching HTML structure + toggle `<script>` from `hp/ai-research/index.html` or `hp/youtube/index.html` (the simplest of the five), add a new `<a class="hp-nav-link">` row to the nav list on **all** `/hp` pages (including the new one, marked `active`), and use an absolute path (`/hp/whatever`) for its URL and for any cross-page links, since these pages live at different folder depths.
 
 Since GitHub Pages serves a directory's `index.html` for both `/hp` and `/hp/` (no Jekyll pretty-permalink magic needed), every `/hp` page is a folder (`hp/case-study/index.html`, not `hp/case-study.html`) so its clean URL works. The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin `<meta http-equiv="refresh">` redirect stubs pointing at `/hp` and `/hp/case-study` respectively — update those stubs' targets if a `/hp` page's URL ever changes again.
 
