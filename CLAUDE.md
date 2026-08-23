@@ -124,6 +124,22 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          the same project index.html/projects.html already link to externally
                          under "Research" in their own nav (see "Nav bar consistency" below) —
                          this page just embeds it instead of linking out.
+  p66-example/index.html URL: /hp/p66-example. Added 2026-08-23, nested under "AI Research" in
+                         the sidebar (`.hp-nav-sub` — 10px left indent + a faint left border, no
+                         collapse/expand behavior, just a visual cue) per Avi's request. Describes
+                         an independent pressure-vessel integrity prototype (ML corrosion
+                         prediction, fleet risk dashboard, ASME/API standards reference) from
+                         github.com/avikravi/p66-vessel-integrity — explicitly NOT affiliated with
+                         Phillips 66, built on synthetic data only; keep that disclaimer visible if
+                         you edit this page's copy. Currently a "Not Yet Deployed" placeholder
+                         (matching the `panel-empty`/`empty-tag` pattern originally used on
+                         hp/youtube before its playlist existed) linking out to the GitHub repo,
+                         not a live embed — that repo is a Next.js app with no `output: 'export'`
+                         config and no live deployment (verified via WebFetch on its next.config.ts
+                         and README), so it can't be iframed like hp/ai-research's static GitHub
+                         Pages embed. Swap the `.panel-empty` block for a `.sim-embed`-style
+                         iframe (copy the pattern from hp/ai-research/index.html) once Avi deploys
+                         it somewhere public and gives you the URL.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -163,7 +179,7 @@ If asked to add a new page or extend `index.html`/`projects.html`, copy tokens a
 
 ## The `/hp` section (`hp/`)
 
-As of 2026-08-22, every page under `hp/` (`index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, and `ai-research/index.html` as of 2026-08-23) shares one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This sidebar is deliberately its own design layer, sitting *outside* the light-editorial system every `/hp` page's content area now uses (see above): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color — this is the only place `--hp-blue` still appears; the content area of every `/hp` page uses `--blue` (#1967b1) like `index.html`/`projects.html`. Links, in order: "Home - Job Fit" (`/hp` — relabeled from plain "Home" on 2026-08-23 so the sidebar itself hints at what that page is), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), AI Research (`/hp/ai-research`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
+As of 2026-08-22, every page under `hp/` (`index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, and `p66-example/index.html` as of 2026-08-23) shares one persistent left sidebar nav (`.hp-shell` / `.hp-sidenav` / `.hp-main` etc. — the CSS block is duplicated verbatim into each page's `<style>`, since there's no build step to share it from one file). This sidebar is deliberately its own design layer, sitting *outside* the light-editorial system every `/hp` page's content area now uses (see above): a dark (`#14161b`) fixed-left sidebar (232px) with the HP brand blue (`#0096D6`, via `var(--hp-blue, #0096D6)` so it renders correctly even on pages whose own `:root` doesn't define `--hp-blue`) as the active-link/accent color — this is the only place `--hp-blue` still appears; the content area of every `/hp` page uses `--blue` (#1967b1) like `index.html`/`projects.html`. Links, in order: "Home - Job Fit" (`/hp` — relabeled from plain "Home" on 2026-08-23 so the sidebar itself hints at what that page is), ZGX Nano Case Study (`/hp/case-study`), Use Cases (`/hp/use-cases`), Youtube (`/hp/youtube`), AI Research (`/hp/ai-research`), and P66 Example (`/hp/p66-example`, nested under AI Research via `.hp-nav-sub`). Deliberately **no** link back to the main site (`/`) — Avi removed it on 2026-08-22 so the sidebar doesn't distract a reader who's evaluating this HP-specific material. Don't re-add one unless he asks.
 
 Every `/hp` page's `.wrap` uses the same `max-width: 1180px; margin: 0 auto; padding: 0 24px;` as of 2026-08-23 (matching `index.html`/`projects.html`) — before that, the four pages had drifted to three different widths (1100px, 1180px, 900px) as they were built one at a time. `h1` is `32px` / `line-height: 1.15` and `.dek` is `15.5px` / `max-width: 620px` on every `/hp` page too, for the same reason. `hp/use-cases/index.html`'s prose content is wrapped in a `.panel-body { max-width: 780px; }` div (matching `hp/case-study/index.html`'s existing convention) so its paragraphs don't stretch edge-to-edge now that `.wrap` is wider — the `industry-nav` chip grid and `balance-note` are inside that same wrapper. If you touch any `/hp` page's header typography or `.wrap`, check the other four match.
 

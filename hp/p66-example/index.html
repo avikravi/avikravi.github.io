@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youtube Playlist | Avi Ravishankar</title>
-    <meta name="description" content="A running Youtube playlist of Avi's AI/ML project walkthroughs, from sports-prediction modeling to hardware reviews.">
+    <title>P66 Example | Avi Ravishankar</title>
+    <meta name="description" content="An independent pressure-vessel integrity management prototype — ML corrosion prediction, fleet risk dashboards, and ASME/API standards reference.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,149 +60,92 @@
         .dek {
             font-size: 15.5px;
             color: var(--ink-faint);
-            max-width: 620px;
+            max-width: 640px;
         }
 
-        .yt-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
+        .disclaimer {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--ink-faint);
+            max-width: 640px;
+            padding: 10px 14px;
+            border-left: 2px solid var(--line);
+        }
+
+        .panel-empty {
             margin-top: 32px;
+            padding: 56px 24px;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            text-align: center;
         }
 
-        .yt-list { order: 2; }
+        .empty-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            border: 1px dashed var(--line);
+            border-radius: 3px;
+            padding: 6px 12px;
+            margin-bottom: 14px;
+        }
 
-        .yt-list-title {
+        .panel-empty p {
+            font-size: 14.5px;
+            color: var(--ink-faint);
+            max-width: 460px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+
+        .repo-link {
+            display: inline-block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 10px 18px;
+            transition: border-color 0.15s, background-color 0.15s;
+        }
+
+        .repo-link:hover { border-color: #c9c9c9; background: #fafafa; }
+
+        .feature-list {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--line);
+        }
+
+        .feature-list h2 {
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.06em;
             text-transform: uppercase;
             color: var(--ink-faint);
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--line);
             margin-bottom: 14px;
         }
 
-        .yt-list-items {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        .feature-list ul {
+            list-style: none;
+            max-width: 640px;
         }
 
-        .video-card {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            width: 100%;
-            cursor: pointer;
-            text-align: left;
-            background: none;
-            border: none;
-            padding: 6px;
-            border-radius: 8px;
-            font: inherit;
-            transition: background-color 0.15s;
-        }
-
-        .video-card:hover { background: #fafafa; }
-        .video-card.active { background: #f2f7fc; }
-
-        .video-thumb {
-            display: block;
-            position: relative;
-            width: 130px;
-            flex-shrink: 0;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid var(--line);
-            transition: border-color 0.15s;
-        }
-
-        .video-card:hover .video-thumb,
-        .video-card.active .video-thumb {
-            border-color: var(--hp-blue, #0096D6);
-        }
-
-        .video-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .video-thumb .play-badge {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.15);
-            opacity: 0;
-            transition: opacity 0.15s;
-        }
-
-        .video-card:hover .play-badge,
-        .video-card.active .play-badge {
-            opacity: 1;
-        }
-
-        .play-badge svg {
-            width: 26px;
-            height: 26px;
-            filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
-        }
-
-        .video-card-title {
-            display: block;
-            padding-top: 2px;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--ink);
-            line-height: 1.4;
-        }
-
-        .video-card.active .video-card-title { color: var(--hp-blue, #0096D6); }
-
-        .video-grid-empty {
+        .feature-list li {
             font-size: 13.5px;
-            color: var(--ink-faint);
+            color: var(--ink-soft);
+            padding: 10px 0;
+            border-top: 1px solid var(--line);
+            line-height: 1.5;
         }
 
-        .yt-player-col { order: 1; min-width: 0; }
+        .feature-list li:first-child { border-top: none; }
 
-        .video-embed {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .video-embed iframe {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        .video-note {
-            margin-top: 14px;
-            font-size: 13px;
-            color: var(--ink-faint);
-        }
-
-        .video-note a { color: var(--blue); text-decoration: none; }
-        .video-note a:hover { text-decoration: underline; }
-
-        @media (min-width: 760px) {
-            .yt-layout { flex-direction: row; align-items: flex-start; }
-            .yt-list { order: 1; width: 300px; flex-shrink: 0; max-height: 640px; overflow-y: auto; }
-            .yt-player-col { order: 2; flex: 1; }
-        }
+        .feature-list li strong { color: var(--ink); }
 
         footer {
             padding: 28px 0 48px;
@@ -319,9 +262,9 @@
                 <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
                 <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
                 <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
-                <a href="/hp/youtube" class="hp-nav-link active">Youtube</a>
+                <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
                 <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
-                <a href="/hp/p66-example" class="hp-nav-link hp-nav-sub">P66 Example</a>
+                <a href="/hp/p66-example" class="hp-nav-link hp-nav-sub active">P66 Example</a>
             </nav>
         </aside>
         <div class="hp-nav-scrim" id="hpNavScrim"></div>
@@ -333,22 +276,25 @@
             </button>
     <div class="wrap">
         <header class="page-header">
-            <div class="eyebrow">Video Log</div>
-            <h1>Youtube Playlist</h1>
-            <p class="dek">A running log of AI/ML project walkthroughs and reviews &mdash; from sports-prediction modeling to hands-on hardware demos.</p>
+            <div class="eyebrow">Independent Prototype</div>
+            <h1>Pressure Vessel Integrity</h1>
+            <p class="dek">A pressure-vessel integrity management prototype combining ML-based corrosion prediction, fleet risk dashboards, and ASME/API standards reference &mdash; built end-to-end, from a synthetic 360-vessel fleet through to a Next.js frontend.</p>
+            <p class="disclaimer">Independent prototype built on synthetic data only &mdash; explicitly unaffiliated with Phillips 66.</p>
         </header>
 
-        <div class="yt-layout">
-            <div class="yt-list">
-                <div class="yt-list-title">All Videos</div>
-                <div class="yt-list-items" id="ytGrid"></div>
-            </div>
-            <div class="yt-player-col">
-                <div class="video-embed">
-                    <iframe id="ytPlayer" src="https://www.youtube.com/embed/pCK9gDc9sFE?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" title="HP ZGX Nano — Youtube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-                </div>
-                <p class="video-note"><a href="https://www.youtube.com/playlist?list=PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo" target="_blank" rel="noopener">Open the full playlist on Youtube</a>.</p>
-            </div>
+        <div class="panel-empty">
+            <div class="empty-tag">Not Yet Deployed</div>
+            <p>The live app isn't hosted publicly yet &mdash; it currently runs locally. In the meantime, browse the source and README on GitHub.</p>
+            <a class="repo-link" href="https://github.com/avikravi/p66-vessel-integrity" target="_blank" rel="noopener">View the repo on GitHub &rarr;</a>
+        </div>
+
+        <div class="feature-list">
+            <h2>What's in it</h2>
+            <ul>
+                <li><strong>ML corrosion prediction</strong> &mdash; a synthetic fleet of 360 vessels with physics-informed damage mechanisms, scored with a GradientBoosting model server-side and a Ridge model for client-side inference.</li>
+                <li><strong>Fleet risk dashboard</strong> &mdash; fleet overview, vessel registry, and per-vessel detail pages built in Next.js.</li>
+                <li><strong>Standards grounding</strong> &mdash; ASME Section VIII formulas and API 510/571/572/579-1/580 inspection logic, mapped to damage mechanisms rather than applying generic ML to a CSV.</li>
+            </ul>
         </div>
 
         <footer>
@@ -370,43 +316,6 @@
             if (closeBtn) closeBtn.addEventListener('click', closeNav);
             if (scrim) scrim.addEventListener('click', closeNav);
         })();
-
-        var PLAYLIST_ID = 'PL7jVMm9XS9Px7BLSKPi3yaR7Zy_dcHKXo';
-
-        function playVideo(id) {
-            var player = document.getElementById('ytPlayer');
-            player.src = 'https://www.youtube.com/embed/' + id + '?list=' + PLAYLIST_ID + '&autoplay=1';
-            document.querySelectorAll('.video-card').forEach(function (c) {
-                c.classList.toggle('active', c.dataset.id === id);
-            });
-        }
-
-        fetch('videos.json')
-            .then(function (r) { return r.json(); })
-            .then(function (videos) {
-                var grid = document.getElementById('ytGrid');
-                if (!videos.length) {
-                    grid.outerHTML = '<p class="video-grid-empty">No videos listed yet.</p>';
-                    return;
-                }
-                videos.forEach(function (v, i) {
-                    var card = document.createElement('button');
-                    card.type = 'button';
-                    card.className = 'video-card' + (i === 0 ? ' active' : '');
-                    card.dataset.id = v.id;
-                    card.innerHTML =
-                        '<span class="video-thumb">' +
-                            '<img src="https://img.youtube.com/vi/' + v.id + '/hqdefault.jpg" alt="" loading="lazy">' +
-                            '<span class="play-badge"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></span>' +
-                        '</span>' +
-                        '<span class="video-card-title">' + v.title.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>';
-                    card.addEventListener('click', function () { playVideo(v.id); });
-                    grid.appendChild(card);
-                });
-            })
-            .catch(function () {
-                document.getElementById('ytGrid').outerHTML = '<p class="video-grid-empty">Couldn\'t load the video list — <a href="https://www.youtube.com/playlist?list=' + PLAYLIST_ID + '" target="_blank" rel="noopener">view the playlist on Youtube</a> instead.</p>';
-            });
     </script>
 </body>
 </html>
