@@ -108,10 +108,16 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          hardcoded, non-YouTube videos, written directly into `#ytGrid`'s HTML
                          ahead of the dynamically-loaded YouTube ones (in this order: "P66 Vessel
                          Integrity Intelligence," then "Card Database App"): Loom embeds, each with
-                         `data-embed="loom"` and `data-loom-id="..."` instead of `data-id`, and a
-                         plain dark thumbnail (`.video-thumb.no-image`) rather than an `<img>`,
-                         since Loom's CDN thumbnail URL pattern returned 403 when tested. Only the
-                         P66 card carries a small blue "Featured" tag next to its title (via a
+                         `data-embed="loom"` and `data-loom-id="..."` instead of `data-id`. Each
+                         has a real thumbnail `<img>` pulled from the video itself — the guessed
+                         CDN pattern (`cdn.loom.com/sessions/thumbnails/{id}-00001.jpg` /
+                         `-with-play.gif`) 403s, but Loom's oEmbed endpoint
+                         (`https://www.loom.com/v1/oembed?url=https://www.loom.com/share/{id}`)
+                         returns a working `thumbnail_url` (`cdn.loom.com/sessions/thumbnails/{id}-
+                         {hash}.gif`, an animated GIF) — hit that endpoint for any new Loom video's
+                         id to get its real thumbnail before hardcoding a card, rather than
+                         guessing the URL or leaving a plain color box. Only the P66 card carries a
+                         small blue "Featured" tag next to its title (via a
                          `<span class="featured-tag">` inside `.video-card-title`) and is `active`
                          by default, so it's what plays when the page loads — Card Database App is
                          a plain, unfeatured list item. Avi explicitly rejected an earlier version
