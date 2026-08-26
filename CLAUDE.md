@@ -104,30 +104,40 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          reading order 1:1). List built from hp/youtube/videos.json (see below);
                          clicking an item swaps the iframe's src (autoplay) and highlights the
                          active item. No embedded YouTube Data API/key — see "The /hp section"
-                         below for why. As of 2026-08-25, the very first item in the list is a
-                         hardcoded, non-YouTube video: a Loom embed of "P66 Vessel Integrity
-                         Intelligence," marked with a small blue "Featured" tag next to its title
-                         and active by default so it's what plays when the page loads. Avi
-                         explicitly rejected an earlier version of this (a separate bordered
-                         "featured" box above the whole list/player layout) — he wanted it to stay
-                         inside the existing list, not become a new visual element, so don't
-                         reintroduce a standalone featured section without being asked again. This
-                         hardcoded card lives directly in the HTML inside `#ytGrid` (not in
-                         `videos.json`, which only supports YouTube IDs — it drives the
-                         `img.youtube.com` thumbnail and `youtube.com/embed` URL construction), has
-                         `data-embed="loom"` and `data-loom-id="..."` instead of `data-id`, and its
-                         thumbnail is a plain dark box (`.video-thumb.no-image`) rather than an
-                         `<img>`, since Loom's CDN thumbnail URL pattern returned 403 when tested.
-                         The shared `playVideo(card)` function (now takes the clicked card element,
-                         not just an id) branches on `card.dataset.embed` to build either a
-                         `loom.com/embed/{id}` or `youtube.com/embed/{id}?list=...` src, and also
-                         swaps the `#videoNote` link between "See the full P66 write-up" (linking
-                         to `/hp/p66-example`) and "Open the full playlist on Youtube" accordingly.
-                         Dynamically-added YouTube cards get `data-embed="youtube"` and are never
-                         active by default anymore (the Loom card owns that). If Avi wants to
-                         change or add another featured video, edit this hardcoded card and the
-                         `if (card.dataset.embed === 'loom')` branch directly — don't try to route
-                         a non-YouTube video through `videos.json`.
+                         below for why. As of 2026-08-25, the first two items in the list are
+                         hardcoded, non-YouTube videos, written directly into `#ytGrid`'s HTML
+                         ahead of the dynamically-loaded YouTube ones (in this order: "P66 Vessel
+                         Integrity Intelligence," then "Card Database App"): Loom embeds, each with
+                         `data-embed="loom"` and `data-loom-id="..."` instead of `data-id`, and a
+                         plain dark thumbnail (`.video-thumb.no-image`) rather than an `<img>`,
+                         since Loom's CDN thumbnail URL pattern returned 403 when tested. Only the
+                         P66 card carries a small blue "Featured" tag next to its title (via a
+                         `<span class="featured-tag">` inside `.video-card-title`) and is `active`
+                         by default, so it's what plays when the page loads — Card Database App is
+                         a plain, unfeatured list item. Avi explicitly rejected an earlier version
+                         of the featured treatment (a separate bordered box above the whole
+                         list/player layout) — he wanted it to stay inside the existing list, not
+                         become a new visual element, so don't reintroduce a standalone featured
+                         section without being asked again. The shared `playVideo(card)` function
+                         (takes the clicked card element, not just an id) branches on
+                         `card.dataset.embed` to build either a `loom.com/embed/{id}` or
+                         `youtube.com/embed/{id}?list=...` src. It also updates the `#videoNote`
+                         paragraph below the player: for a `loom` card it reads
+                         `card.dataset.noteText`/`card.dataset.noteHref` if present (only the P66
+                         card sets these, linking to `/hp/p66-example`) and clears the note
+                         entirely if absent (Card Database App has no write-up page, so its note is
+                         blank — don't invent one); for a `youtube` card it always shows "Open the
+                         full playlist on Youtube." Dynamically-added YouTube cards get
+                         `data-embed="youtube"` and are never active by default (the featured Loom
+                         card owns that). `hp/youtube/videos.json`'s own order matters too — it's
+                         currently `[Forecast 48, Academic Paper Review]` so the full on-page order
+                         reads P66 → Card Database App → Forecast 48 → Academic Paper Review,
+                         per Avi's explicit ordering request; keep the two hardcoded Loom cards and
+                         this JSON order in sync if the sequence ever changes again. If Avi wants
+                         to add another non-YouTube featured or regular video, copy one of these two
+                         hardcoded `<button class="video-card">` blocks and wire up `playVideo`'s
+                         `loom` branch accordingly — don't try to route a non-YouTube video through
+                         `videos.json` (that file only supports YouTube IDs).
   youtube/videos.json    Manually maintained list of {id, title} for the /hp/youtube thumbnail
                          grid, fetched client-side with a plain relative fetch() (same file://
                          caveat as tailor/app.js — serve over HTTP(S) to test locally). Update

@@ -353,11 +353,17 @@
             <div class="yt-list">
                 <div class="yt-list-title">All Videos</div>
                 <div class="yt-list-items" id="ytGrid">
-                    <button type="button" class="video-card active" data-embed="loom" data-loom-id="59958d9bcd884f908d3f095fa45e71d8">
+                    <button type="button" class="video-card active" data-embed="loom" data-loom-id="59958d9bcd884f908d3f095fa45e71d8" data-note-text="See the full P66 Vessel Integrity Intelligence write-up" data-note-href="/hp/p66-example">
                         <span class="video-thumb no-image">
                             <span class="play-badge" style="opacity: 1;"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></span>
                         </span>
                         <span class="video-card-title"><span class="featured-tag">Featured</span>P66 Vessel Integrity Intelligence</span>
+                    </button>
+                    <button type="button" class="video-card" data-embed="loom" data-loom-id="78dba250aeb5498493a64f05bb517beb">
+                        <span class="video-thumb no-image">
+                            <span class="play-badge" style="opacity: 1;"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></span>
+                        </span>
+                        <span class="video-card-title">Card Database App</span>
                     </button>
                 </div>
             </div>
@@ -396,7 +402,9 @@
             var note = document.getElementById('videoNote');
             if (card.dataset.embed === 'loom') {
                 player.src = 'https://www.loom.com/embed/' + card.dataset.loomId;
-                note.innerHTML = '<a href="/hp/p66-example">See the full P66 Vessel Integrity Intelligence write-up</a>.';
+                note.innerHTML = card.dataset.noteHref
+                    ? '<a href="' + card.dataset.noteHref + '">' + card.dataset.noteText + '</a>.'
+                    : '';
             } else {
                 player.src = 'https://www.youtube.com/embed/' + card.dataset.id + '?list=' + PLAYLIST_ID + '&autoplay=1';
                 note.innerHTML = '<a href="https://www.youtube.com/playlist?list=' + PLAYLIST_ID + '" target="_blank" rel="noopener">Open the full playlist on Youtube</a>.';
@@ -406,7 +414,9 @@
             });
         }
 
-        document.querySelector('[data-embed="loom"]').addEventListener('click', function () { playVideo(this); });
+        document.querySelectorAll('[data-embed="loom"]').forEach(function (card) {
+            card.addEventListener('click', function () { playVideo(card); });
+        });
 
         fetch('videos.json')
             .then(function (r) { return r.json(); })
