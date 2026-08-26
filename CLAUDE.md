@@ -67,11 +67,16 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          own page, and this page's avi-review text references "Box 1"/"Box 2"
                          (Feedback/Positive Reviews) by number in several places — keep those two
                          numbers stable if you ever reorder tabs again. Competitor Tracker was
-                         refreshed 2026-08-25 for a presentation: added AMD's Ryzen AI Halo (first
-                         non-GB10 competitor, ships with Windows as an option, unlike every GB10
-                         box) and ServeTheHome's follow-up review of the shipping Lenovo
-                         ThinkStation PGX, and updated the May 31 RTX Spark entry to note HP itself
-                         is a confirmed RTX Spark OEM partner for fall 2026. Feedback/Positive
+                         refreshed 2026-08-25 for a presentation, then again 2026-08-26 for
+                         interview prep: added AMD's Ryzen AI Halo (first non-GB10 competitor,
+                         ships with Windows as an option, unlike every GB10 box), ServeTheHome's
+                         follow-up review of the shipping Lenovo ThinkStation PGX, and NVIDIA's own
+                         Feb 25, 2026 DGX Spark Founders Edition price hike ($3,999 to $4,699,
+                         memory supply constraints) — note that NVIDIA's own post explicitly says
+                         that price change does NOT apply to OEM GB10 systems like the ZGX Nano, so
+                         don't conflate the two if this gets updated again. Also updated the May 31
+                         RTX Spark entry to note HP itself is a confirmed RTX Spark OEM partner for
+                         fall 2026. Feedback/Positive
                          Reviews were re-checked against fresh search results but no new
                          independent ZGX-Nano-specific reviews turned up since the original Oct/Nov
                          2025 batch (Notebookcheck, ServeTheHome, StorageReview, Global Nerdy) — one
