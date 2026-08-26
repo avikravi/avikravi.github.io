@@ -63,11 +63,77 @@
             max-width: 620px;
         }
 
+        .featured-section {
+            margin-top: 28px;
+            padding: 22px;
+            border: 1.5px solid var(--hp-blue, #0096D6);
+            border-radius: 12px;
+            background: #f5fafd;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #fff;
+            background: var(--hp-blue, #0096D6);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .featured-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .featured-desc {
+            font-size: 14px;
+            color: var(--ink-soft);
+            max-width: 700px;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .featured-desc a { color: var(--hp-blue, #0096D6); text-decoration: none; font-weight: 600; }
+        .featured-desc a:hover { text-decoration: underline; }
+
+        .featured-embed-wrap {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .featured-embed-wrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .more-videos-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-top: 36px;
+        }
+
         .yt-layout {
             display: flex;
             flex-direction: column;
             gap: 28px;
-            margin-top: 32px;
+            margin-top: 18px;
         }
 
         .yt-list { order: 2; }
@@ -331,6 +397,16 @@
             <p class="dek">A running log of AI/ML project walkthroughs and reviews &mdash; from sports-prediction modeling to hands-on hardware demos.</p>
         </header>
 
+        <section class="featured-section">
+            <span class="featured-badge">Featured Example</span>
+            <h2 class="featured-title">P66 Vessel Integrity Intelligence</h2>
+            <p class="featured-desc">A walkthrough of an independent pressure-vessel integrity management prototype &mdash; ML corrosion prediction, a fleet risk dashboard, and an ASME/API standards reference, built end-to-end. <a href="/hp/p66-example">See the full write-up &rarr;</a></p>
+            <div class="featured-embed-wrap">
+                <iframe src="https://www.loom.com/embed/59958d9bcd884f908d3f095fa45e71d8" title="P66 Vessel Integrity Intelligence walkthrough" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <div class="more-videos-title">More Videos</div>
         <div class="yt-layout">
             <div class="yt-list">
                 <div class="yt-list-title">All Videos</div>
