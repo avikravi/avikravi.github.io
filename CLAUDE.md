@@ -66,7 +66,19 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          here since Use Cases' own text still refers to itself as Box 4 on its
                          own page, and this page's avi-review text references "Box 1"/"Box 2"
                          (Feedback/Positive Reviews) by number in several places — keep those two
-                         numbers stable if you ever reorder tabs again.
+                         numbers stable if you ever reorder tabs again. Competitor Tracker was
+                         refreshed 2026-08-25 for a presentation: added AMD's Ryzen AI Halo (first
+                         non-GB10 competitor, ships with Windows as an option, unlike every GB10
+                         box) and ServeTheHome's follow-up review of the shipping Lenovo
+                         ThinkStation PGX, and updated the May 31 RTX Spark entry to note HP itself
+                         is a confirmed RTX Spark OEM partner for fall 2026. Feedback/Positive
+                         Reviews were re-checked against fresh search results but no new
+                         independent ZGX-Nano-specific reviews turned up since the original Oct/Nov
+                         2025 batch (Notebookcheck, ServeTheHome, StorageReview, Global Nerdy) — one
+                         candidate claim (VRM temperatures under sustained overclock, from
+                         aigigabit.com) was deliberately excluded because that domain now redirects
+                         to an unrelated finance subdomain and couldn't be verified directly; don't
+                         add it back without a trustworthy live source.
   use-cases/index.html   URL: /hp/use-cases. 10-industry potential-use-case review for the ZGX
                          Nano (industry chip switcher, one panel per industry), split out from
                          case-study/index.html into its own page on 2026-08-22 so it could get
