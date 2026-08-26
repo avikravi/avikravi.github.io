@@ -104,20 +104,30 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          reading order 1:1). List built from hp/youtube/videos.json (see below);
                          clicking an item swaps the iframe's src (autoplay) and highlights the
                          active item. No embedded YouTube Data API/key — see "The /hp section"
-                         below for why. As of 2026-08-25, a `.featured-section` block (hp-blue
-                         bordered card with a "Featured Example" badge) sits above the `.yt-layout`
-                         playlist, directly under the page header — Avi wanted it impossible for an
-                         interviewer to miss. It hardcodes a Loom embed (not YouTube — a different
-                         iframe src pattern, `loom.com/embed/{id}`) for "P66 Vessel Integrity
-                         Intelligence," with a description and a link to `/hp/p66-example` for the
-                         full write-up. This is a one-off hardcoded video, not part of
-                         `videos.json`/the YouTube playlist system — if Avi wants to change or add
-                         another featured video, edit the iframe `src` and copy directly in this
-                         section rather than trying to route it through `videos.json` (that file
-                         only supports YouTube IDs, since it drives the `img.youtube.com` thumbnail
-                         and `youtube.com/embed` URL construction in the script below). A
-                         "More Videos" label separates the featured block from the regular
-                         playlist list.
+                         below for why. As of 2026-08-25, the very first item in the list is a
+                         hardcoded, non-YouTube video: a Loom embed of "P66 Vessel Integrity
+                         Intelligence," marked with a small blue "Featured" tag next to its title
+                         and active by default so it's what plays when the page loads. Avi
+                         explicitly rejected an earlier version of this (a separate bordered
+                         "featured" box above the whole list/player layout) — he wanted it to stay
+                         inside the existing list, not become a new visual element, so don't
+                         reintroduce a standalone featured section without being asked again. This
+                         hardcoded card lives directly in the HTML inside `#ytGrid` (not in
+                         `videos.json`, which only supports YouTube IDs — it drives the
+                         `img.youtube.com` thumbnail and `youtube.com/embed` URL construction), has
+                         `data-embed="loom"` and `data-loom-id="..."` instead of `data-id`, and its
+                         thumbnail is a plain dark box (`.video-thumb.no-image`) rather than an
+                         `<img>`, since Loom's CDN thumbnail URL pattern returned 403 when tested.
+                         The shared `playVideo(card)` function (now takes the clicked card element,
+                         not just an id) branches on `card.dataset.embed` to build either a
+                         `loom.com/embed/{id}` or `youtube.com/embed/{id}?list=...` src, and also
+                         swaps the `#videoNote` link between "See the full P66 write-up" (linking
+                         to `/hp/p66-example`) and "Open the full playlist on Youtube" accordingly.
+                         Dynamically-added YouTube cards get `data-embed="youtube"` and are never
+                         active by default anymore (the Loom card owns that). If Avi wants to
+                         change or add another featured video, edit this hardcoded card and the
+                         `if (card.dataset.embed === 'loom')` branch directly — don't try to route
+                         a non-YouTube video through `videos.json`.
   youtube/videos.json    Manually maintained list of {id, title} for the /hp/youtube thumbnail
                          grid, fetched client-side with a plain relative fetch() (same file://
                          caveat as tailor/app.js — serve over HTTP(S) to test locally). Update
