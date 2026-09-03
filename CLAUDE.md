@@ -206,23 +206,67 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          its own tab" link inside `.app-note` (same URL, two places in this file —
                          the other `.app-note` link points to the GitHub repo, not Vercel, so leave
                          that one alone) together.
-  30-60-90/index.html    URL: /hp/30-60-90. Added 2026-08-27. A 30/60/90-day plan for the actual
-                         HP Principal TPMM, AI Solutions role, written for post-interview
-                         follow-up. First page under the sidebar's new "Post Interview" grouped
-                         section (see "The /hp section" below) rather than the flat top-level list
-                         the other six pages use. Content is a Guiding Principles intro followed by
-                         three `.phase-block` sections (Days 1-30, Days 31-60, Days 61-90), each
-                         with a stacked (not grid) Goals / Key Activities / Deliverables / Success
-                         Metrics layout — deliberately vertical, not a 2-column grid, because Key
-                         Activities is always much longer than the other three sections and a grid
-                         left ugly whitespace under the shorter columns. The plan is written to be
-                         internally consistent with the rest of the site: it references the real
-                         gaps documented on `/hp` itself (no battlecards/reference architectures
-                         yet, Llama/Mistral/Gemma/Qwen/vLLM/Semantic Kernel not yet hands-on) and
-                         commits to closing them on a specific timeline, and it cites the
+  30-60-90/index.html    URL: /hp/30-60-90. Added 2026-08-27, substantially expanded 2026-08-27
+                         (same day, second pass) per Avi's explicit review feedback. A 30/60/90-day
+                         plan for the actual HP Principal TPMM, AI Solutions role, written for
+                         post-interview follow-up. First page under the sidebar's new "Post
+                         Interview" grouped section (see "The /hp section" below) rather than the
+                         flat top-level list the other six pages use. Written deliberately in a
+                         principal-level voice: declarative and confident, but paired with explicit
+                         humility (the Guiding Principles section states outright which models/
+                         frameworks Avi doesn't have hands-on experience with yet, rather than
+                         glossing over it) — preserve that tone if you edit this page's copy, don't
+                         let it drift toward either false modesty or overclaiming.
+                         **No compensation figures anywhere on this page, or anywhere else on the
+                         site** — Avi explicitly asked for this after an earlier chat turn (not the
+                         page itself) mentioned a number; never reintroduce one.
+                         Section order: page-header (with an inline `.arc-timeline` visual, a
+                         4-milestone horizontal progress bar for Day 1/30/60/90, CSS-only — flex
+                         row of dots on a track line, collapses to a stacked list below 640px since
+                         a centered-under-each-dot label layout would overflow narrow viewports) →
+                         Guiding Principles (5 principles now, not 4 — added "show value before
+                         being asked to" and the explicit hands-on-gaps admission) → **Day One:
+                         Build While I Learn** (new section — directly addresses Avi's ask to show
+                         he can start building immediately; three `.hypothesis-grid` cards, each a
+                         Hypothesis/Prototype/What It Proves oil-and-gas scenario, explicitly built
+                         as extensions of the real, already-shipped `/hp/p66-example` prototype, not
+                         net-new invented claims) → **The 90-Day Arc** (the original three
+                         `.phase-block` sections, Days 1-30/31-60/61-90, lightly revised to
+                         cross-reference the Day One hypotheses; each phase's Goals/Key Activities/
+                         Deliverables/Success Metrics is a vertical stack via `.plan-grid`, not a
+                         2-column grid — Key Activities is always much longer than the other three
+                         and a grid left ugly whitespace under the shorter columns) → **Expanding
+                         the Channel: Academia** (new — grounded in Avi's real Rice TA role and
+                         daytum curriculum work, not generic "partner with universities" filler) →
+                         **The Ecosystem: NVIDIA, OEMs, and Channel Partners** (new — an honest
+                         read on HP being one of ~6 OEMs on the same GB10 silicon, pulled directly
+                         from the competitor tracker's own findings) → **Messaging & Positioning as
+                         a Living System** (new — proposes formalizing exactly the scraper/agent
+                         pattern already prototyped on `/hp/case-study` into an internal tool; uses
+                         the reusable `.flow-diagram` component, a horizontal row of `.flow-step`
+                         boxes joined by `.flow-arrow` characters, five steps: Scrape → Score & Rank
+                         → Draft → Human Review → Publish, looping back to step 1) → **Metrics That
+                         Matter** (new — a `.metrics-grid` of 5 `.metric-tile` cards proposing a
+                         north star metric, "Revenue-Qualified Pipeline Influenced," plus 4
+                         supporting KPIs; tiles show a metric name and definition, deliberately NOT
+                         fake live numbers, since these are proposed/illustrative until HP
+                         leadership sets real thresholds — don't add fabricated data to these tiles
+                         later) → **Planning in a Market That Moves Weekly** (new — reuses the same
+                         `.flow-diagram` component for a 4-step Plan → Build → Signal Check →
+                         Re-baseline cadence, explicitly framed as "here's the cadence I'd bring,"
+                         not a claim to already know HP's actual roadmap) → footer.
+                         The plan is written to be internally consistent with the rest of the site:
+                         it references the real gaps documented on `/hp` itself (no battlecards/
+                         reference architectures yet, several open-source models/frameworks not yet
+                         hands-on) and commits to closing them on a specific timeline, cites the
                          methodology of the ZGX Nano case study as the standard for any new
-                         benchmark or content claim. Doesn't use the `--hp-blue` accent anywhere in
-                         its content area, consistent with every other `/hp` page.
+                         benchmark or content claim, and the Day One section explicitly builds on
+                         `/hp/p66-example` rather than inventing unrelated new claims. Doesn't use
+                         the `--hp-blue` accent anywhere in its content area, consistent with every
+                         other `/hp` page. If you add more visual components to this page, reuse
+                         `.flow-diagram`/`.metrics-grid`/`.hypothesis-grid` rather than inventing a
+                         fourth pattern — Avi's explicit ask was to make the page visual, not to
+                         maximize the number of distinct visual styles on it.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -352,6 +396,7 @@ The `docx` library is loaded from a CDN `<script>` tag in `tracker.html`'s `<hea
 - Git author identity is `Avi Ravishankar <avikravi@gmail.com>` — already configured locally; don't reconfigure without being asked.
 - Line endings: this repo is edited from both Windows and other environments; expect harmless LF→CRLF warnings from git on Windows — these are not errors.
 - Keep commits scoped and the commit message descriptive of the actual content change (e.g. "Add application: Rivian", not "update").
+- **Never mention compensation, salary, or pay figures anywhere on the site.** As of 2026-08-27, Avi explicitly asked that no page ever reference a dollar comp figure — this came up because a chat reply (not any page) mentioned a target salary number, and he wants the whole public site to stay silent on compensation entirely, not just the page that prompted it. If asked to discuss comp in future work, do it in chat only, never in a file that gets published.
 
 ## Keeping this file updated
 
