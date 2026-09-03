@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30/60/90 Day Plan | Avi Ravishankar</title>
+    <meta name="description" content="A first-90-days plan for HP's Principal Technical Product Marketing Manager, AI Solutions role.">
+    <meta name="robots" content="noindex, nofollow">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --hp-blue: #0096D6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header.page-header {
+            padding: 44px 0 0;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .dek {
+            font-size: 15.5px;
+            color: var(--ink-faint);
+            max-width: 700px;
+        }
+
+        .meta-line {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--ink-faint);
+        }
+
+        .panel-title { font-size: 20px; font-weight: 700; color: #000; margin-bottom: 8px; }
+
+        .panel-desc {
+            font-size: 14px;
+            color: var(--ink-faint);
+            max-width: 720px;
+            margin-bottom: 22px;
+            line-height: 1.6;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .principles-section { margin-top: 40px; }
+
+        .principles-list { list-style: none; display: flex; flex-direction: column; gap: 16px; max-width: 800px; }
+
+        .principles-list li {
+            font-size: 14.5px;
+            color: var(--ink-soft);
+            line-height: 1.65;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .principles-list li::before {
+            content: '\2192';
+            position: absolute;
+            left: 0;
+            color: var(--blue);
+            font-weight: 700;
+        }
+
+        .principles-list strong { color: #000; }
+
+        .phase-block {
+            margin-top: 52px;
+            padding-top: 32px;
+            border-top: 1px solid var(--line);
+        }
+
+        .phase-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--blue);
+            border: 1px solid var(--blue);
+            border-radius: 4px;
+            padding: 3px 9px;
+            margin-bottom: 12px;
+        }
+
+        .phase-title { font-size: 23px; font-weight: 700; color: #000; margin-bottom: 10px; }
+
+        .phase-intro {
+            font-size: 14.5px;
+            color: var(--ink-soft);
+            max-width: 800px;
+            line-height: 1.65;
+            margin-bottom: 28px;
+        }
+
+        .plan-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+            max-width: 860px;
+        }
+
+        .plan-col-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .plan-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+        .plan-list li {
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            line-height: 1.55;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .plan-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--ink-faint);
+        }
+
+        footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-faint);
+            margin-top: 52px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 25px; }
+            header.page-header { padding: 32px 0 0; }
+            .phase-title { font-size: 20px; }
+        }
+
+        /* HP section nav (shared across /hp pages) */
+        .hp-shell { display: flex; align-items: flex-start; min-height: 100vh; }
+
+        .hp-sidenav {
+            width: 232px;
+            flex-shrink: 0;
+            background: #14161b;
+            color: #fff;
+            padding: 26px 18px;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            overflow-y: auto;
+            z-index: 110;
+        }
+
+        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+
+        .hp-brand {
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            color: #fff;
+            text-decoration: none;
+        }
+        .hp-brand span { color: var(--hp-blue, #0096D6); }
+
+        .hp-nav-close {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .hp-sidenav-links { display: flex; flex-direction: column; gap: 2px; }
+
+        .hp-nav-link {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #b7bcc4;
+            text-decoration: none;
+            transition: background-color 0.15s, color 0.15s;
+        }
+        .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+        .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
+
+        .hp-nav-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hp-nav-section-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #7a8290;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
+        .hp-nav-scrim.open { display: block; }
+
+        .hp-nav-open {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            background: #fff;
+            border: none;
+            border-bottom: 1px solid var(--line, #e5e5e5);
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--hp-blue, #0096D6);
+            cursor: pointer;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .hp-main { flex: 1; min-width: 0; margin-left: 232px; }
+
+        @media (max-width: 880px) {
+            .hp-sidenav { transform: translateX(-100%); width: 76%; max-width: 300px; box-shadow: 4px 0 28px rgba(0,0,0,0.25); transition: transform 0.22s ease; }
+            .hp-sidenav.open { transform: translateX(0); }
+            .hp-nav-close { display: block; }
+            .hp-main { margin-left: 0; }
+            .hp-nav-open { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hp-shell">
+        <aside class="hp-sidenav" id="hpSidenav">
+            <div class="hp-sidenav-head">
+                <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
+                <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
+            </div>
+            <nav class="hp-sidenav-links">
+                <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
+                <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
+                <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
+                <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
+                <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
+                <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
+            </nav>
+            <div class="hp-nav-section">
+                <div class="hp-nav-section-label">Post Interview</div>
+                <nav class="hp-sidenav-links">
+                    <a href="/hp/30-60-90" class="hp-nav-link active">30/60/90 Plan</a>
+                </nav>
+            </div>
+        </aside>
+        <div class="hp-nav-scrim" id="hpNavScrim"></div>
+
+        <div class="hp-main">
+            <button type="button" class="hp-nav-open" id="hpNavOpen" aria-label="Open menu" aria-expanded="false">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
+                Menu
+            </button>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="eyebrow">Post-Interview Follow-Up</div>
+            <h1>30/60/90 Day Plan</h1>
+            <p class="dek">A concrete first-90-days plan for the Principal Technical Product Marketing Manager, AI Solutions role, built around HP's local-AI hardware line, the ZGX Nano, the broader GB10/DGX ecosystem, and the incoming RTX Spark line, and mapped directly to the responsibility areas in the posting.</p>
+            <p class="meta-line">Prepared for HP Inc. &middot; Principal Technical Product Marketing Manager, AI Solutions &middot; Req #3166789</p>
+        </header>
+
+        <section class="principles-section">
+            <h2 class="panel-title">Guiding Principles</h2>
+            <p class="panel-desc">Four commitments that shape every week of this plan, not just the milestones.</p>
+            <ul class="principles-list">
+                <li><strong>Ground every claim in first-hand technical work.</strong> Before I position or message anything, I run it myself, on real hardware, against real open-source models &mdash; the same standard I held myself to building the independent ZGX Nano case study on this site.</li>
+                <li><strong>Fix the highest-leverage gap first.</strong> HP does not yet have formal battlecards or reference architectures for this product line. That's where the first 60 days go, not the easiest wins available.</li>
+                <li><strong>Build systems that outlast me.</strong> A competitive tracker or a positioning doc that only I can update is a liability. Everything I ship gets a documented owner and a fixed cadence.</li>
+                <li><strong>Let real customers check my work.</strong> Marketing claims that a reviewer can debunk in a hands-on test cost more credibility than they're worth. Every claim I make gets checked against a real user or a real benchmark first.</li>
+            </ul>
+        </section>
+
+        <section class="phase-block">
+            <span class="phase-tag">Days 1&ndash;30</span>
+            <h2 class="phase-title">Learn the Platform, Map the Landscape</h2>
+            <p class="phase-intro">The first 30 days are about building real technical fluency and an honest picture of where HP stands today, before writing a single word of external messaging.</p>
+
+            <div class="plan-grid">
+                <div>
+                    <div class="plan-col-title">Goals</div>
+                    <ul class="plan-list">
+                        <li>Build hands-on technical fluency with the ZGX Nano and the broader GB10 platform, not just the spec sheet.</li>
+                        <li>Produce a first-hand, source-cited map of the competitive landscape across every GB10 OEM and the true architectural alternatives.</li>
+                        <li>Meet every internal stakeholder across Product, Engineering, Sales, and Marketing who touches the AI Solutions line.</li>
+                        <li>Audit existing positioning, messaging, and sales collateral for gaps.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Key Activities</div>
+                    <ul class="plan-list">
+                        <li>Unbox and run a ZGX Nano end to end. Load and benchmark at least three open-source models across the size spectrum, a small model for a latency baseline, a mid-size model like Llama 3 8B, and a large model near the 128GB memory ceiling, using Ollama for local serving.</li>
+                        <li>Independently reproduce the specific technical claims already circulating in public reviews, the memory bandwidth ceiling, idle power draw, and context-length falloff under load, so any messaging I write is checked against real hardware, not just secondary sources.</li>
+                        <li>Interview 8 to 10 internal stakeholders across product management, hardware engineering, field sales, and channel partners to map the current GTM motion and where PMM support is missing today.</li>
+                        <li>Talk to 5 or more real ZGX Nano users or developer-community members to build a first-hand voice-of-customer baseline.</li>
+                        <li>Stand up a living competitive tracker covering every GB10 OEM (ASUS, Dell, Lenovo, MSI, Supermicro) plus the real architectural alternatives (AMD's Ryzen AI Halo, Apple's Mac Studio for local LLM use), refreshed on a documented cadence rather than a one-time snapshot.</li>
+                        <li>Identify the single highest-leverage messaging gap in market today, the open RTX Spark vs. DGX Spark brand-confusion question is the leading candidate, and draft an initial point of view.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Deliverables</div>
+                    <ul class="plan-list">
+                        <li>A one-page "State of the Local-AI Market" internal briefing comparing HP's position against every GB10 OEM and the AMD/Apple alternatives on price, memory, OS support, and measured performance.</li>
+                        <li>A first-hand, documented benchmark log for the ZGX Nano across at least three open-source models.</li>
+                        <li>A stakeholder map naming the five people whose sign-off matters most to ship anything in the next 60 days.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Success Metrics</div>
+                    <ul class="plan-list">
+                        <li>100% of identified key stakeholders interviewed by day 30.</li>
+                        <li>First-hand benchmark data published internally for at least three open-source models.</li>
+                        <li>Competitive tracker live and covering 100% of known GB10 OEMs plus non-GB10 entrants.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-block">
+            <span class="phase-tag">Days 31&ndash;60</span>
+            <h2 class="phase-title">Build the Assets, Ship the First Wins</h2>
+            <p class="phase-intro">With the platform and the landscape mapped, days 31 to 60 go toward closing the biggest documented gap, sales enablement, and shipping the first piece of technical thought leadership.</p>
+
+            <div class="plan-grid">
+                <div>
+                    <div class="plan-col-title">Goals</div>
+                    <ul class="plan-list">
+                        <li>Close the sales enablement gap identified in the first 30 days: no formal battlecards or reference architectures exist yet for this line.</li>
+                        <li>Ship the first piece of externally credible technical content.</li>
+                        <li>Close my own hands-on gaps across the open-model ecosystem, so every future customer conversation is backed by direct experience.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Key Activities</div>
+                    <ul class="plan-list">
+                        <li>Build a full competitive battlecard for the ZGX Nano against every GB10 OEM and AMD's Ryzen AI Halo: price, memory, OS support, thermals and noise, and the specific objections field sales are already hearing, like the plastic chassis at this price point and the lack of a Windows option.</li>
+                        <li>Build a documented, repeatable reference architecture for a local RAG pipeline on the ZGX Nano, model serving through Ollama, orchestration through LangChain or LangGraph, so sales engineers and customers start from a proven pattern instead of a blank page.</li>
+                        <li>Extend hands-on model coverage to Llama, Mistral, Gemma, and Qwen directly on the ZGX Nano, and evaluate vLLM as a throughput-focused serving alternative to Ollama.</li>
+                        <li>Publish the first technical blog post or whitepaper: a benchmarked, fully-cited comparison of the ZGX Nano against at least two direct competitors, held to the same sourcing standard as the independent ZGX Nano case study on this site.</li>
+                        <li>Run a structured GTM readiness review with sales and channel partners: walk the new battlecard and reference architecture, gather objections, and revise before wide release.</li>
+                        <li>Scope a concrete positioning fix for the RTX Spark and DGX Spark brand-confusion risk, with a messaging framework that keeps the two lines clearly differentiated at retail and in the channel.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Deliverables</div>
+                    <ul class="plan-list">
+                        <li>A finished, sales-ready battlecard and reference architecture, reviewed and signed off by both Sales and Product.</li>
+                        <li>One published technical blog post or whitepaper with real benchmark data and full citations.</li>
+                        <li>A documented RTX Spark vs. DGX Spark positioning framework.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Success Metrics</div>
+                    <ul class="plan-list">
+                        <li>Battlecard and reference architecture in active use by at least two sales teams or channel partners.</li>
+                        <li>Published content shows measurable engagement against whatever content analytics HP already tracks.</li>
+                        <li>Hands-on coverage complete across every open-source model family named in the role: Llama, Mistral, DeepSeek, Gemma, and Qwen.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="phase-block">
+            <span class="phase-tag">Days 61&ndash;90</span>
+            <h2 class="phase-title">Own the Motion, Scale the Impact</h2>
+            <p class="phase-intro">The last 30 days move from building individual assets to owning a repeatable motion, one measured in business outcomes and built to run without me in the room.</p>
+
+            <div class="plan-grid">
+                <div>
+                    <div class="plan-col-title">Goals</div>
+                    <ul class="plan-list">
+                        <li>Move from shipping individual assets to owning a repeatable, cross-functional GTM motion.</li>
+                        <li>Show measurable business impact, not just activity.</li>
+                        <li>Leave behind a cadence and a system that outlives the 90-day mark.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Key Activities</div>
+                    <ul class="plan-list">
+                        <li>Present a formal go-to-market briefing to cross-functional leadership across Product, Engineering, Sales, and Marketing: current market position, the competitive landscape, the assets shipped in days 31 to 60, and a recommended roadmap for the next two quarters.</li>
+                        <li>Stand up a recurring competitive-intelligence cadence, a documented biweekly digest with a named owner, so tracking doesn't lapse back into a one-time snapshot after day 90.</li>
+                        <li>Identify and scope one customer-facing proof point, a named reference customer or a public benchmark result, that sales can point to directly in active deals.</li>
+                        <li>Formalize a lightweight, recurring customer and developer advisory input loop so future messaging stays grounded in real usage instead of drifting toward claims a reviewer could debunk.</li>
+                        <li>Run a retrospective against the original day-1 stakeholder interviews: which gaps closed, which are still open, and what the next 90 days should prioritize.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Deliverables</div>
+                    <ul class="plan-list">
+                        <li>A cross-functional GTM briefing deck presented to leadership, with a recommended roadmap for the next two quarters.</li>
+                        <li>A live, recurring competitive-intelligence cadence with a named owner and a fixed publishing schedule.</li>
+                        <li>At least one customer-facing proof point ready for sales to use in active deals.</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="plan-col-title">Success Metrics</div>
+                    <ul class="plan-list">
+                        <li>Leadership sign-off on the recommended next-two-quarter roadmap.</li>
+                        <li>Competitive-intelligence cadence running on its documented schedule, independent of day-to-day involvement from me.</li>
+                        <li>At least one active deal or customer conversation where a days 31&ndash;60 asset, the battlecard, the reference architecture, or the published benchmark, was cited as directly influential.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            Prepared for the HP Principal Technical Product Marketing Manager, AI Solutions interview process. Not for external distribution.
+        </footer>
+    </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var openBtn = document.getElementById('hpNavOpen');
+            var closeBtn = document.getElementById('hpNavClose');
+            var sidenav = document.getElementById('hpSidenav');
+            var scrim = document.getElementById('hpNavScrim');
+            function openNav() { sidenav.classList.add('open'); scrim.classList.add('open'); openBtn.setAttribute('aria-expanded', 'true'); }
+            function closeNav() { sidenav.classList.remove('open'); scrim.classList.remove('open'); openBtn.setAttribute('aria-expanded', 'false'); }
+            if (openBtn) openBtn.addEventListener('click', openNav);
+            if (closeBtn) closeBtn.addEventListener('click', closeNav);
+            if (scrim) scrim.addEventListener('click', closeNav);
+        })();
+    </script>
+</body>
+</html>

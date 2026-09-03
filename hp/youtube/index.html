@@ -283,6 +283,22 @@
         .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
         .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
 
+        .hp-nav-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hp-nav-section-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #7a8290;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
         .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
         .hp-nav-scrim.open { display: block; }
 
@@ -330,6 +346,12 @@
                 <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
                 <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
             </nav>
+            <div class="hp-nav-section">
+                <div class="hp-nav-section-label">Post Interview</div>
+                <nav class="hp-sidenav-links">
+                    <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
+                </nav>
+            </div>
         </aside>
         <div class="hp-nav-scrim" id="hpNavScrim"></div>
 
