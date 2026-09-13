@@ -408,6 +408,31 @@ There's no shared layout/build step in this repo, so the snippet is duplicated i
 
 Every page under `hp/` (all 7: `index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, `p66-example/index.html`, `30-60-90/index.html`) passes an extra `content_group: 'HP Portfolio'` parameter in its `gtag('config', ...)` call — a deliberate deviation from the plain snippet used elsewhere, added 2026-09-13 so Avi can filter GA4 reports (Engagement > Pages and screens, Path exploration) down to just visitors exploring the HP portfolio, separate from the rest of the site. Each page already has a distinct `<title>`, which combined with `content_group` is what makes per-page dwell time, click-through paths, and unique-visitor counts within `/hp` reportable in GA4 without any further code — this needs no additional event tracking, since GA4's default collection already measures page views, per-page engagement time, and users automatically on every full-page navigation. If a new `hp/` page is added, its `gtag('config', ...)` call must include this same `content_group` parameter — copy the pattern from any existing `hp/*/index.html` file.
 
+### Self-exclusion (keep Avi's own visits out of the numbers)
+
+As of 2026-09-13, every one of the 12 HTML files has a small inline script *immediately before* the gtag.js `<script>` tag (order matters — Google's disable flag must be set before the tag library loads):
+
+```html
+<!-- Google Analytics self-exclusion (must run before the tag below) -->
+<script>
+  (function () {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('ga_optout') === '1') {
+        localStorage.setItem('ga_opt_out', 'true');
+      } else if (params.get('ga_optout') === '0') {
+        localStorage.removeItem('ga_opt_out');
+      }
+      if (localStorage.getItem('ga_opt_out') === 'true') {
+        window['ga-disable-G-ZKRVLMXMV5'] = true;
+      }
+    } catch (e) {}
+  })();
+</script>
+```
+
+This uses GA4/gtag.js's own documented opt-out mechanism (`window['ga-disable-<MEASUREMENT_ID>'] = true`). Avi opts out once per browser by visiting any page on the site with `?ga_optout=1` appended (e.g. `https://avikravi.github.io/?ga_optout=1`) — that sets a `localStorage` flag under the `avikravi.github.io` origin, which every other page on the site checks on load, so the opt-out follows him across all 12 pages without needing to repeat it per page. `?ga_optout=0` on any page clears the flag again (e.g. for testing that tracking is actually live). Caveats worth knowing: this is per-browser-profile, not per-computer — a different browser, a different OS user profile, or an incognito/private window won't inherit the flag and will still be tracked unless opted out separately in each; clearing site data/localStorage for `avikravi.github.io` also resets it. This client-side flag must stay in every page's `<head>`, ahead of the gtag.js script tag specifically (not just anywhere in `<head>`) — if a new page is ever added, copy this whole block plus the GA snippet from any existing page, in that order.
+
 ## Conventions
 
 - No sudo/admin needed for anything in this repo.

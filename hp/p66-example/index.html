@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google Analytics self-exclusion (must run before the tag below) -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ga_optout') === '1') {
+          localStorage.setItem('ga_opt_out', 'true');
+        } else if (params.get('ga_optout') === '0') {
+          localStorage.removeItem('ga_opt_out');
+        }
+        if (localStorage.getItem('ga_opt_out') === 'true') {
+          window['ga-disable-G-ZKRVLMXMV5'] = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZKRVLMXMV5"></script>
   <script>
