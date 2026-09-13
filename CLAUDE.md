@@ -391,16 +391,16 @@ The `docx` library is loaded from a CDN `<script>` tag in `tracker.html`'s `<hea
 
 ## Analytics
 
-As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (gtag.js) snippet, pasted verbatim right after the opening `<head>` tag, Measurement ID `G-ZKRVLMXMV5`:
+As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (gtag.js) snippet, pasted verbatim right after the opening `<head>` tag, Measurement ID `G-JVHGKBB8PD`:
 
 ```html
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZKRVLMXMV5"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-ZKRVLMXMV5');
+  gtag('config', 'G-JVHGKBB8PD');
 </script>
 ```
 
@@ -424,7 +424,7 @@ As of 2026-09-13, every one of the 12 HTML files has a small inline script *imme
         localStorage.removeItem('ga_opt_out');
       }
       if (localStorage.getItem('ga_opt_out') === 'true') {
-        window['ga-disable-G-ZKRVLMXMV5'] = true;
+        window['ga-disable-G-JVHGKBB8PD'] = true;
       }
     } catch (e) {}
   })();
