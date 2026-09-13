@@ -389,6 +389,23 @@ The `docx` library is loaded from a CDN `<script>` tag in `tracker.html`'s `<hea
 
 `tailor/app.js` fetches `master_resume_data.json` with a plain relative `fetch()`, so this feature only works when `tracker.html` is served over HTTP(S) — opening it directly as a `file://` URL will fail the fetch (browsers block `file://` XHR/fetch to local files). Test locally with a static HTTP server, not by double-clicking the file.
 
+## Analytics
+
+As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (gtag.js) snippet, pasted verbatim right after the opening `<head>` tag, Measurement ID `G-ZKRVLMXMV5`:
+
+```html
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZKRVLMXMV5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZKRVLMXMV5');
+</script>
+```
+
+There's no shared layout/build step in this repo, so the snippet is duplicated into all 12 HTML files individually rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page. **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
+
 ## Conventions
 
 - No sudo/admin needed for anything in this repo.
