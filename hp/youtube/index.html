@@ -451,6 +451,14 @@
         function playVideo(card) {
             var player = document.getElementById('ytPlayer');
             var note = document.getElementById('videoNote');
+            if (typeof gtag === 'function') {
+                var titleEl = card.querySelector('.video-card-title');
+                gtag('event', 'video_select', {
+                    video_title: titleEl ? titleEl.textContent.trim() : '',
+                    video_type: card.dataset.embed,
+                    video_id: card.dataset.embed === 'loom' ? card.dataset.loomId : card.dataset.id
+                });
+            }
             if (card.dataset.embed === 'loom') {
                 player.src = 'https://www.loom.com/embed/' + card.dataset.loomId;
                 note.innerHTML = card.dataset.noteHref

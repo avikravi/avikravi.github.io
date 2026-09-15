@@ -433,6 +433,16 @@ As of 2026-09-13, every one of the 12 HTML files has a small inline script *imme
 
 This uses GA4/gtag.js's own documented opt-out mechanism (`window['ga-disable-<MEASUREMENT_ID>'] = true`). Avi opts out once per browser by visiting any page on the site with `?ga_optout=1` appended (e.g. `https://avikravi.github.io/?ga_optout=1`) — that sets a `localStorage` flag under the `avikravi.github.io` origin, which every other page on the site checks on load, so the opt-out follows him across all 12 pages without needing to repeat it per page. `?ga_optout=0` on any page clears the flag again (e.g. for testing that tracking is actually live). Caveats worth knowing: this is per-browser-profile, not per-computer — a different browser, a different OS user profile, or an incognito/private window won't inherit the flag and will still be tracked unless opted out separately in each; clearing site data/localStorage for `avikravi.github.io` also resets it. This client-side flag must stay in every page's `<head>`, ahead of the gtag.js script tag specifically (not just anywhere in `<head>`) — if a new page is ever added, copy this whole block plus the GA snippet from any existing page, in that order.
 
+### Custom events for cross-origin embeds
+
+Added 2026-09-14. GA4's automatic page-view/engagement tracking can't see *inside* a cross-origin `<iframe>` (no DOM access), which is a blind spot for the three `/hp` pages that embed interactive content rather than just linking out. Manual `gtag('event', ...)` calls fill that gap:
+
+- `hp/youtube/index.html`'s `playVideo(card)` function fires a `video_select` event (`video_title`, `video_type`, `video_id`) on every real click — it's only ever invoked from a click handler (never called on initial page load), so every event genuinely represents a visitor choosing a video, not the default-active P66 card firing on load.
+- `hp/ai-research/index.html`'s and `hp/p66-example/index.html`'s embedded `<iframe>` (both `loading="lazy"`) fire an `embed_viewed` event (`embed_name`) on `onload` — since they're lazy-loaded, this only fires once the visitor actually scrolls the embed into view, not on page load, so it's a real signal they saw the interactive content and not just landed on the page.
+- The "open in its own tab" fallback links on both those pages fire `embed_open_new_tab` (`embed_name`) on click; `p66-example`'s GitHub source link fires `p66_github_click`.
+
+All of these guard with `typeof gtag === 'function'` before calling it, matching the defensive style of the self-exclusion snippet above. If a future `/hp` page embeds another cross-origin iframe or interactive widget, follow this same pattern (an `embed_viewed` on lazy `onload`, plus click events on any explicit follow-through links) rather than leaving it untracked.
+
 ## Conventions
 
 - No sudo/admin needed for anything in this repo.
