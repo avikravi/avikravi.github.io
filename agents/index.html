@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics self-exclusion (must run before the tag below) -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ga_optout') === '1') {
+          localStorage.setItem('ga_opt_out', 'true');
+        } else if (params.get('ga_optout') === '0') {
+          localStorage.removeItem('ga_opt_out');
+        }
+        if (localStorage.getItem('ga_opt_out') === 'true') {
+          window['ga-disable-G-JVHGKBB8PD'] = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JVHGKBB8PD');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleanie's Homebase</title>
+  <meta name="description" content="A fantasy-land map of the agents Avi has built, starting with Cleanie the cleanup golem.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sky-top:#333c49;
+      --sky-mid:#5f7080;
+      --sky-horizon:#aab7bb;
+      --mountain-far:#57626d;
+      --mountain-near:#3c4650;
+      --mist:#cbd4d2;
+
+      --grass:#556f39;
+      --grass-light:#71904c;
+      --grass-dark:#374a24;
+      --rock:#7c7a72;
+      --rock-dark:#54524b;
+      --dirt-path:#7c6142;
+      --cliff:#443c31;
+      --cliff-dark:#2c261e;
+
+      --stone:#7c7a72;
+      --stone-light:#9d9b8f;
+      --stone-dark:#4c4a43;
+
+      --iron:#82858b;
+      --iron-light:#adafb3;
+      --iron-dark:#525459;
+      --leather:#563f2b;
+      --wood-dark:#3a2a1a;
+      --cloak:#3f5238;
+      --cloak-dark:#293623;
+
+      --rune:#7dffb0;
+      --rune-dark:#1f7a4d;
+      --gold:#c8a24a;
+
+      --ink:#171512;
+      --parchment:#e7dab8;
+      --parchment-edge:#9c8355;
+
+      --hud-panel:#1d1e1b;
+      --hud-edge:#57584f;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;}
+    body{
+      min-height:100vh;
+      background:#14161a;
+      color:var(--parchment);
+      font-family:"Rajdhani",system-ui,sans-serif;
+      display:flex;
+      justify-content:center;
+      padding:32px 16px;
+    }
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .eyebrow{
+      font-family:"Rajdhani",sans-serif;
+      font-weight:700;
+      font-size:12.5px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:#8fa08f;
+      text-align:center;
+      margin:0;
+    }
+    .stage{
+      position:relative;
+      width:100%;
+      aspect-ratio:1280/720;
+      border-radius:6px;
+      overflow:hidden;
+      background:#222;
+      box-shadow:0 24px 60px -20px rgba(0,0,0,.65), 0 0 0 1px #000;
+    }
+    .stage svg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    .cap{
+      display:flex;
+      gap:22px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      background:linear-gradient(180deg,#23241f,#1a1b17);
+      border:1px solid var(--hud-edge);
+      border-radius:8px;
+      padding:20px 24px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 24px -18px rgba(0,0,0,.6);
+    }
+    .cap-id{ min-width:220px; }
+    .cap-name{
+      font-family:"Cinzel",serif;
+      font-weight:800;
+      font-size:28px;
+      letter-spacing:.03em;
+      line-height:1.1;
+      margin:0 0 6px;
+      color:var(--parchment);
+      text-shadow:0 2px 0 rgba(0,0,0,.5);
+    }
+    .cap-role{
+      margin:0;
+      font-weight:600;
+      font-size:13.5px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--rune);
+    }
+    .cap-note{
+      flex:1 1 320px;
+      min-width:260px;
+      margin:0;
+      font-size:16px;
+      font-weight:500;
+      line-height:1.6;
+      color:#c7c2ae;
+    }
+    .cap-note b{ color:var(--parchment); font-weight:700; }
+    @media (max-width:600px){
+      .cap-name{ font-size:23px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Fantasy Land &middot; Realm Map</p>
+
+  <div class="stage">
+    <svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Isometric strategy-game view of Cleanie, an armored cleanup golem, standing beside a glowing rune monolith on a grassy plateau under a stormy sky, with unexplored map fading into fog at the edges">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--sky-top)"/>
+          <stop offset="0.65" stop-color="var(--sky-mid)"/>
+          <stop offset="1" stop-color="var(--sky-horizon)"/>
+        </linearGradient>
+        <linearGradient id="grassFace" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="var(--grass-light)"/>
+          <stop offset="1" stop-color="var(--grass-dark)"/>
+        </linearGradient>
+        <linearGradient id="cliffFace" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--cliff)"/>
+          <stop offset="1" stop-color="var(--cliff-dark)"/>
+        </linearGradient>
+        <linearGradient id="stoneFace" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="var(--stone-light)"/>
+          <stop offset="1" stop-color="var(--stone-dark)"/>
+        </linearGradient>
+        <radialGradient id="runeGlow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="var(--rune)" stop-opacity="0.95"/>
+          <stop offset="1" stop-color="var(--rune)" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="fog" cx="0.5" cy="0.46" r="0.75">
+          <stop offset="0" stop-color="#000000" stop-opacity="0"/>
+          <stop offset="0.62" stop-color="#000000" stop-opacity="0"/>
+          <stop offset="1" stop-color="#05070a" stop-opacity="0.82"/>
+        </radialGradient>
+        <linearGradient id="ironBody" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="var(--iron-light)"/>
+          <stop offset="1" stop-color="var(--iron-dark)"/>
+        </linearGradient>
+      </defs>
+
+      <!-- sky -->
+      <rect x="0" y="0" width="1280" height="720" fill="url(#sky)"/>
+      <g opacity="0.5" fill="var(--mist)">
+        <ellipse cx="260" cy="330" rx="150" ry="18"/>
+        <ellipse cx="980" cy="345" rx="170" ry="20"/>
+      </g>
+
+      <!-- mountains -->
+      <path d="M0,400 L110,330 190,378 300,300 400,368 520,318 640,372 760,320 880,375 1000,315 1120,370 1280,325 1280,430 0,430 Z" fill="var(--mountain-far)" opacity="0.85"/>
+      <path d="M0,420 L150,365 260,405 380,350 500,408 630,360 760,412 900,358 1030,410 1160,368 1280,405 1280,460 0,460 Z" fill="var(--mountain-near)"/>
+      <path d="M905,362 l6,-34 6,34 z" fill="var(--mountain-near)"/>
+      <rect x="898" y="330" width="16" height="34" fill="var(--mountain-near)"/>
+
+      <!-- fog-of-war edges -->
+      <rect x="0" y="0" width="1280" height="720" fill="url(#fog)"/>
+
+      <!-- ===== ISO GROUND PLATEAU ===== -->
+      <!-- cliff skirt -->
+      <path d="M160,455 L640,695 1120,455 1120,505 640,745 160,505 Z" fill="url(#cliffFace)"/>
+      <g stroke="var(--cliff-dark)" stroke-width="3" opacity="0.6">
+        <path d="M340,548 L340,596" />
+        <path d="M640,695 L640,745" />
+        <path d="M940,548 L940,596" />
+      </g>
+
+      <!-- grass top face -->
+      <path d="M640,215 L1120,455 640,695 160,455 Z" fill="url(#grassFace)"/>
+      <path d="M640,215 L1120,455 640,695 160,455 Z" fill="none" stroke="var(--grass-dark)" stroke-width="3" opacity="0.4"/>
+
+      <!-- terrain texture patches -->
+      <g opacity="0.55">
+        <ellipse cx="420" cy="360" rx="46" ry="16" fill="var(--rock)" transform="rotate(-24 420 360)"/>
+        <ellipse cx="860" cy="380" rx="40" ry="14" fill="var(--grass-dark)" transform="rotate(20 860 380)"/>
+        <ellipse cx="300" cy="520" rx="52" ry="18" fill="var(--grass-light)" transform="rotate(-18 300 520)" opacity="0.6"/>
+        <ellipse cx="980" cy="560" rx="44" ry="15" fill="var(--rock)" transform="rotate(22 980 560)" opacity="0.7"/>
+        <ellipse cx="640" cy="300" rx="34" ry="12" fill="var(--grass-light)" transform="rotate(-10 640 300)" opacity="0.5"/>
+      </g>
+
+      <!-- worn path -->
+      <path d="M250,470 Q420,500 520,470 T700,468" fill="none" stroke="var(--dirt-path)" stroke-width="14" stroke-linecap="round" opacity="0.55"/>
+      <path d="M250,470 Q420,500 520,470 T700,468" fill="none" stroke="var(--cliff-dark)" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 16" opacity="0.35"/>
+
+      <!-- boulders -->
+      <g>
+        <ellipse cx="255" cy="410" rx="20" ry="13" fill="var(--rock-dark)"/>
+        <ellipse cx="248" cy="404" rx="10" ry="6" fill="var(--rock)"/>
+        <ellipse cx="1010" cy="430" rx="24" ry="15" fill="var(--rock-dark)"/>
+        <ellipse cx="1000" cy="423" rx="11" ry="6" fill="var(--rock)"/>
+      </g>
+
+      <!-- broken ruin stones -->
+      <g fill="var(--stone-dark)" stroke="var(--stone)" stroke-width="1.5">
+        <rect x="470" y="500" width="26" height="16" rx="2" transform="rotate(-8 483 508)"/>
+        <rect x="880" y="520" width="30" height="16" rx="2" transform="rotate(10 895 528)"/>
+        <rect x="760" y="560" width="22" height="14" rx="2" transform="rotate(-4 771 567)"/>
+      </g>
+
+      <!-- windswept dead trees -->
+      <g stroke="var(--cliff-dark)" stroke-width="6" stroke-linecap="round" fill="none">
+        <path d="M225,455 Q215,410 195,390 M215,430 Q235,405 250,398 M218,418 Q200,398 188,402"/>
+        <path d="M1075,478 Q1090,432 1115,412 M1085,452 Q1065,425 1050,418 M1082,440 Q1100,422 1112,426"/>
+      </g>
+
+      <!-- ===== DAIS + MONOLITH ===== -->
+      <g transform="translate(760,470)">
+        <ellipse cx="0" cy="18" rx="110" ry="36" fill="var(--stone-dark)" opacity="0.9"/>
+        <ellipse cx="0" cy="8" rx="88" ry="28" fill="url(#stoneFace)"/>
+        <ellipse cx="0" cy="0" rx="62" ry="20" fill="var(--stone-light)" opacity="0.85"/>
+
+        <path d="M-34,-2 L34,-2 20,-196 -20,-196 Z" fill="url(#stoneFace)" stroke="var(--stone-dark)" stroke-width="2"/>
+        <path d="M-34,-2 L-20,-196 -8,-196 -18,-2 Z" fill="var(--stone-light)" opacity="0.35"/>
+
+        <g stroke="var(--rune)" stroke-width="2.5" fill="none" opacity="0.9">
+          <path d="M-16,-40 L4,-60 -8,-88 14,-108"/>
+          <path d="M2,-140 L-10,-158 8,-172"/>
+        </g>
+
+        <rect x="-17" y="-112" width="34" height="30" rx="3" fill="url(#runeGlow)"/>
+        <rect x="-17" y="-112" width="34" height="30" rx="3" fill="none" stroke="var(--rune)" stroke-width="2"/>
+        <path d="M-9,-100 l6,7 12,-15" fill="none" stroke="#0c3a22" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <circle cx="0" cy="-206" r="9" fill="url(#runeGlow)"/>
+        <circle cx="0" cy="-206" r="5" fill="var(--rune)"/>
+
+        <path d="M-6,-2 Q-40,40 -70,34" stroke="var(--rune-dark)" stroke-width="3" fill="none" opacity="0.8"/>
+        <path d="M8,-2 Q44,36 78,26" stroke="var(--rune-dark)" stroke-width="3" fill="none" opacity="0.8"/>
+      </g>
+
+      <!-- ===== CLEANIE ===== -->
+      <g transform="translate(608,486)">
+        <ellipse cx="6" cy="18" rx="66" ry="17" fill="#050403" opacity="0.4"/>
+
+        <!-- cloak -->
+        <path d="M-40,-150 Q-78,-70 -58,10 L-30,-6 Q-46,-72 -18,-142 Z" fill="var(--cloak-dark)"/>
+        <path d="M40,-150 Q74,-68 52,14 L26,-4 Q42,-70 16,-142 Z" fill="var(--cloak)"/>
+
+        <!-- back leg -->
+        <rect x="-34" y="-58" width="24" height="66" rx="8" fill="var(--iron-dark)"/>
+        <!-- front leg -->
+        <rect x="8" y="-58" width="26" height="68" rx="8" fill="url(#ironBody)"/>
+        <rect x="-38" y="4" width="30" height="18" rx="6" fill="var(--iron-dark)"/>
+        <rect x="6" y="6" width="32" height="18" rx="6" fill="var(--iron)"/>
+
+        <!-- planted hammer-mop haft -->
+        <rect x="58" y="-238" width="10" height="238" rx="4" fill="var(--wood-dark)"/>
+        <g transform="translate(63,-238)">
+          <rect x="-8" y="-26" width="34" height="26" rx="4" fill="var(--iron)"/>
+          <rect x="-8" y="-26" width="34" height="10" fill="var(--iron-light)" opacity="0.6"/>
+          <g stroke="#c9c6ba" stroke-width="3" stroke-linecap="round">
+            <path d="M26,-24 L46,-30"/>
+            <path d="M26,-16 L48,-16"/>
+            <path d="M26,-8 L46,-2"/>
+          </g>
+        </g>
+
+        <!-- torso -->
+        <path d="M-46,-150 Q-52,-96 -40,-52 L40,-52 Q52,-96 46,-150 Q0,-168 -46,-150 Z" fill="url(#ironBody)" stroke="var(--iron-dark)" stroke-width="2"/>
+        <g fill="var(--iron-dark)" opacity="0.7">
+          <circle cx="-30" cy="-140" r="3"/>
+          <circle cx="30" cy="-140" r="3"/>
+          <circle cx="-34" cy="-70" r="3"/>
+          <circle cx="34" cy="-70" r="3"/>
+        </g>
+
+        <!-- belt -->
+        <rect x="-48" y="-58" width="96" height="14" rx="4" fill="var(--leather)"/>
+        <rect x="-8" y="-58" width="16" height="14" fill="var(--gold)"/>
+        <g stroke="var(--iron-dark)" stroke-width="3" stroke-linecap="round">
+          <path d="M-44,-44 l-6,20 10,4"/>
+        </g>
+
+        <!-- chest rune -->
+        <path d="M0,-128 l10,12 -10,12 -10,-12 Z" fill="url(#runeGlow)"/>
+        <path d="M0,-128 l10,12 -10,12 -10,-12 Z" fill="none" stroke="var(--rune)" stroke-width="2"/>
+
+        <!-- pauldrons -->
+        <ellipse cx="-46" cy="-148" rx="18" ry="14" fill="url(#ironBody)" stroke="var(--iron-dark)" stroke-width="2"/>
+        <ellipse cx="46" cy="-148" rx="18" ry="14" fill="url(#ironBody)" stroke="var(--iron-dark)" stroke-width="2"/>
+
+        <!-- resting arm, hand on hip -->
+        <path d="M-46,-140 Q-70,-118 -62,-84 Q-56,-64 -38,-58" fill="none" stroke="var(--iron)" stroke-width="20" stroke-linecap="round"/>
+        <circle cx="-40" cy="-58" r="10" fill="var(--iron-dark)"/>
+
+        <!-- gripping arm -->
+        <path d="M46,-140 Q66,-120 63,-96" fill="none" stroke="var(--iron)" stroke-width="20" stroke-linecap="round"/>
+        <circle cx="63" cy="-92" r="11" fill="var(--iron-dark)"/>
+
+        <!-- head -->
+        <path d="M-26,-180 Q-30,-212 0,-216 Q30,-212 26,-180 Q26,-160 0,-156 Q-26,-160 -26,-180 Z" fill="url(#ironBody)" stroke="var(--iron-dark)" stroke-width="2"/>
+        <path d="M-4,-224 Q0,-236 4,-224 L8,-214 -8,-214 Z" fill="var(--iron)"/>
+        <rect x="-16" y="-190" width="32" height="8" rx="4" fill="url(#runeGlow)"/>
+        <rect x="-16" y="-190" width="32" height="8" rx="4" fill="none" stroke="var(--rune)" stroke-width="1.5"/>
+        <circle cx="18" cy="-208" r="3" fill="var(--rune)"/>
+      </g>
+
+      <!-- floating dust motes near hammer head -->
+      <g fill="#e9e6d8" opacity="0.7">
+        <circle cx="705" cy="238" r="2.4"/>
+        <circle cx="722" cy="226" r="1.8"/>
+        <circle cx="690" cy="222" r="1.6"/>
+      </g>
+
+      <!-- ===== HUD CHROME ===== -->
+      <rect x="2" y="2" width="1276" height="716" fill="none" stroke="#0a0a09" stroke-width="4"/>
+      <g stroke="var(--gold)" stroke-width="3" opacity="0.85" fill="none">
+        <path d="M14,40 L14,14 L40,14"/>
+        <path d="M1266,40 L1266,14 L1240,14"/>
+        <path d="M14,680 L14,706 L40,706"/>
+        <path d="M1266,680 L1266,706 L1240,706"/>
+      </g>
+
+      <!-- nameplate -->
+      <g transform="translate(26,26)">
+        <rect width="248" height="70" rx="6" fill="var(--hud-panel)" stroke="var(--hud-edge)" stroke-width="2" opacity="0.92"/>
+        <rect x="10" y="10" width="50" height="50" rx="6" fill="url(#ironBody)" stroke="var(--iron-dark)" stroke-width="2"/>
+        <path d="M35,20 Q30,32 35,44 Q40,32 35,20 Z" fill="var(--rune)" opacity="0.85"/>
+        <text x="70" y="32" font-family="Cinzel, serif" font-weight="700" font-size="18" fill="var(--parchment)">CLEANIE</text>
+        <text x="70" y="49" font-family="Rajdhani, sans-serif" font-weight="600" font-size="12" letter-spacing="1" fill="var(--rune)">CLEANUP GOLEM &middot; LV.1</text>
+        <rect x="70" y="55" width="164" height="6" rx="3" fill="#3a3b35"/>
+        <rect x="70" y="55" width="164" height="6" rx="3" fill="var(--rune)"/>
+      </g>
+
+      <!-- minimap -->
+      <g transform="translate(26,614)">
+        <rect width="120" height="80" rx="6" fill="var(--hud-panel)" stroke="var(--hud-edge)" stroke-width="2" opacity="0.92"/>
+        <path d="M60,14 L106,40 60,66 14,40 Z" fill="#2b3527" stroke="#4a5c40" stroke-width="1.5"/>
+        <circle cx="66" cy="42" r="4" fill="var(--rune)"/>
+        <circle cx="66" cy="42" r="8" fill="none" stroke="var(--rune)" stroke-width="1.5" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cap">
+    <div class="cap-id">
+      <p class="cap-name">Cleanie</p>
+      <p class="cap-role">Cleanup Golem &middot; The CleanupComputer Order</p>
+    </div>
+    <p class="cap-note">
+      First unit on the map: <b>Cleanie</b>, a stone-and-iron golem bound to
+      the glowing rune-monolith it guards and maintains, sweeping the
+      machine clean with a warhammer built for the job. The rest of the
+      plateau lies unclaimed beyond the fog &mdash; ground enough for
+      whichever agent marches in next.
+    </p>
+  </div>
+</div>
+</body>
+</html>

@@ -287,6 +287,40 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          page, reuse `.metrics-grid`/`.hypothesis-grid`/`.confirm-box` rather than
                          inventing a new pattern — and bias toward a bullet list over a new visual
                          component at all, given the 2026-09-16 brevity mandate above.
+agents/index.html       URL: /agents — "Cleanie's Homebase." Added 2026-09-19. A standalone,
+                         whimsical visual — NOT part of the light-editorial system or the /hp
+                         sidebar, its own one-off "video-game screenshot" design system. Not
+                         linked from the main nav (like tracker.html) — direct-URL-only, purely
+                         personal/fun rather than portfolio content. Renders an isometric
+                         RTS-style scene (StarCraft-esque camera angle, game HUD chrome —
+                         nameplate with a health bar, corner brackets, minimap) of "Cleanie," a
+                         LOTR-flavored armored cleanup golem (representing the real
+                         CleanupComputer project) standing on a grassy plateau beside a
+                         glowing-rune stone monolith (stands in for "the computer" it cleans).
+                         Fog-of-war darkens the map's edges deliberately, so there's visual room
+                         for more agents later WITHOUT any literal placeholder plots/islands in
+                         the scene itself — Avi explicitly asked for no placeholders, only
+                         Cleanie. Design tokens (all scoped to this page only, do not reuse
+                         elsewhere): --sky-top/--sky-mid/--sky-horizon (stormy dusk gradient),
+                         --grass/--grass-light/--grass-dark, --stone/--stone-light/--stone-dark,
+                         --iron/--iron-light/--iron-dark (Cleanie's armor), --rune/--rune-dark
+                         (glowing green magic-tech accent — used for the monolith's screen/cracks,
+                         Cleanie's visor and chest sigil, and HUD status bar), --gold (HUD corner
+                         brackets, belt buckle), --cloak/--cloak-dark, --leather, --wood-dark (the
+                         hammer-mop haft). Fonts: Cinzel (engraved fantasy serif, nameplate/caption
+                         heading) + Rajdhani (condensed HUD/UI sans) — different from every other
+                         page's font stack in this repo, intentional. Single-theme by design (a
+                         fixed in-game screenshot look, not meant to adapt to light mode) — do not
+                         add a light-mode variant. Scene is hand-drawn inline SVG (viewBox 1280x720,
+                         16:9 to read as a real game screenshot), no canvas/WebGL, no JS beyond
+                         none currently (fully static). Carries the standard GA4 snippet + self-
+                         exclusion block per the Analytics section below, but WITHOUT the
+                         `content_group: 'HP Portfolio'` param since it isn't under hp/. This page
+                         is explicitly a living/expanding piece — Avi plans to add more agents
+                         (each presumably its own unit + plot on the same map) later; when that
+                         happens, keep the same iso-plateau/HUD visual language and fog-of-war
+                         framing rather than introducing a new visual system, and update this
+                         entry plus README.md's page table together, same as any other new page.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -424,13 +458,13 @@ As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (g
 </script>
 ```
 
-There's no shared layout/build step in this repo, so the snippet is duplicated into all 12 HTML files individually rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page. **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
+There's no shared layout/build step in this repo, so the snippet is duplicated into all 13 HTML files individually rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page. **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
 
 Every page under `hp/` (all 7: `index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, `p66-example/index.html`, `30-60-90/index.html`) passes an extra `content_group: 'HP Portfolio'` parameter in its `gtag('config', ...)` call — a deliberate deviation from the plain snippet used elsewhere, added 2026-09-13 so Avi can filter GA4 reports (Engagement > Pages and screens, Path exploration) down to just visitors exploring the HP portfolio, separate from the rest of the site. Each page already has a distinct `<title>`, which combined with `content_group` is what makes per-page dwell time, click-through paths, and unique-visitor counts within `/hp` reportable in GA4 without any further code — this needs no additional event tracking, since GA4's default collection already measures page views, per-page engagement time, and users automatically on every full-page navigation. If a new `hp/` page is added, its `gtag('config', ...)` call must include this same `content_group` parameter — copy the pattern from any existing `hp/*/index.html` file.
 
 ### Self-exclusion (keep Avi's own visits out of the numbers)
 
-As of 2026-09-13, every one of the 12 HTML files has a small inline script *immediately before* the gtag.js `<script>` tag (order matters — Google's disable flag must be set before the tag library loads):
+As of 2026-09-13 (13 files as of 2026-09-19's `/agents` addition), every one of them has a small inline script *immediately before* the gtag.js `<script>` tag (order matters — Google's disable flag must be set before the tag library loads):
 
 ```html
 <!-- Google Analytics self-exclusion (must run before the tag below) -->
@@ -451,7 +485,7 @@ As of 2026-09-13, every one of the 12 HTML files has a small inline script *imme
 </script>
 ```
 
-This uses GA4/gtag.js's own documented opt-out mechanism (`window['ga-disable-<MEASUREMENT_ID>'] = true`). Avi opts out once per browser by visiting any page on the site with `?ga_optout=1` appended (e.g. `https://avikravi.github.io/?ga_optout=1`) — that sets a `localStorage` flag under the `avikravi.github.io` origin, which every other page on the site checks on load, so the opt-out follows him across all 12 pages without needing to repeat it per page. `?ga_optout=0` on any page clears the flag again (e.g. for testing that tracking is actually live). Caveats worth knowing: this is per-browser-profile, not per-computer — a different browser, a different OS user profile, or an incognito/private window won't inherit the flag and will still be tracked unless opted out separately in each; clearing site data/localStorage for `avikravi.github.io` also resets it. This client-side flag must stay in every page's `<head>`, ahead of the gtag.js script tag specifically (not just anywhere in `<head>`) — if a new page is ever added, copy this whole block plus the GA snippet from any existing page, in that order.
+This uses GA4/gtag.js's own documented opt-out mechanism (`window['ga-disable-<MEASUREMENT_ID>'] = true`). Avi opts out once per browser by visiting any page on the site with `?ga_optout=1` appended (e.g. `https://avikravi.github.io/?ga_optout=1`) — that sets a `localStorage` flag under the `avikravi.github.io` origin, which every other page on the site checks on load, so the opt-out follows him across all 13 pages without needing to repeat it per page. `?ga_optout=0` on any page clears the flag again (e.g. for testing that tracking is actually live). Caveats worth knowing: this is per-browser-profile, not per-computer — a different browser, a different OS user profile, or an incognito/private window won't inherit the flag and will still be tracked unless opted out separately in each; clearing site data/localStorage for `avikravi.github.io` also resets it. This client-side flag must stay in every page's `<head>`, ahead of the gtag.js script tag specifically (not just anywhere in `<head>`) — if a new page is ever added, copy this whole block plus the GA snippet from any existing page, in that order.
 
 ### Custom events for cross-origin embeds
 

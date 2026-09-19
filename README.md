@@ -102,6 +102,10 @@ Not linked from the main nav bar, direct-URL-only. As of 2026-08-22, all of Avi'
 
 The old root-level `hp-pmm-worksheet.html` and `zgx-nano-case-study.html` are now thin meta-refresh redirect stubs pointing at `/hp` and `/hp/case-study`, in case any old links are still floating around.
 
+## Unlisted / working pages: `/agents`
+
+Not linked from the main nav bar, direct-URL-only — a personal, whimsical piece, not portfolio content. Added 2026-09-19. `agents/index.html` ("Cleanie's Homebase") renders an isometric, StarCraft-style scene of **Cleanie**, an armored cleanup golem representing the real `CleanupComputer` project, guarding a glowing-rune stone monolith that stands in for "the computer" it cleans. It has its own one-off design system (LOTR-flavored, dark, Cinzel + Rajdhani fonts, in-game HUD chrome) — see `CLAUDE.md` for the full token reference. Fog-of-war deliberately darkens the map's edges to leave room for more agents later, without any literal placeholder content in the scene. More agents will be added to this same map over time.
+
 ## Working with Claude Code
 
 This repo has a `CLAUDE.md` file with the design system, data schemas, and conventions Claude Code should follow automatically. Keep it updated when you add pages, change the schema, or change the design system — see the instructions inside `CLAUDE.md` itself.
