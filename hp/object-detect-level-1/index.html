@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Research | Avi Ravishankar</title>
-    <meta name="description" content="Summer 2026 Rice University research: a synthetic soft-tissue deformation dataset and viewer for autonomous surgical robotics.">
+    <title>Object Detection — Level 1 | Avi Ravishankar</title>
+    <meta name="description" content="Level 1 of Avi's object detection project.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,39 +87,34 @@
             max-width: 620px;
         }
 
-        .meta-line {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--ink-faint);
-        }
-
-        .meta-line a { color: var(--blue); text-decoration: none; }
-        .meta-line a:hover { text-decoration: underline; }
-
-        .sim-embed {
+        .panel-empty {
             margin-top: 32px;
-            height: 720px;
-            background: #0a0a0f;
-            border: 1px solid var(--line);
+            padding: 56px 24px;
+            border: 1px dashed var(--line);
             border-radius: 10px;
-            overflow: hidden;
+            text-align: center;
         }
 
-        .sim-embed iframe {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        .sim-note {
-            margin-top: 14px;
-            font-size: 13px;
+        .empty-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             color: var(--ink-faint);
+            border: 1px dashed var(--line);
+            border-radius: 3px;
+            padding: 6px 12px;
+            margin-bottom: 14px;
         }
 
-        .sim-note a { color: var(--blue); text-decoration: none; }
-        .sim-note a:hover { text-decoration: underline; }
+        .panel-empty p {
+            font-size: 14.5px;
+            color: var(--ink-faint);
+            max-width: 440px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
 
         footer {
             padding: 28px 0 48px;
@@ -132,7 +127,6 @@
         @media (max-width: 600px) {
             h1 { font-size: 25px; }
             header.page-header { padding: 32px 0 0; }
-            .sim-embed { height: 560px; }
         }
 
         /* HP section nav (shared across /hp pages) */
@@ -247,7 +241,7 @@
                 <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
                 <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
                 <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
-                <a href="/hp/ai-research" class="hp-nav-link active">AI Research</a>
+                <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
                 <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
             </nav>
             <div class="hp-nav-section">
@@ -260,7 +254,7 @@
                 <div class="hp-nav-section-label">Object Detect</div>
                 <nav class="hp-sidenav-links">
                     <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
-                    <a href="/hp/object-detect-level-1" class="hp-nav-link">Level 1</a>
+                    <a href="/hp/object-detect-level-1" class="hp-nav-link active">Level 1</a>
                 </nav>
             </div>
         </aside>
@@ -273,16 +267,15 @@
             </button>
     <div class="wrap">
         <header class="page-header">
-            <div class="eyebrow">Summer 2026 &middot; Rice University</div>
-            <h1>Surgical Robotics Tissue Simulation</h1>
-            <p class="dek">A synthetic soft-tissue deformation dataset built for autonomous surgical robotics research &mdash; 500 GPU-accelerated soft-body physics simulations run with the Genesis simulator, modeled after the MASIV multi-view video dataset.</p>
-            <p class="meta-line">Compiled by Avinash Ravishankar &middot; Rice University, Summer 2026</p>
+            <div class="eyebrow">Object Detect</div>
+            <h1>Level 1</h1>
+            <p class="dek">Content coming soon.</p>
         </header>
 
-        <div class="sim-embed">
-            <iframe src="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" title="Surgical Robotics Tissue Sim — Dataset Viewer" loading="lazy" onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'ai_research_dataset_viewer'});}"></iframe>
+        <div class="panel-empty">
+            <div class="empty-tag">Content Coming Soon</div>
+            <p>Nothing here yet — tell me what goes on this page and I'll fill it in.</p>
         </div>
-        <p class="sim-note"><a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" target="_blank" rel="noopener" onclick="if(typeof gtag==='function'){gtag('event','embed_open_new_tab',{embed_name:'ai_research_dataset_viewer'});}">Open the dataset viewer in its own tab</a>.</p>
 
         <footer>
             Working draft, not for external distribution yet.
