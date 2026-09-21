@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection — Level 1 | Avi Ravishankar</title>
-    <meta name="description" content="Level 1 of Avi's object detection project.">
+    <title>Object Detection — Level 1: Haar Cascade | Avi Ravishankar</title>
+    <meta name="description" content="Level 1 of Avi's object detection project: classical Haar cascade face detection.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,33 +87,81 @@
             max-width: 620px;
         }
 
-        .panel-empty {
-            margin-top: 32px;
-            padding: 56px 24px;
-            border: 1px dashed var(--line);
-            border-radius: 10px;
-            text-align: center;
-        }
+        .status-row { margin-top: 14px; }
 
-        .empty-tag {
+        .level-status {
             display: inline-block;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--ink-faint);
-            border: 1px dashed var(--line);
-            border-radius: 3px;
-            padding: 6px 12px;
-            margin-bottom: 14px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid currentColor;
+        }
+        .level-status.done { color: #1e7145; }
+        .level-status.priority { color: var(--blue); }
+        .level-status.optional { color: var(--ink-faint); }
+        .level-status.goal { color: #a8461f; }
+
+        .panel-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #000;
+            margin: 40px 0 8px;
         }
 
-        .panel-empty p {
-            font-size: 14.5px;
+        .panel-desc {
+            font-size: 14px;
             color: var(--ink-faint);
-            max-width: 440px;
-            margin: 0 auto;
+            max-width: 720px;
+            margin-bottom: 18px;
             line-height: 1.6;
+        }
+
+        .panel-body { max-width: 720px; }
+        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
+        .panel-body p:last-child { margin-bottom: 0; }
+        .panel-body strong { color: #000; }
+
+        .balance-note {
+            font-size: 13px;
+            color: var(--ink-faint);
+            padding: 12px 14px;
+            border-left: 2px solid var(--line);
+            margin: 16px 0 4px;
+            line-height: 1.6;
+            max-width: 720px;
+        }
+        .balance-note strong { color: var(--ink-soft); }
+
+        .confirm-box {
+            margin-top: 40px;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 18px 20px;
+        }
+
+        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+
+        .confirm-list li {
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .confirm-blank {
+            display: inline-block;
+            flex: 1 1 160px;
+            width: 160px;
+            min-width: 160px;
+            border-bottom: 1px dashed var(--ink-faint);
+            height: 1em;
+            vertical-align: middle;
         }
 
         footer {
@@ -255,6 +303,16 @@
                 <nav class="hp-sidenav-links">
                     <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
                     <a href="/hp/object-detect-level-1" class="hp-nav-link active">Level 1</a>
+                    <a href="/hp/object-detect-level-2" class="hp-nav-link">Level 2</a>
+                    <a href="/hp/object-detect-level-3" class="hp-nav-link">Level 3</a>
+                    <a href="/hp/object-detect-level-4" class="hp-nav-link">Level 4</a>
+                    <a href="/hp/object-detect-level-5" class="hp-nav-link">Level 5</a>
+                    <a href="/hp/object-detect-level-6" class="hp-nav-link">Level 6</a>
+                    <a href="/hp/object-detect-level-7" class="hp-nav-link">Level 7</a>
+                    <a href="/hp/object-detect-level-8" class="hp-nav-link">Level 8</a>
+                    <a href="/hp/object-detect-level-9" class="hp-nav-link">Level 9</a>
+                    <a href="/hp/object-detect-level-10" class="hp-nav-link">Level 10</a>
+                
                 </nav>
             </div>
         </aside>
@@ -268,13 +326,26 @@
     <div class="wrap">
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
-            <h1>Level 1</h1>
-            <p class="dek">Content coming soon.</p>
+            <h1>Level 1 — Haar Cascade</h1>
+            <p class="dek">Classical computer vision, fixed rules, no learned weights beyond the pre-trained cascade. Face detection.</p>
+            <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
-        <div class="panel-empty">
-            <div class="empty-tag">Content Coming Soon</div>
-            <p>Nothing here yet — tell me what goes on this page and I'll fill it in.</p>
+        <div class="panel-title">Approach</div>
+        <div class="panel-desc">The starting point for the whole detection ladder: a face detector built on OpenCV's pre-trained Haar cascade classifiers.</div>
+        <div class="panel-body">
+            <p>A sliding window is matched against Haar-like features — simple edge, line, and rectangle patterns — and an AdaBoost-trained cascade of weak classifiers rejects obvious non-faces early, so only promising regions get the full check. Nothing here is learned from my own data; it's hand-crafted rules plus a pre-trained cascade, which makes it fast but brittle to pose, lighting, and occlusion.</p>
+            <p>This level exists to anchor the classical end of the ladder — the baseline that Level 3's deep-learning detector is measured against.</p>
+        </div>
+
+        <div class="panel-title">Still to Fill In</div>
+        <div class="panel-desc">What's left before this level is fully written up.</div>
+        <div class="confirm-box">
+            <ul class="confirm-list">
+                <li>Demo image or video <span class="confirm-blank"></span></li>
+                <li>Code / notebook link <span class="confirm-blank"></span></li>
+                <li>Accuracy notes / failure cases observed <span class="confirm-blank"></span></li>
+            </ul>
         </div>
 
         <footer>

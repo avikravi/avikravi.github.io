@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection — Summary | Avi Ravishankar</title>
-    <meta name="description" content="Slide-deck summary of Avi's object detection project.">
+    <title>Object Detection — Level 4: YOLOv8 on a Manufacturing/Robotics Scene | Avi Ravishankar</title>
+    <meta name="description" content="Level 4 of Avi's object detection project: YOLOv8 applied to a manufacturing or robotics scene, the level that answers the assignment brief.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,21 +87,22 @@
             max-width: 620px;
         }
 
-        .slides-embed {
-            margin-top: 32px;
-            height: 720px;
-            background: #0a0a0f;
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            overflow: hidden;
-        }
+        .status-row { margin-top: 14px; }
 
-        .slides-embed iframe {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: 0;
+        .level-status {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid currentColor;
         }
+        .level-status.done { color: #1e7145; }
+        .level-status.priority { color: var(--blue); }
+        .level-status.optional { color: var(--ink-faint); }
+        .level-status.goal { color: #a8461f; }
 
         .panel-title {
             font-size: 19px;
@@ -118,81 +119,49 @@
             line-height: 1.6;
         }
 
-        .level-status {
-            display: inline-block;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid currentColor;
-        }
-        .level-status.done { color: #1e7145; }
-        .level-status.priority { color: var(--blue); }
-        .level-status.optional { color: var(--ink-faint); }
-        .level-status.goal { color: #a8461f; }
-        .level-status.pending { color: var(--ink-faint); }
+        .panel-body { max-width: 720px; }
+        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
+        .panel-body p:last-child { margin-bottom: 0; }
+        .panel-body strong { color: #000; }
 
-        .level-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        .level-table th {
-            text-align: left;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            padding: 0 10px 10px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .level-table td {
-            padding: 12px 10px 12px 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            vertical-align: top;
-        }
-        .level-table th:first-child, .level-table td:first-child { width: 50px; }
-        .level-table th:last-child, .level-table td:last-child { width: 180px; }
-        .level-table td a { color: var(--blue); font-weight: 700; text-decoration: none; }
-        .level-table td a:hover { text-decoration: underline; }
-
-        .roadmap-note {
-            margin-top: 16px;
+        .balance-note {
             font-size: 13px;
             color: var(--ink-faint);
-            line-height: 1.6;
             padding: 12px 14px;
             border-left: 2px solid var(--line);
+            margin: 16px 0 4px;
+            line-height: 1.6;
+            max-width: 720px;
         }
+        .balance-note strong { color: var(--ink-soft); }
 
-        .panel-empty {
-            margin-top: 32px;
-            padding: 56px 24px;
+        .confirm-box {
+            margin-top: 40px;
             border: 1px dashed var(--line);
             border-radius: 10px;
-            text-align: center;
+            padding: 18px 20px;
         }
 
-        .empty-tag {
+        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+
+        .confirm-list li {
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            line-height: 1.5;
+        }
+
+        .confirm-blank {
             display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            border: 1px dashed var(--line);
-            border-radius: 3px;
-            padding: 6px 12px;
-            margin-bottom: 14px;
-        }
-
-        .panel-empty p {
-            font-size: 14.5px;
-            color: var(--ink-faint);
-            max-width: 440px;
-            margin: 0 auto;
-            line-height: 1.6;
+            flex: 1 1 160px;
+            width: 160px;
+            min-width: 160px;
+            border-bottom: 1px dashed var(--ink-faint);
+            height: 1em;
+            vertical-align: middle;
         }
 
         footer {
@@ -206,7 +175,6 @@
         @media (max-width: 600px) {
             h1 { font-size: 25px; }
             header.page-header { padding: 32px 0 0; }
-            .slides-embed { height: 560px; }
         }
 
         /* HP section nav (shared across /hp pages) */
@@ -333,11 +301,11 @@
             <div class="hp-nav-section">
                 <div class="hp-nav-section-label">Object Detect</div>
                 <nav class="hp-sidenav-links">
-                    <a href="/hp/object-detect-summary" class="hp-nav-link active">Summary</a>
+                    <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
                     <a href="/hp/object-detect-level-1" class="hp-nav-link">Level 1</a>
                     <a href="/hp/object-detect-level-2" class="hp-nav-link">Level 2</a>
                     <a href="/hp/object-detect-level-3" class="hp-nav-link">Level 3</a>
-                    <a href="/hp/object-detect-level-4" class="hp-nav-link">Level 4</a>
+                    <a href="/hp/object-detect-level-4" class="hp-nav-link active">Level 4</a>
                     <a href="/hp/object-detect-level-5" class="hp-nav-link">Level 5</a>
                     <a href="/hp/object-detect-level-6" class="hp-nav-link">Level 6</a>
                     <a href="/hp/object-detect-level-7" class="hp-nav-link">Level 7</a>
@@ -358,35 +326,28 @@
     <div class="wrap">
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
-            <h1>Summary</h1>
-            <p class="dek">A slide-deck overview of the object detection project I'm working on.</p>
+            <h1>Level 4 — YOLOv8 on a Manufacturing/Robotics Scene</h1>
+            <p class="dek">Same deep-learning detector as Level 3, applied to a scene that actually answers the assignment brief.</p>
+            <div class="status-row"><span class="level-status priority">Recommended Priority</span></div>
         </header>
 
-        <div class="panel-title">Level Roadmap</div>
-        <div class="panel-desc">Ten graduated levels, from classical computer vision to tracked, unique-object counting. Levels 7-10 are still to be defined.</div>
-        <table class="level-table">
-            <thead>
-                <tr><th>Level</th><th>Approach</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-                <tr><td><a href="/hp/object-detect-level-1">1</a></td><td>Haar Cascade — classical, fixed rules (faces)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-2">2</a></td><td>HOG + SVM — learned classifier, hand-crafted features (pedestrians)</td><td><span class="level-status optional">Optional</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-3">3</a></td><td>YOLOv8 — deep learning, general-purpose (highway cars)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-4">4</a></td><td>YOLOv8 applied to a manufacturing/robotics scene</td><td><span class="level-status priority">Recommended Priority</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-5">5</a></td><td>Video — same detection running frame-by-frame</td><td><span class="level-status goal">Goal</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-6">6</a></td><td>Tracking + unique counting across frames</td><td><span class="level-status priority">Priority</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-7">7</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-8">8</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-9">9</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-10">10</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-            </tbody>
-        </table>
-        <p class="roadmap-note">Priority order with the time left: Level 4 (manufacturing-relevant static scene) → Level 5 (video) → Level 6 (tracking/counting) is the core deliverable. Level 3's highway traffic proves the deep-learning model works, but it's a smart-city example, not the manufacturing/robotics domain the brief asks for — Level 4 is what actually answers it. HOG + SVM (Level 2) is a nice-to-add narrative bridge if time allows, not essential.</p>
+        <div class="panel-title">Approach</div>
+        <div class="panel-desc">The assignment brief specifically asks for a manufacturing or robotics domain. Level 3's highway traffic doesn't qualify — this level does.</div>
+        <div class="panel-body">
+            <p>Same YOLOv8 approach as Level 3, retargeted at a scene the brief actually asks for: detecting parts or packages on a line, PPE/hard-hat compliance, or a warehouse robotics setting. Anbu will likely weight this level most heavily, since it's the one that's actually on-domain rather than just a proof the model works.</p>
+            <p>Given roughly a day and a half left, this is the top-priority level to lock down before Level 5 or 6.</p>
+        </div>
 
-        <div class="panel-title">Slide Deck</div>
-        <div class="panel-empty">
-            <div class="empty-tag">Slides Coming Soon</div>
-            <p>The presentation isn't embedded yet. Send over the deck (Google Slides link, PDF export, or exported images) and it goes here.</p>
+        <div class="panel-title">Still to Fill In</div>
+        <div class="panel-desc">What's left before this level is fully written up.</div>
+        <div class="confirm-box">
+            <ul class="confirm-list">
+                <li>Which scene: parts on a line / PPE compliance / warehouse robotics? <span class="confirm-blank"></span></li>
+                <li>Dataset or footage source <span class="confirm-blank"></span></li>
+                <li>Demo video or screenshot <span class="confirm-blank"></span></li>
+                <li>Code / notebook link <span class="confirm-blank"></span></li>
+                <li>Results / metrics <span class="confirm-blank"></span></li>
+            </ul>
         </div>
 
         <footer>
