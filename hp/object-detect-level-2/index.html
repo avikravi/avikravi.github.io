@@ -1,564 +1,910 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <!-- Google Analytics self-exclusion (must run before the tag below) -->
-  <script>
-    (function () {
-      try {
-        var params = new URLSearchParams(window.location.search);
-        if (params.get('ga_optout') === '1') {
-          localStorage.setItem('ga_opt_out', 'true');
-        } else if (params.get('ga_optout') === '0') {
-          localStorage.removeItem('ga_opt_out');
-        }
-        if (localStorage.getItem('ga_opt_out') === 'true') {
-          window['ga-disable-G-JVHGKBB8PD'] = true;
-        }
-      } catch (e) {}
-    })();
-  </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-JVHGKBB8PD', { 'content_group': 'HP Portfolio' });
-  </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <!-- Google Analytics self-exclusion (must run before the tag below) -->
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get("ga_optout") === "1") {
+            localStorage.setItem("ga_opt_out", "true");
+          } else if (params.get("ga_optout") === "0") {
+            localStorage.removeItem("ga_opt_out");
+          }
+          if (localStorage.getItem("ga_opt_out") === "true") {
+            window["ga-disable-G-JVHGKBB8PD"] = true;
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-JVHGKBB8PD", { content_group: "HP Portfolio" });
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Object Detection — Level 2: HOG + SVM | Avi Ravishankar</title>
-    <meta name="description" content="Level 2 of Avi's object detection project: HOG + SVM pedestrian detection, the historical bridge to deep learning.">
-    <meta name="robots" content="noindex, nofollow">
+    <meta
+      name="description"
+      content="Level 2 of Avi's object detection project: HOG + SVM pedestrian detection, the historical bridge to deep learning."
+    />
+    <meta name="robots" content="noindex, nofollow" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        :root {
-            --bg: #ffffff;
-            --ink: #191919;
-            --ink-soft: #3d3d3d;
-            --ink-faint: #767676;
-            --line: #e5e5e5;
-            --blue: #1967b1;
-            --hp-blue: #0096D6;
-        }
+      :root {
+        --bg: #ffffff;
+        --ink: #191919;
+        --ink-soft: #3d3d3d;
+        --ink-faint: #767676;
+        --line: #e5e5e5;
+        --blue: #1967b1;
+        --hp-blue: #0096d6;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--ink-soft);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink-soft);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
 
-        a { color: var(--blue); }
+      a {
+        color: var(--blue);
+      }
 
-        .wrap {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
 
-        header.page-header {
-            padding: 44px 0 0;
-        }
+      header.page-header {
+        padding: 44px 0 0;
+      }
 
-        .eyebrow {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin-bottom: 10px;
-        }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 10px;
+      }
 
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #000;
+        margin-bottom: 12px;
+        line-height: 1.15;
+      }
+
+      .dek {
+        font-size: 15.5px;
+        color: var(--ink-faint);
+        max-width: 680px;
+      }
+
+      .status-row {
+        margin-top: 14px;
+      }
+
+      .level-status {
+        display: inline-block;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+      }
+      .level-status.done {
+        color: #1e7145;
+      }
+      .level-status.priority {
+        color: var(--blue);
+      }
+      .level-status.optional {
+        color: var(--ink-faint);
+      }
+      .level-status.goal {
+        color: #a8461f;
+      }
+      .level-status.pending {
+        color: var(--ink-faint);
+      }
+
+      .panel-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: #000;
+        margin: 36px 0 8px;
+      }
+      .panel-title:first-of-type {
+        margin-top: 28px;
+      }
+
+      .panel-desc {
+        font-size: 14px;
+        color: var(--ink-faint);
+        max-width: 720px;
+        margin-bottom: 14px;
+        line-height: 1.6;
+      }
+
+      .panel-body {
+        max-width: 720px;
+      }
+      .panel-body p {
+        font-size: 14.5px;
+        color: var(--ink-soft);
+        margin-bottom: 12px;
+        line-height: 1.65;
+      }
+      .panel-body p:last-child {
+        margin-bottom: 0;
+      }
+      .panel-body strong {
+        color: #000;
+      }
+      .panel-body code {
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
+        font-size: 12.5px;
+        background: #f2f2f2;
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+
+      .balance-note {
+        font-size: 13px;
+        color: var(--ink-faint);
+        padding: 12px 14px;
+        border-left: 2px solid var(--line);
+        margin: 16px 0 4px;
+        line-height: 1.6;
+        max-width: 720px;
+      }
+      .balance-note strong {
+        color: var(--ink-soft);
+      }
+
+      .confirm-box {
+        margin-top: 24px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        padding: 16px 18px;
+        max-width: 720px;
+      }
+      .confirm-box .box-label {
+        display: block;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 8px;
+      }
+      .confirm-box p {
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.6;
+        margin: 0;
+      }
+      .confirm-box p + p {
+        margin-top: 8px;
+      }
+
+      .code-block {
+        margin: 16px 0;
+        background: #0a0a0f;
+        border-radius: 8px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        max-width: 720px;
+      }
+      .code-block pre {
+        margin: 0;
+      }
+      .code-block code {
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #c9d1d9;
+        white-space: pre;
+      }
+      .code-block.terminal code {
+        color: #7ee787;
+      }
+
+      .output-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin: 16px 0 -4px;
+      }
+
+      .level-image {
+        margin: 18px 0;
+        max-width: 720px;
+      }
+      .level-image img {
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+      .level-image figcaption {
+        margin-top: 8px;
+        font-size: 12.5px;
+        color: var(--ink-faint);
+        line-height: 1.5;
+      }
+
+      .image-pair {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin: 18px 0;
+        max-width: 720px;
+      }
+      .image-pair .level-image {
+        flex: 1 1 260px;
+        margin: 0;
+        max-width: none;
+      }
+
+      .video-embed {
+        margin: 18px 0;
+        max-width: 720px;
+        aspect-ratio: 16 / 9;
+        background: #0a0a0f;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .video-embed iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      .video-embed.vertical {
+        aspect-ratio: 9 / 16;
+        max-width: none;
+      }
+
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        align-items: start;
+        gap: 10px;
+        margin: 14px 0 4px;
+        max-width: 720px;
+      }
+      .video-tile {
+        position: relative;
+      }
+      .video-tile .video-embed {
+        margin: 0;
+        max-width: none;
+      }
+      .video-num {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.72);
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        pointer-events: none;
+      }
+      .video-anomaly-tag {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        z-index: 2;
+        background: #a8461f;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 7px;
+        border-radius: 4px;
+        pointer-events: none;
+      }
+
+      .result-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        max-width: 720px;
+        margin: 4px 0 16px;
+      }
+      .result-list li {
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        line-height: 1.55;
+        padding-left: 16px;
+        position: relative;
+      }
+      .result-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--ink-faint);
+      }
+      .result-list strong {
+        color: #000;
+      }
+      .result-list code {
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
+        font-size: 12px;
+        background: #f2f2f2;
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+
+      .data-table {
+        width: 100%;
+        max-width: 720px;
+        border-collapse: collapse;
+        margin: 12px 0 4px;
+      }
+      .data-table th {
+        text-align: left;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        padding: 0 8px 8px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .data-table td {
+        padding: 7px 8px 7px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 12.5px;
+        color: var(--ink-soft);
+      }
+      .data-table td.over-yes {
+        color: #a8461f;
+        font-weight: 700;
+      }
+
+      .spec-table {
+        width: 100%;
+        max-width: 720px;
+        border-collapse: collapse;
+        margin: 4px 0 16px;
+      }
+      .spec-table td {
+        padding: 8px 12px 8px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--ink-soft);
+        vertical-align: top;
+      }
+      .spec-table td:first-child {
+        width: 150px;
+        font-weight: 700;
+        color: #000;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .download-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--blue);
+        text-decoration: none;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 6px 12px;
+        margin: 8px 8px 0 0;
+      }
+      .download-link:hover {
+        border-color: var(--blue);
+      }
+
+      footer {
+        padding: 28px 0 48px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--ink-faint);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 600px) {
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #000;
-            margin-bottom: 12px;
-            line-height: 1.15;
+          font-size: 25px;
         }
+        header.page-header {
+          padding: 32px 0 0;
+        }
+      }
 
-        .dek {
-            font-size: 15.5px;
-            color: var(--ink-faint);
-            max-width: 680px;
-        }
+      /* HP section nav (shared across /hp pages) */
+      .hp-shell {
+        display: flex;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
 
-        .status-row { margin-top: 14px; }
+      .hp-sidenav {
+        width: 220px;
+        flex-shrink: 0;
+        background: #14161b;
+        color: #fff;
+        padding: 18px 14px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 110;
+      }
 
-        .level-status {
-            display: inline-block;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid currentColor;
-        }
-        .level-status.done { color: #1e7145; }
-        .level-status.priority { color: var(--blue); }
-        .level-status.optional { color: var(--ink-faint); }
-        .level-status.goal { color: #a8461f; }
-        .level-status.pending { color: var(--ink-faint); }
+      .hp-sidenav-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
 
-        .panel-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: #000;
-            margin: 36px 0 8px;
-        }
-        .panel-title:first-of-type { margin-top: 28px; }
+      .hp-brand {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: #fff;
+        text-decoration: none;
+      }
+      .hp-brand span {
+        color: var(--hp-blue, #0096d6);
+      }
 
-        .panel-desc {
-            font-size: 14px;
-            color: var(--ink-faint);
-            max-width: 720px;
-            margin-bottom: 14px;
-            line-height: 1.6;
-        }
+      .hp-nav-close {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 4px;
+      }
 
-        .panel-body { max-width: 720px; }
-        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
-        .panel-body p:last-child { margin-bottom: 0; }
-        .panel-body strong { color: #000; }
-        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+      .hp-sidenav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
 
-        .balance-note {
-            font-size: 13px;
-            color: var(--ink-faint);
-            padding: 12px 14px;
-            border-left: 2px solid var(--line);
-            margin: 16px 0 4px;
-            line-height: 1.6;
-            max-width: 720px;
-        }
-        .balance-note strong { color: var(--ink-soft); }
+      .hp-nav-link {
+        display: block;
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #b7bcc4;
+        text-decoration: none;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
+      }
+      .hp-nav-link:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .hp-nav-link.active {
+        background: var(--hp-blue, #0096d6);
+        color: #fff;
+      }
 
-        .confirm-box {
-            margin-top: 24px;
-            border: 1px dashed var(--line);
-            border-radius: 10px;
-            padding: 16px 18px;
-            max-width: 720px;
-        }
-        .confirm-box .box-label {
-            display: block;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin-bottom: 8px;
-        }
-        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
-        .confirm-box p + p { margin-top: 8px; }
+      .hp-nav-section {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-        .code-block {
-            margin: 16px 0;
-            background: #0a0a0f;
-            border-radius: 8px;
-            padding: 14px 16px;
-            overflow-x: auto;
-            max-width: 720px;
-        }
-        .code-block pre { margin: 0; }
-        .code-block code {
-            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.6;
-            color: #c9d1d9;
-            white-space: pre;
-        }
-        .code-block.terminal code { color: #7ee787; }
+      .hp-nav-section-label {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: #7a8290;
+        padding: 0 8px;
+        margin-bottom: 4px;
+      }
 
-        .output-label {
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin: 16px 0 -4px;
-        }
+      .hp-level-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        margin-top: 3px;
+      }
 
-        .level-image { margin: 18px 0; max-width: 720px; }
-        .level-image img {
-            display: block;
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--line);
-        }
-        .level-image figcaption {
-            margin-top: 8px;
-            font-size: 12.5px;
-            color: var(--ink-faint);
-            line-height: 1.5;
-        }
+      .hp-level-link {
+        display: block;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #b7bcc4;
+        text-decoration: none;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
+      }
+      .hp-level-link:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .hp-level-link.active {
+        background: var(--hp-blue, #0096d6);
+        color: #fff;
+      }
 
-        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
-        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+      .hp-nav-scrim {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 105;
+      }
+      .hp-nav-scrim.open {
+        display: block;
+      }
 
-        .video-embed {
-            margin: 18px 0;
-            max-width: 720px;
-            aspect-ratio: 16 / 9;
-            background: #0a0a0f;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
-        .video-embed.vertical { aspect-ratio: 9 / 16; max-width: none; }
+      .hp-nav-open {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        background: #fff;
+        border: none;
+        border-bottom: 1px solid var(--line, #e5e5e5);
+        padding: 14px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--hp-blue, #0096d6);
+        cursor: pointer;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            align-items: start;
-            gap: 10px;
-            margin: 14px 0 4px;
-            max-width: 720px;
-        }
-        .video-tile { position: relative; }
-        .video-tile .video-embed { margin: 0; max-width: none; }
-        .video-num {
-            position: absolute;
-            top: 6px; left: 6px;
-            z-index: 2;
-            background: rgba(0,0,0,0.72);
-            color: #fff;
-            font-size: 10.5px;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 4px;
-            pointer-events: none;
-        }
-        .video-anomaly-tag {
-            position: absolute;
-            top: 6px; right: 6px;
-            z-index: 2;
-            background: #a8461f;
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            padding: 3px 7px;
-            border-radius: 4px;
-            pointer-events: none;
-        }
+      .hp-main {
+        flex: 1;
+        min-width: 0;
+        margin-left: 220px;
+      }
 
-        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
-        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
-        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
-        .result-list strong { color: #000; }
-        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
-
-        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
-        .data-table th {
-            text-align: left;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            padding: 0 8px 8px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .data-table td {
-            padding: 7px 8px 7px 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 12.5px;
-            color: var(--ink-soft);
-        }
-        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
-
-        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
-        .spec-table td {
-            padding: 8px 12px 8px 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 13px;
-            color: var(--ink-soft);
-            vertical-align: top;
-        }
-        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
-
-        .download-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12.5px;
-            font-weight: 700;
-            color: var(--blue);
-            text-decoration: none;
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            padding: 6px 12px;
-            margin: 8px 8px 0 0;
-        }
-        .download-link:hover { border-color: var(--blue); }
-
-        footer {
-            padding: 28px 0 48px;
-            border-top: 1px solid var(--line);
-            font-size: 13px;
-            color: var(--ink-faint);
-            margin-top: 40px;
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 25px; }
-            header.page-header { padding: 32px 0 0; }
-        }
-
-        /* HP section nav (shared across /hp pages) */
-        .hp-shell { display: flex; align-items: flex-start; min-height: 100vh; }
-
+      @media (max-width: 880px) {
         .hp-sidenav {
-            width: 220px;
-            flex-shrink: 0;
-            background: #14161b;
-            color: #fff;
-            padding: 18px 14px;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            overflow-y: auto;
-            z-index: 110;
+          transform: translateX(-100%);
+          width: 76%;
+          max-width: 300px;
+          box-shadow: 4px 0 28px rgba(0, 0, 0, 0.25);
+          transition: transform 0.22s ease;
         }
-
-        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-
-        .hp-brand {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.02em;
-            color: #fff;
-            text-decoration: none;
+        .hp-sidenav.open {
+          transform: translateX(0);
         }
-        .hp-brand span { color: var(--hp-blue, #0096D6); }
-
         .hp-nav-close {
-            display: none;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 20px;
-            line-height: 1;
-            cursor: pointer;
-            padding: 0 4px;
+          display: block;
         }
-
-        .hp-sidenav-links { display: flex; flex-direction: column; gap: 1px; }
-
-        .hp-nav-link {
-            display: block;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.35;
-            color: #b7bcc4;
-            text-decoration: none;
-            transition: background-color 0.15s, color 0.15s;
+        .hp-main {
+          margin-left: 0;
         }
-        .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-        .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
-
-        .hp-nav-section {
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .hp-nav-section-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            color: #7a8290;
-            padding: 0 8px;
-            margin-bottom: 4px;
-        }
-
-        .hp-level-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 3px;
-            margin-top: 3px;
-        }
-
-        .hp-level-link {
-            display: block;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 700;
-            line-height: 1.3;
-            color: #b7bcc4;
-            text-decoration: none;
-            transition: background-color 0.15s, color 0.15s;
-        }
-        .hp-level-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-        .hp-level-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
-
-        .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
-        .hp-nav-scrim.open { display: block; }
-
         .hp-nav-open {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            background: #fff;
-            border: none;
-            border-bottom: 1px solid var(--line, #e5e5e5);
-            padding: 14px 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--hp-blue, #0096D6);
-            cursor: pointer;
-            position: sticky;
-            top: 0;
-            z-index: 90;
+          display: flex;
         }
-
-        .hp-main { flex: 1; min-width: 0; margin-left: 220px; }
-
-        @media (max-width: 880px) {
-            .hp-sidenav { transform: translateX(-100%); width: 76%; max-width: 300px; box-shadow: 4px 0 28px rgba(0,0,0,0.25); transition: transform 0.22s ease; }
-            .hp-sidenav.open { transform: translateX(0); }
-            .hp-nav-close { display: block; }
-            .hp-main { margin-left: 0; }
-            .hp-nav-open { display: flex; }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="hp-shell">
-        <aside class="hp-sidenav" id="hpSidenav">
-            <div class="hp-sidenav-head">
-                <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
-                <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
-            </div>
-            <nav class="hp-sidenav-links">
-                <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
-                <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
-                <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
-                <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
-                <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
-                <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
-            </nav>
-            <div class="hp-nav-section">
-                <div class="hp-nav-section-label">Post Interview</div>
-                <nav class="hp-sidenav-links">
-                    <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
-                </nav>
-            </div>
-            <div class="hp-nav-section">
-                <div class="hp-nav-section-label">Object Detect</div>
-                <nav class="hp-sidenav-links">
-                    <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
-                </nav>
-                <nav class="hp-level-grid">
-                        <a href="/hp/object-detect-level-1" class="hp-level-link" title="Level 1">1</a>
-                        <a href="/hp/object-detect-level-2" class="hp-level-link active" title="Level 2">2</a>
-                        <a href="/hp/object-detect-level-3" class="hp-level-link" title="Level 3">3</a>
-                        <a href="/hp/object-detect-level-4" class="hp-level-link" title="Level 4">4</a>
-                        <a href="/hp/object-detect-level-5" class="hp-level-link" title="Level 5">5</a>
-                        <a href="/hp/object-detect-level-6" class="hp-level-link" title="Level 6">6</a>
-                        <a href="/hp/object-detect-level-7" class="hp-level-link" title="Level 7">7</a>
-                        <a href="/hp/object-detect-level-8" class="hp-level-link" title="Level 8">8</a>
-                        <a href="/hp/object-detect-level-9" class="hp-level-link" title="Level 9">9</a>
-                        <a href="/hp/object-detect-level-10" class="hp-level-link" title="Level 10">10</a>
-                </nav>
-            </div>
-        </aside>
-        <div class="hp-nav-scrim" id="hpNavScrim"></div>
+      <aside class="hp-sidenav" id="hpSidenav">
+        <div class="hp-sidenav-head">
+          <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
+          <button
+            type="button"
+            class="hp-nav-close"
+            id="hpNavClose"
+            aria-label="Close menu"
+          >
+            &times;
+          </button>
+        </div>
+        <nav class="hp-sidenav-links">
+          <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
+          <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
+          <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
+          <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
+          <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
+          <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
+        </nav>
+        <div class="hp-nav-section">
+          <div class="hp-nav-section-label">Post Interview</div>
+          <nav class="hp-sidenav-links">
+            <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
+          </nav>
+        </div>
+        <div class="hp-nav-section">
+          <div class="hp-nav-section-label">Object Detect</div>
+          <nav class="hp-sidenav-links">
+            <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
+          </nav>
+          <nav class="hp-level-grid">
+            <a
+              href="/hp/object-detect-level-1"
+              class="hp-level-link"
+              title="Level 1"
+              >1</a
+            >
+            <a
+              href="/hp/object-detect-level-2"
+              class="hp-level-link active"
+              title="Level 2"
+              >2</a
+            >
+            <a
+              href="/hp/object-detect-level-3"
+              class="hp-level-link"
+              title="Level 3"
+              >3</a
+            >
+            <a
+              href="/hp/object-detect-level-4"
+              class="hp-level-link"
+              title="Level 4"
+              >4</a
+            >
+            <a
+              href="/hp/object-detect-level-5"
+              class="hp-level-link"
+              title="Level 5"
+              >5</a
+            >
+            <a
+              href="/hp/object-detect-level-6"
+              class="hp-level-link"
+              title="Level 6"
+              >6</a
+            >
+            <a
+              href="/hp/object-detect-level-7"
+              class="hp-level-link"
+              title="Level 7"
+              >7</a
+            >
+            <a
+              href="/hp/object-detect-level-8"
+              class="hp-level-link"
+              title="Level 8"
+              >8</a
+            >
+            <a
+              href="/hp/object-detect-level-9"
+              class="hp-level-link"
+              title="Level 9"
+              >9</a
+            >
+            <a
+              href="/hp/object-detect-level-10"
+              class="hp-level-link"
+              title="Level 10"
+              >10</a
+            >
+          </nav>
+        </div>
+      </aside>
+      <div class="hp-nav-scrim" id="hpNavScrim"></div>
 
-        <div class="hp-main">
-            <button type="button" class="hp-nav-open" id="hpNavOpen" aria-label="Open menu" aria-expanded="false">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
-                Menu
-            </button>
-    <div class="wrap">
-        <header class="page-header">
+      <div class="hp-main">
+        <button
+          type="button"
+          class="hp-nav-open"
+          id="hpNavOpen"
+          aria-label="Open menu"
+          aria-expanded="false"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          >
+            <line x1="1" y1="4" x2="15" y2="4" />
+            <line x1="1" y1="8" x2="15" y2="8" />
+            <line x1="1" y1="12" x2="15" y2="12" />
+          </svg>
+          Menu
+        </button>
+        <div class="wrap">
+          <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Level 2 — HOG + SVM</h1>
-            <p class="dek">A learned classifier on hand-crafted features. Pedestrian detection, and the real historical bridge between fixed rules and deep learning.</p>
-            <div class="status-row"><span class="level-status done">Done</span></div>
-        </header>
+            <p class="dek">
+              A learned classifier on hand-crafted features. Pedestrian
+              detection, and the real historical bridge between fixed rules and
+              deep learning.
+            </p>
+            <div class="status-row">
+              <span class="level-status done">Done</span>
+            </div>
+          </header>
 
-        <div class="panel-title">Approach</div>
-        <div class="panel-desc">Dalal-Triggs HOG + SVM (2005) &mdash; the real historical middle step between Haar Cascade (2001) and deep learning (~2014+).</div>
-        <div class="panel-body">
-            <p>Still hand-engineered <strong>features</strong> &mdash; gradient-direction histograms instead of Haar's light/dark rectangles &mdash; but the <strong>classifier</strong> is a trained SVM. That's the first appearance of "learning" in this progression, just not deep learning: Level 1 was fixed rules end to end, this is a learned classifier on fixed features, and Level 3 is fully learned features via a neural network.</p>
-        </div>
-        <div class="code-block"><pre><code>hog = cv2.HOGDescriptor()
+          <div class="panel-title">Approach</div>
+          <div class="panel-desc">
+            Dalal-Triggs HOG + SVM (2005) &mdash; the real historical middle
+            step between Haar Cascade (2001) and deep learning (~2014+).
+          </div>
+          <div class="panel-body">
+            <p>
+              Still hand-engineered <strong>features</strong> &mdash;
+              gradient-direction histograms instead of Haar's light/dark
+              rectangles &mdash; but the <strong>classifier</strong> is a
+              trained SVM. That's the first appearance of "learning" in this
+              progression, just not deep learning: Level 1 was fixed rules end
+              to end, this is a learned classifier on fixed features, and Level
+              3 is fully learned features via a neural network.
+            </p>
+          </div>
+          <div class="code-block">
+            <pre><code>hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-boxes, weights = hog.detectMultiScale(img, winStride=(8,8), padding=(8,8), scale=1.05)</code></pre></div>
-        <div class="panel-body">
-            <p>HOG+SVM notoriously returns many overlapping duplicate boxes per person across scales and positions &mdash; getting clean single-box-per-person output required adding custom <strong>non-max suppression</strong> (IoU-based box collapsing). That's a standard, expected companion step for this detector, not optional polish.</p>
-        </div>
+boxes, weights = hog.detectMultiScale(img, winStride=(8,8), padding=(8,8), scale=1.05)</code></pre>
+          </div>
+          <div class="panel-body">
+            <p>
+              HOG+SVM notoriously returns many overlapping duplicate boxes per
+              person across scales and positions &mdash; getting clean
+              single-box-per-person output required adding custom
+              <strong>non-max suppression</strong> (IoU-based box collapsing).
+              That's a standard, expected companion step for this detector, not
+              optional polish.
+            </p>
+          </div>
 
-        <div class="panel-title">Success case</div>
-        <div class="image-pair">
+          <div class="panel-title">Success case</div>
+          <div class="image-pair">
             <figure class="level-image">
-                <img src="people1.jpg" alt="Original, unannotated studio group photo of nine standing people" loading="lazy">
-                <figcaption><strong>Before</strong> &mdash; the original, unannotated photo.</figcaption>
+              <img
+                src="people1.jpg"
+                alt="Original, unannotated studio group photo of nine standing people"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>Before</strong> &mdash; the original, unannotated photo.
+              </figcaption>
             </figure>
             <figure class="level-image">
-                <img src="output1.jpg" alt="HOG plus SVM correctly boxing every person in the same studio group photo" loading="lazy">
-                <figcaption><strong>After</strong> &mdash; a studio group photo of upright, standing people, correctly boxed after NMS.</figcaption>
+              <img
+                src="output1.jpg"
+                alt="HOG plus SVM correctly boxing every person in the same studio group photo"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>After</strong> &mdash; a studio group photo of upright,
+                standing people, correctly boxed after NMS.
+              </figcaption>
             </figure>
-        </div>
-        <p class="output-label">Terminal output</p>
-        <div class="code-block terminal"><pre><code>people1.jpg -> Detected 4 pedestrian(s) after NMS
-Saved annotated image as output1.jpg</code></pre></div>
+          </div>
+          <p class="output-label">Terminal output</p>
+          <div class="code-block terminal">
+            <pre><code>people1.jpg -> Detected 4 pedestrian(s) after NMS
+Saved annotated image as output1.jpg</code></pre>
+          </div>
 
-        <div class="panel-title">Zero-detection case</div>
-        <div class="image-pair">
+          <div class="panel-title">Zero-detection case</div>
+          <div class="image-pair">
             <figure class="level-image">
-                <img src="people4.jpg" alt="Original, unannotated close cropped group portrait" loading="lazy">
-                <figcaption><strong>Before</strong> &mdash; the original, unannotated photo.</figcaption>
+              <img
+                src="people4.jpg"
+                alt="Original, unannotated close cropped group portrait"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>Before</strong> &mdash; the original, unannotated photo.
+              </figcaption>
             </figure>
             <figure class="level-image">
-                <img src="output4.jpg" alt="HOG plus SVM run on the same close cropped group portrait, zero boxes drawn" loading="lazy">
-                <figcaption><strong>After</strong> &mdash; identical to the input: zero detections, so nothing got drawn. Kept deliberately as a limitation showcase (see note below).</figcaption>
+              <img
+                src="output4.jpg"
+                alt="HOG plus SVM run on the same close cropped group portrait, zero boxes drawn"
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>After</strong> &mdash; identical to the input: zero
+                detections, so nothing got drawn. Kept deliberately as a
+                limitation showcase (see note below).
+              </figcaption>
             </figure>
-        </div>
-        <p class="output-label">Terminal output</p>
-        <div class="code-block terminal"><pre><code>people4.jpg -> Detected 0 pedestrian(s) after NMS
-Saved annotated image as output4.jpg</code></pre></div>
+          </div>
+          <p class="output-label">Terminal output</p>
+          <div class="code-block terminal">
+            <pre><code>people4.jpg -> Detected 0 pedestrian(s) after NMS
+Saved annotated image as output4.jpg</code></pre>
+          </div>
 
-        <div class="balance-note">Worth being upfront: this second image is a tight, close-cropped group portrait &mdash; head, shoulders, arms wrapped around each other, no legs in frame. HOG+SVM's pedestrian detector is trained to match a full standing silhouette, and a crop with no legs or torso structure gives it nothing to match, which is exactly what happened here: zero detections. Small, occluded, or atypical-crop/pose subjects are where classical feature-based detectors break down &mdash; and it's a real, honest example of why the field moved to deep learning.</div>
+          <div class="balance-note">
+            Worth being upfront: this second image is a tight, close-cropped
+            group portrait &mdash; head, shoulders, arms wrapped around each
+            other, no legs in frame. HOG+SVM's pedestrian detector is trained to
+            match a full standing silhouette, and a crop with no legs or torso
+            structure gives it nothing to match, which is exactly what happened
+            here: zero detections. Small, occluded, or atypical-crop/pose
+            subjects are where classical feature-based detectors break down
+            &mdash; and it's a real, honest example of why the field moved to
+            deep learning.
+          </div>
 
-        <div class="confirm-box">
-            <span class="box-label">Flag for Avi</span>
-            <p>My project notes describe this zero-detection case as a wide traffic-camera shot with small, distant cyclists &mdash; but the image actually saved in the project folder (<code>level2/output4.jpg</code>) is the close-cropped group portrait shown above, not a traffic scene. I wrote the caption and note above to match what the file actually shows rather than the notes. If you have the real cyclist image, send it over and I'll swap it in as the failure case instead.</p>
+          <footer>Working draft, not for external distribution yet.</footer>
         </div>
-
-        <footer>
-            Working draft, not for external distribution yet.
-        </footer>
-    </div>
-        </div>
+      </div>
     </div>
 
     <script>
-        (function () {
-            var openBtn = document.getElementById('hpNavOpen');
-            var closeBtn = document.getElementById('hpNavClose');
-            var sidenav = document.getElementById('hpSidenav');
-            var scrim = document.getElementById('hpNavScrim');
-            function openNav() { sidenav.classList.add('open'); scrim.classList.add('open'); openBtn.setAttribute('aria-expanded', 'true'); }
-            function closeNav() { sidenav.classList.remove('open'); scrim.classList.remove('open'); openBtn.setAttribute('aria-expanded', 'false'); }
-            if (openBtn) openBtn.addEventListener('click', openNav);
-            if (closeBtn) closeBtn.addEventListener('click', closeNav);
-            if (scrim) scrim.addEventListener('click', closeNav);
-        })();
+      (function () {
+        var openBtn = document.getElementById("hpNavOpen");
+        var closeBtn = document.getElementById("hpNavClose");
+        var sidenav = document.getElementById("hpSidenav");
+        var scrim = document.getElementById("hpNavScrim");
+        function openNav() {
+          sidenav.classList.add("open");
+          scrim.classList.add("open");
+          openBtn.setAttribute("aria-expanded", "true");
+        }
+        function closeNav() {
+          sidenav.classList.remove("open");
+          scrim.classList.remove("open");
+          openBtn.setAttribute("aria-expanded", "false");
+        }
+        if (openBtn) openBtn.addEventListener("click", openNav);
+        if (closeBtn) closeBtn.addEventListener("click", closeNav);
+        if (scrim) scrim.addEventListener("click", closeNav);
+      })();
     </script>
-</body>
+  </body>
 </html>
