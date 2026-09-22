@@ -745,7 +745,7 @@
             <tbody>
               <tr>
                 <td><a href="/hp/object-detect-level-1">1</a></td>
-                <td>Haar Cascade — classical, fixed rules (faces)</td>
+                <td>Haar Cascade — learned classifier (AdaBoost), hand-crafted features (faces)</td>
                 <td><span class="level-status done">Done</span></td>
               </tr>
               <tr>
@@ -786,7 +786,7 @@
               </tr>
               <tr>
                 <td><a href="/hp/object-detect-level-7">7</a></td>
-                <td>Video object tracking + unique counting (ByteTrack)</td>
+                <td>Video object tracking + unique counting (BoT-SORT)</td>
                 <td><span class="level-status done">Done</span></td>
               </tr>
               <tr>
@@ -810,9 +810,9 @@
           <div class="panel-title">Overall Narrative Arc</div>
           <div class="panel-body">
             <p>
-              <strong>Technical progression:</strong> fixed classical rules (L1)
-              &rarr; learned classifier on fixed features (L2) &rarr; fully
-              learned deep learning (L3) &rarr; open-vocabulary/zero-shot (L5,
+              <strong>Technical progression:</strong> hand-designed features +
+              learned classifier (L1, L2) &rarr; fully learned features and
+              classifier, end-to-end (L3) &rarr; open-vocabulary/zero-shot (L5,
               L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward
               look (L9, L10).
             </p>

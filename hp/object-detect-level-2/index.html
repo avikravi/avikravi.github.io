@@ -511,7 +511,7 @@
         <div class="panel-title">Approach</div>
         <div class="panel-desc">Dalal-Triggs HOG + SVM (2005) &mdash; the real historical middle step between Haar Cascade (2001) and deep learning (~2014+).</div>
         <div class="panel-body">
-            <p>Still hand-engineered <strong>features</strong> &mdash; gradient-direction histograms instead of Haar's light/dark rectangles &mdash; but the <strong>classifier</strong> is a trained SVM. That's the first appearance of "learning" in this progression, just not deep learning: Level 1 was fixed rules end to end, this is a learned classifier on fixed features, and Level 3 is fully learned features via a neural network.</p>
+            <p>Still hand-engineered <strong>features</strong> &mdash; gradient-direction histograms instead of Haar's light/dark rectangles &mdash; but the <strong>classifier</strong> is a trained SVM instead of an AdaBoost cascade. Level 1 and this level are actually the same category: hand-designed features plus a learned classifier. What changes here is feature quality &mdash; gradient orientation captures shape more robustly than raw intensity contrast &mdash; not whether learning happens at all. Level 3 is the real jump: fully learned features via a neural network, not just a learned classifier bolted onto hand-designed ones.</p>
         </div>
         <div class="code-block"><pre><code>hog = cv2.HOGDescriptor()
 hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())

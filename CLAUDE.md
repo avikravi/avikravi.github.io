@@ -418,10 +418,27 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          console summary is a heavier, slower job than a single image and hasn't
                          been done yet — a reasonable follow-up if Avi wants it); 9-10 are writeups
                          with no script to run. Content by level:
-                         L1 Haar Cascade (classical, fixed rules, faces) — Done. Before/after pair:
+                         L1 Haar Cascade (hand-designed features, learned classifier, faces) — Done.
+                         As of 2026-09-22, corrected from an earlier "classical, fixed rules, no
+                         learning" framing after an ML-engineer review: Viola-Jones does learn —
+                         AdaBoost selects which Haar rectangle features are discriminative and trains
+                         the cascade stages from labeled examples. What's hand-designed is the
+                         rectangle feature template, not the classifier. Correct arc: Haar (L1) and
+                         HOG (L2) are the same category, hand-designed features + a learned
+                         classifier, differing in feature quality (intensity contrast vs. gradient
+                         orientation) and classifier type (AdaBoost cascade vs. SVM) — not in
+                         whether learning happens. YOLO (L3+) is the real jump: learned features +
+                         learned classifier, end-to-end. This page's dek, Approach panel-body, and
+                         Limitations list were all reworded to state this correctly; don't reintroduce
+                         "no learning"/"fixed rules" language for L1 without re-deriving why it's
+                         wrong (see the corrected panel-body prose on the live page for the accurate
+                         version). Before/after pair:
                          `face_sample.jpg` (original) / `output.jpg` (annotated). Terminal output:
                          8 faces detected, with each box's real pixel coordinates.
                          L2 HOG+SVM (learned classifier, hand-crafted features, pedestrians) — Done.
+                         As of 2026-09-22, its Approach panel-body's L1/L2/L3 comparison sentence was
+                         also corrected alongside L1's fix above (it previously said "Level 1 was
+                         fixed rules end to end," which is the same inaccuracy) — see the L1 note.
                          Two separate before/after pairs under their own subheadings: "Success case"
                          (`people1.jpg` / `output1.jpg`, terminal output: 4 pedestrians after NMS)
                          and "Zero-detection case" (`people4.jpg` / `output4.jpg`, terminal output:
@@ -490,8 +507,27 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          version that cross-referenced Level 5's image directly via an absolute
                          path — now each level's images are self-contained in its own folder, which
                          is more robust if either page's assets ever change.
-                         L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
-                         Done. A debugging note about an early motorcycle-filtering oversight (COCO
+                         L7 Video object tracking + counting (YOLOv8 `model.track()`, BoT-SORT) —
+                         Done. As of 2026-09-22, corrected from an earlier "ByteTrack" label after
+                         an ML-engineer review of the code: no `tracker=` argument is passed to
+                         `model.track()` in either `detect_video_tracking.py` (L7) or
+                         `detect_video_speed.py` (L8), so both actually run on Ultralytics' default
+                         tracker, BoT-SORT, not ByteTrack — BoT-SORT extends ByteTrack's association
+                         logic with camera-motion compensation and optional re-ID. This page's dek,
+                         panel-desc, code-block comment, and meta description, plus the Summary
+                         page's roadmap-table row, were all updated to say BoT-SORT; before saying
+                         "ByteTrack" (or any tracker name) anywhere on this site again, verify it
+                         against the actual `tracker=` argument (or its absence) in the source
+                         script, not against what a comment or prior page copy claims. The same
+                         review also caught that "unique track IDs" (this page's per-clip totals,
+                         and L8's "Total vehicles tracked" figures) is an upper-bound estimate, not
+                         a verified physical count — an occluded vehicle that the tracker loses and
+                         reacquires gets a new ID and is counted twice. Both L7 and L8 now carry a
+                         `.balance-note` making this explicit, with L7's noting line-crossing/zone
+                         counting as the production-grade alternative (robust to track fragmentation
+                         since a fragmented track still only crosses the line once) and L8's
+                         cross-referencing L7's fuller explanation rather than repeating it. A
+                         debugging note about an early motorcycle-filtering oversight (COCO
                          class ID 3 missing from the filter dict, not a detection failure) — as of
                          2026-09-22 this is now visibly backed by real data: Clip 5's terminal
                          output shows `motorcycle: 2 unique`, the only one of the 5 clips with any,
@@ -599,7 +635,19 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          `.spec-table` (Spec/Value rows) of real GB10 specs from hp.com, then a
                          5-point core argument grounded in Level 6-8's actual CPU bottlenecks
                          (Grounding DINO's 30-60s+ runtime, ~2-3fps video tracking) rather than a
-                         generic "AI needs GPUs" pitch.
+                         generic "AI needs GPUs" pitch. As of 2026-09-22, added a `.balance-note`
+                         right after the spec table (per ML-engineer review) clarifying that the
+                         table's "Up to 1,000 TOPS" figure is an FP4/sparse-precision number, not
+                         representative of the FP16/INT8 precision a YOLO-class model would
+                         realistically run at — the page no longer implies the pipeline gets a
+                         literal 1,000-TOPS speedup; the practical win is framed as the CUDA GPU +
+                         TensorRT + unified memory combination replacing a CPU with no CUDA path,
+                         not the raw TOPS number. Core Argument point 1 was reworded to match (GB10's
+                         CUDA GPU/TensorRT/unified memory removing the model-size ceiling,
+                         "independent of the headline TOPS figure," rather than implying GB10's
+                         speedup scales with that figure). Note L10's own spec table already states
+                         its compute figure correctly ("Up to 20 petaFLOPS FP4," explicitly labeled)
+                         — no change was needed there, only on L9.
                          L10 Writeup: scaling to the HP ZGX Fury AI Station — Done, no code. Same
                          `.spec-table` pattern with real GB300 specs, framed as "one engineer's
                          tool becoming shared facility infrastructure" — the natural Nano-to-Fury

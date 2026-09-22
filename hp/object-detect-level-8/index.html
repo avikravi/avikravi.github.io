@@ -519,6 +519,8 @@ mph = meters_per_sec * 2.23694</code></pre></div>
             <p>Visual feature: bounding boxes turn red above a configurable mph threshold, green at or below it &mdash; recalculated fresh every frame per vehicle, so it toggles live and accurately reflects current speed.</p>
         </div>
 
+        <div class="balance-note">The "Total vehicles tracked" figures below (e.g. 46 in clip 1) are unique <em>track IDs</em> from the same BoT-SORT tracker as Level 7, not a verified physical count &mdash; an upper bound, since an occluded vehicle that gets reacquired under a new ID is counted twice. See <a href="/hp/object-detect-level-7">Level 7</a> for the full explanation and the production alternative (line-crossing / zone counting).</div>
+
         <div class="panel-title">Real output: clip 1</div>
         <div class="panel-desc">A sample of the actual per-vehicle rows from this run (47 vehicles tracked total).</div>
         <table class="data-table">

@@ -526,9 +526,11 @@
             <tr><td>HP positioning</td><td>"Real-time computer vision" and "edge AI"</td></tr>
         </table>
 
+        <div class="balance-note">Worth being precise about that 1,000 TOPS figure: it's an FP4 (4-bit, sparse) number, the precision aggressive quantization uses &mdash; not what this pipeline would realistically run. A YOLO-class model here would run at FP16 or INT8, well below the headline figure, so this isn't a literal "1,000-TOPS speedup" for this workload. The real practical win is a CUDA-capable GPU with TensorRT and unified memory replacing an Intel CPU with no CUDA path at all &mdash; not the raw TOPS number.</div>
+
         <div class="panel-title">Core Argument</div>
         <ul class="result-list">
-            <li><strong>1.</strong> Every model used across Levels 1&ndash;8 was deliberately the smallest variant available (<code>yolov8n</code>, <code>yolov8s-world</code>, <code>grounding-dino-tiny</code>) specifically because this Intel Mac's CPU couldn't handle anything larger &mdash; GB10 removes that ceiling entirely.</li>
+            <li><strong>1.</strong> Every model used across Levels 1&ndash;8 was deliberately the smallest variant available (<code>yolov8n</code>, <code>yolov8s-world</code>, <code>grounding-dino-tiny</code>) specifically because this Intel Mac's CPU couldn't handle anything larger &mdash; GB10's CUDA GPU, TensorRT, and unified memory remove that ceiling, independent of the headline TOPS figure.</li>
             <li><strong>2.</strong> Grounding DINO goes from single-image-only to near-real-time.</li>
             <li><strong>3.</strong> Video tracking goes from a ~2&ndash;3fps batch process (Levels 7&ndash;8) to true real-time at 30+ fps.</li>
             <li><strong>4.</strong> Fine-tuning YOLOv8 on a customer's actual forklifts, parts, and PPE &mdash; closing the exact vocabulary gap Level 4 surfaced, rather than perpetually prompt-engineering around it with Levels 5&ndash;6 &mdash; becomes practical with 128GB of unified memory.</li>

@@ -28,7 +28,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Object Detection — Level 7: Video Object Tracking + Counting | Avi Ravishankar</title>
-    <meta name="description" content="Level 7 of Avi's object detection project: YOLOv8 with ByteTrack for persistent-ID vehicle tracking and unique counting.">
+    <meta name="description" content="Level 7 of Avi's object detection project: YOLOv8 with BoT-SORT for persistent-ID vehicle tracking and unique counting.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -504,16 +504,17 @@
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Level 7 — Video Object Tracking + Counting</h1>
-            <p class="dek">YOLOv8 with model.track() (ByteTrack), applied to real traffic video. Persistent IDs instead of re-detecting the same vehicle every frame.</p>
+            <p class="dek">YOLOv8 with model.track() (BoT-SORT), applied to real traffic video. Persistent IDs instead of re-detecting the same vehicle every frame.</p>
             <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
-        <div class="panel-desc">YOLOv8 with <code>model.track()</code> (ByteTrack by default), applied to real traffic video clips.</div>
+        <div class="panel-desc">YOLOv8 with <code>model.track()</code> (BoT-SORT by default), applied to real traffic video clips.</div>
         <div class="code-block"><pre><code>results = model.track(frame, persist=True, verbose=False, conf=0.15)
+# no tracker= argument passed, so Ultralytics uses its default: BoT-SORT
 # result.boxes.id gives persistent track IDs across frames</code></pre></div>
         <div class="panel-body">
-            <p>Persistent IDs mean I can count <strong>unique</strong> vehicles that passed through a clip, not just re-detect (and over-count) the same vehicle in every frame it's visible.</p>
+            <p>Persistent IDs mean I can count <strong>unique</strong> vehicles that passed through a clip, not just re-detect (and over-count) the same vehicle in every frame it's visible. No <code>tracker=</code> argument is passed to <code>model.track()</code>, so this runs on Ultralytics' default, BoT-SORT, not ByteTrack &mdash; BoT-SORT extends ByteTrack's association logic with camera-motion compensation and optional re-ID.</p>
         </div>
 
         <div class="panel-title">Built</div>
@@ -526,6 +527,8 @@
         <div class="panel-body">
             <p><strong>Results:</strong> across the 5 demo clips below, unique-object counts range from 0 (Clip 3, the deliberate anomaly test) to 279 across a 1,709-frame clip (Clip 5) &mdash; full per-clip class breakdowns are in each clip's own terminal output.</p>
         </div>
+
+        <div class="balance-note">These are unique <em>track IDs</em>, not a verified physical count &mdash; an upper bound, not ground truth. If a vehicle is occluded and the tracker loses and reacquires it, it gets assigned a new ID and is counted twice. Production-grade counting systems typically use line-crossing or zone-crossing logic instead: even a track that fragments into multiple IDs only crosses the counting line once, so fragmentation doesn't inflate the count.</div>
 
         <div class="balance-note">Motorcycles initially didn't appear in the counts &mdash; not a detection failure, a filtering oversight: the class-filter dict simply didn't include COCO class ID 3 (motorcycle). Fixing it also required lowering <code>conf</code> from the 0.25 default, since motorcycles are underrepresented relative to cars in COCO's training data and typically score lower confidence.</div>
 

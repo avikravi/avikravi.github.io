@@ -504,14 +504,14 @@
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Level 1 — Haar Cascade</h1>
-            <p class="dek">Classical computer vision, fixed rules, no learned weights beyond the pretrained cascade. Face detection.</p>
+            <p class="dek">Hand-designed features (Haar rectangles), a learned classifier (AdaBoost cascade). Face detection.</p>
             <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
         <div class="panel-desc">OpenCV's built-in pretrained Haar Cascade face detector &mdash; the Viola-Jones algorithm, 2001.</div>
         <div class="panel-body">
-            <p>Haar wavelets are simple, fixed light/dark rectangular patterns &mdash; for example, checking whether a region is darker on top than below, which roughly matches eyebrow-to-cheek contrast. There's no neural network and no learned features here. The only thing "designed" is which combination of these fixed patterns, in what cascade order, reliably flags a face.</p>
+            <p>Haar wavelets are simple, fixed light/dark rectangular patterns &mdash; for example, checking whether a region is darker on top than below, which roughly matches eyebrow-to-cheek contrast. Those rectangle templates are hand-designed, not learned, and there's no neural network here. But the classifier itself <em>is</em> trained: AdaBoost selects which of thousands of candidate rectangle features are actually discriminative and chains them into a cascade of weak classifiers, using labeled face/non-face examples. So this isn't "no learning" &mdash; it's hand-designed features plus a learned classifier, the same category as Level 2's HOG+SVM, just with weaker features (raw intensity contrast vs. gradient orientation) and an AdaBoost cascade instead of an SVM.</p>
             <p>This is also the pipeline's proof of concept: load an image, run detection, draw a box, save the result. Validating that end-to-end flow on the simplest possible case, before introducing any model weights, gives every later level a debugging baseline &mdash; if something breaks in Level 4 or Level 8, the problem is in the new logic, not the load/detect/draw/save loop itself.</p>
         </div>
         <div class="code-block"><pre><code>face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -545,7 +545,7 @@ Saved annotated image as output.jpg</code></pre></div>
         <ul class="result-list">
             <li>Single class only (faces)</li>
             <li>Frontal-face only &mdash; fails on tilt, angle, occlusion</li>
-            <li>Fixed, hand-designed rules &mdash; zero learning in the detection logic itself</li>
+            <li>The features (Haar rectangle templates) are hand-designed, not learned &mdash; only the classifier (which features, what cascade order) is trained. A real ceiling relative to Level 3+'s fully learned features.</li>
             <li>No confidence score in the deep-learning sense</li>
         </ul>
 
