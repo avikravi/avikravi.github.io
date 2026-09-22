@@ -35,7 +35,7 @@
     <title>Object Detection — Summary | Avi Ravishankar</title>
     <meta
       name="description"
-      content="Slide-deck summary of Avi's object detection project."
+      content="Summary of Avi's object detection project."
     />
     <meta name="robots" content="noindex, nofollow" />
     <style>
@@ -675,9 +675,18 @@
 
           <div class="intro-video">
             <p class="video-eyebrow">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              >
                 <circle cx="8" cy="8" r="6.5" />
-                <path d="M6.5 5.5l4 2.5-4 2.5z" fill="currentColor" stroke="none" />
+                <path
+                  d="M6.5 5.5l4 2.5-4 2.5z"
+                  fill="currentColor"
+                  stroke="none"
+                />
               </svg>
               Watch First
             </p>
@@ -686,23 +695,40 @@
                 src="https://www.youtube.com/embed/owyWbPvuC4k"
                 title="Project walkthrough — Avi explains the object detection project"
                 loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                  web-share;
+                "
                 allowfullscreen
-                onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'summary_intro_video'});}"
+                onload="
+                  if (typeof gtag === 'function') {
+                    gtag('event', 'embed_viewed', {
+                      embed_name: 'summary_intro_video',
+                    });
+                  }
+                "
               ></iframe>
             </div>
             <p class="video-caption">
-              A short walkthrough of this project, in my own words &mdash; the fastest way to understand what it is and why it's built this way before digging into the ten levels below.
+              A short walkthrough of this project, in my own words &mdash; the
+              fastest way to understand what it is and why it's built this way
+              before digging into the ten levels below.
             </p>
           </div>
 
           <div class="panel-body">
             <p>
               Rather than one app, this is a progressive series of ten "levels"
-              demonstrating increasing technical sophistication (classical
-              computer vision &rarr; learned classifiers &rarr; deep learning
-              &rarr; open-vocabulary detection &rarr; video tracking &rarr;
-              hardware-scaling analysis).
+              demonstrating increasing technical sophistication
+              <br />
+              classical computer vision &rarr; learned classifiers &rarr; deep
+              learning &rarr; open-vocabulary detection &rarr; video tracking
+              &rarr; hardware-scaling analysis
             </p>
           </div>
 
@@ -745,7 +771,10 @@
             <tbody>
               <tr>
                 <td><a href="/hp/object-detect-level-1">1</a></td>
-                <td>Haar Cascade — learned classifier (AdaBoost), hand-crafted features (faces)</td>
+                <td>
+                  Haar Cascade — learned classifier (AdaBoost), hand-crafted
+                  features (faces)
+                </td>
                 <td><span class="level-status done">Done</span></td>
               </tr>
               <tr>
