@@ -335,7 +335,21 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          paired with which; don't assume filename order implies pairing on a level
                          you haven't verified).
 
-                         **Terminal output (added 2026-09-21).** Levels 1-6 each show a real,
+                         **CAUTION — these 10 pages are generated from one local Python script**
+                         (in a scratchpad dir, not tracked in this repo) that rewrites all 10 files
+                         at once from hardcoded per-level content strings. This already caused one
+                         real problem (2026-09-21): Avi opened `hp/object-detect-level-2/index.html`
+                         himself and manually removed its "Flag for Avi" `.confirm-box` (a plain
+                         `git commit -m "Edits"`, not a Claude Code change), and a subsequent
+                         Claude Code regeneration of all 10 pages — done to reorder Level 3's
+                         content, unrelated to Level 2 — silently re-added that box, since the
+                         generator script still had the old content and had no way to know about
+                         Avi's out-of-band edit. Caught and re-fixed the same session, but the
+                         lesson stands: before regenerating any of these pages from such a script,
+                         check `git log --oneline -- hp/object-detect-level-*` (and the summary
+                         page) for commits not authored by that regeneration process, and fold
+                         any real edits found there into the script first — don't assume the
+                         script's last-known content is still accurate just because you wrote it.
                          verified "Terminal output" block (`.output-label` + `.code-block.terminal`
                          — same dark container as the source-code `.code-block`s, but with green
                          `#7ee787` text instead of gray, to read as "what it printed" rather than
@@ -371,14 +385,19 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          (`people1.jpg` / `output1.jpg`, terminal output: 4 pedestrians after NMS)
                          and "Zero-detection case" (`people4.jpg` / `output4.jpg`, terminal output:
                          0 pedestrians — captioned as identical to the input, since nothing was
-                         detected to draw). IMPORTANT DISCREPANCY: Avi's project notes describe the
-                         zero-detection case as "a wide traffic-camera shot with small, distant
-                         cyclists," but the actual saved file is a close-cropped group portrait, not
-                         a traffic scene — the page describes what the image actually shows (a crop
-                         with no legs/torso for the pedestrian detector to match) and flags the
-                         mismatch to Avi in an on-page `.confirm-box` ("Flag for Avi"). If Avi
-                         supplies the real cyclist image (with its own unannotated original), swap
-                         both in and remove that box.
+                         detected to draw). IMPORTANT DISCREPANCY (context, not currently shown on
+                         the page): Avi's project notes describe the zero-detection case as "a wide
+                         traffic-camera shot with small, distant cyclists," but the actual saved
+                         file is a close-cropped group portrait, not a traffic scene — the page
+                         describes what the image actually shows (a crop with no legs/torso for the
+                         pedestrian detector to match) instead of the notes' description. An
+                         on-page `.confirm-box` ("Flag for Avi") originally called this mismatch out
+                         explicitly; Avi read it and removed the box himself (2026-09-21, a manual
+                         edit — see git history, not a Claude Code change) without supplying a
+                         replacement cyclist image, so treat this as acknowledged/accepted rather
+                         than an open item — don't re-add that confirm-box. If Avi ever does supply
+                         a real cyclist image (with its own unannotated original), swap both in as
+                         the zero-detection case instead of the current portrait.
                          L3 YOLOv8 general detection (COCO, 80 classes) — Done. Two results, in
                          this order (per Avi, 2026-09-22): the highway-camera result comes first,
                          shown as a before/after pair (`traffic.jpg` / `traffic_output.jpg`, 9
