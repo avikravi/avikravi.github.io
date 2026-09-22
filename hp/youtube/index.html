@@ -259,21 +259,21 @@
         .hp-shell { display: flex; align-items: flex-start; min-height: 100vh; }
 
         .hp-sidenav {
-            width: 232px;
+            width: 220px;
             flex-shrink: 0;
             background: #14161b;
             color: #fff;
-            padding: 26px 18px;
+            padding: 18px 14px;
             position: fixed;
             top: 0; left: 0; bottom: 0;
             overflow-y: auto;
             z-index: 110;
         }
 
-        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 
         .hp-brand {
-            font-size: 14.5px;
+            font-size: 13px;
             font-weight: 800;
             letter-spacing: 0.02em;
             color: #fff;
@@ -286,20 +286,21 @@
             background: none;
             border: none;
             color: #fff;
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1;
             cursor: pointer;
             padding: 0 4px;
         }
 
-        .hp-sidenav-links { display: flex; flex-direction: column; gap: 2px; }
+        .hp-sidenav-links { display: flex; flex-direction: column; gap: 1px; }
 
         .hp-nav-link {
             display: block;
-            padding: 10px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 12px;
             font-weight: 600;
+            line-height: 1.35;
             color: #b7bcc4;
             text-decoration: none;
             transition: background-color 0.15s, color 0.15s;
@@ -308,20 +309,42 @@
         .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
 
         .hp-nav-section {
-            margin-top: 20px;
-            padding-top: 16px;
+            margin-top: 10px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .hp-nav-section-label {
-            font-size: 10.5px;
+            font-size: 9.5px;
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.07em;
             text-transform: uppercase;
             color: #7a8290;
-            padding: 0 12px;
-            margin-bottom: 8px;
+            padding: 0 8px;
+            margin-bottom: 4px;
         }
+
+        .hp-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .hp-level-link {
+            display: block;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #b7bcc4;
+            text-decoration: none;
+            transition: background-color 0.15s, color 0.15s;
+        }
+        .hp-level-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+        .hp-level-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
 
         .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
         .hp-nav-scrim.open { display: block; }
@@ -344,7 +367,7 @@
             z-index: 90;
         }
 
-        .hp-main { flex: 1; min-width: 0; margin-left: 232px; }
+        .hp-main { flex: 1; min-width: 0; margin-left: 220px; }
 
         @media (max-width: 880px) {
             .hp-sidenav { transform: translateX(-100%); width: 76%; max-width: 300px; box-shadow: 4px 0 28px rgba(0,0,0,0.25); transition: transform 0.22s ease; }
@@ -380,17 +403,18 @@
                 <div class="hp-nav-section-label">Object Detect</div>
                 <nav class="hp-sidenav-links">
                     <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
-                    <a href="/hp/object-detect-level-1" class="hp-nav-link">Level 1</a>
-                    <a href="/hp/object-detect-level-2" class="hp-nav-link">Level 2</a>
-                    <a href="/hp/object-detect-level-3" class="hp-nav-link">Level 3</a>
-                    <a href="/hp/object-detect-level-4" class="hp-nav-link">Level 4</a>
-                    <a href="/hp/object-detect-level-5" class="hp-nav-link">Level 5</a>
-                    <a href="/hp/object-detect-level-6" class="hp-nav-link">Level 6</a>
-                    <a href="/hp/object-detect-level-7" class="hp-nav-link">Level 7</a>
-                    <a href="/hp/object-detect-level-8" class="hp-nav-link">Level 8</a>
-                    <a href="/hp/object-detect-level-9" class="hp-nav-link">Level 9</a>
-                    <a href="/hp/object-detect-level-10" class="hp-nav-link">Level 10</a>
-                
+                </nav>
+                <nav class="hp-level-grid">
+                        <a href="/hp/object-detect-level-1" class="hp-level-link" title="Level 1">1</a>
+                        <a href="/hp/object-detect-level-2" class="hp-level-link" title="Level 2">2</a>
+                        <a href="/hp/object-detect-level-3" class="hp-level-link" title="Level 3">3</a>
+                        <a href="/hp/object-detect-level-4" class="hp-level-link" title="Level 4">4</a>
+                        <a href="/hp/object-detect-level-5" class="hp-level-link" title="Level 5">5</a>
+                        <a href="/hp/object-detect-level-6" class="hp-level-link" title="Level 6">6</a>
+                        <a href="/hp/object-detect-level-7" class="hp-level-link" title="Level 7">7</a>
+                        <a href="/hp/object-detect-level-8" class="hp-level-link" title="Level 8">8</a>
+                        <a href="/hp/object-detect-level-9" class="hp-level-link" title="Level 9">9</a>
+                        <a href="/hp/object-detect-level-10" class="hp-level-link" title="Level 10">10</a>
                 </nav>
             </div>
         </aside>
