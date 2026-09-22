@@ -201,9 +201,44 @@
             overflow: hidden;
         }
         .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
-        .video-embed.vertical { aspect-ratio: 9 / 16; max-width: 320px; }
-        .video-caption { font-size: 12px; font-weight: 700; color: var(--ink-faint); margin: 24px 0 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-        .video-caption:first-of-type { margin-top: 12px; }
+        .video-embed.vertical { aspect-ratio: 9 / 16; max-width: none; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            align-items: start;
+            gap: 10px;
+            margin: 14px 0 4px;
+            max-width: 720px;
+        }
+        .video-tile { position: relative; }
+        .video-tile .video-embed { margin: 0; max-width: none; }
+        .video-num {
+            position: absolute;
+            top: 6px; left: 6px;
+            z-index: 2;
+            background: rgba(0,0,0,0.72);
+            color: #fff;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        .video-anomaly-tag {
+            position: absolute;
+            top: 6px; right: 6px;
+            z-index: 2;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 7px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
 
         .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
         .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
@@ -468,31 +503,40 @@
         <div class="balance-note">Motorcycles initially didn't appear in the counts &mdash; not a detection failure, a filtering oversight: the class-filter dict simply didn't include COCO class ID 3 (motorcycle). Fixing it also required lowering <code>conf</code> from the 0.25 default, since motorcycles are underrepresented relative to cars in COCO's training data and typically score lower confidence.</div>
 
         <div class="panel-title">Demo Clips</div>
-        <div class="panel-desc">Five tracked clips, in order.</div>
+        <div class="panel-desc">Five tracked clips. Clips 1, 2, 4, and 5 are real traffic footage. Clip 3 is a deliberate anomaly test: a random video of oranges dropping, thrown at the same tracker to see whether it would find anything in a scene it wasn't built for. It found nothing &mdash; the correct, honest result. "Orange" is actually one of COCO's own 80 classes, so this wasn't a rigged test either; the model still came up empty, which is the same lesson as Level 3's aerial photo in a new form: a model is only as good as how well the actual footage matches its training distribution, not just whether a class exists in its vocabulary.</div>
 
-        <p class="video-caption">Clip 1</p>
-        <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/UWup7HqeD7o" title="Object detection tracking clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_1'});}"></iframe>
-        </div>
-
-        <p class="video-caption">Clip 2</p>
-        <div class="video-embed vertical">
-            <iframe src="https://www.youtube.com/embed/9s6Aw3lQFgc" title="Object detection tracking clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_2'});}"></iframe>
-        </div>
-
-        <p class="video-caption">Clip 3</p>
-        <div class="video-embed vertical">
-            <iframe src="https://www.youtube.com/embed/X-R83Jnfg38" title="Object detection tracking clip 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_3'});}"></iframe>
-        </div>
-
-        <p class="video-caption">Clip 4</p>
-        <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/aryhtIwIh0s" title="Object detection tracking clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_4'});}"></iframe>
-        </div>
-
-        <p class="video-caption">Clip 5</p>
-        <div class="video-embed">
-            <iframe src="https://www.youtube.com/embed/cdDmq56dR7g" title="Object detection tracking clip 5" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_5'});}"></iframe>
+        <div class="video-grid">
+            <div class="video-tile">
+                <span class="video-num">1</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/UWup7HqeD7o" title="Object detection tracking clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_1'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">2</span>
+                <div class="video-embed vertical">
+                    <iframe src="https://www.youtube.com/embed/9s6Aw3lQFgc" title="Object detection tracking clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_2'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">3</span>
+                <span class="video-anomaly-tag">Anomaly test</span>
+                <div class="video-embed vertical">
+                    <iframe src="https://www.youtube.com/embed/X-R83Jnfg38" title="Object detection tracking clip 3 — anomaly test, oranges" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_3'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">4</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/aryhtIwIh0s" title="Object detection tracking clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_4'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">5</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/cdDmq56dR7g" title="Object detection tracking clip 5" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_5'});}"></iframe>
+                </div>
+            </div>
         </div>
 
         <footer>

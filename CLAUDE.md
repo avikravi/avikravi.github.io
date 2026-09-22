@@ -385,26 +385,32 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          debugging note about an early motorcycle-filtering oversight (COCO class
                          ID 3 missing from the filter dict, not a detection failure). As of
                          2026-09-21, a "Demo Clips" section embeds all 5 of Avi's real tracked
-                         YouTube videos in order (titled "Level7 - Output1" through "Output5" on
-                         YouTube itself, confirming the numbering) — 3 standard landscape uploads
-                         (Clips 1, 4, 5: `UWup7HqeD7o`, `aryhtIwIh0s`, `cdDmq56dR7g`) and 2 YouTube
-                         Shorts (Clips 2, 3: `9s6Aw3lQFgc`, `X-R83Jnfg38`). Each is its own
-                         `.video-embed` (`<p class="video-caption">Clip N</p>` + iframe,
-                         `src="https://www.youtube.com/embed/{ID}"`) stacked in sequence rather
-                         than a grid, since order was the point ("in order" per Avi) and mixing
-                         16:9/9:16 aspect ratios in a wrapping grid reads worse than a clean
-                         vertical list. Shorts use the `.video-embed.vertical` modifier
-                         (`aspect-ratio: 9/16; max-width: 320px`) so they don't get badly
-                         letterboxed at the default 16:9 container size — landscape clips use the
-                         plain `.video-embed`. Every iframe fires the same `embed_viewed` GA4 event
-                         on lazy `onload` that `hp/ai-research`/`hp/p66-example` already use
-                         (`embed_name` values `level7_clip_1` through `_5`) — see Analytics below;
-                         if more clips are ever added, follow this same pattern rather than
-                         inventing a new one. This replaced the earlier `.confirm-box` that
-                         explained the raw recordings (7.7MB-626MB per clip) were too large for a
-                         static GitHub Pages repo — that reasoning is still accurate (it's why
-                         YouTube hosts them instead of this repo), just no longer shown on the page
-                         now that the real embeds exist.
+                         YouTube videos (titled "Level7 - Output1" through "Output5" on YouTube
+                         itself, confirming the numbering) — 3 standard landscape uploads (Clips 1,
+                         4, 5: `UWup7HqeD7o`, `aryhtIwIh0s`, `cdDmq56dR7g`) and 2 YouTube Shorts
+                         (Clips 2, 3: `9s6Aw3lQFgc`, `X-R83Jnfg38`). Laid out as a `.video-grid`
+                         (CSS grid, `repeat(auto-fill, minmax(190px, 1fr))`, `align-items: start` so
+                         mixed 16:9/9:16 tiles keep their own natural height instead of stretching
+                         to match row neighbors — 3 columns at desktop width, collapsing to 1 on
+                         mobile) rather than the original stacked-with-captions layout, which Avi
+                         found too loose; each tile is a small numbered `.video-num` badge
+                         overlaid top-left on the `.video-embed` instead of a separate caption line,
+                         landscape tiles plain `.video-embed`, Shorts get the `.video-embed.vertical`
+                         modifier (`aspect-ratio: 9/16`). **Clip 3 is a deliberate anomaly test, not
+                         a mistake** — Avi threw a random video of oranges dropping at the tracker
+                         to see whether it would find anything in a scene it wasn't built for; it
+                         found nothing, which is the correct, honest result (and notably "orange" is
+                         genuinely one of COCO's 80 classes, so it wasn't a rigged test — the model
+                         still came up empty on real footage, echoing Level 3's aerial-photo lesson).
+                         This reasoning is stated up front in the "Demo Clips" `.panel-desc`, before
+                         the grid, per Avi's request, and Clip 3's tile carries an amber
+                         `.video-anomaly-tag` ("Anomaly test") badge in the top-right corner so it
+                         reads as intentional at a glance, not a stray/broken video. If more clips
+                         are ever added, keep the grid pattern (and flag any other intentionally
+                         off-topic test clip the same way) rather than reverting to a stacked list.
+                         Every iframe fires the same `embed_viewed` GA4 event on lazy `onload` that
+                         `hp/ai-research`/`hp/p66-example` already use (`embed_name` values
+                         `level7_clip_1` through `_5`) — see Analytics below.
                          L8 Video speed estimation + CSV export — Done. Real per-vehicle data
                          tables (`.data-table`) pulled directly from `objectdetect/level8/
                          speed_data1.csv` and `speed_data4.csv` (both copied into
