@@ -511,8 +511,24 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          (one vehicle averaging 157mph, another peaking past 275mph) — same
                          uncalibrated pixel-to-mph formula, no camera calibration in either case.
                          Don't swap in more "flattering" numbers if this section is ever edited;
-                         the implausible clip 4 numbers are the whole point. Same YouTube-pending
-                         `.confirm-box`/`.video-embed` situation as Level 7.
+                         the implausible clip 4 numbers are the whole point. As of 2026-09-22, a
+                         "Demo Clips" section (same pattern as Level 7) embeds all 4 of Avi's real
+                         YouTube clips, in his given order (`P1r6nl-ANTk`, `NNSnomdiG68`,
+                         `P7z4Tpds3x8`, `MFsgUAnEmFs`) — the old `.confirm-box` was removed. Laid
+                         out as a 2x2 `.video-grid.pair` (`grid-template-columns: repeat(auto-fit,
+                         minmax(280px, 1fr))`, a new modifier alongside the base `.video-grid` used
+                         for Level 7's 3-column layout — Level 8's 4 clips are all standard
+                         landscape uploads, no Shorts, so 2 columns reads cleaner/tighter than 3+1).
+                         **All 4 embeds currently show "This video is private"** — checked directly
+                         in the browser pane (which has real network access, unlike this
+                         environment's `curl`, which gets blanket-blocked by YouTube's oEmbed
+                         endpoint regardless of a video's actual status — don't trust `curl`/oEmbed
+                         checks against youtube.com from here, verify in the browser pane instead).
+                         This is a YouTube-side visibility setting, not a bug in the embed code —
+                         the code itself is correct and will start working the moment Avi sets
+                         these 4 videos to "Unlisted" or "Public" in YouTube Studio, no further
+                         edits needed here. Flag this to Avi when doing related work until he
+                         confirms it's fixed.
                          L9 Writeup: scaling to the HP ZGX Nano AI Station — Done, no code. A
                          `.spec-table` (Spec/Value rows) of real GB10 specs from hp.com, then a
                          5-point core argument grounded in Level 6-8's actual CPU bottlenecks

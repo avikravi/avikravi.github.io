@@ -221,6 +221,7 @@
             margin: 14px 0 4px;
             max-width: 720px;
         }
+        .video-grid.pair { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
         .video-tile { position: relative; }
         .video-tile .video-embed { margin: 0; max-width: none; }
         .video-num {
@@ -554,6 +555,35 @@ mph = meters_per_sec * 2.23694</code></pre></div>
             <a class="download-link" href="speed_data4.csv" download>&#8595; speed_data4.csv (clip 4, uncalibrated)</a>
         </div>
 
+        <div class="panel-title">Demo Clips</div>
+        <div class="panel-desc">Four tracked clips, in order. Clip 1 matches the realistic speed data above; Clip 4 matches the wildly implausible speed data above.</div>
+        <div class="video-grid pair">
+            <div class="video-tile">
+                <span class="video-num">1</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/P1r6nl-ANTk" title="Object detection speed estimation clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_1'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">2</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/NNSnomdiG68" title="Object detection speed estimation clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_2'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">3</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/P7z4Tpds3x8" title="Object detection speed estimation clip 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_3'});}"></iframe>
+                </div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">4</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/MFsgUAnEmFs" title="Object detection speed estimation clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_4'});}"></iframe>
+                </div>
+            </div>
+        </div>
+
         <div class="panel-title">Data extraction pipeline</div>
         <ul class="result-list">
             <li>Full per-vehicle speed history collected across the entire video &mdash; every reading, every frame, per tracked ID.</li>
@@ -562,11 +592,6 @@ mph = meters_per_sec * 2.23694</code></pre></div>
         </ul>
         <div class="panel-body">
             <p>The video isn't just producing a visual &mdash; it's extracting structured, exportable data per object, exactly the kind of output a real manufacturing or logistics deployment would need to feed into a dashboard or reporting system.</p>
-        </div>
-
-        <div class="confirm-box">
-            <span class="box-label">Not yet embedded</span>
-            <p>Same constraint as Level 7: the annotated speed videos run up to 620MB per clip, too large to publish directly here. The CSV data above is real and downloadable now; the video itself is going up on YouTube and will be embedded once Avi sends the link.</p>
         </div>
 
         <footer>
