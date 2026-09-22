@@ -350,6 +350,27 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          page) for commits not authored by that regeneration process, and fold
                          any real edits found there into the script first — don't assume the
                          script's last-known content is still accurate just because you wrote it.
+
+                         **Anomaly-tag audit (2026-09-22).** Avi liked the `.anomaly-tag` treatment
+                         enough to ask for it "wherever it applies" across all ten levels, which
+                         prompted a full re-read of every level's actual content against a specific
+                         definition: an anomaly case is a *deliberate, out-of-domain probe* — Avi
+                         intentionally threw something unrelated to the project's real domain at a
+                         working detector just to see what it would do, expecting (and getting) a
+                         null/negative result. Only two qualify: Level 3's aerial photo and Level
+                         7's Clip 3 (oranges), both already tagged. Cases that look similar but
+                         don't qualify, on purpose — don't tag these if revisiting this later: Level
+                         2's zero-detection portrait (a real failure mode on an in-domain subject,
+                         not an unrelated probe), Level 4's COCO vocabulary gap (the project's
+                         central finding, not a side-test), Level 5's zero-detection on the
+                         synthetic render (one of four *systematic* test images reused across
+                         Levels 5-6, not a one-off curiosity), and Level 8's uncalibrated Clip 4
+                         speeds (a data-quality caveat within the same clip type, already covered
+                         by its own `.balance-note`). If a genuinely new anomaly case is added to
+                         any level later, apply `.anomaly-tag` (text) or `.video-anomaly-tag`
+                         (media tile) using this same test, not just "this result was unexpected."
+
+                         **Terminal output (added 2026-09-21).** Levels 1-6 each show a real,
                          verified "Terminal output" block (`.output-label` + `.code-block.terminal`
                          — same dark container as the source-code `.code-block`s, but with green
                          `#7ee787` text instead of gray, to read as "what it printed" rather than
@@ -404,11 +425,14 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          vehicles — terminal output confirms the exact real Ultralytics print
                          format, "7 cars, 1 bus, 1 truck", matching the page's prose exactly);
                          the aerial/broccoli-false-positive result comes second, explicitly labeled
-                         as an anomaly with an inline `.anomaly-tag` badge (same amber `#a8461f`
-                         as Level 7's `.video-anomaly-tag`, but a plain inline-block span next to
-                         the `.panel-title` text rather than absolutely positioned over a tile,
-                         since there's no image here to overlay) — Avi confirmed he isn't sending
-                         that image, so this is text-only by design, not a gap: no `.confirm-box`
+                         as an anomaly with an inline `.anomaly-tag` badge (Avi specifically liked
+                         this treatment, 2026-09-22 — amber `#a8461f`, `9.5px` uppercase text,
+                         `3px 8px` padding, pixel-identical to Level 7's `.video-anomaly-tag`
+                         values so the two read as the same design element even though one is a
+                         plain inline-block span next to `.panel-title` text and the other is
+                         absolutely positioned over a video tile — there's no image here to
+                         overlay, hence the two variants) — Avi confirmed he isn't sending that
+                         image, so this is text-only by design, not a gap: no `.confirm-box`
                          asking for it anymore. If Avi ever does send the aerial photo, add it as
                          a normal `.level-image` (no "before" needed if he only has the annotated
                          result) but keep the anomaly framing and second position, matching how
