@@ -379,13 +379,23 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          mismatch to Avi in an on-page `.confirm-box` ("Flag for Avi"). If Avi
                          supplies the real cyclist image (with its own unannotated original), swap
                          both in and remove that box.
-                         L3 YOLOv8 general detection (COCO, 80 classes) — Done. Two results: an
-                         aerial/broccoli-false-positive result (text only — that demo image isn't
-                         in the project folder, flagged in a `.confirm-box`) and a highway-camera
-                         result shown as a before/after pair (`traffic.jpg` / `traffic_output.jpg`,
-                         9 vehicles — terminal output confirms the exact real Ultralytics print
-                         format, "7 cars, 1 bus, 1 truck", matching the page's prose exactly).
-                         `.balance-note` ties the two results together (viewpoint sensitivity).
+                         L3 YOLOv8 general detection (COCO, 80 classes) — Done. Two results, in
+                         this order (per Avi, 2026-09-22): the highway-camera result comes first,
+                         shown as a before/after pair (`traffic.jpg` / `traffic_output.jpg`, 9
+                         vehicles — terminal output confirms the exact real Ultralytics print
+                         format, "7 cars, 1 bus, 1 truck", matching the page's prose exactly);
+                         the aerial/broccoli-false-positive result comes second, explicitly labeled
+                         as an anomaly with an inline `.anomaly-tag` badge (same amber `#a8461f`
+                         as Level 7's `.video-anomaly-tag`, but a plain inline-block span next to
+                         the `.panel-title` text rather than absolutely positioned over a tile,
+                         since there's no image here to overlay) — Avi confirmed he isn't sending
+                         that image, so this is text-only by design, not a gap: no `.confirm-box`
+                         asking for it anymore. If Avi ever does send the aerial photo, add it as
+                         a normal `.level-image` (no "before" needed if he only has the annotated
+                         result) but keep the anomaly framing and second position, matching how
+                         Level 7's Clip 3 anomaly is still visually flagged even though it has
+                         real footage. `.balance-note` ties the two results together (viewpoint
+                         sensitivity) and still works regardless of which one is listed first.
                          L4 YOLOv8 on a real manufacturing scene — Done. The project's pivot point:
                          before/after pair (`warehouse.jpg` / `output.jpg`), result is `person: 3`
                          and nothing else (terminal output confirms this exactly), `.balance-note`

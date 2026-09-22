@@ -250,6 +250,20 @@
             pointer-events: none;
         }
 
+        .anomaly-tag {
+            display: inline-block;
+            vertical-align: middle;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
         .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
         .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
         .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
@@ -497,15 +511,6 @@
             <p>Ultralytics YOLOv8n ("nano," the smallest, fastest variant) pretrained on COCO &mdash; 80 general classes: person, bicycle, car, motorcycle, bus, truck, and 74 others, mostly household, street, and animal objects. Nothing industrial.</p>
         </div>
 
-        <div class="panel-title">Aerial traffic photo</div>
-        <div class="panel-body">
-            <p><strong>0 cars detected</strong>, with a false positive of "2 broccolis" &mdash; tree canopies viewed from directly above visually resembled COCO's broccoli class. Root cause: YOLO's COCO training data is almost entirely street-level/dashcam-angle photos; a nadir (straight-down) viewpoint is a different visual distribution the model never learned.</p>
-        </div>
-        <div class="confirm-box">
-            <span class="box-label">Not yet added</span>
-            <p>The aerial test image isn't saved in the project folder, so there's no demo photo for this result yet &mdash; the text above is from my own notes. Send it over and I'll add it here.</p>
-        </div>
-
         <div class="panel-title">Angled highway camera</div>
         <div class="image-pair">
             <figure class="level-image">
@@ -525,6 +530,12 @@ Total vehicles detected: 9
   bus: 1
   truck: 1
 Saved annotated image as output.jpg</code></pre></div>
+
+        <div class="panel-title">Aerial traffic photo<span class="anomaly-tag">Anomaly test</span></div>
+        <div class="panel-body">
+            <p>I also tried this same model on a straight-down aerial traffic photo, as a deliberate anomaly test &mdash; a viewpoint the highway camera above doesn't cover. I didn't save that image, so there's no demo photo for this one, just the result.</p>
+            <p><strong>0 cars detected</strong>, with a false positive of "2 broccolis" &mdash; tree canopies viewed from directly above visually resembled COCO's broccoli class. Root cause: YOLO's COCO training data is almost entirely street-level/dashcam-angle photos; a nadir (straight-down) viewpoint is a different visual distribution the model never learned.</p>
+        </div>
 
         <div class="balance-note">Same pretrained model, same general scene type &mdash; cars on a road &mdash; wildly different results purely from camera viewpoint. Concrete proof that a pretrained model is only as good as how well the deployment scene matches its training data's visual distribution.</div>
 
