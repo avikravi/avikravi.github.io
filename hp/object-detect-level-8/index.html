@@ -549,7 +549,7 @@ mph = meters_per_sec * 2.23694</code></pre></div>
             </tbody>
         </table>
         <div class="panel-body">
-            <p>No camera calibration in either case. That gap is the clearest possible demonstration of why an uncalibrated pixel-to-mph conversion is an approximation, not a measurement.</p>
+            <p>No camera calibration in either case. That gap is the clearest possible demonstration of why an uncalibrated pixel-to-mph conversion is an approximation, not a measurement &mdash; clip 4 flags 158 of its 167 tracked vehicles (95%) as "over threshold," versus 0 of 10 in clip 3, the slowest/most static of the four.</p>
         </div>
 
         <div>
@@ -565,24 +565,48 @@ mph = meters_per_sec * 2.23694</code></pre></div>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/P1r6nl-ANTk" title="Object detection speed estimation clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_1'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 46
+Vehicles exceeding 10mph threshold: 40
+Saved annotated video as output_speed1.mp4
+Saved speed data table as speed_data1.csv</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">2</span>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/NNSnomdiG68" title="Object detection speed estimation clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_2'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 21
+Vehicles exceeding 10mph threshold: 20
+Saved annotated video as output_speed2.mp4
+Saved speed data table as speed_data2.csv</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">3</span>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/P7z4Tpds3x8" title="Object detection speed estimation clip 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_3'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 10
+Vehicles exceeding 10mph threshold: 0
+Saved annotated video as output_speed3.mp4
+Saved speed data table as speed_data3.csv</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">4</span>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/MFsgUAnEmFs" title="Object detection speed estimation clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_4'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 167
+Vehicles exceeding 10mph threshold: 158
+Saved annotated video as output_speed4.mp4
+Saved speed data table as speed_data4.csv</code></pre></div>
             </div>
         </div>
 
