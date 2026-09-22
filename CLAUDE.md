@@ -298,7 +298,27 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          project, classical CV -> learned classifiers -> deep learning ->
                          open-vocabulary detection -> video tracking -> hardware-scaling analysis.
                          Page structure: dek states the assignment context (no compensation/dates,
-                         per the site's usual rule — see Conventions below); an "Environment"
+                         per the site's usual rule — see Conventions below); an `.intro-video`
+                         block (added 2026-09-22, per Avi: "high up... the first thing he clicks
+                         on") comes immediately after the header, before any other content —
+                         a "Watch First" `.video-eyebrow` (small play-icon SVG + blue uppercase
+                         label) over a single `.video-embed-single` (same dark `#0a0a0f`/rounded/
+                         `aspect-ratio: 16:9` language as the `.video-embed` component used on
+                         Levels 7-8, but its own class since this is a lone hero embed at
+                         `max-width: 840px`, not a grid tile) embedding Avi's own YouTube video of
+                         himself walking through the project (`owyWbPvuC4k`) for Anbu, the
+                         evaluator, with a one-line caption underneath. Deliberately placed before
+                         the intro paragraph, Environment panel, and roadmap table — nothing sits
+                         above it except the page header. Fires the same lazy-`onload`
+                         `embed_viewed` GA4 event pattern as other embeds (`embed_name:
+                         'summary_intro_video'`). This file isn't part of `build_levels.py` (that
+                         script only generates `object-detect-level-1` through `-10`) — it's
+                         hand-edited directly, and as of 2026-09-21 it's also been reformatted by
+                         Avi's own editor (Prettier-style: double quotes, multi-line attributes,
+                         2-space indent) in an out-of-band `git commit -m "Edits"`, unlike every
+                         other page in this repo which stays single-quote/4-space. Match that
+                         formatting when editing this specific file rather than reverting it to
+                         the rest of the site's style. An "Environment"
                          panel documents the real constraint that shaped every later level (Intel
                          Mac, Python 3.11, `torch==2.2.2` ceiling since PyTorch dropped Intel Mac
                          support at 2.3, which cascades into numpy `<2`, opencv-python `<5`, and

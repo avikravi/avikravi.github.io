@@ -103,6 +103,51 @@
         max-width: 620px;
       }
 
+      .intro-video {
+        margin: 28px 0 32px;
+        max-width: 840px;
+      }
+
+      .video-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 10px;
+      }
+
+      .video-eyebrow svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+
+      .video-embed-single {
+        aspect-ratio: 16 / 9;
+        background: #0a0a0f;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .video-embed-single iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .video-caption {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        line-height: 1.5;
+      }
+
       .slides-embed {
         margin-top: 32px;
         height: 720px;
@@ -627,6 +672,29 @@
               positioning.
             </p>
           </header>
+
+          <div class="intro-video">
+            <p class="video-eyebrow">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="8" cy="8" r="6.5" />
+                <path d="M6.5 5.5l4 2.5-4 2.5z" fill="currentColor" stroke="none" />
+              </svg>
+              Watch First
+            </p>
+            <div class="video-embed-single">
+              <iframe
+                src="https://www.youtube.com/embed/owyWbPvuC4k"
+                title="Project walkthrough — Avi explains the object detection project"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'summary_intro_video'});}"
+              ></iframe>
+            </div>
+            <p class="video-caption">
+              A short walkthrough of this project, in my own words &mdash; the fastest way to understand what it is and why it's built this way before digging into the ten levels below.
+            </p>
+          </div>
 
           <div class="panel-body">
             <p>
