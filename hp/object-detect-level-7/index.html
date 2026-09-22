@@ -469,6 +469,12 @@
                 <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
             </nav>
             <div class="hp-nav-section">
+                <div class="hp-nav-section-label">Post Interview</div>
+                <nav class="hp-sidenav-links">
+                    <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
+                </nav>
+            </div>
+            <div class="hp-nav-section">
                 <div class="hp-nav-section-label">Object Detect</div>
                 <nav class="hp-sidenav-links">
                     <a href="/hp/object-detect-summary" class="hp-nav-link">Summary</a>
@@ -484,12 +490,6 @@
                         <a href="/hp/object-detect-level-8" class="hp-level-link" title="Level 8">8</a>
                         <a href="/hp/object-detect-level-9" class="hp-level-link" title="Level 9">9</a>
                         <a href="/hp/object-detect-level-10" class="hp-level-link" title="Level 10">10</a>
-                </nav>
-            </div>
-            <div class="hp-nav-section">
-                <div class="hp-nav-section-label">Post Interview</div>
-                <nav class="hp-sidenav-links">
-                    <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
                 </nav>
             </div>
         </aside>
@@ -524,7 +524,7 @@
         </ul>
 
         <div class="panel-body">
-            <p><strong>Result:</strong> 46 unique vehicles tracked across a ~800-frame clip (breakdown by class: cars, buses, trucks).</p>
+            <p><strong>Results:</strong> across the 5 demo clips below, unique-object counts range from 0 (Clip 3, the deliberate anomaly test) to 279 across a 1,709-frame clip (Clip 5) &mdash; full per-clip class breakdowns are in each clip's own terminal output.</p>
         </div>
 
         <div class="balance-note">Motorcycles initially didn't appear in the counts &mdash; not a detection failure, a filtering oversight: the class-filter dict simply didn't include COCO class ID 3 (motorcycle). Fixing it also required lowering <code>conf</code> from the 0.25 default, since motorcycles are underrepresented relative to cars in COCO's training data and typically score lower confidence.</div>
@@ -538,12 +538,32 @@
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/UWup7HqeD7o" title="Object detection tracking clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_1'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>traffic1.mp4 -> Processed 796 frames
+Unique vehicles tracked, by class:
+  person: 17 unique  (peak 6 simultaneously in frame)
+  car: 43 unique  (peak 10 simultaneously in frame)
+  motorcycle: 0 unique  (peak 0 simultaneously in frame)
+  bus: 6 unique  (peak 2 simultaneously in frame)
+  truck: 18 unique  (peak 2 simultaneously in frame)
+  Total: 84 unique objects
+Saved annotated video as output_tracked1.mp4</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">2</span>
                 <div class="video-embed vertical">
                     <iframe src="https://www.youtube.com/embed/9s6Aw3lQFgc" title="Object detection tracking clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_2'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>traffic2.mp4 -> Processed 910 frames
+Unique vehicles tracked, by class:
+  person: 13 unique  (peak 4 simultaneously in frame)
+  car: 18 unique  (peak 7 simultaneously in frame)
+  motorcycle: 0 unique  (peak 0 simultaneously in frame)
+  bus: 8 unique  (peak 3 simultaneously in frame)
+  truck: 9 unique  (peak 2 simultaneously in frame)
+  Total: 48 unique objects
+Saved annotated video as output_tracked2.mp4</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">3</span>
@@ -551,18 +571,48 @@
                 <div class="video-embed vertical">
                     <iframe src="https://www.youtube.com/embed/X-R83Jnfg38" title="Object detection tracking clip 3 — anomaly test, oranges" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_3'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>traffic3.mp4 -> Processed 356 frames
+Unique vehicles tracked, by class:
+  person: 0 unique  (peak 0 simultaneously in frame)
+  car: 0 unique  (peak 0 simultaneously in frame)
+  motorcycle: 0 unique  (peak 0 simultaneously in frame)
+  bus: 0 unique  (peak 0 simultaneously in frame)
+  truck: 0 unique  (peak 0 simultaneously in frame)
+  Total: 0 unique objects
+Saved annotated video as output_tracked3.mp4</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">4</span>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/aryhtIwIh0s" title="Object detection tracking clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_4'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>traffic4.mp4 -> Processed 525 frames
+Unique vehicles tracked, by class:
+  person: 4 unique  (peak 2 simultaneously in frame)
+  car: 10 unique  (peak 8 simultaneously in frame)
+  motorcycle: 0 unique  (peak 0 simultaneously in frame)
+  bus: 3 unique  (peak 2 simultaneously in frame)
+  truck: 0 unique  (peak 0 simultaneously in frame)
+  Total: 17 unique objects
+Saved annotated video as output_tracked4.mp4</code></pre></div>
             </div>
             <div class="video-tile">
                 <span class="video-num">5</span>
                 <div class="video-embed">
                     <iframe src="https://www.youtube.com/embed/cdDmq56dR7g" title="Object detection tracking clip 5" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level7_clip_5'});}"></iframe>
                 </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>traffic5.mp4 -> Processed 1709 frames
+Unique vehicles tracked, by class:
+  person: 66 unique  (peak 11 simultaneously in frame)
+  car: 162 unique  (peak 13 simultaneously in frame)
+  motorcycle: 2 unique  (peak 1 simultaneously in frame)
+  bus: 7 unique  (peak 3 simultaneously in frame)
+  truck: 42 unique  (peak 3 simultaneously in frame)
+  Total: 279 unique objects
+Saved annotated video as output_tracked5.mp4</code></pre></div>
             </div>
         </div>
 

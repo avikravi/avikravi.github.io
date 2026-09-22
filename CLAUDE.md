@@ -471,9 +471,18 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          path — now each level's images are self-contained in its own folder, which
                          is more robust if either page's assets ever change.
                          L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
-                         Done. Real result (46 unique vehicles across a ~800-frame clip) and a
-                         debugging note about an early motorcycle-filtering oversight (COCO class
-                         ID 3 missing from the filter dict, not a detection failure). As of
+                         Done. A debugging note about an early motorcycle-filtering oversight (COCO
+                         class ID 3 missing from the filter dict, not a detection failure) — as of
+                         2026-09-22 this is now visibly backed by real data: Clip 5's terminal
+                         output shows `motorcycle: 2 unique`, the only one of the 5 clips with any,
+                         consistent with the note's claim that motorcycles are rare/low-confidence
+                         relative to cars even after the filter fix. The page's original "Result:
+                         46 unique vehicles across a ~800-frame clip" line was a vague, unverified
+                         claim from Avi's early notes (no clip number given) that didn't cleanly
+                         match any of the 5 real per-clip logs once Avi supplied them — replaced
+                         with a "Results:" line citing the real range across all 5 clips (0 to 279)
+                         instead of one unsourced number; don't reintroduce a claim that isn't
+                         traceable to a specific clip's terminal output. As of
                          2026-09-21, a "Demo Clips" section embeds all 5 of Avi's real tracked
                          YouTube videos (titled "Level7 - Output1" through "Output5" on YouTube
                          itself, confirming the numbering) — 3 standard landscape uploads (Clips 1,
