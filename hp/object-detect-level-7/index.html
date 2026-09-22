@@ -191,6 +191,17 @@
         .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
         .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
 
+        .video-embed {
+            margin: 18px 0;
+            max-width: 720px;
+            aspect-ratio: 16 / 9;
+            background: #0a0a0f;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+
         .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
         .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
         .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
@@ -455,7 +466,7 @@
 
         <div class="confirm-box">
             <span class="box-label">Not yet embedded</span>
-            <p>The actual tracked recordings run 7.7MB to 626MB per clip &mdash; too large to publish directly on a static GitHub Pages site (and I don't have a way to compress/transcode them from here). Send over a short, compressed clip (or a GIF of a few seconds) and I'll embed it here.</p>
+            <p>The actual tracked recordings run 7.7MB to 626MB per clip &mdash; too large to publish directly on a static GitHub Pages site. Avi is uploading these to YouTube and will send the links; once he does, they'll be embedded here the same way the Youtube playlist page works elsewhere on this site.</p>
         </div>
 
         <footer>

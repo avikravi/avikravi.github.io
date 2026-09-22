@@ -191,6 +191,17 @@
         .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
         .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
 
+        .video-embed {
+            margin: 18px 0;
+            max-width: 720px;
+            aspect-ratio: 16 / 9;
+            background: #0a0a0f;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+
         .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
         .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
         .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
@@ -441,10 +452,16 @@
         <div class="code-block"><pre><code>face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))</code></pre></div>
 
-        <figure class="level-image">
-            <img src="output.jpg" alt="Haar cascade face detection boxes on a group photo of about ten people" loading="lazy">
-            <figcaption>Tested on a group photo of ~10 people. Missed several faces with head tilt or partial occlusion from overlapping people; one false positive on fabric folds coincidentally matching the pattern.</figcaption>
-        </figure>
+        <div class="image-pair">
+            <figure class="level-image">
+                <img src="face_sample.jpg" alt="Original, unannotated group photo of about ten people" loading="lazy">
+                <figcaption><strong>Before</strong> &mdash; the original, unannotated photo.</figcaption>
+            </figure>
+            <figure class="level-image">
+                <img src="output.jpg" alt="Haar cascade face detection boxes on the same group photo" loading="lazy">
+                <figcaption><strong>After</strong> &mdash; missed several faces with head tilt or partial occlusion from overlapping people; one false positive on fabric folds coincidentally matching the pattern.</figcaption>
+            </figure>
+        </div>
 
         <div class="panel-title">Limitations</div>
         <div class="panel-desc">Stated honestly, not hidden.</div>

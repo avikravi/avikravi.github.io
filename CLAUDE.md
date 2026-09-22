@@ -319,57 +319,79 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
   object-detect-level-1/index.html through object-detect-level-10/index.html  URLs:
                          /hp/object-detect-level-1 through -10. All ten fully written up
                          2026-09-21 from Avi's real project (code, results, and — for most levels —
-                         actual annotated demo images copied in from his local `objectdetect/`
-                         folder as siblings of each page's `index.html`; e.g.
-                         `hp/object-detect-level-1/output.jpg`). Large source assets (some images
-                         were 8256x5504 / 20MB+; videos ran 7.7MB-626MB) were NOT committed as-is —
-                         oversized images were resized/recompressed with macOS `sips` (max ~1600px
-                         wide, ~78-80% JPEG quality) before copying in, and the Level 7/8 videos
-                         were left out entirely (see below). Content by level:
-                         L1 Haar Cascade (classical, fixed rules, faces) — Done, real annotated
-                         group-photo result image.
+                         actual demo images copied in from his local `objectdetect/` folder as
+                         siblings of each page's `index.html`; e.g. `hp/object-detect-level-1/
+                         output.jpg`). Large source assets (some images were 8256x5504 / 20MB+;
+                         one was a PNG mislabeled with a `.jpg` extension; videos ran 7.7MB-626MB)
+                         were NOT committed as-is — oversized/mislabeled images were resized and
+                         properly re-encoded as JPEG with macOS `sips` (max ~1600px wide, ~75-80%
+                         quality) before copying in, and the Level 7/8 videos were left out
+                         entirely (see below — Avi is uploading them to YouTube instead). Every
+                         level with a result image also got its matching **unannotated original**
+                         copied in and shown as a `.image-pair` "Before"/"After" (added 2026-09-21
+                         per Avi's request) — matching the raw source to the right result took real
+                         visual verification (e.g. Level 2's `people1.jpg`/`people4.jpg` inputs
+                         needed to be checked against `output1.jpg`/`output4.jpg` to confirm which
+                         paired with which; don't assume filename order implies pairing on a level
+                         you haven't verified). Content by level:
+                         L1 Haar Cascade (classical, fixed rules, faces) — Done. Before/after pair:
+                         `face_sample.jpg` (original) / `output.jpg` (annotated).
                          L2 HOG+SVM (learned classifier, hand-crafted features, pedestrians) — Done.
-                         Two real result images: a clean success, and a zero-detection image kept
-                         as a deliberate limitation showcase. IMPORTANT DISCREPANCY: Avi's project
-                         notes describe the zero-detection case as "a wide traffic-camera shot with
-                         small, distant cyclists," but the actual saved file
-                         (`objectdetect/level2/output4.jpg`) is a close-cropped group portrait, not
-                         a traffic scene — the page describes what the image actually shows (a
-                         crop with no legs/torso for the pedestrian detector to match) and flags
-                         the mismatch to Avi in an on-page `.confirm-box` ("Flag for Avi"). If Avi
-                         supplies the real cyclist image, swap it in and remove that box.
+                         Two separate before/after pairs under their own subheadings: "Success case"
+                         (`people1.jpg` / `output1.jpg`) and "Zero-detection case" (`people4.jpg` /
+                         `output4.jpg` — captioned as identical to the input, since nothing was
+                         detected to draw). IMPORTANT DISCREPANCY: Avi's project notes describe the
+                         zero-detection case as "a wide traffic-camera shot with small, distant
+                         cyclists," but the actual saved file is a close-cropped group portrait, not
+                         a traffic scene — the page describes what the image actually shows (a crop
+                         with no legs/torso for the pedestrian detector to match) and flags the
+                         mismatch to Avi in an on-page `.confirm-box` ("Flag for Avi"). If Avi
+                         supplies the real cyclist image (with its own unannotated original), swap
+                         both in and remove that box.
                          L3 YOLOv8 general detection (COCO, 80 classes) — Done. Two results: an
                          aerial/broccoli-false-positive result (text only — that demo image isn't
                          in the project folder, flagged in a `.confirm-box`) and a highway-camera
-                         result (real image, `traffic_output.jpg`, 9 vehicles). `.balance-note`
-                         ties the two together (viewpoint sensitivity).
+                         result shown as a before/after pair (`traffic.jpg` / `traffic_output.jpg`,
+                         9 vehicles). `.balance-note` ties the two results together (viewpoint
+                         sensitivity).
                          L4 YOLOv8 on a real manufacturing scene — Done. The project's pivot point:
-                         real warehouse image, result is `person: 3` and nothing else, `.balance-note`
-                         explains COCO's missing industrial vocabulary. Don't soften this framing —
-                         it's what the rest of the project (L5, L6) directly responds to.
+                         before/after pair (`warehouse.jpg` / `output.jpg`), result is `person: 3`
+                         and nothing else, `.balance-note` explains COCO's missing industrial
+                         vocabulary. Don't soften this framing — it's what the rest of the project
+                         (L5, L6) directly responds to.
                          L5 YOLO-World (open-vocabulary) — Done. Iteration history as a
                          `.result-list` (confidence threshold, over-generic "box" term, imgsz),
-                         real "final clean result" image (helmet/person/safety vest/electrical
-                         cabinet/pallet jack all correctly boxed), plus a second real image showing
-                         zero detections on a synthetic 3D-rendered warehouse scene — deliberately
-                         set up as a cliffhanger into Level 6.
+                         "final clean result" shown as a before/after pair (`warehouse1.jpg` /
+                         `output1.jpg` — helmet/person/safety vest/electrical cabinet/pallet jack
+                         all correctly boxed), plus a third, separate image (`output3.jpg`, no
+                         "before" pair — it's already unannotated since nothing was detected)
+                         showing zero detections on a synthetic 3D-rendered warehouse scene,
+                         deliberately set up as a cliffhanger into Level 6.
                          L6 Grounding DINO (stronger open-vocabulary) — Done. Dependency-conflict
                          story (transformers 5.x needs torch>=2.5, pinned to 4.46.3 instead — links
                          back to the Environment panel on Summary rather than repeating it), custom
-                         cross-class duplicate suppression, and the "standout result": an
-                         `.image-pair` showing Level 5's zero-detection synthetic image
-                         side-by-side with Grounding DINO finding cardboard boxes/crate/pallet
-                         truck/cabinet on the EXACT same image (Level 6's image references Level
-                         5's via an absolute cross-folder path,
-                         `/hp/object-detect-level-5/output3.jpg` — if Level 5's image is ever
-                         renamed or removed, fix this reference too).
+                         cross-class duplicate suppression, and the "standout result": its own
+                         before/after pair (`warehouse3.jpg` / `output3.jpg`, both local to this
+                         page's folder — `warehouse3.jpg` was recovered from a PNG mislabeled
+                         `.jpg` and properly re-encoded) showing cardboard box/crate/pallet
+                         truck/cabinet all correctly found, followed by a plain-text callout
+                         (not a second image) noting Level 5's YOLO-World found nothing on this
+                         exact same image, linking to `/hp/object-detect-level-5`. This replaced an
+                         earlier version that cross-referenced Level 5's image directly via an
+                         absolute path — now each level's images are self-contained in its own
+                         folder, which is more robust if either page's assets ever change.
                          L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
                          Done, text/code only. Real result (46 unique vehicles across a ~800-frame
                          clip) and a debugging note about an early motorcycle-filtering oversight
                          (COCO class ID 3 missing from the filter dict, not a detection failure).
                          A `.confirm-box` explains the actual recordings (7.7MB-626MB per clip) are
-                         too large to publish on static GitHub Pages and are NOT embedded — if Avi
-                         sends a compressed/trimmed clip, embed it and remove the box.
+                         too large to publish on static GitHub Pages — Avi is uploading them to
+                         YouTube and will send the links to embed. A `.video-embed` CSS component
+                         (dark `#0a0a0f` 16:9 iframe container, same visual language as
+                         `.slides-embed`/`.app-embed`) is already defined in every level page's
+                         `<style>`, unused until those links arrive — reuse it rather than
+                         inventing a new container when Avi sends them, same pattern as
+                         hp/youtube's video embeds elsewhere on this site.
                          L8 Video speed estimation + CSV export — Done. Real per-vehicle data
                          tables (`.data-table`) pulled directly from `objectdetect/level8/
                          speed_data1.csv` and `speed_data4.csv` (both copied into
@@ -380,8 +402,8 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          (one vehicle averaging 157mph, another peaking past 275mph) — same
                          uncalibrated pixel-to-mph formula, no camera calibration in either case.
                          Don't swap in more "flattering" numbers if this section is ever edited;
-                         the implausible clip 4 numbers are the whole point. Same video-too-large
-                         `.confirm-box` as Level 7.
+                         the implausible clip 4 numbers are the whole point. Same YouTube-pending
+                         `.confirm-box`/`.video-embed` situation as Level 7.
                          L9 Writeup: scaling to the HP ZGX Nano AI Station — Done, no code. A
                          `.spec-table` (Spec/Value rows) of real GB10 specs from hp.com, then a
                          5-point core argument grounded in Level 6-8's actual CPU bottlenecks
@@ -400,9 +422,12 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          an "Approach" `.panel-title`/`.panel-desc`/`.panel-body` writeup, a
                          `.code-block` (dark `#0a0a0f` background, monospace, matches the
                          `.slides-embed`/`.app-embed` dark-iframe visual language used elsewhere
-                         under /hp) for real code snippets, `.level-image`/`.image-pair` figures
-                         for real annotated result photos (each with a genuine, specific
-                         figcaption — never a generic "detection result" caption), a `.result-list`
+                         under /hp) for real code snippets, `.level-image`/`.image-pair` figures —
+                         almost always a "Before" (original, unannotated) paired with an "After"
+                         (detection result), each with a genuine, specific figcaption, never a
+                         generic "detection result" caption — a `.video-embed` component (same
+                         dark 16:9 iframe pattern, currently unused, waiting on Avi's YouTube
+                         links for Levels 7-8), a `.result-list`
                          (dot-bullet, same pattern as hp/30-60-90's `.plan-list`) for iteration
                          histories and built-feature lists, `.balance-note` for the "honest
                          limitation" callouts every level in this project deliberately includes,

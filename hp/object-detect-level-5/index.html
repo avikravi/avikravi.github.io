@@ -191,6 +191,17 @@
         .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
         .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
 
+        .video-embed {
+            margin: 18px 0;
+            max-width: 720px;
+            aspect-ratio: 16 / 9;
+            background: #0a0a0f;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+
         .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
         .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
         .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
@@ -450,14 +461,20 @@ results = model.predict(image_path, conf=0.08, iou=0.5)</code></pre></div>
             <li>Raising <code>imgsz</code> to 1280 (from the default 640) recovered detection of smaller/distant objects (a pallet jack handle) lost to downscaling, at the cost of needing to re-lower <code>conf</code> since scores shifted slightly.</li>
         </ul>
 
-        <figure class="level-image">
-            <img src="output1.jpg" alt="YOLO-World correctly detecting helmet, person, safety vest, electrical cabinet, and pallet jack in a warehouse" loading="lazy">
-            <figcaption>Final result: helmet, person, safety vest, electrical cabinet, and pallet jack all correctly detected with distinct per-class colors and confidence scores.</figcaption>
-        </figure>
+        <div class="image-pair">
+            <figure class="level-image">
+                <img src="warehouse1.jpg" alt="Original, unannotated warehouse photo with two workers in safety vests and helmets" loading="lazy">
+                <figcaption><strong>Before</strong> &mdash; the original, unannotated photo.</figcaption>
+            </figure>
+            <figure class="level-image">
+                <img src="output1.jpg" alt="YOLO-World correctly detecting helmet, person, safety vest, electrical cabinet, and pallet jack in the same warehouse photo" loading="lazy">
+                <figcaption><strong>After</strong> &mdash; helmet, person, safety vest, electrical cabinet, and pallet jack all correctly detected with distinct per-class colors and confidence scores.</figcaption>
+            </figure>
+        </div>
 
         <figure class="level-image">
             <img src="output3.jpg" alt="A synthetic, 3D rendered forklift warehouse image with zero detections drawn" loading="lazy">
-            <figcaption>Not every scene worked: this synthetic, 3D-rendered forklift warehouse image returned zero detections &mdash; see <a href="/hp/object-detect-level-6">Level 6</a> for what changed on the exact same image.</figcaption>
+            <figcaption>Not every scene worked: this synthetic, 3D-rendered forklift warehouse image returned zero detections (shown as originally captured &mdash; with nothing detected, there's no annotated version to compare against) &mdash; see <a href="/hp/object-detect-level-6">Level 6</a> for what changed on the exact same image.</figcaption>
         </figure>
 
         <div class="balance-note">Open-vocabulary detection matches <strong>language patterns</strong>, not fixed definitions. Word choice directly and significantly changes what gets detected &mdash; a real UX/deployment consideration, not just a modeling detail.</div>
