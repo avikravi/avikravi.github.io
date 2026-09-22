@@ -1,2 +1,10 @@
 # Working notes — private, not for the live site
 zgx-nano-notes.md
+
+# Object detection source project (venv, model weights, raw test media) —
+# lives alongside this repo but isn't part of the published site. Specific
+# demo images/CSVs are copied into hp/object-detect-level-*/ deliberately;
+# this excludes the rest (multi-GB venv, .pt model weights, full-size video).
+objectdetect/
+weights/
+.DS_Store

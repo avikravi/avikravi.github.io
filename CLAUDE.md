@@ -287,73 +287,131 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          page, reuse `.metrics-grid`/`.hypothesis-grid`/`.confirm-box` rather than
                          inventing a new pattern — and bias toward a bullet list over a new visual
                          component at all, given the 2026-09-16 brevity mandate above.
-  object-detect-summary/index.html  URL: /hp/object-detect-summary. Added 2026-09-20 for a
-                         6-level assignment breakdown, expanded 2026-09-21 to 10 levels once Avi
-                         said there'd be more (see "The /hp section" below for the sidebar group).
-                         Holds a "Level Roadmap" `.level-table` (Level/Approach/Status columns,
-                         borrowed styling from hp/index.html's job-fit table — no zebra stripes,
-                         just `border-bottom` rows) listing all ten levels with links to their own
-                         pages (below) plus a `.roadmap-note` callout giving Avi's stated priority
-                         order for the original six (Level 4 -> 5 -> 6 as the core deliverable,
-                         HOG+SVM optional) — Levels 7-10 show as `TBD`/`TBD` (approach + status)
-                         with the neutral `.level-status.pending` pill until Avi defines them;
-                         update those two cells and the pill once he does, don't invent content.
-                         Update the table's status pills generally if any level's status changes.
-                         Below that, a `.panel-empty`/`.empty-tag` placeholder ("Slides Coming
-                         Soon") still waits for the actual deck (Google Slides link, PDF export, or
-                         exported images all plausible; format not yet confirmed) — a
-                         `.slides-embed` CSS rule (same iframe-container pattern as `.sim-embed`/
-                         `.app-embed` on other /hp pages) is already in the stylesheet, unused
-                         until that embed is wired up.
-  object-detect-level-1/index.html through object-detect-level-6/index.html  URLs:
-                         /hp/object-detect-level-1 through -6, all six written up 2026-09-20.
-                         Level 1 (Haar Cascade) and Level 3
-                         (YOLOv8, highway traffic) added 2026-09-20 as placeholders, then all six
-                         written up the same day once Avi supplied the level breakdown: Level 1
-                         Haar Cascade (classical, fixed rules, faces — Done), Level 2 HOG+SVM
-                         (learned classifier on hand-crafted features, pedestrians — Optional,
-                         a ~30-min narrative-bridge add if time allows, not essential), Level 3
-                         YOLOv8 on highway traffic (deep learning, general-purpose — Done, but
-                         explicitly flagged in its own `.balance-note` callout as a smart-city
-                         example, NOT the manufacturing/robotics domain the assignment brief asks
-                         for — don't let a future edit soften or remove that caveat, it's the
-                         honest core of the page), Level 4 YOLOv8 on an actual manufacturing/
-                         robotics scene (Recommended Priority — the level that actually answers
-                         the brief; content still describes candidate scenes — parts/packages on
-                         a line, PPE/hard-hat compliance, warehouse robotics — as open, since Avi
-                         hasn't picked one yet), Level 5 video/frame-by-frame (Goal — explains why
-                         per-frame counting alone double-counts moving objects, setting up Level
-                         6), Level 6 tracking + unique counting (Priority — notes Ultralytics'
-                         built-in `model.track()` makes this a small lift once Level 5 works, and
-                         is worth prioritizing over Level 2 if time is short). Every level page
-                         shares one template: eyebrow/h1/dek header, a `.level-status` pill (color
-                         variants: `.done` green, `.priority` blue, `.optional` ink-faint, `.goal`
-                         amber — defined once per page's own `<style>`, same duplication-since-no-
-                         build-step pattern as everything else under hp/), an "Approach"
-                         `.panel-title`/`.panel-desc`/`.panel-body` writeup, and a "Still to Fill
-                         In" section: a dashed `.confirm-box` containing a `.confirm-list` of
-                         concrete missing items (demo video/screenshot, code/notebook link,
-                         results/metrics, etc.) each ending in a `.confirm-blank` dashed-underline
-                         placeholder — same visual pattern as hp/30-60-90's "Open Questions"
-                         section, reused here for the same reason: these are things ONLY Avi can
-                         fill in (demo footage, actual numbers, a repo link), so don't invent
-                         placeholder content for them yourself. Level 3 is the only page with a
-                         `.balance-note` (the smart-city-vs-manufacturing caveat, cross-linking to
-                         Level 4); the `.balance-note` CSS is duplicated into every level page's
-                         `<style>` regardless so it's available if a future level needs the same
-                         honest-caveat treatment.
-  object-detect-level-7/index.html through object-detect-level-10/index.html  URLs:
-                         /hp/object-detect-level-7 through -10. Added 2026-09-21 when Avi said
-                         the assignment would have 10 levels total, not 6 — pure placeholders,
-                         content not yet defined. Each uses the ORIGINAL simple placeholder
-                         pattern from before Levels 1-6 were written up (eyebrow/h1 "Level N"/dek
-                         "Content coming soon." + a `.level-status.pending` "TBD" pill + a
-                         `.panel-empty`/`.empty-tag` "Content Coming Soon" box) rather than the
-                         fuller Approach/Still-to-Fill-In template Levels 1-6 use, since there's
-                         no approach or status info yet to write up — don't invent any. When Avi
-                         supplies what Levels 7-10 actually are, rewrite each using the Level 1-6
-                         template above as the pattern, update its status pill, and update its two
-                         cells in object-detect-summary's roadmap table (both currently `TBD`).
+  object-detect-summary/index.html  URL: /hp/object-detect-summary. Added 2026-09-20 as a
+                         6-level placeholder breakdown, expanded 2026-09-21 to 10 levels, then
+                         completely rewritten 2026-09-21 with Avi's real project content (he
+                         supplied a full reference doc — `~/Downloads/project_reference.md` — plus
+                         the actual code/images/CSVs from his local `objectdetect/` project folder,
+                         which sits untracked alongside this repo; see `.gitignore`). This is a
+                         real take-home deliverable for an HP Principal TPMM, AI Solutions
+                         interview (round 4): a progressive 10-level object detection/counting
+                         project, classical CV -> learned classifiers -> deep learning ->
+                         open-vocabulary detection -> video tracking -> hardware-scaling analysis.
+                         Page structure: dek states the assignment context (no compensation/dates,
+                         per the site's usual rule — see Conventions below); an "Environment"
+                         panel documents the real constraint that shaped every later level (Intel
+                         Mac, Python 3.11, `torch==2.2.2` ceiling since PyTorch dropped Intel Mac
+                         support at 2.3, which cascades into numpy `<2`, opencv-python `<5`, and
+                         `transformers==4.46.3` pins — Level 6's own dependency-conflict story
+                         links back here rather than repeating it); a "Level Roadmap" `.level-table`
+                         (Level/Approach/Status, styled like hp/index.html's job-fit table) with
+                         all ten rows, every one `Done`; an "Overall Narrative Arc" panel
+                         reproducing Avi's own framing verbatim (the L1->L10 technical progression,
+                         and the "every level has an honest documented limitation" theme running
+                         through the whole project) — if a level's content changes, keep this
+                         panel's per-level callouts (tilted faces/L1, zero-detection/L2,
+                         wrong-viewpoint/L3, missing vocabulary/L4, language-matching/L5,
+                         compute cost/L6, motorcycle filter/L7, approximate speed/L8) in sync with
+                         what that level's own page actually says. Below that, a `.panel-empty`/
+                         `.empty-tag` placeholder ("Slides Coming Soon") still waits for the actual
+                         deck — unrelated to the 10 levels, don't remove it just because the levels
+                         are now filled in.
+  object-detect-level-1/index.html through object-detect-level-10/index.html  URLs:
+                         /hp/object-detect-level-1 through -10. All ten fully written up
+                         2026-09-21 from Avi's real project (code, results, and — for most levels —
+                         actual annotated demo images copied in from his local `objectdetect/`
+                         folder as siblings of each page's `index.html`; e.g.
+                         `hp/object-detect-level-1/output.jpg`). Large source assets (some images
+                         were 8256x5504 / 20MB+; videos ran 7.7MB-626MB) were NOT committed as-is —
+                         oversized images were resized/recompressed with macOS `sips` (max ~1600px
+                         wide, ~78-80% JPEG quality) before copying in, and the Level 7/8 videos
+                         were left out entirely (see below). Content by level:
+                         L1 Haar Cascade (classical, fixed rules, faces) — Done, real annotated
+                         group-photo result image.
+                         L2 HOG+SVM (learned classifier, hand-crafted features, pedestrians) — Done.
+                         Two real result images: a clean success, and a zero-detection image kept
+                         as a deliberate limitation showcase. IMPORTANT DISCREPANCY: Avi's project
+                         notes describe the zero-detection case as "a wide traffic-camera shot with
+                         small, distant cyclists," but the actual saved file
+                         (`objectdetect/level2/output4.jpg`) is a close-cropped group portrait, not
+                         a traffic scene — the page describes what the image actually shows (a
+                         crop with no legs/torso for the pedestrian detector to match) and flags
+                         the mismatch to Avi in an on-page `.confirm-box` ("Flag for Avi"). If Avi
+                         supplies the real cyclist image, swap it in and remove that box.
+                         L3 YOLOv8 general detection (COCO, 80 classes) — Done. Two results: an
+                         aerial/broccoli-false-positive result (text only — that demo image isn't
+                         in the project folder, flagged in a `.confirm-box`) and a highway-camera
+                         result (real image, `traffic_output.jpg`, 9 vehicles). `.balance-note`
+                         ties the two together (viewpoint sensitivity).
+                         L4 YOLOv8 on a real manufacturing scene — Done. The project's pivot point:
+                         real warehouse image, result is `person: 3` and nothing else, `.balance-note`
+                         explains COCO's missing industrial vocabulary. Don't soften this framing —
+                         it's what the rest of the project (L5, L6) directly responds to.
+                         L5 YOLO-World (open-vocabulary) — Done. Iteration history as a
+                         `.result-list` (confidence threshold, over-generic "box" term, imgsz),
+                         real "final clean result" image (helmet/person/safety vest/electrical
+                         cabinet/pallet jack all correctly boxed), plus a second real image showing
+                         zero detections on a synthetic 3D-rendered warehouse scene — deliberately
+                         set up as a cliffhanger into Level 6.
+                         L6 Grounding DINO (stronger open-vocabulary) — Done. Dependency-conflict
+                         story (transformers 5.x needs torch>=2.5, pinned to 4.46.3 instead — links
+                         back to the Environment panel on Summary rather than repeating it), custom
+                         cross-class duplicate suppression, and the "standout result": an
+                         `.image-pair` showing Level 5's zero-detection synthetic image
+                         side-by-side with Grounding DINO finding cardboard boxes/crate/pallet
+                         truck/cabinet on the EXACT same image (Level 6's image references Level
+                         5's via an absolute cross-folder path,
+                         `/hp/object-detect-level-5/output3.jpg` — if Level 5's image is ever
+                         renamed or removed, fix this reference too).
+                         L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
+                         Done, text/code only. Real result (46 unique vehicles across a ~800-frame
+                         clip) and a debugging note about an early motorcycle-filtering oversight
+                         (COCO class ID 3 missing from the filter dict, not a detection failure).
+                         A `.confirm-box` explains the actual recordings (7.7MB-626MB per clip) are
+                         too large to publish on static GitHub Pages and are NOT embedded — if Avi
+                         sends a compressed/trimmed clip, embed it and remove the box.
+                         L8 Video speed estimation + CSV export — Done. Real per-vehicle data
+                         tables (`.data-table`) pulled directly from `objectdetect/level8/
+                         speed_data1.csv` and `speed_data4.csv` (both copied into
+                         `hp/object-detect-level-8/` as real downloadable artifacts via
+                         `.download-link`s — they're tiny, a few KB, unlike the videos). The
+                         calibration-honesty point is made with REAL data, not just prose: clip 1's
+                         speeds are plausible (single digits to low 30s mph), clip 4's are not
+                         (one vehicle averaging 157mph, another peaking past 275mph) — same
+                         uncalibrated pixel-to-mph formula, no camera calibration in either case.
+                         Don't swap in more "flattering" numbers if this section is ever edited;
+                         the implausible clip 4 numbers are the whole point. Same video-too-large
+                         `.confirm-box` as Level 7.
+                         L9 Writeup: scaling to the HP ZGX Nano AI Station — Done, no code. A
+                         `.spec-table` (Spec/Value rows) of real GB10 specs from hp.com, then a
+                         5-point core argument grounded in Level 6-8's actual CPU bottlenecks
+                         (Grounding DINO's 30-60s+ runtime, ~2-3fps video tracking) rather than a
+                         generic "AI needs GPUs" pitch.
+                         L10 Writeup: scaling to the HP ZGX Fury AI Station — Done, no code. Same
+                         `.spec-table` pattern with real GB300 specs, framed as "one engineer's
+                         tool becoming shared facility infrastructure" — the natural Nano-to-Fury
+                         scaling path, closing with the on-prem/fixed-cost argument that's constant
+                         across both.
+                         Shared template (all ten pages): eyebrow/h1/dek header with a
+                         `.level-status` pill (currently all `.done`/green — `.priority` blue,
+                         `.optional` ink-faint, `.goal` amber, and `.pending` ink-faint variants
+                         still exist in the CSS but are unused now that every level is filled in;
+                         leave them defined in case a future level needs a non-Done status again),
+                         an "Approach" `.panel-title`/`.panel-desc`/`.panel-body` writeup, a
+                         `.code-block` (dark `#0a0a0f` background, monospace, matches the
+                         `.slides-embed`/`.app-embed` dark-iframe visual language used elsewhere
+                         under /hp) for real code snippets, `.level-image`/`.image-pair` figures
+                         for real annotated result photos (each with a genuine, specific
+                         figcaption — never a generic "detection result" caption), a `.result-list`
+                         (dot-bullet, same pattern as hp/30-60-90's `.plan-list`) for iteration
+                         histories and built-feature lists, `.balance-note` for the "honest
+                         limitation" callouts every level in this project deliberately includes,
+                         and — only where something is genuinely still missing (L2's image
+                         mismatch, L3's aerial demo image, L7/L8's oversized videos) — a
+                         `.confirm-box` with plain prose (no more dashed `.confirm-blank` lines;
+                         that pattern was for pure placeholders and no longer fits now that most
+                         content is real). All of this CSS is duplicated per page as usual (no
+                         shared stylesheet in this repo).
 agents/index.html       URL: /agents — "Cleanie's Homebase." Added 2026-09-19. A standalone,
                          whimsical visual — NOT part of the light-editorial system or the /hp
                          sidebar, its own one-off "video-game screenshot" design system. Not

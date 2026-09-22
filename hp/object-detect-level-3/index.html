@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection — Level 3: YOLOv8 (Highway Traffic) | Avi Ravishankar</title>
-    <meta name="description" content="Level 3 of Avi's object detection project: YOLOv8 deep-learning detection on highway traffic.">
+    <title>Object Detection — Level 3: YOLOv8 General Detection | Avi Ravishankar</title>
+    <meta name="description" content="Level 3 of Avi's object detection project: YOLOv8 deep-learning detection, pretrained on COCO's 80 classes.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,7 +84,7 @@
         .dek {
             font-size: 15.5px;
             color: var(--ink-faint);
-            max-width: 620px;
+            max-width: 680px;
         }
 
         .status-row { margin-top: 14px; }
@@ -103,19 +103,21 @@
         .level-status.priority { color: var(--blue); }
         .level-status.optional { color: var(--ink-faint); }
         .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
 
         .panel-title {
             font-size: 19px;
             font-weight: 700;
             color: #000;
-            margin: 40px 0 8px;
+            margin: 36px 0 8px;
         }
+        .panel-title:first-of-type { margin-top: 28px; }
 
         .panel-desc {
             font-size: 14px;
             color: var(--ink-faint);
             max-width: 720px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.6;
         }
 
@@ -123,6 +125,7 @@
         .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
         .panel-body p:last-child { margin-bottom: 0; }
         .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
 
         .balance-note {
             font-size: 13px;
@@ -136,33 +139,107 @@
         .balance-note strong { color: var(--ink-soft); }
 
         .confirm-box {
-            margin-top: 40px;
+            margin-top: 24px;
             border: 1px dashed var(--line);
             border-radius: 10px;
-            padding: 18px 20px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
         }
 
-        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
-
-        .confirm-list li {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
             line-height: 1.5;
         }
 
-        .confirm-blank {
-            display: inline-block;
-            flex: 1 1 160px;
-            width: 160px;
-            min-width: 160px;
-            border-bottom: 1px dashed var(--ink-faint);
-            height: 1em;
-            vertical-align: middle;
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
         }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
 
         footer {
             padding: 28px 0 48px;
@@ -350,27 +427,33 @@
     <div class="wrap">
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
-            <h1>Level 3 — YOLOv8 (Highway Traffic)</h1>
-            <p class="dek">Deep learning, general-purpose detection. Cars on highway footage — proof the model works, not yet the assignment's target domain.</p>
+            <h1>Level 3 — YOLOv8 General Detection</h1>
+            <p class="dek">Deep learning, general-purpose detection. Ultralytics YOLOv8n pretrained on COCO's 80 classes.</p>
             <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
-        <div class="panel-desc">A YOLOv8 model detecting and boxing cars in highway traffic footage — the first deep-learning level in the ladder.</div>
+        <div class="panel-desc">Deep learning, general-purpose detection. Same pretrained model, two scenes, two very different outcomes.</div>
         <div class="panel-body">
-            <p>YOLOv8 is a single-stage deep detector: one forward pass over the image predicts bounding boxes and class scores directly, instead of the sliding-window/hand-crafted-feature approach of Levels 1 and 2. Trained on large, general-purpose datasets, it generalizes across object types far better than a Haar cascade or HOG+SVM classifier ever could.</p>
+            <p>Ultralytics YOLOv8n ("nano," the smallest, fastest variant) pretrained on COCO &mdash; 80 general classes: person, bicycle, car, motorcycle, bus, truck, and 74 others, mostly household, street, and animal objects. Nothing industrial.</p>
         </div>
-<div class="balance-note">Worth being upfront about: this is a strong proof that the deep-learning detector works, but it's a <strong>smart-city example, not a manufacturing or robotics scene</strong> — and the assignment brief specifically asks for one of those two domains. I'm treating this level as proof the model works, and making <a href="/hp/object-detect-level-4">Level 4</a> the one that actually answers the brief.</div>
 
-        <div class="panel-title">Still to Fill In</div>
-        <div class="panel-desc">What's left before this level is fully written up.</div>
-        <div class="confirm-box">
-            <ul class="confirm-list">
-                <li>Demo video or screenshot <span class="confirm-blank"></span></li>
-                <li>Code / notebook link <span class="confirm-blank"></span></li>
-                <li>Results / metrics (mAP, FPS, etc.) <span class="confirm-blank"></span></li>
-            </ul>
+        <div class="panel-title">Aerial traffic photo</div>
+        <div class="panel-body">
+            <p><strong>0 cars detected</strong>, with a false positive of "2 broccolis" &mdash; tree canopies viewed from directly above visually resembled COCO's broccoli class. Root cause: YOLO's COCO training data is almost entirely street-level/dashcam-angle photos; a nadir (straight-down) viewpoint is a different visual distribution the model never learned.</p>
         </div>
+        <div class="confirm-box">
+            <span class="box-label">Not yet added</span>
+            <p>The aerial test image isn't saved in the project folder, so there's no demo photo for this result yet &mdash; the text above is from my own notes. Send it over and I'll add it here.</p>
+        </div>
+
+        <div class="panel-title">Angled highway camera</div>
+        <figure class="level-image">
+            <img src="traffic_output.jpg" alt="YOLOv8 correctly detecting nine vehicles on an angled DOT highway camera image" loading="lazy">
+            <figcaption>9 vehicles correctly detected (7 cars, 1 bus &mdash; likely a truck misclassification since no bus was visible in frame, 1 truck), confidence scores ranging 0.32&ndash;0.75.</figcaption>
+        </figure>
+
+        <div class="balance-note">Same pretrained model, same general scene type &mdash; cars on a road &mdash; wildly different results purely from camera viewpoint. Concrete proof that a pretrained model is only as good as how well the deployment scene matches its training data's visual distribution.</div>
 
         <footer>
             Working draft, not for external distribution yet.

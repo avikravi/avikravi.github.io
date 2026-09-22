@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection — Level 5: Video, Frame-by-Frame | Avi Ravishankar</title>
-    <meta name="description" content="Level 5 of Avi's object detection project: running the detector frame-by-frame across video.">
+    <title>Object Detection — Level 5: YOLO-World | Avi Ravishankar</title>
+    <meta name="description" content="Level 5 of Avi's object detection project: YOLO-World open-vocabulary detection, matching any text-described object.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,7 +84,7 @@
         .dek {
             font-size: 15.5px;
             color: var(--ink-faint);
-            max-width: 620px;
+            max-width: 680px;
         }
 
         .status-row { margin-top: 14px; }
@@ -103,19 +103,21 @@
         .level-status.priority { color: var(--blue); }
         .level-status.optional { color: var(--ink-faint); }
         .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
 
         .panel-title {
             font-size: 19px;
             font-weight: 700;
             color: #000;
-            margin: 40px 0 8px;
+            margin: 36px 0 8px;
         }
+        .panel-title:first-of-type { margin-top: 28px; }
 
         .panel-desc {
             font-size: 14px;
             color: var(--ink-faint);
             max-width: 720px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.6;
         }
 
@@ -123,6 +125,7 @@
         .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
         .panel-body p:last-child { margin-bottom: 0; }
         .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
 
         .balance-note {
             font-size: 13px;
@@ -136,33 +139,107 @@
         .balance-note strong { color: var(--ink-soft); }
 
         .confirm-box {
-            margin-top: 40px;
+            margin-top: 24px;
             border: 1px dashed var(--line);
             border-radius: 10px;
-            padding: 18px 20px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
         }
 
-        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
-
-        .confirm-list li {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
             line-height: 1.5;
         }
 
-        .confirm-blank {
-            display: inline-block;
-            flex: 1 1 160px;
-            width: 160px;
-            min-width: 160px;
-            border-bottom: 1px dashed var(--ink-faint);
-            height: 1em;
-            vertical-align: middle;
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
         }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
 
         footer {
             padding: 28px 0 48px;
@@ -350,27 +427,40 @@
     <div class="wrap">
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
-            <h1>Level 5 — Video, Frame-by-Frame</h1>
-            <p class="dek">The same detector running continuously across video frames instead of a single still image. My stated goal for this project.</p>
-            <div class="status-row"><span class="level-status goal">Goal</span></div>
+            <h1>Level 5 — YOLO-World</h1>
+            <p class="dek">Open-vocabulary detection: any object described in plain text at inference time, no training or fine-tuning required.</p>
+            <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
-        <div class="panel-desc">Running the Level 4 model on every frame of a video, overlaying boxes, and writing out an annotated output video.</div>
+        <div class="panel-desc">Ultralytics YOLOWorld (<code>yolov8s-world.pt</code>) &mdash; the direct answer to Level 4's vocabulary gap.</div>
         <div class="panel-body">
-            <p>Mechanically straightforward once Level 4 works: decode the video frame-by-frame, run the detector on each frame, draw the boxes, and re-encode. The interesting part is what it exposes — per-frame detection alone counts the same object over and over as it moves through the scene, which is exactly the gap Level 6 closes.</p>
+            <p>Detects <em>any</em> object described in plain text at inference time &mdash; no training or fine-tuning required, unlike COCO's fixed 80-class list.</p>
         </div>
+        <div class="code-block"><pre><code>model = YOLOWorld("yolov8s-world.pt")
+model.set_classes(["forklift", "cardboard box", "pallet", "helmet", "person"])
+results = model.predict(image_path, conf=0.08, iou=0.5)</code></pre></div>
 
-        <div class="panel-title">Still to Fill In</div>
-        <div class="panel-desc">What's left before this level is fully written up.</div>
-        <div class="confirm-box">
-            <ul class="confirm-list">
-                <li>Source video <span class="confirm-blank"></span></li>
-                <li>Output demo video <span class="confirm-blank"></span></li>
-                <li>Code / notebook link <span class="confirm-blank"></span></li>
-                <li>Frame rate / performance notes <span class="confirm-blank"></span></li>
-            </ul>
-        </div>
+        <div class="panel-title">Getting there</div>
+        <div class="panel-desc">Worth showing as process, not just the end result.</div>
+        <ul class="result-list">
+            <li>Initial results only found "person" &mdash; the default confidence threshold (0.25) was filtering out less-common/compound terms scoring lower; lowering to ~0.08 revealed the rest.</li>
+            <li>"box" matched <em>any</em> box-shaped object &mdash; electrical cabinets, mystery equipment &mdash; too generic a term. This matches language patterns, not fixed categories.</li>
+            <li>Refined to specific phrases: "cardboard box," "wooden crate," "electrical cabinet," "pallet jack," "safety vest," "helmet."</li>
+            <li>Raising <code>imgsz</code> to 1280 (from the default 640) recovered detection of smaller/distant objects (a pallet jack handle) lost to downscaling, at the cost of needing to re-lower <code>conf</code> since scores shifted slightly.</li>
+        </ul>
+
+        <figure class="level-image">
+            <img src="output1.jpg" alt="YOLO-World correctly detecting helmet, person, safety vest, electrical cabinet, and pallet jack in a warehouse" loading="lazy">
+            <figcaption>Final result: helmet, person, safety vest, electrical cabinet, and pallet jack all correctly detected with distinct per-class colors and confidence scores.</figcaption>
+        </figure>
+
+        <figure class="level-image">
+            <img src="output3.jpg" alt="A synthetic, 3D rendered forklift warehouse image with zero detections drawn" loading="lazy">
+            <figcaption>Not every scene worked: this synthetic, 3D-rendered forklift warehouse image returned zero detections &mdash; see <a href="/hp/object-detect-level-6">Level 6</a> for what changed on the exact same image.</figcaption>
+        </figure>
+
+        <div class="balance-note">Open-vocabulary detection matches <strong>language patterns</strong>, not fixed definitions. Word choice directly and significantly changes what gets detected &mdash; a real UX/deployment consideration, not just a modeling detail.</div>
 
         <footer>
             Working draft, not for external distribution yet.

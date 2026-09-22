@@ -84,7 +84,7 @@
         .dek {
             font-size: 15.5px;
             color: var(--ink-faint);
-            max-width: 620px;
+            max-width: 680px;
         }
 
         .status-row { margin-top: 14px; }
@@ -103,19 +103,21 @@
         .level-status.priority { color: var(--blue); }
         .level-status.optional { color: var(--ink-faint); }
         .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
 
         .panel-title {
             font-size: 19px;
             font-weight: 700;
             color: #000;
-            margin: 40px 0 8px;
+            margin: 36px 0 8px;
         }
+        .panel-title:first-of-type { margin-top: 28px; }
 
         .panel-desc {
             font-size: 14px;
             color: var(--ink-faint);
             max-width: 720px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.6;
         }
 
@@ -123,6 +125,7 @@
         .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
         .panel-body p:last-child { margin-bottom: 0; }
         .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
 
         .balance-note {
             font-size: 13px;
@@ -136,33 +139,107 @@
         .balance-note strong { color: var(--ink-soft); }
 
         .confirm-box {
-            margin-top: 40px;
+            margin-top: 24px;
             border: 1px dashed var(--line);
             border-radius: 10px;
-            padding: 18px 20px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
         }
 
-        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
-
-        .confirm-list li {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
             line-height: 1.5;
         }
 
-        .confirm-blank {
-            display: inline-block;
-            flex: 1 1 160px;
-            width: 160px;
-            min-width: 160px;
-            border-bottom: 1px dashed var(--ink-faint);
-            height: 1em;
-            vertical-align: middle;
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
         }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
 
         footer {
             padding: 28px 0 48px;
@@ -351,26 +428,32 @@
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Level 1 — Haar Cascade</h1>
-            <p class="dek">Classical computer vision, fixed rules, no learned weights beyond the pre-trained cascade. Face detection.</p>
+            <p class="dek">Classical computer vision, fixed rules, no learned weights beyond the pretrained cascade. Face detection.</p>
             <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
-        <div class="panel-desc">The starting point for the whole detection ladder: a face detector built on OpenCV's pre-trained Haar cascade classifiers.</div>
+        <div class="panel-desc">OpenCV's built-in pretrained Haar Cascade face detector &mdash; the Viola-Jones algorithm, 2001.</div>
         <div class="panel-body">
-            <p>A sliding window is matched against Haar-like features — simple edge, line, and rectangle patterns — and an AdaBoost-trained cascade of weak classifiers rejects obvious non-faces early, so only promising regions get the full check. Nothing here is learned from my own data; it's hand-crafted rules plus a pre-trained cascade, which makes it fast but brittle to pose, lighting, and occlusion.</p>
-            <p>This level exists to anchor the classical end of the ladder — the baseline that Level 3's deep-learning detector is measured against.</p>
+            <p>Haar wavelets are simple, fixed light/dark rectangular patterns &mdash; for example, checking whether a region is darker on top than below, which roughly matches eyebrow-to-cheek contrast. There's no neural network and no learned features here. The only thing "designed" is which combination of these fixed patterns, in what cascade order, reliably flags a face.</p>
+            <p>This is also the pipeline's proof of concept: load an image, run detection, draw a box, save the result. Validating that end-to-end flow on the simplest possible case, before introducing any model weights, gives every later level a debugging baseline &mdash; if something breaks in Level 4 or Level 8, the problem is in the new logic, not the load/detect/draw/save loop itself.</p>
         </div>
+        <div class="code-block"><pre><code>face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))</code></pre></div>
 
-        <div class="panel-title">Still to Fill In</div>
-        <div class="panel-desc">What's left before this level is fully written up.</div>
-        <div class="confirm-box">
-            <ul class="confirm-list">
-                <li>Demo image or video <span class="confirm-blank"></span></li>
-                <li>Code / notebook link <span class="confirm-blank"></span></li>
-                <li>Accuracy notes / failure cases observed <span class="confirm-blank"></span></li>
-            </ul>
-        </div>
+        <figure class="level-image">
+            <img src="output.jpg" alt="Haar cascade face detection boxes on a group photo of about ten people" loading="lazy">
+            <figcaption>Tested on a group photo of ~10 people. Missed several faces with head tilt or partial occlusion from overlapping people; one false positive on fabric folds coincidentally matching the pattern.</figcaption>
+        </figure>
+
+        <div class="panel-title">Limitations</div>
+        <div class="panel-desc">Stated honestly, not hidden.</div>
+        <ul class="result-list">
+            <li>Single class only (faces)</li>
+            <li>Frontal-face only &mdash; fails on tilt, angle, occlusion</li>
+            <li>Fixed, hand-designed rules &mdash; zero learning in the detection logic itself</li>
+            <li>No confidence score in the deep-learning sense</li>
+        </ul>
 
         <footer>
             Working draft, not for external distribution yet.

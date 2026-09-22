@@ -134,6 +134,17 @@
         .level-status.goal { color: #a8461f; }
         .level-status.pending { color: var(--ink-faint); }
 
+        .panel-body { max-width: 720px; }
+        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
+        .panel-body p:last-child { margin-bottom: 0; }
+        .panel-body strong { color: #000; }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
         .level-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
         .level-table th {
             text-align: left;
@@ -383,29 +394,45 @@
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Summary</h1>
-            <p class="dek">A slide-deck overview of the object detection project I'm working on.</p>
+            <p class="dek">Take-home deliverable for a Principal Product Marketing Manager, AI Solutions interview (round 4): a local object detection/counting application for a manufacturing or robotics use case, plus a short presentation on performance and customer positioning.</p>
         </header>
 
+        <div class="panel-body">
+            <p>Rather than one app, this is a progressive series of ten "levels" demonstrating increasing technical sophistication — classical computer vision &rarr; learned classifiers &rarr; deep learning &rarr; open-vocabulary detection &rarr; video tracking &rarr; hardware-scaling analysis.</p>
+        </div>
+
+        <div class="panel-title">Environment</div>
+        <div class="panel-desc">Runs locally, not in the cloud.</div>
+        <ul class="result-list">
+            <li>macOS, Intel-based MacBook Air &mdash; not Apple Silicon, which mattered a lot for package compatibility.</li>
+            <li>Python 3.11 in a project-local venv, downgraded from 3.13 because <strong>PyTorch dropped Intel Mac support starting at version 2.3</strong> &mdash; <code>torch==2.2.2</code> was the last compatible version, which constrained every downstream package choice: numpy pinned <code>&lt;2</code> to match torch 2.2.2's expected ABI, opencv-python pinned <code>&lt;5</code> (v5 moved Haar cascades to a contrib-only module), transformers pinned to <code>4.46.3</code> (newer versions require <code>torch&gt;=2.5</code>).</li>
+        </ul>
+
         <div class="panel-title">Level Roadmap</div>
-        <div class="panel-desc">Ten graduated levels, from classical computer vision to tracked, unique-object counting. Levels 7-10 are still to be defined.</div>
+        <div class="panel-desc">Ten graduated levels, from classical computer vision to a forward-looking hardware-scaling analysis.</div>
         <table class="level-table">
             <thead>
                 <tr><th>Level</th><th>Approach</th><th>Status</th></tr>
             </thead>
             <tbody>
                 <tr><td><a href="/hp/object-detect-level-1">1</a></td><td>Haar Cascade — classical, fixed rules (faces)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-2">2</a></td><td>HOG + SVM — learned classifier, hand-crafted features (pedestrians)</td><td><span class="level-status optional">Optional</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-3">3</a></td><td>YOLOv8 — deep learning, general-purpose (highway cars)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-4">4</a></td><td>YOLOv8 applied to a manufacturing/robotics scene</td><td><span class="level-status priority">Recommended Priority</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-5">5</a></td><td>Video — same detection running frame-by-frame</td><td><span class="level-status goal">Goal</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-6">6</a></td><td>Tracking + unique counting across frames</td><td><span class="level-status priority">Priority</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-7">7</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-8">8</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-9">9</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-10">10</a></td><td>TBD</td><td><span class="level-status pending">TBD</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-2">2</a></td><td>HOG + SVM — learned classifier, hand-crafted features (pedestrians)</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-3">3</a></td><td>YOLOv8 — deep learning, general-purpose (COCO, 80 classes)</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-4">4</a></td><td>YOLOv8 on a real manufacturing scene — the vocabulary-gap pivot</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-5">5</a></td><td>YOLO-World — open-vocabulary detection, any object by text prompt</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-6">6</a></td><td>Grounding DINO — stronger open-vocabulary detection</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-7">7</a></td><td>Video object tracking + unique counting (ByteTrack)</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-8">8</a></td><td>Video speed estimation + CSV data export</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-9">9</a></td><td>Writeup: scaling to the HP ZGX Nano AI Station</td><td><span class="level-status done">Done</span></td></tr>
+                <tr><td><a href="/hp/object-detect-level-10">10</a></td><td>Writeup: scaling to the HP ZGX Fury AI Station</td><td><span class="level-status done">Done</span></td></tr>
             </tbody>
         </table>
-        <p class="roadmap-note">Priority order with the time left: Level 4 (manufacturing-relevant static scene) → Level 5 (video) → Level 6 (tracking/counting) is the core deliverable. Level 3's highway traffic proves the deep-learning model works, but it's a smart-city example, not the manufacturing/robotics domain the brief asks for — Level 4 is what actually answers it. HOG + SVM (Level 2) is a nice-to-add narrative bridge if time allows, not essential.</p>
+
+        <div class="panel-title">Overall Narrative Arc</div>
+        <div class="panel-body">
+            <p><strong>Technical progression:</strong> fixed classical rules (L1) &rarr; learned classifier on fixed features (L2) &rarr; fully learned deep learning (L3) &rarr; open-vocabulary/zero-shot (L5, L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward look (L9, L10).</p>
+            <p><strong>Consistent theme:</strong> every level includes an honestly documented limitation or failure, not just wins — tilted faces missed in L1, a deliberately-kept zero-detection result in L2, a wrong-viewpoint failure in L3, COCO's missing industrial vocabulary in L4, imprecise language-matching in L5, heavy compute cost in L6, a motorcycle-filtering oversight in L7, explicitly-flagged approximate speed in L8. That's deliberate — it demonstrates real engineering judgment rather than a cherry-picked highlight reel.</p>
+        </div>
 
         <div class="panel-title">Slide Deck</div>
         <div class="panel-empty">

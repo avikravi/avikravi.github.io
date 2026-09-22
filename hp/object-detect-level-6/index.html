@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Object Detection — Level 6: Tracking + Unique Counting | Avi Ravishankar</title>
-    <meta name="description" content="Level 6 of Avi's object detection project: multi-object tracking for unique counting across video frames.">
+    <title>Object Detection — Level 6: Grounding DINO | Avi Ravishankar</title>
+    <meta name="description" content="Level 6 of Avi's object detection project: Grounding DINO, a stronger transformer-based open-vocabulary detector.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,7 +84,7 @@
         .dek {
             font-size: 15.5px;
             color: var(--ink-faint);
-            max-width: 620px;
+            max-width: 680px;
         }
 
         .status-row { margin-top: 14px; }
@@ -103,19 +103,21 @@
         .level-status.priority { color: var(--blue); }
         .level-status.optional { color: var(--ink-faint); }
         .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
 
         .panel-title {
             font-size: 19px;
             font-weight: 700;
             color: #000;
-            margin: 40px 0 8px;
+            margin: 36px 0 8px;
         }
+        .panel-title:first-of-type { margin-top: 28px; }
 
         .panel-desc {
             font-size: 14px;
             color: var(--ink-faint);
             max-width: 720px;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.6;
         }
 
@@ -123,6 +125,7 @@
         .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
         .panel-body p:last-child { margin-bottom: 0; }
         .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
 
         .balance-note {
             font-size: 13px;
@@ -136,33 +139,107 @@
         .balance-note strong { color: var(--ink-soft); }
 
         .confirm-box {
-            margin-top: 40px;
+            margin-top: 24px;
             border: 1px dashed var(--line);
             border-radius: 10px;
-            padding: 18px 20px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
         }
 
-        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
-
-        .confirm-list li {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
             line-height: 1.5;
         }
 
-        .confirm-blank {
-            display: inline-block;
-            flex: 1 1 160px;
-            width: 160px;
-            min-width: 160px;
-            border-bottom: 1px dashed var(--ink-faint);
-            height: 1em;
-            vertical-align: middle;
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
         }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
 
         footer {
             padding: 28px 0 48px;
@@ -350,28 +427,48 @@
     <div class="wrap">
         <header class="page-header">
             <div class="eyebrow">Object Detect</div>
-            <h1>Level 6 — Tracking + Unique Counting</h1>
-            <p class="dek">Consistent object IDs across frames, so counts reflect unique objects passed through the scene, not repeated per-frame detections.</p>
-            <div class="status-row"><span class="level-status priority">Priority</span></div>
+            <h1>Level 6 — Grounding DINO</h1>
+            <p class="dek">A stronger, transformer-based open-vocabulary detector. Better at nuanced phrases, meaningfully heavier to run.</p>
+            <div class="status-row"><span class="level-status done">Done</span></div>
         </header>
 
         <div class="panel-title">Approach</div>
-        <div class="panel-desc">The strongest answer to "counting": tracking assigns each object a persistent ID across frames instead of re-detecting it from scratch every frame.</div>
+        <div class="panel-desc">A stronger, transformer-based open-vocabulary detector &mdash; better at nuanced phrases, meaningfully heavier to run.</div>
         <div class="panel-body">
-            <p>Per-frame detection counts (Level 5) double-count the same object across many frames as it moves through the scene — a video with 900 frames each showing roughly one part isn't "900 parts," it's one part passing through 900 times. Tracking fixes this by assigning consistent IDs frame-to-frame, so the real answer becomes something like "12 unique parts passed."</p>
-            <p>Ultralytics has tracking built in — <code>model.track()</code> instead of <code>model()</code> — so this isn't a large lift once Level 5 is working. Worth prioritizing over Level 2 (HOG+SVM) if time is tight, since it's the level that actually answers the counting question.</p>
+            <p>Cross-attention between text and image regions, via Hugging Face <code>transformers</code> (<code>IDEA-Research/grounding-dino-tiny</code>). Several seconds to over a minute per image on CPU, versus sub-second for YOLO-World in Level 5 &mdash; a real compute tradeoff, not just a quality upgrade.</p>
         </div>
 
-        <div class="panel-title">Still to Fill In</div>
-        <div class="panel-desc">What's left before this level is fully written up.</div>
-        <div class="confirm-box">
-            <ul class="confirm-list">
-                <li>Tracker used (ByteTrack / other) <span class="confirm-blank"></span></li>
-                <li>Final unique count achieved <span class="confirm-blank"></span></li>
-                <li>Demo video or screenshot <span class="confirm-blank"></span></li>
-                <li>Code / notebook link <span class="confirm-blank"></span></li>
-            </ul>
+        <div class="panel-title">Dependency conflict</div>
+        <div class="panel-body">
+            <p>Latest <code>transformers</code> (5.x) requires <code>torch&gt;=2.5</code>, which conflicts directly with this Intel Mac's <code>torch==2.2.2</code> ceiling (see Environment on the <a href="/hp/object-detect-summary">Summary</a> page). Pinned <code>transformers==4.46.3</code> instead &mdash; it predates that requirement and still supports Grounding DINO. API differences between versions also required a single flat text string (<code>"helmet. person. safety vest."</code>) rather than the newer nested-list input format.</p>
         </div>
+        <div class="code-block"><pre><code>processor = AutoProcessor.from_pretrained("IDEA-Research/grounding-dino-tiny")
+model = AutoModelForZeroShotObjectDetection.from_pretrained("IDEA-Research/grounding-dino-tiny")
+text_query = "helmet. person. safety vest. electrical cabinet. hand pallet truck. cardboard box."
+inputs = processor(images=image, text=text_query, return_tensors="pt")
+results = processor.post_process_grounded_object_detection(
+    outputs, input_ids=inputs.input_ids, box_threshold=0.22, text_threshold=0.2, target_sizes=[image.size[::-1]]
+)[0]</code></pre></div>
+
+        <div class="panel-title">Custom additions</div>
+        <ul class="result-list">
+            <li><strong>Cross-class duplicate suppression</strong> (a custom IoU function) &mdash; different independent text queries could each match the same physical object, producing stacked duplicate boxes with different labels; sorted by confidence and dropped the lower-confidence overlaps.</li>
+            <li>Per-class color coding plus label-collision avoidance &mdash; labels step down vertically instead of overprinting when boxes sit close together.</li>
+        </ul>
+
+        <div class="panel-title">Standout result</div>
+        <div class="image-pair">
+            <figure class="level-image">
+                <img src="/hp/object-detect-level-5/output3.jpg" alt="YOLO-World, zero detections on a synthetic 3D rendered warehouse image" loading="lazy">
+                <figcaption>Level 5 (YOLO-World): zero detections on this synthetic 3D render.</figcaption>
+            </figure>
+            <figure class="level-image">
+                <img src="output3.jpg" alt="Grounding DINO correctly finding cardboard boxes, a wooden crate, a hand pallet truck, and an electrical cabinet on the same synthetic image" loading="lazy">
+                <figcaption>Level 6 (Grounding DINO): cardboard box, wooden crate, hand pallet truck, and electrical cabinet all correctly found &mdash; the exact same image.</figcaption>
+            </figure>
+        </div>
+
+        <div class="balance-note">The model that identifies objects best also demands the most compute &mdash; several seconds to a minute per image here, versus sub-second for Level 5. That tradeoff is a direct, honest segue into local AI hardware positioning (Levels 9 and 10).</div>
 
         <footer>
             Working draft, not for external distribution yet.
