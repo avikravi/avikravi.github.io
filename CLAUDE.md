@@ -381,17 +381,30 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          absolute path — now each level's images are self-contained in its own
                          folder, which is more robust if either page's assets ever change.
                          L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
-                         Done, text/code only. Real result (46 unique vehicles across a ~800-frame
-                         clip) and a debugging note about an early motorcycle-filtering oversight
-                         (COCO class ID 3 missing from the filter dict, not a detection failure).
-                         A `.confirm-box` explains the actual recordings (7.7MB-626MB per clip) are
-                         too large to publish on static GitHub Pages — Avi is uploading them to
-                         YouTube and will send the links to embed. A `.video-embed` CSS component
-                         (dark `#0a0a0f` 16:9 iframe container, same visual language as
-                         `.slides-embed`/`.app-embed`) is already defined in every level page's
-                         `<style>`, unused until those links arrive — reuse it rather than
-                         inventing a new container when Avi sends them, same pattern as
-                         hp/youtube's video embeds elsewhere on this site.
+                         Done. Real result (46 unique vehicles across a ~800-frame clip) and a
+                         debugging note about an early motorcycle-filtering oversight (COCO class
+                         ID 3 missing from the filter dict, not a detection failure). As of
+                         2026-09-21, a "Demo Clips" section embeds all 5 of Avi's real tracked
+                         YouTube videos in order (titled "Level7 - Output1" through "Output5" on
+                         YouTube itself, confirming the numbering) — 3 standard landscape uploads
+                         (Clips 1, 4, 5: `UWup7HqeD7o`, `aryhtIwIh0s`, `cdDmq56dR7g`) and 2 YouTube
+                         Shorts (Clips 2, 3: `9s6Aw3lQFgc`, `X-R83Jnfg38`). Each is its own
+                         `.video-embed` (`<p class="video-caption">Clip N</p>` + iframe,
+                         `src="https://www.youtube.com/embed/{ID}"`) stacked in sequence rather
+                         than a grid, since order was the point ("in order" per Avi) and mixing
+                         16:9/9:16 aspect ratios in a wrapping grid reads worse than a clean
+                         vertical list. Shorts use the `.video-embed.vertical` modifier
+                         (`aspect-ratio: 9/16; max-width: 320px`) so they don't get badly
+                         letterboxed at the default 16:9 container size — landscape clips use the
+                         plain `.video-embed`. Every iframe fires the same `embed_viewed` GA4 event
+                         on lazy `onload` that `hp/ai-research`/`hp/p66-example` already use
+                         (`embed_name` values `level7_clip_1` through `_5`) — see Analytics below;
+                         if more clips are ever added, follow this same pattern rather than
+                         inventing a new one. This replaced the earlier `.confirm-box` that
+                         explained the raw recordings (7.7MB-626MB per clip) were too large for a
+                         static GitHub Pages repo — that reasoning is still accurate (it's why
+                         YouTube hosts them instead of this repo), just no longer shown on the page
+                         now that the real embeds exist.
                          L8 Video speed estimation + CSV export — Done. Real per-vehicle data
                          tables (`.data-table`) pulled directly from `objectdetect/level8/
                          speed_data1.csv` and `speed_data4.csv` (both copied into
@@ -641,11 +654,12 @@ This uses GA4/gtag.js's own documented opt-out mechanism (`window['ga-disable-<M
 
 ### Custom events for cross-origin embeds
 
-Added 2026-09-14. GA4's automatic page-view/engagement tracking can't see *inside* a cross-origin `<iframe>` (no DOM access), which is a blind spot for the three `/hp` pages that embed interactive content rather than just linking out. Manual `gtag('event', ...)` calls fill that gap:
+Added 2026-09-14. GA4's automatic page-view/engagement tracking can't see *inside* a cross-origin `<iframe>` (no DOM access), which is a blind spot for the `/hp` pages that embed interactive content rather than just linking out. Manual `gtag('event', ...)` calls fill that gap:
 
 - `hp/youtube/index.html`'s `playVideo(card)` function fires a `video_select` event (`video_title`, `video_type`, `video_id`) on every real click — it's only ever invoked from a click handler (never called on initial page load), so every event genuinely represents a visitor choosing a video, not the default-active P66 card firing on load.
 - `hp/ai-research/index.html`'s and `hp/p66-example/index.html`'s embedded `<iframe>` (both `loading="lazy"`) fire an `embed_viewed` event (`embed_name`) on `onload` — since they're lazy-loaded, this only fires once the visitor actually scrolls the embed into view, not on page load, so it's a real signal they saw the interactive content and not just landed on the page.
 - The "open in its own tab" fallback links on both those pages fire `embed_open_new_tab` (`embed_name`) on click; `p66-example`'s GitHub source link fires `p66_github_click`.
+- `hp/object-detect-level-7/index.html`'s five YouTube `<iframe>`s (added 2026-09-21, also `loading="lazy"`) each fire their own `embed_viewed` event with a distinct `embed_name` (`level7_clip_1` through `level7_clip_5`) on `onload`, same reasoning as the ai-research/p66-example embeds. No "open in new tab" link for these — YouTube's own player chrome already offers that.
 
 All of these guard with `typeof gtag === 'function'` before calling it, matching the defensive style of the self-exclusion snippet above. If a future `/hp` page embeds another cross-origin iframe or interactive widget, follow this same pattern (an `embed_viewed` on lazy `onload`, plus click events on any explicit follow-through links) rather than leaving it untracked.
 
