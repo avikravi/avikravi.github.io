@@ -479,14 +479,20 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          itself, confirming the numbering) — 3 standard landscape uploads (Clips 1,
                          4, 5: `UWup7HqeD7o`, `aryhtIwIh0s`, `cdDmq56dR7g`) and 2 YouTube Shorts
                          (Clips 2, 3: `9s6Aw3lQFgc`, `X-R83Jnfg38`). Laid out as a `.video-grid`
-                         (CSS grid, `repeat(auto-fill, minmax(190px, 1fr))`, `align-items: start` so
-                         mixed 16:9/9:16 tiles keep their own natural height instead of stretching
-                         to match row neighbors — 3 columns at desktop width, collapsing to 1 on
-                         mobile) rather than the original stacked-with-captions layout, which Avi
-                         found too loose; each tile is a small numbered `.video-num` badge
-                         overlaid top-left on the `.video-embed` instead of a separate caption line,
-                         landscape tiles plain `.video-embed`, Shorts get the `.video-embed.vertical`
-                         modifier (`aspect-ratio: 9/16`). **Clip 3 is a deliberate anomaly test, not
+                         (CSS grid, `align-items: start` so mixed 16:9/9:16 tiles keep their own
+                         natural height instead of stretching to match row neighbors) rather than
+                         the original stacked-with-captions layout, which Avi found too loose; each
+                         tile is a small numbered `.video-num` badge overlaid top-left on the
+                         `.video-embed` instead of a separate caption line, landscape tiles plain
+                         `.video-embed`, Shorts get the `.video-embed.vertical` modifier
+                         (`aspect-ratio: 9/16`). **Sized large (2026-09-22, per Avi: "way bigger" /
+                         "don't worry too much about the layout being perfect"):** `.video-grid` is
+                         `repeat(2, 1fr)` at up to `max-width: 1100px` (not the usual 720px text
+                         column — video needs the extra width, prose doesn't), collapsing to a
+                         single full-width column below `760px` viewport width. This intentionally
+                         trades the earlier tighter 3-column layout for real watchability; don't
+                         re-tighten it back down without being asked again. **Clip 3 is a
+                         deliberate anomaly test, not
                          a mistake** — Avi threw a random video of oranges dropping at the tracker
                          to see whether it would find anything in a scene it wasn't built for; it
                          found nothing, which is the correct, honest result (and notably "orange" is
@@ -515,20 +521,28 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          "Demo Clips" section (same pattern as Level 7) embeds all 4 of Avi's real
                          YouTube clips, in his given order (`P1r6nl-ANTk`, `NNSnomdiG68`,
                          `P7z4Tpds3x8`, `MFsgUAnEmFs`) — the old `.confirm-box` was removed. Laid
-                         out as a 2x2 `.video-grid.pair` (`grid-template-columns: repeat(auto-fit,
-                         minmax(280px, 1fr))`, a new modifier alongside the base `.video-grid` used
-                         for Level 7's 3-column layout — Level 8's 4 clips are all standard
-                         landscape uploads, no Shorts, so 2 columns reads cleaner/tighter than 3+1).
-                         **All 4 embeds currently show "This video is private"** — checked directly
-                         in the browser pane (which has real network access, unlike this
-                         environment's `curl`, which gets blanket-blocked by YouTube's oEmbed
-                         endpoint regardless of a video's actual status — don't trust `curl`/oEmbed
-                         checks against youtube.com from here, verify in the browser pane instead).
-                         This is a YouTube-side visibility setting, not a bug in the embed code —
-                         the code itself is correct and will start working the moment Avi sets
-                         these 4 videos to "Unlisted" or "Public" in YouTube Studio, no further
-                         edits needed here. Flag this to Avi when doing related work until he
-                         confirms it's fixed.
+                         out as a 2x2 `.video-grid` — same shared class as Level 7, not a separate
+                         modifier (a `.video-grid.pair` variant existed briefly on 2026-09-22 but
+                         was removed the same day: its two-class selector had higher specificity
+                         than the plain `.video-grid` mobile media query, so `.pair`'s desktop
+                         `repeat(2, 1fr)` silently won even under the `max-width: 760px` breakpoint
+                         and mobile stayed stuck at 2 cramped columns — caught by literally checking
+                         mobile in the browser pane, not just eyeballing desktop. Now both Level 7
+                         and Level 8 just use bare `.video-grid`, which is `repeat(2, 1fr)` at up to
+                         `1100px` and collapses to one column below 760px, no specificity conflict
+                         possible. If a future level needs a different column count, add the
+                         variant rule *inside* the same media query it needs to win against, not as
+                         a same-specificity-or-lower rule outside it).
+                         All 4 initially showed "This video is private" right after embedding —
+                         confirmed a YouTube-side visibility setting, not an embed-code bug, by
+                         checking directly in the browser pane (which has real network access,
+                         unlike this environment's `curl`, which gets blanket-blocked by YouTube's
+                         oEmbed endpoint regardless of a video's actual status — don't trust
+                         `curl`/oEmbed checks against youtube.com from here, verify in the browser
+                         pane instead). Avi set all 4 to Public in YouTube Studio the same day and
+                         confirmed via the live production site (not just localhost) that all four
+                         now play correctly, titled "Level8 - Output1" through "Output4" matching
+                         tile order 1-4.
                          L9 Writeup: scaling to the HP ZGX Nano AI Station — Done, no code. A
                          `.spec-table` (Spec/Value rows) of real GB10 specs from hp.com, then a
                          5-point core argument grounded in Level 6-8's actual CPU bottlenecks
@@ -554,8 +568,8 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          figures — almost always a "Before" (original, unannotated) paired with an
                          "After" (detection result), each with a genuine, specific figcaption, never
                          a generic "detection result" caption — a `.video-embed` component (same
-                         dark iframe pattern; Level 7 uses it live in a `.video-grid`, Level 8 still
-                         has it unused, waiting on Avi's YouTube links), a `.result-list`
+                         dark iframe pattern; Levels 7 and 8 both use it live in a shared
+                         `.video-grid`, sized large per Avi's request — see above), a `.result-list`
                          (dot-bullet, same pattern as hp/30-60-90's `.plan-list`) for iteration
                          histories and built-feature lists, `.balance-note` for the "honest
                          limitation" callouts every level in this project deliberately includes,
