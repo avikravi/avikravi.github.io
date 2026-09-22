@@ -1,464 +1,789 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <!-- Google Analytics self-exclusion (must run before the tag below) -->
-  <script>
-    (function () {
-      try {
-        var params = new URLSearchParams(window.location.search);
-        if (params.get('ga_optout') === '1') {
-          localStorage.setItem('ga_opt_out', 'true');
-        } else if (params.get('ga_optout') === '0') {
-          localStorage.removeItem('ga_opt_out');
-        }
-        if (localStorage.getItem('ga_opt_out') === 'true') {
-          window['ga-disable-G-JVHGKBB8PD'] = true;
-        }
-      } catch (e) {}
-    })();
-  </script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-JVHGKBB8PD', { 'content_group': 'HP Portfolio' });
-  </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <!-- Google Analytics self-exclusion (must run before the tag below) -->
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get("ga_optout") === "1") {
+            localStorage.setItem("ga_opt_out", "true");
+          } else if (params.get("ga_optout") === "0") {
+            localStorage.removeItem("ga_opt_out");
+          }
+          if (localStorage.getItem("ga_opt_out") === "true") {
+            window["ga-disable-G-JVHGKBB8PD"] = true;
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-JVHGKBB8PD", { content_group: "HP Portfolio" });
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Object Detection — Summary | Avi Ravishankar</title>
-    <meta name="description" content="Slide-deck summary of Avi's object detection project.">
-    <meta name="robots" content="noindex, nofollow">
+    <meta
+      name="description"
+      content="Slide-deck summary of Avi's object detection project."
+    />
+    <meta name="robots" content="noindex, nofollow" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        :root {
-            --bg: #ffffff;
-            --ink: #191919;
-            --ink-soft: #3d3d3d;
-            --ink-faint: #767676;
-            --line: #e5e5e5;
-            --blue: #1967b1;
-            --hp-blue: #0096D6;
-        }
+      :root {
+        --bg: #ffffff;
+        --ink: #191919;
+        --ink-soft: #3d3d3d;
+        --ink-faint: #767676;
+        --line: #e5e5e5;
+        --blue: #1967b1;
+        --hp-blue: #0096d6;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--ink-soft);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink-soft);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
 
-        a { color: var(--blue); }
+      a {
+        color: var(--blue);
+      }
 
-        .wrap {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
 
-        header.page-header {
-            padding: 44px 0 0;
-        }
+      header.page-header {
+        padding: 44px 0 0;
+      }
 
-        .eyebrow {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin-bottom: 10px;
-        }
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 10px;
+      }
 
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #000;
+        margin-bottom: 12px;
+        line-height: 1.15;
+      }
+
+      .dek {
+        font-size: 15.5px;
+        color: var(--ink-faint);
+        max-width: 620px;
+      }
+
+      .slides-embed {
+        margin-top: 32px;
+        height: 720px;
+        background: #0a0a0f;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .slides-embed iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .panel-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: #000;
+        margin: 40px 0 8px;
+      }
+
+      .panel-desc {
+        font-size: 14px;
+        color: var(--ink-faint);
+        max-width: 720px;
+        margin-bottom: 18px;
+        line-height: 1.6;
+      }
+
+      .level-status {
+        display: inline-block;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+      }
+      .level-status.done {
+        color: #1e7145;
+      }
+      .level-status.priority {
+        color: var(--blue);
+      }
+      .level-status.optional {
+        color: var(--ink-faint);
+      }
+      .level-status.goal {
+        color: #a8461f;
+      }
+      .level-status.pending {
+        color: var(--ink-faint);
+      }
+
+      .panel-body {
+        max-width: 720px;
+      }
+      .panel-body p {
+        font-size: 14.5px;
+        color: var(--ink-soft);
+        margin-bottom: 12px;
+        line-height: 1.65;
+      }
+      .panel-body p:last-child {
+        margin-bottom: 0;
+      }
+      .panel-body strong {
+        color: #000;
+      }
+
+      .result-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        max-width: 720px;
+        margin: 4px 0 16px;
+      }
+      .result-list li {
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        line-height: 1.55;
+        padding-left: 16px;
+        position: relative;
+      }
+      .result-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--ink-faint);
+      }
+      .result-list strong {
+        color: #000;
+      }
+      .result-list code {
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
+        font-size: 12px;
+        background: #f2f2f2;
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+
+      .level-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 4px;
+      }
+      .level-table th {
+        text-align: left;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        padding: 0 10px 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .level-table td {
+        padding: 12px 10px 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        vertical-align: top;
+      }
+      .level-table th:first-child,
+      .level-table td:first-child {
+        width: 50px;
+      }
+      .level-table th:last-child,
+      .level-table td:last-child {
+        width: 180px;
+      }
+      .level-table td a {
+        color: var(--blue);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .level-table td a:hover {
+        text-decoration: underline;
+      }
+
+      .roadmap-note {
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        line-height: 1.6;
+        padding: 12px 14px;
+        border-left: 2px solid var(--line);
+      }
+
+      .panel-empty {
+        margin-top: 32px;
+        padding: 56px 24px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .empty-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        border: 1px dashed var(--line);
+        border-radius: 3px;
+        padding: 6px 12px;
+        margin-bottom: 14px;
+      }
+
+      .panel-empty p {
+        font-size: 14.5px;
+        color: var(--ink-faint);
+        max-width: 440px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      footer {
+        padding: 28px 0 48px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--ink-faint);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 600px) {
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #000;
-            margin-bottom: 12px;
-            line-height: 1.15;
+          font-size: 25px;
         }
-
-        .dek {
-            font-size: 15.5px;
-            color: var(--ink-faint);
-            max-width: 620px;
+        header.page-header {
+          padding: 32px 0 0;
         }
-
         .slides-embed {
-            margin-top: 32px;
-            height: 720px;
-            background: #0a0a0f;
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            overflow: hidden;
+          height: 560px;
         }
+      }
 
-        .slides-embed iframe {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
+      /* HP section nav (shared across /hp pages) */
+      .hp-shell {
+        display: flex;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
 
-        .panel-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: #000;
-            margin: 40px 0 8px;
-        }
+      .hp-sidenav {
+        width: 220px;
+        flex-shrink: 0;
+        background: #14161b;
+        color: #fff;
+        padding: 18px 14px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 110;
+      }
 
-        .panel-desc {
-            font-size: 14px;
-            color: var(--ink-faint);
-            max-width: 720px;
-            margin-bottom: 18px;
-            line-height: 1.6;
-        }
+      .hp-sidenav-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
 
-        .level-status {
-            display: inline-block;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid currentColor;
-        }
-        .level-status.done { color: #1e7145; }
-        .level-status.priority { color: var(--blue); }
-        .level-status.optional { color: var(--ink-faint); }
-        .level-status.goal { color: #a8461f; }
-        .level-status.pending { color: var(--ink-faint); }
+      .hp-brand {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: #fff;
+        text-decoration: none;
+      }
+      .hp-brand span {
+        color: var(--hp-blue, #0096d6);
+      }
 
-        .panel-body { max-width: 720px; }
-        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
-        .panel-body p:last-child { margin-bottom: 0; }
-        .panel-body strong { color: #000; }
+      .hp-nav-close {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 4px;
+      }
 
-        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
-        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
-        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
-        .result-list strong { color: #000; }
-        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+      .hp-sidenav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
 
-        .level-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-        .level-table th {
-            text-align: left;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            padding: 0 10px 10px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .level-table td {
-            padding: 12px 10px 12px 0;
-            border-bottom: 1px solid var(--line);
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            vertical-align: top;
-        }
-        .level-table th:first-child, .level-table td:first-child { width: 50px; }
-        .level-table th:last-child, .level-table td:last-child { width: 180px; }
-        .level-table td a { color: var(--blue); font-weight: 700; text-decoration: none; }
-        .level-table td a:hover { text-decoration: underline; }
+      .hp-nav-link {
+        display: block;
+        padding: 5px 8px;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.35;
+        color: #b7bcc4;
+        text-decoration: none;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
+      }
+      .hp-nav-link:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .hp-nav-link.active {
+        background: var(--hp-blue, #0096d6);
+        color: #fff;
+      }
 
-        .roadmap-note {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--ink-faint);
-            line-height: 1.6;
-            padding: 12px 14px;
-            border-left: 2px solid var(--line);
-        }
+      .hp-nav-section {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
 
-        .panel-empty {
-            margin-top: 32px;
-            padding: 56px 24px;
-            border: 1px dashed var(--line);
-            border-radius: 10px;
-            text-align: center;
-        }
+      .hp-nav-section-label {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: #7a8290;
+        padding: 0 8px;
+        margin-bottom: 4px;
+      }
 
-        .empty-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            border: 1px dashed var(--line);
-            border-radius: 3px;
-            padding: 6px 12px;
-            margin-bottom: 14px;
-        }
+      .hp-level-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        margin-top: 3px;
+      }
 
-        .panel-empty p {
-            font-size: 14.5px;
-            color: var(--ink-faint);
-            max-width: 440px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
+      .hp-level-link {
+        display: block;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 5px;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #b7bcc4;
+        text-decoration: none;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
+      }
+      .hp-level-link:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .hp-level-link.active {
+        background: var(--hp-blue, #0096d6);
+        color: #fff;
+      }
 
-        footer {
-            padding: 28px 0 48px;
-            border-top: 1px solid var(--line);
-            font-size: 13px;
-            color: var(--ink-faint);
-            margin-top: 40px;
-        }
+      .hp-nav-scrim {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 105;
+      }
+      .hp-nav-scrim.open {
+        display: block;
+      }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 25px; }
-            header.page-header { padding: 32px 0 0; }
-            .slides-embed { height: 560px; }
-        }
+      .hp-nav-open {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        background: #fff;
+        border: none;
+        border-bottom: 1px solid var(--line, #e5e5e5);
+        padding: 14px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--hp-blue, #0096d6);
+        cursor: pointer;
+        position: sticky;
+        top: 0;
+        z-index: 90;
+      }
 
-        /* HP section nav (shared across /hp pages) */
-        .hp-shell { display: flex; align-items: flex-start; min-height: 100vh; }
+      .hp-main {
+        flex: 1;
+        min-width: 0;
+        margin-left: 220px;
+      }
 
+      @media (max-width: 880px) {
         .hp-sidenav {
-            width: 220px;
-            flex-shrink: 0;
-            background: #14161b;
-            color: #fff;
-            padding: 18px 14px;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            overflow-y: auto;
-            z-index: 110;
+          transform: translateX(-100%);
+          width: 76%;
+          max-width: 300px;
+          box-shadow: 4px 0 28px rgba(0, 0, 0, 0.25);
+          transition: transform 0.22s ease;
         }
-
-        .hp-sidenav-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-
-        .hp-brand {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.02em;
-            color: #fff;
-            text-decoration: none;
+        .hp-sidenav.open {
+          transform: translateX(0);
         }
-        .hp-brand span { color: var(--hp-blue, #0096D6); }
-
         .hp-nav-close {
-            display: none;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 20px;
-            line-height: 1;
-            cursor: pointer;
-            padding: 0 4px;
+          display: block;
         }
-
-        .hp-sidenav-links { display: flex; flex-direction: column; gap: 1px; }
-
-        .hp-nav-link {
-            display: block;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.35;
-            color: #b7bcc4;
-            text-decoration: none;
-            transition: background-color 0.15s, color 0.15s;
+        .hp-main {
+          margin-left: 0;
         }
-        .hp-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-        .hp-nav-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
-
-        .hp-nav-section {
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .hp-nav-section-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            color: #7a8290;
-            padding: 0 8px;
-            margin-bottom: 4px;
-        }
-
-        .hp-level-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 3px;
-            margin-top: 3px;
-        }
-
-        .hp-level-link {
-            display: block;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 700;
-            line-height: 1.3;
-            color: #b7bcc4;
-            text-decoration: none;
-            transition: background-color 0.15s, color 0.15s;
-        }
-        .hp-level-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-        .hp-level-link.active { background: var(--hp-blue, #0096D6); color: #fff; }
-
-        .hp-nav-scrim { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 105; }
-        .hp-nav-scrim.open { display: block; }
-
         .hp-nav-open {
-            display: none;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            background: #fff;
-            border: none;
-            border-bottom: 1px solid var(--line, #e5e5e5);
-            padding: 14px 20px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--hp-blue, #0096D6);
-            cursor: pointer;
-            position: sticky;
-            top: 0;
-            z-index: 90;
+          display: flex;
         }
-
-        .hp-main { flex: 1; min-width: 0; margin-left: 220px; }
-
-        @media (max-width: 880px) {
-            .hp-sidenav { transform: translateX(-100%); width: 76%; max-width: 300px; box-shadow: 4px 0 28px rgba(0,0,0,0.25); transition: transform 0.22s ease; }
-            .hp-sidenav.open { transform: translateX(0); }
-            .hp-nav-close { display: block; }
-            .hp-main { margin-left: 0; }
-            .hp-nav-open { display: flex; }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="hp-shell">
-        <aside class="hp-sidenav" id="hpSidenav">
-            <div class="hp-sidenav-head">
-                <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
-                <button type="button" class="hp-nav-close" id="hpNavClose" aria-label="Close menu">&times;</button>
-            </div>
-            <nav class="hp-sidenav-links">
-                <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
-                <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
-                <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
-                <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
-                <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
-                <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
-            </nav>
-            <div class="hp-nav-section">
-                <div class="hp-nav-section-label">Post Interview</div>
-                <nav class="hp-sidenav-links">
-                    <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
-                </nav>
-            </div>
-            <div class="hp-nav-section">
-                <div class="hp-nav-section-label">Object Detect</div>
-                <nav class="hp-sidenav-links">
-                    <a href="/hp/object-detect-summary" class="hp-nav-link active">Summary</a>
-                </nav>
-                <nav class="hp-level-grid">
-                        <a href="/hp/object-detect-level-1" class="hp-level-link" title="Level 1">1</a>
-                        <a href="/hp/object-detect-level-2" class="hp-level-link" title="Level 2">2</a>
-                        <a href="/hp/object-detect-level-3" class="hp-level-link" title="Level 3">3</a>
-                        <a href="/hp/object-detect-level-4" class="hp-level-link" title="Level 4">4</a>
-                        <a href="/hp/object-detect-level-5" class="hp-level-link" title="Level 5">5</a>
-                        <a href="/hp/object-detect-level-6" class="hp-level-link" title="Level 6">6</a>
-                        <a href="/hp/object-detect-level-7" class="hp-level-link" title="Level 7">7</a>
-                        <a href="/hp/object-detect-level-8" class="hp-level-link" title="Level 8">8</a>
-                        <a href="/hp/object-detect-level-9" class="hp-level-link" title="Level 9">9</a>
-                        <a href="/hp/object-detect-level-10" class="hp-level-link" title="Level 10">10</a>
-                </nav>
-            </div>
-        </aside>
-        <div class="hp-nav-scrim" id="hpNavScrim"></div>
+      <aside class="hp-sidenav" id="hpSidenav">
+        <div class="hp-sidenav-head">
+          <a href="/hp" class="hp-brand">HP <span>&middot;</span> Avi</a>
+          <button
+            type="button"
+            class="hp-nav-close"
+            id="hpNavClose"
+            aria-label="Close menu"
+          >
+            &times;
+          </button>
+        </div>
+        <nav class="hp-sidenav-links">
+          <a href="/hp" class="hp-nav-link">Home - Job Fit</a>
+          <a href="/hp/case-study" class="hp-nav-link">ZGX Nano Case Study</a>
+          <a href="/hp/use-cases" class="hp-nav-link">Use Cases</a>
+          <a href="/hp/youtube" class="hp-nav-link">Youtube</a>
+          <a href="/hp/ai-research" class="hp-nav-link">AI Research</a>
+          <a href="/hp/p66-example" class="hp-nav-link">P66 Example</a>
+        </nav>
+        <div class="hp-nav-section">
+          <div class="hp-nav-section-label">Post Interview</div>
+          <nav class="hp-sidenav-links">
+            <a href="/hp/30-60-90" class="hp-nav-link">30/60/90 Plan</a>
+          </nav>
+        </div>
+        <div class="hp-nav-section">
+          <div class="hp-nav-section-label">Object Detect</div>
+          <nav class="hp-sidenav-links">
+            <a href="/hp/object-detect-summary" class="hp-nav-link active"
+              >Summary</a
+            >
+          </nav>
+          <nav class="hp-level-grid">
+            <a
+              href="/hp/object-detect-level-1"
+              class="hp-level-link"
+              title="Level 1"
+              >1</a
+            >
+            <a
+              href="/hp/object-detect-level-2"
+              class="hp-level-link"
+              title="Level 2"
+              >2</a
+            >
+            <a
+              href="/hp/object-detect-level-3"
+              class="hp-level-link"
+              title="Level 3"
+              >3</a
+            >
+            <a
+              href="/hp/object-detect-level-4"
+              class="hp-level-link"
+              title="Level 4"
+              >4</a
+            >
+            <a
+              href="/hp/object-detect-level-5"
+              class="hp-level-link"
+              title="Level 5"
+              >5</a
+            >
+            <a
+              href="/hp/object-detect-level-6"
+              class="hp-level-link"
+              title="Level 6"
+              >6</a
+            >
+            <a
+              href="/hp/object-detect-level-7"
+              class="hp-level-link"
+              title="Level 7"
+              >7</a
+            >
+            <a
+              href="/hp/object-detect-level-8"
+              class="hp-level-link"
+              title="Level 8"
+              >8</a
+            >
+            <a
+              href="/hp/object-detect-level-9"
+              class="hp-level-link"
+              title="Level 9"
+              >9</a
+            >
+            <a
+              href="/hp/object-detect-level-10"
+              class="hp-level-link"
+              title="Level 10"
+              >10</a
+            >
+          </nav>
+        </div>
+      </aside>
+      <div class="hp-nav-scrim" id="hpNavScrim"></div>
 
-        <div class="hp-main">
-            <button type="button" class="hp-nav-open" id="hpNavOpen" aria-label="Open menu" aria-expanded="false">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
-                Menu
-            </button>
-    <div class="wrap">
-        <header class="page-header">
+      <div class="hp-main">
+        <button
+          type="button"
+          class="hp-nav-open"
+          id="hpNavOpen"
+          aria-label="Open menu"
+          aria-expanded="false"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          >
+            <line x1="1" y1="4" x2="15" y2="4" />
+            <line x1="1" y1="8" x2="15" y2="8" />
+            <line x1="1" y1="12" x2="15" y2="12" />
+          </svg>
+          Menu
+        </button>
+        <div class="wrap">
+          <header class="page-header">
             <div class="eyebrow">Object Detect</div>
             <h1>Summary</h1>
-            <p class="dek">Take-home deliverable for a Principal Product Marketing Manager, AI Solutions interview (round 4): a local object detection/counting application for a manufacturing or robotics use case, plus a short presentation on performance and customer positioning.</p>
-        </header>
+            <p class="dek">
+              Take-home deliverable for a Principal Product Marketing Manager,
+              AI Solutions interview (round 4): a local object
+              detection/counting application for a manufacturing or robotics use
+              case, plus a short presentation on performance and customer
+              positioning.
+            </p>
+          </header>
 
-        <div class="panel-body">
-            <p>Rather than one app, this is a progressive series of ten "levels" demonstrating increasing technical sophistication — classical computer vision &rarr; learned classifiers &rarr; deep learning &rarr; open-vocabulary detection &rarr; video tracking &rarr; hardware-scaling analysis.</p>
-        </div>
+          <div class="panel-body">
+            <p>
+              Rather than one app, this is a progressive series of ten "levels"
+              demonstrating increasing technical sophistication (classical
+              computer vision &rarr; learned classifiers &rarr; deep learning
+              &rarr; open-vocabulary detection &rarr; video tracking &rarr;
+              hardware-scaling analysis).
+            </p>
+          </div>
 
-        <div class="panel-title">Environment</div>
-        <div class="panel-desc">Runs locally, not in the cloud.</div>
-        <ul class="result-list">
-            <li>macOS, Intel-based MacBook Air &mdash; not Apple Silicon, which mattered a lot for package compatibility.</li>
-            <li>Python 3.11 in a project-local venv, downgraded from 3.13 because <strong>PyTorch dropped Intel Mac support starting at version 2.3</strong> &mdash; <code>torch==2.2.2</code> was the last compatible version, which constrained every downstream package choice: numpy pinned <code>&lt;2</code> to match torch 2.2.2's expected ABI, opencv-python pinned <code>&lt;5</code> (v5 moved Haar cascades to a contrib-only module), transformers pinned to <code>4.46.3</code> (newer versions require <code>torch&gt;=2.5</code>).</li>
-        </ul>
+          <div class="panel-title">Environment</div>
+          <div class="panel-desc">Runs locally, not in the cloud.</div>
+          <ul class="result-list">
+            <li>
+              macOS, Intel-based MacBook Air &mdash; not Apple Silicon, which
+              mattered a lot for package compatibility.
+            </li>
+            <li>
+              Python 3.11 in a project-local venv, downgraded from 3.13 because
+              <strong
+                >PyTorch dropped Intel Mac support starting at version
+                2.3</strong
+              >
+              &mdash; <code>torch==2.2.2</code> was the last compatible version,
+              which constrained every downstream package choice: numpy pinned
+              <code>&lt;2</code> to match torch 2.2.2's expected ABI,
+              opencv-python pinned <code>&lt;5</code> (v5 moved Haar cascades to
+              a contrib-only module), transformers pinned to
+              <code>4.46.3</code> (newer versions require
+              <code>torch&gt;=2.5</code>).
+            </li>
+          </ul>
 
-        <div class="panel-title">Level Roadmap</div>
-        <div class="panel-desc">Ten graduated levels, from classical computer vision to a forward-looking hardware-scaling analysis.</div>
-        <table class="level-table">
+          <div class="panel-title">Level Roadmap</div>
+          <div class="panel-desc">
+            Ten graduated levels, from classical computer vision to a
+            forward-looking hardware-scaling analysis.
+          </div>
+          <table class="level-table">
             <thead>
-                <tr><th>Level</th><th>Approach</th><th>Status</th></tr>
+              <tr>
+                <th>Level</th>
+                <th>Approach</th>
+                <th>Status</th>
+              </tr>
             </thead>
             <tbody>
-                <tr><td><a href="/hp/object-detect-level-1">1</a></td><td>Haar Cascade — classical, fixed rules (faces)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-2">2</a></td><td>HOG + SVM — learned classifier, hand-crafted features (pedestrians)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-3">3</a></td><td>YOLOv8 — deep learning, general-purpose (COCO, 80 classes)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-4">4</a></td><td>YOLOv8 on a real manufacturing scene — the vocabulary-gap pivot</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-5">5</a></td><td>YOLO-World — open-vocabulary detection, any object by text prompt</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-6">6</a></td><td>Grounding DINO — stronger open-vocabulary detection</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-7">7</a></td><td>Video object tracking + unique counting (ByteTrack)</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-8">8</a></td><td>Video speed estimation + CSV data export</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-9">9</a></td><td>Writeup: scaling to the HP ZGX Nano AI Station</td><td><span class="level-status done">Done</span></td></tr>
-                <tr><td><a href="/hp/object-detect-level-10">10</a></td><td>Writeup: scaling to the HP ZGX Fury AI Station</td><td><span class="level-status done">Done</span></td></tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-1">1</a></td>
+                <td>Haar Cascade — classical, fixed rules (faces)</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-2">2</a></td>
+                <td>
+                  HOG + SVM — learned classifier, hand-crafted features
+                  (pedestrians)
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-3">3</a></td>
+                <td>
+                  YOLOv8 — deep learning, general-purpose (COCO, 80 classes)
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-4">4</a></td>
+                <td>
+                  YOLOv8 on a real manufacturing scene — the vocabulary-gap
+                  pivot
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-5">5</a></td>
+                <td>
+                  YOLO-World — open-vocabulary detection, any object by text
+                  prompt
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-6">6</a></td>
+                <td>Grounding DINO — stronger open-vocabulary detection</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-7">7</a></td>
+                <td>Video object tracking + unique counting (ByteTrack)</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-8">8</a></td>
+                <td>Video speed estimation + CSV data export</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-9">9</a></td>
+                <td>Writeup: scaling to the HP ZGX Nano AI Station</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/hp/object-detect-level-10">10</a></td>
+                <td>Writeup: scaling to the HP ZGX Fury AI Station</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
             </tbody>
-        </table>
+          </table>
 
-        <div class="panel-title">Overall Narrative Arc</div>
-        <div class="panel-body">
-            <p><strong>Technical progression:</strong> fixed classical rules (L1) &rarr; learned classifier on fixed features (L2) &rarr; fully learned deep learning (L3) &rarr; open-vocabulary/zero-shot (L5, L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward look (L9, L10).</p>
-            <p><strong>Consistent theme:</strong> every level includes an honestly documented limitation or failure, not just wins — tilted faces missed in L1, a deliberately-kept zero-detection result in L2, a wrong-viewpoint failure in L3, COCO's missing industrial vocabulary in L4, imprecise language-matching in L5, heavy compute cost in L6, a motorcycle-filtering oversight in L7, explicitly-flagged approximate speed in L8. That's deliberate — it demonstrates real engineering judgment rather than a cherry-picked highlight reel.</p>
-        </div>
+          <div class="panel-title">Overall Narrative Arc</div>
+          <div class="panel-body">
+            <p>
+              <strong>Technical progression:</strong> fixed classical rules (L1)
+              &rarr; learned classifier on fixed features (L2) &rarr; fully
+              learned deep learning (L3) &rarr; open-vocabulary/zero-shot (L5,
+              L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward
+              look (L9, L10).
+            </p>
+            <p>
+              <strong>Consistent theme:</strong> every level includes an
+              honestly documented limitation or failure, not just wins — tilted
+              faces missed in L1, a deliberately-kept zero-detection result in
+              L2, a wrong-viewpoint failure in L3, COCO's missing industrial
+              vocabulary in L4, imprecise language-matching in L5, heavy compute
+              cost in L6, a motorcycle-filtering oversight in L7,
+              explicitly-flagged approximate speed in L8.
+            </p>
+          </div>
 
-        <div class="panel-title">Slide Deck</div>
-        <div class="panel-empty">
-            <div class="empty-tag">Slides Coming Soon</div>
-            <p>The presentation isn't embedded yet. Send over the deck (Google Slides link, PDF export, or exported images) and it goes here.</p>
+          <footer>Working draft, not for external distribution yet.</footer>
         </div>
-
-        <footer>
-            Working draft, not for external distribution yet.
-        </footer>
-    </div>
-        </div>
+      </div>
     </div>
 
     <script>
-        (function () {
-            var openBtn = document.getElementById('hpNavOpen');
-            var closeBtn = document.getElementById('hpNavClose');
-            var sidenav = document.getElementById('hpSidenav');
-            var scrim = document.getElementById('hpNavScrim');
-            function openNav() { sidenav.classList.add('open'); scrim.classList.add('open'); openBtn.setAttribute('aria-expanded', 'true'); }
-            function closeNav() { sidenav.classList.remove('open'); scrim.classList.remove('open'); openBtn.setAttribute('aria-expanded', 'false'); }
-            if (openBtn) openBtn.addEventListener('click', openNav);
-            if (closeBtn) closeBtn.addEventListener('click', closeNav);
-            if (scrim) scrim.addEventListener('click', closeNav);
-        })();
+      (function () {
+        var openBtn = document.getElementById("hpNavOpen");
+        var closeBtn = document.getElementById("hpNavClose");
+        var sidenav = document.getElementById("hpSidenav");
+        var scrim = document.getElementById("hpNavScrim");
+        function openNav() {
+          sidenav.classList.add("open");
+          scrim.classList.add("open");
+          openBtn.setAttribute("aria-expanded", "true");
+        }
+        function closeNav() {
+          sidenav.classList.remove("open");
+          scrim.classList.remove("open");
+          openBtn.setAttribute("aria-expanded", "false");
+        }
+        if (openBtn) openBtn.addEventListener("click", openNav);
+        if (closeBtn) closeBtn.addEventListener("click", closeNav);
+        if (scrim) scrim.addEventListener("click", closeNav);
+      })();
     </script>
-</body>
+  </body>
 </html>
