@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -507,6 +517,14 @@
                 <figcaption><strong>After</strong> &mdash; 9 vehicles correctly detected (7 cars, 1 bus &mdash; likely a truck misclassification since no bus was visible in frame, 1 truck), confidence scores ranging 0.32&ndash;0.75.</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>image 1/1 traffic.jpg: 352x640 7 cars, 1 bus, 1 truck, 219.0ms
+Speed: 8.4ms preprocess, 219.0ms inference, 21.6ms postprocess per image at shape (1, 3, 352, 640)
+Total vehicles detected: 9
+  car: 7
+  bus: 1
+  truck: 1
+Saved annotated image as output.jpg</code></pre></div>
 
         <div class="balance-note">Same pretrained model, same general scene type &mdash; cars on a road &mdash; wildly different results purely from camera viewpoint. Concrete proof that a pretrained model is only as good as how well the deployment scene matches its training data's visual distribution.</div>
 

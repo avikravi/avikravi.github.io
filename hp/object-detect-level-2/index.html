@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -504,6 +514,9 @@ boxes, weights = hog.detectMultiScale(img, winStride=(8,8), padding=(8,8), scale
                 <figcaption><strong>After</strong> &mdash; a studio group photo of upright, standing people, correctly boxed after NMS.</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>people1.jpg -> Detected 4 pedestrian(s) after NMS
+Saved annotated image as output1.jpg</code></pre></div>
 
         <div class="panel-title">Zero-detection case</div>
         <div class="image-pair">
@@ -516,6 +529,9 @@ boxes, weights = hog.detectMultiScale(img, winStride=(8,8), padding=(8,8), scale
                 <figcaption><strong>After</strong> &mdash; identical to the input: zero detections, so nothing got drawn. Kept deliberately as a limitation showcase (see note below).</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>people4.jpg -> Detected 0 pedestrian(s) after NMS
+Saved annotated image as output4.jpg</code></pre></div>
 
         <div class="balance-note">Worth being upfront: this second image is a tight, close-cropped group portrait &mdash; head, shoulders, arms wrapped around each other, no legs in frame. HOG+SVM's pedestrian detector is trained to match a full standing silhouette, and a crop with no legs or torso structure gives it nothing to match, which is exactly what happened here: zero detections. Small, occluded, or atypical-crop/pose subjects are where classical feature-based detectors break down &mdash; and it's a real, honest example of why the field moved to deep learning.</div>
 

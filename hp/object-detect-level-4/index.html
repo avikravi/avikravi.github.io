@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -497,6 +507,12 @@
                 <figcaption><strong>After</strong> &mdash; <code>person: 3</code> and nothing else. Zero forklifts, pallets, boxes, or electrical equipment detected, despite all being clearly visible.</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>image 1/1 warehouse.jpg: 640x640 3 persons, 250.2ms
+Speed: 10.8ms preprocess, 250.2ms inference, 1.7ms postprocess per image at shape (1, 3, 640, 640)
+Total objects detected: 3
+  person: 3
+Saved annotated image as output.jpg</code></pre></div>
 
         <div class="balance-note"><strong>The real finding, not just an accuracy gap:</strong> COCO's 80 classes have almost nothing industrial &mdash; no forklift, pallet, crate, PPE-specific class, or factory equipment exists in the vocabulary at all. A pretrained general-purpose model is fundamentally <em>blind</em> to industry-specific objects, not just "less accurate" on them &mdash; the concept doesn't exist in its vocabulary. It's what directly motivated Levels 5 and 6.</div>
         <div class="panel-body">

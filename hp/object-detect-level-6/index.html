@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -516,6 +526,13 @@ results = processor.post_process_grounded_object_detection(
                 <figcaption><strong>After</strong> &mdash; cardboard box, wooden crate, hand pallet truck, and electrical cabinet all correctly found.</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>warehouse3.jpg -> Total objects detected: 8
+  hand pallet truck: 1
+  cardboard box wooden crate: 2
+  electrical cabinet: 4
+  cardboard box: 1
+Saved annotated image as output3.jpg</code></pre></div>
         <div class="panel-body">
             <p>For reference: <a href="/hp/object-detect-level-5">Level 5</a>'s YOLO-World returned <strong>zero detections</strong> on this exact same image &mdash; same scene, two different open-vocabulary detectors, very different outcomes.</p>
         </div>

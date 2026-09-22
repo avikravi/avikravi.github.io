@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -505,15 +515,30 @@ results = model.predict(image_path, conf=0.08, iou=0.5)</code></pre></div>
                 <figcaption><strong>Before</strong> &mdash; the original, unannotated photo.</figcaption>
             </figure>
             <figure class="level-image">
-                <img src="output1.jpg" alt="YOLO-World correctly detecting helmet, person, safety vest, electrical cabinet, and pallet jack in the same warehouse photo" loading="lazy">
-                <figcaption><strong>After</strong> &mdash; helmet, person, safety vest, electrical cabinet, and pallet jack all correctly detected with distinct per-class colors and confidence scores.</figcaption>
+                <img src="output1.jpg" alt="YOLO-World correctly detecting person, helmet, electrical cabinet, and pallet jack in the same warehouse photo" loading="lazy">
+                <figcaption><strong>After</strong> &mdash; person, helmet, electrical cabinet, and pallet jack all correctly detected with distinct per-class colors and confidence scores.</figcaption>
             </figure>
         </div>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>image 1/1 warehouse1.jpg: 864x1280 2 helmets, 4 persons, 2 electrical cabinets, 1 pallet jack, 1251.3ms
+Speed: 20.3ms preprocess, 1251.3ms inference, 1.5ms postprocess per image at shape (1, 3, 864, 1280)
+warehouse1.jpg -> Total objects detected: 9
+  person: 4
+  helmet: 2
+  electrical cabinet: 2
+  pallet jack: 1
+Saved annotated image as output1.jpg</code></pre></div>
 
         <figure class="level-image">
             <img src="output3.jpg" alt="A synthetic, 3D rendered forklift warehouse image with zero detections drawn" loading="lazy">
             <figcaption>Not every scene worked: this synthetic, 3D-rendered forklift warehouse image returned zero detections (shown as originally captured &mdash; with nothing detected, there's no annotated version to compare against) &mdash; see <a href="/hp/object-detect-level-6">Level 6</a> for what changed on the exact same image.</figcaption>
         </figure>
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>image 1/1 warehouse3.jpg: 736x1280 (no detections), 1527.6ms
+Speed: 23.0ms preprocess, 1527.6ms inference, 1.5ms postprocess per image at shape (1, 3, 736, 1280)
+warehouse3.jpg -> Total objects detected: 0
+  No objects detected - try lowering conf further or rephrasing classes.
+Saved annotated image as output3.jpg</code></pre></div>
 
         <div class="balance-note">Open-vocabulary detection matches <strong>language patterns</strong>, not fixed definitions. Word choice directly and significantly changes what gets detected &mdash; a real UX/deployment consideration, not just a modeling detail.</div>
 

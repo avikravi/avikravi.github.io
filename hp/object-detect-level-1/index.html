@@ -173,6 +173,16 @@
             color: #c9d1d9;
             white-space: pre;
         }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
 
         .level-image { margin: 18px 0; max-width: 720px; }
         .level-image img {
@@ -500,6 +510,18 @@ faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, min
                 <figcaption><strong>After</strong> &mdash; missed several faces with head tilt or partial occlusion from overlapping people; one false positive on fabric folds coincidentally matching the pattern.</figcaption>
             </figure>
         </div>
+
+        <p class="output-label">Terminal output</p>
+        <div class="code-block terminal"><pre><code>Detected 8 face(s)
+  Box: x=196, y=57, width=75, height=75
+  Box: x=401, y=57, width=96, height=96
+  Box: x=323, y=130, width=74, height=74
+  Box: x=123, y=184, width=68, height=68
+  Box: x=224, y=211, width=91, height=91
+  Box: x=440, y=242, width=88, height=88
+  Box: x=348, y=264, width=82, height=82
+  Box: x=288, y=283, width=72, height=72
+Saved annotated image as output.jpg</code></pre></div>
 
         <div class="panel-title">Limitations</div>
         <div class="panel-desc">Stated honestly, not hidden.</div>

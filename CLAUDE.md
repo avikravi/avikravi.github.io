@@ -333,13 +333,44 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          visual verification (e.g. Level 2's `people1.jpg`/`people4.jpg` inputs
                          needed to be checked against `output1.jpg`/`output4.jpg` to confirm which
                          paired with which; don't assume filename order implies pairing on a level
-                         you haven't verified). Content by level:
+                         you haven't verified).
+
+                         **Terminal output (added 2026-09-21).** Levels 1-6 each show a real,
+                         verified "Terminal output" block (`.output-label` + `.code-block.terminal`
+                         — same dark container as the source-code `.code-block`s, but with green
+                         `#7ee787` text instead of gray, to read as "what it printed" rather than
+                         "what I wrote") right after their image(s). This is genuinely captured
+                         console output, not invented: Avi's `objectdetect/` project has a working
+                         Python 3.11 venv, so each level's detection script was re-run from a
+                         sanitized copy (original `cv2.imshow`/`cv2.waitKey`/`cv2.destroyAllWindows`
+                         calls stripped out first, since those block on a GUI window and would have
+                         popped a live window on Avi's screen if left in) against the exact same
+                         input image already on the page, and the real stdout was pasted in
+                         verbatim. Re-running caught two inaccuracies inherited from Avi's own
+                         reference doc that the initial page copy had repeated without independently
+                         verifying against the actual output image: Level 2's "success case" is
+                         `people1.jpg` -> 4 pedestrians detected (not "6-8" as the reference doc
+                         estimated), and Level 5's `output1.jpg` result is person/helmet/electrical
+                         cabinet/pallet jack — it does NOT include "safety vest" despite that being
+                         one of the model's searched-for classes; the page copy was corrected to
+                         match the verified console output instead of the unverified prior claim.
+                         If any level's image or claimed numbers are ever edited again, prefer
+                         re-running the underlying script (from within its own `objectdetect/levelN/`
+                         directory, with a sanitized no-GUI copy, e.g. `sed -e '/cv2\.imshow/d' -e
+                         '/cv2\.waitKey/d' -e '/cv2\.destroyAllWindows/d'`) over trusting prose
+                         descriptions, exactly like this pass did. Levels 7-10 don't have a terminal
+                         output block: 7-8 are video (reprocessing a full clip to capture its
+                         console summary is a heavier, slower job than a single image and hasn't
+                         been done yet — a reasonable follow-up if Avi wants it); 9-10 are writeups
+                         with no script to run. Content by level:
                          L1 Haar Cascade (classical, fixed rules, faces) — Done. Before/after pair:
-                         `face_sample.jpg` (original) / `output.jpg` (annotated).
+                         `face_sample.jpg` (original) / `output.jpg` (annotated). Terminal output:
+                         8 faces detected, with each box's real pixel coordinates.
                          L2 HOG+SVM (learned classifier, hand-crafted features, pedestrians) — Done.
                          Two separate before/after pairs under their own subheadings: "Success case"
-                         (`people1.jpg` / `output1.jpg`) and "Zero-detection case" (`people4.jpg` /
-                         `output4.jpg` — captioned as identical to the input, since nothing was
+                         (`people1.jpg` / `output1.jpg`, terminal output: 4 pedestrians after NMS)
+                         and "Zero-detection case" (`people4.jpg` / `output4.jpg`, terminal output:
+                         0 pedestrians — captioned as identical to the input, since nothing was
                          detected to draw). IMPORTANT DISCREPANCY: Avi's project notes describe the
                          zero-detection case as "a wide traffic-camera shot with small, distant
                          cyclists," but the actual saved file is a close-cropped group portrait, not
@@ -352,21 +383,25 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          aerial/broccoli-false-positive result (text only — that demo image isn't
                          in the project folder, flagged in a `.confirm-box`) and a highway-camera
                          result shown as a before/after pair (`traffic.jpg` / `traffic_output.jpg`,
-                         9 vehicles). `.balance-note` ties the two results together (viewpoint
-                         sensitivity).
+                         9 vehicles — terminal output confirms the exact real Ultralytics print
+                         format, "7 cars, 1 bus, 1 truck", matching the page's prose exactly).
+                         `.balance-note` ties the two results together (viewpoint sensitivity).
                          L4 YOLOv8 on a real manufacturing scene — Done. The project's pivot point:
                          before/after pair (`warehouse.jpg` / `output.jpg`), result is `person: 3`
-                         and nothing else, `.balance-note` explains COCO's missing industrial
-                         vocabulary. Don't soften this framing — it's what the rest of the project
-                         (L5, L6) directly responds to.
+                         and nothing else (terminal output confirms this exactly), `.balance-note`
+                         explains COCO's missing industrial vocabulary. Don't soften this framing —
+                         it's what the rest of the project (L5, L6) directly responds to.
                          L5 YOLO-World (open-vocabulary) — Done. Iteration history as a
                          `.result-list` (confidence threshold, over-generic "box" term, imgsz),
                          "final clean result" shown as a before/after pair (`warehouse1.jpg` /
-                         `output1.jpg` — helmet/person/safety vest/electrical cabinet/pallet jack
-                         all correctly boxed), plus a third, separate image (`output3.jpg`, no
-                         "before" pair — it's already unannotated since nothing was detected)
-                         showing zero detections on a synthetic 3D-rendered warehouse scene,
-                         deliberately set up as a cliffhanger into Level 6.
+                         `output1.jpg` — person/helmet/electrical cabinet/pallet jack all correctly
+                         boxed; terminal output verified this is `person: 4, helmet: 2, electrical
+                         cabinet: 2, pallet jack: 1` — see the "IMPORTANT" note above, this page
+                         copy used to also claim "safety vest" and that was wrong), plus a third,
+                         separate image (`output3.jpg`, no "before" pair — it's already unannotated
+                         since nothing was detected, terminal output confirms 0 objects) showing
+                         zero detections on a synthetic 3D-rendered warehouse scene, deliberately
+                         set up as a cliffhanger into Level 6.
                          L6 Grounding DINO (stronger open-vocabulary) — Done. Dependency-conflict
                          story (transformers 5.x needs torch>=2.5, pinned to 4.46.3 instead — links
                          back to the Environment panel on Summary rather than repeating it), custom
@@ -374,12 +409,14 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          before/after pair (`warehouse3.jpg` / `output3.jpg`, both local to this
                          page's folder — `warehouse3.jpg` was recovered from a PNG mislabeled
                          `.jpg` and properly re-encoded) showing cardboard box/crate/pallet
-                         truck/cabinet all correctly found, followed by a plain-text callout
-                         (not a second image) noting Level 5's YOLO-World found nothing on this
-                         exact same image, linking to `/hp/object-detect-level-5`. This replaced an
-                         earlier version that cross-referenced Level 5's image directly via an
-                         absolute path — now each level's images are self-contained in its own
-                         folder, which is more robust if either page's assets ever change.
+                         truck/cabinet all correctly found (terminal output gives the precise
+                         breakdown: `hand pallet truck: 1, cardboard box wooden crate: 2, electrical
+                         cabinet: 4, cardboard box: 1`), followed by a plain-text callout (not a
+                         second image) noting Level 5's YOLO-World found nothing on this exact same
+                         image, linking to `/hp/object-detect-level-5`. This replaced an earlier
+                         version that cross-referenced Level 5's image directly via an absolute
+                         path — now each level's images are self-contained in its own folder, which
+                         is more robust if either page's assets ever change.
                          L7 Video object tracking + counting (YOLOv8 `model.track()`, ByteTrack) —
                          Done. Real result (46 unique vehicles across a ~800-frame clip) and a
                          debugging note about an early motorcycle-filtering oversight (COCO class
@@ -441,12 +478,15 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          an "Approach" `.panel-title`/`.panel-desc`/`.panel-body` writeup, a
                          `.code-block` (dark `#0a0a0f` background, monospace, matches the
                          `.slides-embed`/`.app-embed` dark-iframe visual language used elsewhere
-                         under /hp) for real code snippets, `.level-image`/`.image-pair` figures —
-                         almost always a "Before" (original, unannotated) paired with an "After"
-                         (detection result), each with a genuine, specific figcaption, never a
-                         generic "detection result" caption — a `.video-embed` component (same
-                         dark 16:9 iframe pattern, currently unused, waiting on Avi's YouTube
-                         links for Levels 7-8), a `.result-list`
+                         under /hp) for real code snippets — plus a `.code-block.terminal` variant
+                         (green `#7ee787` text instead of gray, labeled with a small
+                         `.output-label` above it reading "Terminal output") for genuinely captured
+                         console output on Levels 1-6, see above — `.level-image`/`.image-pair`
+                         figures — almost always a "Before" (original, unannotated) paired with an
+                         "After" (detection result), each with a genuine, specific figcaption, never
+                         a generic "detection result" caption — a `.video-embed` component (same
+                         dark iframe pattern; Level 7 uses it live in a `.video-grid`, Level 8 still
+                         has it unused, waiting on Avi's YouTube links), a `.result-list`
                          (dot-bullet, same pattern as hp/30-60-90's `.plan-list`) for iteration
                          histories and built-feature lists, `.balance-note` for the "honest
                          limitation" callouts every level in this project deliberately includes,
