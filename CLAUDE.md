@@ -54,7 +54,28 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          only in the persistent sidebar shared by every /hp page. Writing style
                          for the "How I Qualify" column: short, complete sentences. Never use a
                          dash (em dash or "--") to join two clauses; split into separate
-                         sentences instead.
+                         sentences instead. As of 2026-09-23, added a dedicated "Computer Vision &
+                         Object Detection" category (7 rows: Classical Computer Vision, Deep
+                         Learning Object Detection, Open-Vocabulary & Zero-Shot Detection, Video
+                         Object Tracking & Counting, Structured Data Extraction from Video, AI
+                         Hardware Scaling Analysis), placed right after "Expert-Level Concept
+                         Areas" and before "Experience Requirements" — each row cites specific,
+                         real, verified numbers from the object-detect-level-1 through -10 project
+                         (e.g. "8 faces detected," "5 real traffic clips," "past 275mph") and
+                         links directly to the matching `/hp/object-detect-level-N` page(s) or
+                         `/hp/object-detect-summary`. Also appended one linking sentence each to
+                         three existing rows that already touched this territory rather than
+                         leaving them stale: "AI Inference & Model Serving" (links to the Summary
+                         page as an expansion of the existing Mesos edge-CV bullet),
+                         "Model Evaluation & Deployment" (cites the project's re-run/verify
+                         discipline and the two inaccuracies plus the BoT-SORT/ByteTrack error it
+                         caught), "Model Fine-Tuning & Optimization" (cites the real YOLO-World
+                         confidence-threshold tuning and Grounding DINO duplicate-suppression
+                         work), and "GPU/CPU concepts" (cites the Intel-Mac CPU-only constraint
+                         that drove model-size choices and fed the Level 9 hardware-scaling
+                         writeup). Don't fabricate new numbers if this section is extended later;
+                         pull only from what the object-detect-level-N pages and CLAUDE.md's own
+                         per-level notes already state as verified.
   case-study/index.html  URL: /hp/case-study. Working case study on the HP ZGX Nano AI Station
                          (feedback/positive-review scraper boxes, personal research, competitor
                          tracker). Originator of the light-editorial design system: as of
