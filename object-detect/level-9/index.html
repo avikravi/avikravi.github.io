@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics self-exclusion (must run before the tag below) -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ga_optout') === '1') {
+          localStorage.setItem('ga_opt_out', 'true');
+        } else if (params.get('ga_optout') === '0') {
+          localStorage.removeItem('ga_opt_out');
+        }
+        if (localStorage.getItem('ga_opt_out') === 'true') {
+          window['ga-disable-G-JVHGKBB8PD'] = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JVHGKBB8PD');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection — Level 9: Scaling to the HP ZGX Nano | Avi Ravishankar</title>
+    <meta name="description" content="Level 9 of Avi's object detection project: a written analysis of scaling the pipeline to the HP ZGX Nano AI Station.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --hp-blue: #0096D6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header.page-header {
+            padding: 44px 0 0;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .dek {
+            font-size: 15.5px;
+            color: var(--ink-faint);
+            max-width: 680px;
+        }
+
+        .status-row { margin-top: 14px; }
+
+        .level-status {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid currentColor;
+        }
+        .level-status.done { color: #1e7145; }
+        .level-status.priority { color: var(--blue); }
+        .level-status.optional { color: var(--ink-faint); }
+        .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
+
+        .panel-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #000;
+            margin: 36px 0 8px;
+        }
+        .panel-title:first-of-type { margin-top: 28px; }
+
+        .panel-desc {
+            font-size: 14px;
+            color: var(--ink-faint);
+            max-width: 720px;
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .panel-body { max-width: 720px; }
+        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
+        .panel-body p:last-child { margin-bottom: 0; }
+        .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .balance-note {
+            font-size: 13px;
+            color: var(--ink-faint);
+            padding: 12px 14px;
+            border-left: 2px solid var(--line);
+            margin: 16px 0 4px;
+            line-height: 1.6;
+            max-width: 720px;
+        }
+        .balance-note strong { color: var(--ink-soft); }
+
+        .confirm-box {
+            margin-top: 24px;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
+        }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
+
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
+            line-height: 1.5;
+        }
+
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .video-embed {
+            margin: 18px 0;
+            max-width: 720px;
+            aspect-ratio: 16 / 9;
+            background: #0a0a0f;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+        .video-embed.vertical { aspect-ratio: 9 / 16; max-width: 480px; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start;
+            gap: 20px;
+            margin: 14px 0 4px;
+            max-width: 1100px;
+        }
+        .video-tile { position: relative; }
+        .video-tile .video-embed { margin: 0; max-width: none; }
+        .video-num {
+            position: absolute;
+            top: 8px; left: 8px;
+            z-index: 2;
+            background: rgba(0,0,0,0.72);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        @media (max-width: 760px) {
+            .video-grid { grid-template-columns: 1fr; }
+        }
+        .video-anomaly-tag {
+            position: absolute;
+            top: 6px; right: 6px;
+            z-index: 2;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .anomaly-tag {
+            display: inline-block;
+            vertical-align: middle;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
+
+        footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-faint);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 25px; }
+            header.page-header { padding: 32px 0 0; }
+        }
+
+        /* Left sidebar nav */
+        .site-side {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 200px;
+            border-right: 1px solid var(--line);
+            background: var(--bg);
+            padding: 22px 16px;
+            overflow-y: auto;
+        }
+
+        .side-logo {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #000;
+            text-decoration: none;
+            padding: 0 10px;
+            margin-bottom: 22px;
+        }
+
+        .side-links { display: flex; flex-direction: column; gap: 2px; }
+
+        .side-links a {
+            display: block;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-links a:hover { color: var(--ink); background: #fafafa; }
+        .side-links a.active { color: #000; background: #f2f2f2; }
+
+        .side-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .side-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 10px;
+            margin-bottom: 4px;
+        }
+
+        .side-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .side-level-grid a {
+            display: block;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
+        .side-level-grid a.active { color: #fff; background: #191919; }
+
+        .site-main { margin-left: 200px; }
+
+        /* Top bar: resume button only */
+        .top-bar {
+            border-bottom: 1px solid var(--line);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-resume-btn {
+            padding: 8px 16px;
+            background: #191919;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .nav-resume-btn:hover { background: #000; }
+
+        @media (max-width: 760px) {
+            .site-side {
+                position: static;
+                width: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .side-logo { margin-bottom: 0; padding: 0; }
+            .side-links { flex-direction: row; gap: 2px; }
+            .side-links a { padding: 6px 8px; font-size: 11px; }
+            .side-section { margin-top: 0; padding-top: 0; border-top: none; flex-basis: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+            .side-section-label { padding: 0; margin-bottom: 0; }
+            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
+            .site-main { margin-left: 0; }
+            .top-bar { padding: 10px 16px; }
+        }
+
+    </style>
+</head>
+<body>
+    <aside class="site-side">
+        <a href="/" class="side-logo">AR</a>
+        <nav class="side-links">
+            <a href="/">Home</a>
+            <a href="/projects.html">AI Projects</a>
+            <a href="#">Games</a>
+        </nav>
+        <div class="side-section">
+            <div class="side-section-label">Object Detect</div>
+            <nav class="side-links">
+                <a href="/object-detect">Summary</a>
+            </nav>
+            <nav class="side-level-grid">
+                <a href="/object-detect/level-1" title="Level 1">1</a>
+                <a href="/object-detect/level-2" title="Level 2">2</a>
+                <a href="/object-detect/level-3" title="Level 3">3</a>
+                <a href="/object-detect/level-4" title="Level 4">4</a>
+                <a href="/object-detect/level-5" title="Level 5">5</a>
+                <a href="/object-detect/level-6" title="Level 6">6</a>
+                <a href="/object-detect/level-7" title="Level 7">7</a>
+                <a href="/object-detect/level-8" title="Level 8">8</a>
+                <a href="/object-detect/level-9" title="Level 9" class="active">9</a>
+                <a href="/object-detect/level-10" title="Level 10">10</a>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="site-main">
+    <div class="top-bar">
+        <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
+    </div>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="eyebrow">Object Detect</div>
+            <h1>Level 9 — Scaling to the HP ZGX Nano AI Station</h1>
+            <p class="dek">Not code — a written hardware-scaling analysis, grounded directly in real bottlenecks hit in Levels 6-8.</p>
+            <div class="status-row"><span class="level-status done">Done</span></div>
+        </header>
+
+        <div class="panel-title">Approach</div>
+        <div class="panel-desc">Not code &mdash; a written hardware-scaling analysis, grounded directly in real bottlenecks hit in Levels 6&ndash;8.</div>
+        <div class="panel-body">
+            <p>Grounding DINO's 30&ndash;60+ second CPU runtime per image (Level 6) and video tracking capped at ~2&ndash;3fps on CPU (Levels 7&ndash;8) are the real bottlenecks this argument is built on &mdash; not a generic "AI needs GPUs" pitch.</p>
+        </div>
+
+        <div class="panel-title">Relevant Specs</div>
+        <div class="panel-desc">From hp.com.</div>
+        <table class="spec-table">
+            <tr><td>Chip</td><td>NVIDIA GB10 Grace Blackwell Superchip</td></tr>
+            <tr><td>AI Compute</td><td>Up to 1,000 TOPS</td></tr>
+            <tr><td>CPU</td><td>20-core Grace Arm</td></tr>
+            <tr><td>Memory</td><td>128GB unified coherent memory</td></tr>
+            <tr><td>Model capacity</td><td>Up to 200B parameters locally (405B with two Nanos linked via NVIDIA ConnectX)</td></tr>
+            <tr><td>Size / weight</td><td>150 &times; 150 &times; 51mm / 2.6 lbs</td></tr>
+            <tr><td>HP positioning</td><td>"Real-time computer vision" and "edge AI"</td></tr>
+        </table>
+
+        <div class="balance-note">Worth being precise about that 1,000 TOPS figure: it's an FP4 (4-bit, sparse) number, the precision aggressive quantization uses &mdash; not what this pipeline would realistically run. A YOLO-class model here would run at FP16 or INT8, well below the headline figure, so this isn't a literal "1,000-TOPS speedup" for this workload. The real practical win is a CUDA-capable GPU with TensorRT and unified memory replacing an Intel CPU with no CUDA path at all &mdash; not the raw TOPS number.</div>
+
+        <div class="panel-title">Core Argument</div>
+        <ul class="result-list">
+            <li><strong>1.</strong> Every model used across Levels 1&ndash;8 was deliberately the smallest variant available (<code>yolov8n</code>, <code>yolov8s-world</code>, <code>grounding-dino-tiny</code>) specifically because this Intel Mac's CPU couldn't handle anything larger &mdash; GB10's CUDA GPU, TensorRT, and unified memory remove that ceiling, independent of the headline TOPS figure.</li>
+            <li><strong>2.</strong> Grounding DINO goes from single-image-only to near-real-time.</li>
+            <li><strong>3.</strong> Video tracking goes from a ~2&ndash;3fps batch process (Levels 7&ndash;8) to true real-time at 30+ fps.</li>
+            <li><strong>4.</strong> Fine-tuning YOLOv8 on a customer's actual forklifts, parts, and PPE &mdash; closing the exact vocabulary gap Level 4 surfaced, rather than perpetually prompt-engineering around it with Levels 5&ndash;6 &mdash; becomes practical with 128GB of unified memory.</li>
+            <li><strong>5.</strong> Multi-camera, multi-stream real-time deployment becomes feasible.</li>
+        </ul>
+
+        <footer>
+            &copy; 2026 Avi Ravishankar
+        </footer>
+    </div>
+        </div>
+    
+</body>
+</html>

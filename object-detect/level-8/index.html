@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics self-exclusion (must run before the tag below) -->
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ga_optout') === '1') {
+          localStorage.setItem('ga_opt_out', 'true');
+        } else if (params.get('ga_optout') === '0') {
+          localStorage.removeItem('ga_opt_out');
+        }
+        if (localStorage.getItem('ga_opt_out') === 'true') {
+          window['ga-disable-G-JVHGKBB8PD'] = true;
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-JVHGKBB8PD');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection — Level 8: Video Speed Estimation + Data Export | Avi Ravishankar</title>
+    <meta name="description" content="Level 8 of Avi's object detection project: per-vehicle speed estimation and CSV data export from tracked video.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --hp-blue: #0096D6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink-soft);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header.page-header {
+            padding: 44px 0 0;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #000;
+            margin-bottom: 12px;
+            line-height: 1.15;
+        }
+
+        .dek {
+            font-size: 15.5px;
+            color: var(--ink-faint);
+            max-width: 680px;
+        }
+
+        .status-row { margin-top: 14px; }
+
+        .level-status {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid currentColor;
+        }
+        .level-status.done { color: #1e7145; }
+        .level-status.priority { color: var(--blue); }
+        .level-status.optional { color: var(--ink-faint); }
+        .level-status.goal { color: #a8461f; }
+        .level-status.pending { color: var(--ink-faint); }
+
+        .panel-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #000;
+            margin: 36px 0 8px;
+        }
+        .panel-title:first-of-type { margin-top: 28px; }
+
+        .panel-desc {
+            font-size: 14px;
+            color: var(--ink-faint);
+            max-width: 720px;
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .panel-body { max-width: 720px; }
+        .panel-body p { font-size: 14.5px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.65; }
+        .panel-body p:last-child { margin-bottom: 0; }
+        .panel-body strong { color: #000; }
+        .panel-body code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12.5px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .balance-note {
+            font-size: 13px;
+            color: var(--ink-faint);
+            padding: 12px 14px;
+            border-left: 2px solid var(--line);
+            margin: 16px 0 4px;
+            line-height: 1.6;
+            max-width: 720px;
+        }
+        .balance-note strong { color: var(--ink-soft); }
+
+        .confirm-box {
+            margin-top: 24px;
+            border: 1px dashed var(--line);
+            border-radius: 10px;
+            padding: 16px 18px;
+            max-width: 720px;
+        }
+        .confirm-box .box-label {
+            display: block;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+        .confirm-box p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+        .confirm-box p + p { margin-top: 8px; }
+
+        .code-block {
+            margin: 16px 0;
+            background: #0a0a0f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            max-width: 720px;
+        }
+        .code-block pre { margin: 0; }
+        .code-block code {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #c9d1d9;
+            white-space: pre;
+        }
+        .code-block.terminal code { color: #7ee787; }
+
+        .output-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 16px 0 -4px;
+        }
+
+        .level-image { margin: 18px 0; max-width: 720px; }
+        .level-image img {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+        }
+        .level-image figcaption {
+            margin-top: 8px;
+            font-size: 12.5px;
+            color: var(--ink-faint);
+            line-height: 1.5;
+        }
+
+        .image-pair { display: flex; gap: 16px; flex-wrap: wrap; margin: 18px 0; max-width: 720px; }
+        .image-pair .level-image { flex: 1 1 260px; margin: 0; max-width: none; }
+
+        .video-embed {
+            margin: 18px 0;
+            max-width: 720px;
+            aspect-ratio: 16 / 9;
+            background: #0a0a0f;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+        .video-embed.vertical { aspect-ratio: 9 / 16; max-width: 480px; }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            align-items: start;
+            gap: 20px;
+            margin: 14px 0 4px;
+            max-width: 1100px;
+        }
+        .video-tile { position: relative; }
+        .video-tile .video-embed { margin: 0; max-width: none; }
+        .video-num {
+            position: absolute;
+            top: 8px; left: 8px;
+            z-index: 2;
+            background: rgba(0,0,0,0.72);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        @media (max-width: 760px) {
+            .video-grid { grid-template-columns: 1fr; }
+        }
+        .video-anomaly-tag {
+            position: absolute;
+            top: 6px; right: 6px;
+            z-index: 2;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        .anomaly-tag {
+            display: inline-block;
+            vertical-align: middle;
+            background: #a8461f;
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+        .result-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 720px; margin: 4px 0 16px; }
+        .result-list li { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; padding-left: 16px; position: relative; }
+        .result-list li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-faint); }
+        .result-list strong { color: #000; }
+        .result-list code { font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; background: #f2f2f2; padding: 1px 5px; border-radius: 3px; }
+
+        .data-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 12px 0 4px; }
+        .data-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 8px 8px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .data-table td {
+            padding: 7px 8px 7px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+        .data-table td.over-yes { color: #a8461f; font-weight: 700; }
+
+        .spec-table { width: 100%; max-width: 720px; border-collapse: collapse; margin: 4px 0 16px; }
+        .spec-table td {
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-soft);
+            vertical-align: top;
+        }
+        .spec-table td:first-child { width: 150px; font-weight: 700; color: #000; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 6px 12px;
+            margin: 8px 8px 0 0;
+        }
+        .download-link:hover { border-color: var(--blue); }
+
+        footer {
+            padding: 28px 0 48px;
+            border-top: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--ink-faint);
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 25px; }
+            header.page-header { padding: 32px 0 0; }
+        }
+
+        /* Left sidebar nav */
+        .site-side {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 200px;
+            border-right: 1px solid var(--line);
+            background: var(--bg);
+            padding: 22px 16px;
+            overflow-y: auto;
+        }
+
+        .side-logo {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #000;
+            text-decoration: none;
+            padding: 0 10px;
+            margin-bottom: 22px;
+        }
+
+        .side-links { display: flex; flex-direction: column; gap: 2px; }
+
+        .side-links a {
+            display: block;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-links a:hover { color: var(--ink); background: #fafafa; }
+        .side-links a.active { color: #000; background: #f2f2f2; }
+
+        .side-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .side-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 10px;
+            margin-bottom: 4px;
+        }
+
+        .side-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .side-level-grid a {
+            display: block;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
+        .side-level-grid a.active { color: #fff; background: #191919; }
+
+        .site-main { margin-left: 200px; }
+
+        /* Top bar: resume button only */
+        .top-bar {
+            border-bottom: 1px solid var(--line);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-resume-btn {
+            padding: 8px 16px;
+            background: #191919;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .nav-resume-btn:hover { background: #000; }
+
+        @media (max-width: 760px) {
+            .site-side {
+                position: static;
+                width: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .side-logo { margin-bottom: 0; padding: 0; }
+            .side-links { flex-direction: row; gap: 2px; }
+            .side-links a { padding: 6px 8px; font-size: 11px; }
+            .side-section { margin-top: 0; padding-top: 0; border-top: none; flex-basis: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+            .side-section-label { padding: 0; margin-bottom: 0; }
+            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
+            .site-main { margin-left: 0; }
+            .top-bar { padding: 10px 16px; }
+        }
+
+    </style>
+</head>
+<body>
+    <aside class="site-side">
+        <a href="/" class="side-logo">AR</a>
+        <nav class="side-links">
+            <a href="/">Home</a>
+            <a href="/projects.html">AI Projects</a>
+            <a href="#">Games</a>
+        </nav>
+        <div class="side-section">
+            <div class="side-section-label">Object Detect</div>
+            <nav class="side-links">
+                <a href="/object-detect">Summary</a>
+            </nav>
+            <nav class="side-level-grid">
+                <a href="/object-detect/level-1" title="Level 1">1</a>
+                <a href="/object-detect/level-2" title="Level 2">2</a>
+                <a href="/object-detect/level-3" title="Level 3">3</a>
+                <a href="/object-detect/level-4" title="Level 4">4</a>
+                <a href="/object-detect/level-5" title="Level 5">5</a>
+                <a href="/object-detect/level-6" title="Level 6">6</a>
+                <a href="/object-detect/level-7" title="Level 7">7</a>
+                <a href="/object-detect/level-8" title="Level 8" class="active">8</a>
+                <a href="/object-detect/level-9" title="Level 9">9</a>
+                <a href="/object-detect/level-10" title="Level 10">10</a>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="site-main">
+    <div class="top-bar">
+        <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
+    </div>
+    <div class="wrap">
+        <header class="page-header">
+            <div class="eyebrow">Object Detect</div>
+            <h1>Level 8 — Video Speed Estimation + Data Export</h1>
+            <p class="dek">Extends Level 7's tracking with per-vehicle speed estimation and a structured, exportable data pipeline.</p>
+            <div class="status-row"><span class="level-status done">Done</span></div>
+        </header>
+
+        <div class="panel-title">Approach</div>
+        <div class="panel-desc">Extends Level 7's tracking with per-vehicle speed estimation and a structured data extraction pipeline.</div>
+        <div class="code-block"><pre><code># Pixel displacement between tracked positions / calibrated pixels-per-meter / elapsed time
+pixel_dist = ((x_new - x_old)**2 + (y_new - y_old)**2) ** 0.5
+meters_per_sec = (pixel_dist / PIXELS_PER_METER) / seconds
+mph = meters_per_sec * 2.23694</code></pre></div>
+        <div class="panel-body">
+            <p>Explicitly stated as an approximation &mdash; true speed requires real camera calibration (e.g., a surveyed lane-width reference), which is stated both in the on-screen video overlay and in terminal output. That honesty is a deliberate part of the narrative: an uncalibrated number presented as precise would undermine credibility the moment someone asks how it was calibrated.</p>
+            <p>Visual feature: bounding boxes turn red above a configurable mph threshold, green at or below it &mdash; recalculated fresh every frame per vehicle, so it toggles live and accurately reflects current speed.</p>
+        </div>
+
+        <div class="balance-note">The "Total vehicles tracked" figures below (e.g. 46 in clip 1) are unique <em>track IDs</em> from the same BoT-SORT tracker as Level 7, not a verified physical count &mdash; an upper bound, since an occluded vehicle that gets reacquired under a new ID is counted twice. See <a href="/object-detect/level-7">Level 7</a> for the full explanation and the production alternative (line-crossing / zone counting).</div>
+
+        <div class="panel-title">Real output: clip 1</div>
+        <div class="panel-desc">A sample of the actual per-vehicle rows from this run (47 vehicles tracked total).</div>
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Class</th><th>Avg MPH</th><th>Max MPH</th><th>Min MPH</th><th>Frames</th><th>Over threshold</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>car</td><td>14.1</td><td>23.2</td><td>3.1</td><td>74</td><td class="over-yes">YES</td></tr>
+                <tr><td>16</td><td>car</td><td>15.3</td><td>24.3</td><td>2.3</td><td>74</td><td class="over-yes">YES</td></tr>
+                <tr><td>20</td><td>bus</td><td>4.8</td><td>28.7</td><td>0.0</td><td>147</td><td class="over-yes">YES</td></tr>
+                <tr><td>26</td><td>car</td><td>18.2</td><td>24.2</td><td>12.1</td><td>49</td><td class="over-yes">YES</td></tr>
+                <tr><td>45</td><td>car</td><td>17.2</td><td>32.3</td><td>6.5</td><td>79</td><td class="over-yes">YES</td></tr>
+                <tr><td>48</td><td>truck</td><td>12.5</td><td>22.3</td><td>3.2</td><td>66</td><td class="over-yes">YES</td></tr>
+                <tr><td>67</td><td>car</td><td>3.6</td><td>8.7</td><td>0.0</td><td>128</td><td>no</td></tr>
+                <tr><td>71</td><td>car</td><td>31.3</td><td>33.1</td><td>29.6</td><td>7</td><td class="over-yes">YES</td></tr>
+            </tbody>
+        </table>
+
+        <div class="balance-note">Clip 1's speeds look like real highway traffic &mdash; mostly single digits to low 30s mph. Clip 4, from a different camera angle, reads wildly implausible speeds for the exact same code and math &mdash; one vehicle averaging 157 mph, another peaking past 275 mph:</div>
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Class</th><th>Avg MPH</th><th>Max MPH</th><th>Min MPH</th><th>Frames</th><th>Over threshold</th></tr></thead>
+            <tbody>
+                <tr><td>8</td><td>car</td><td>61.0</td><td>121.0</td><td>19.5</td><td>77</td><td class="over-yes">YES</td></tr>
+                <tr><td>11</td><td>car</td><td>99.7</td><td>206.9</td><td>1.8</td><td>42</td><td class="over-yes">YES</td></tr>
+                <tr><td>120</td><td>car</td><td>121.8</td><td>163.0</td><td>81.4</td><td>13</td><td class="over-yes">YES</td></tr>
+                <tr><td>139</td><td>car</td><td>157.5</td><td>193.6</td><td>108.6</td><td>10</td><td class="over-yes">YES</td></tr>
+                <tr><td>154</td><td>car</td><td>133.3</td><td>155.1</td><td>78.7</td><td>19</td><td class="over-yes">YES</td></tr>
+                <tr><td>157</td><td>car</td><td>126.0</td><td>275.5</td><td>62.3</td><td>7</td><td class="over-yes">YES</td></tr>
+                <tr><td>176</td><td>car</td><td>118.8</td><td>243.2</td><td>50.3</td><td>48</td><td class="over-yes">YES</td></tr>
+            </tbody>
+        </table>
+        <div class="panel-body">
+            <p>No camera calibration in either case. That gap is the clearest possible demonstration of why an uncalibrated pixel-to-mph conversion is an approximation, not a measurement &mdash; clip 4 flags 158 of its 167 tracked vehicles (95%) as "over threshold," versus 0 of 10 in clip 3, the slowest/most static of the four.</p>
+        </div>
+
+        <div>
+            <a class="download-link" href="speed_data1.csv" download>&#8595; speed_data1.csv (clip 1, realistic)</a>
+            <a class="download-link" href="speed_data4.csv" download>&#8595; speed_data4.csv (clip 4, uncalibrated)</a>
+        </div>
+
+        <div class="panel-title">Demo Clips</div>
+        <div class="panel-desc">Four tracked clips, in order. Clip 1 matches the realistic speed data above; Clip 4 matches the wildly implausible speed data above.</div>
+        <div class="video-grid">
+            <div class="video-tile">
+                <span class="video-num">1</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/P1r6nl-ANTk" title="Object detection speed estimation clip 1" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_1'});}"></iframe>
+                </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 46
+Vehicles exceeding 10mph threshold: 40
+Saved annotated video as output_speed1.mp4
+Saved speed data table as speed_data1.csv</code></pre></div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">2</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/NNSnomdiG68" title="Object detection speed estimation clip 2" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_2'});}"></iframe>
+                </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 21
+Vehicles exceeding 10mph threshold: 20
+Saved annotated video as output_speed2.mp4
+Saved speed data table as speed_data2.csv</code></pre></div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">3</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/P7z4Tpds3x8" title="Object detection speed estimation clip 3" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_3'});}"></iframe>
+                </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 10
+Vehicles exceeding 10mph threshold: 0
+Saved annotated video as output_speed3.mp4
+Saved speed data table as speed_data3.csv</code></pre></div>
+            </div>
+            <div class="video-tile">
+                <span class="video-num">4</span>
+                <div class="video-embed">
+                    <iframe src="https://www.youtube.com/embed/MFsgUAnEmFs" title="Object detection speed estimation clip 4" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen onload="if(typeof gtag==='function'){gtag('event','embed_viewed',{embed_name:'level8_clip_4'});}"></iframe>
+                </div>
+                <p class="output-label">Terminal output</p>
+                <div class="code-block terminal"><pre><code>--------------------------------------------------------------------------------
+Total vehicles tracked: 167
+Vehicles exceeding 10mph threshold: 158
+Saved annotated video as output_speed4.mp4
+Saved speed data table as speed_data4.csv</code></pre></div>
+            </div>
+        </div>
+
+        <div class="panel-title">Data extraction pipeline</div>
+        <ul class="result-list">
+            <li>Full per-vehicle speed history collected across the entire video &mdash; every reading, every frame, per tracked ID.</li>
+            <li>End-of-run printed summary table: vehicle ID, class, avg/max/min mph, frames tracked, over-threshold flag.</li>
+            <li><strong>CSV export</strong> &mdash; a genuine structured, exportable data artifact, not just a video to watch once.</li>
+        </ul>
+        <div class="panel-body">
+            <p>The video isn't just producing a visual &mdash; it's extracting structured, exportable data per object, exactly the kind of output a real manufacturing or logistics deployment would need to feed into a dashboard or reporting system.</p>
+        </div>
+
+        <footer>
+            &copy; 2026 Avi Ravishankar
+        </footer>
+    </div>
+        </div>
+    
+</body>
+</html>

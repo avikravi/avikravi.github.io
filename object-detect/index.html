@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics self-exclusion (must run before the tag below) -->
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get("ga_optout") === "1") {
+            localStorage.setItem("ga_opt_out", "true");
+          } else if (params.get("ga_optout") === "0") {
+            localStorage.removeItem("ga_opt_out");
+          }
+          if (localStorage.getItem("ga_opt_out") === "true") {
+            window["ga-disable-G-JVHGKBB8PD"] = true;
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-JVHGKBB8PD");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Object Detection — Summary | Avi Ravishankar</title>
+    <meta
+      name="description"
+      content="Summary of Avi's object detection project."
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #ffffff;
+        --ink: #191919;
+        --ink-soft: #3d3d3d;
+        --ink-faint: #767676;
+        --line: #e5e5e5;
+        --blue: #1967b1;
+        --hp-blue: #0096d6;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink-soft);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--blue);
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      header.page-header {
+        padding: 44px 0 0;
+      }
+
+      .eyebrow {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        margin-bottom: 10px;
+      }
+
+      h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #000;
+        margin-bottom: 12px;
+        line-height: 1.15;
+      }
+
+      .dek {
+        font-size: 15.5px;
+        color: var(--ink-faint);
+        max-width: 620px;
+      }
+
+      .intro-video {
+        margin: 28px 0 32px;
+        max-width: 420px;
+      }
+
+      .video-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 10px;
+      }
+
+      .video-eyebrow svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+
+      .video-embed-single {
+        aspect-ratio: 16 / 9;
+        background: #0a0a0f;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .video-embed-single iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .video-caption {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        line-height: 1.5;
+      }
+
+      .slides-embed {
+        margin-top: 32px;
+        height: 720px;
+        background: #0a0a0f;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .slides-embed iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      .panel-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: #000;
+        margin: 40px 0 8px;
+      }
+
+      .panel-desc {
+        font-size: 14px;
+        color: var(--ink-faint);
+        max-width: 720px;
+        margin-bottom: 18px;
+        line-height: 1.6;
+      }
+
+      .level-status {
+        display: inline-block;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+      }
+      .level-status.done {
+        color: #1e7145;
+      }
+      .level-status.priority {
+        color: var(--blue);
+      }
+      .level-status.optional {
+        color: var(--ink-faint);
+      }
+      .level-status.goal {
+        color: #a8461f;
+      }
+      .level-status.pending {
+        color: var(--ink-faint);
+      }
+
+      .panel-body {
+        max-width: 720px;
+      }
+      .panel-body p {
+        font-size: 14.5px;
+        color: var(--ink-soft);
+        margin-bottom: 12px;
+        line-height: 1.65;
+      }
+      .panel-body p:last-child {
+        margin-bottom: 0;
+      }
+      .panel-body strong {
+        color: #000;
+      }
+
+      .result-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        max-width: 720px;
+        margin: 4px 0 16px;
+      }
+      .result-list li {
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        line-height: 1.55;
+        padding-left: 16px;
+        position: relative;
+      }
+      .result-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--ink-faint);
+      }
+      .result-list strong {
+        color: #000;
+      }
+      .result-list code {
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
+        font-size: 12px;
+        background: #f2f2f2;
+        padding: 1px 5px;
+        border-radius: 3px;
+      }
+
+      .level-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 4px;
+      }
+      .level-table th {
+        text-align: left;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        padding: 0 10px 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .level-table td {
+        padding: 12px 10px 12px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 13.5px;
+        color: var(--ink-soft);
+        vertical-align: top;
+      }
+      .level-table th:first-child,
+      .level-table td:first-child {
+        width: 50px;
+      }
+      .level-table th:last-child,
+      .level-table td:last-child {
+        width: 180px;
+      }
+      .level-table td a {
+        color: var(--blue);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .level-table td a:hover {
+        text-decoration: underline;
+      }
+
+      .roadmap-note {
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--ink-faint);
+        line-height: 1.6;
+        padding: 12px 14px;
+        border-left: 2px solid var(--line);
+      }
+
+      .panel-empty {
+        margin-top: 32px;
+        padding: 56px 24px;
+        border: 1px dashed var(--line);
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .empty-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        border: 1px dashed var(--line);
+        border-radius: 3px;
+        padding: 6px 12px;
+        margin-bottom: 14px;
+      }
+
+      .panel-empty p {
+        font-size: 14.5px;
+        color: var(--ink-faint);
+        max-width: 440px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      footer {
+        padding: 28px 0 48px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--ink-faint);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 25px;
+        }
+        header.page-header {
+          padding: 32px 0 0;
+        }
+        .slides-embed {
+          height: 560px;
+        }
+      }
+
+        /* Left sidebar nav */
+        .site-side {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 200px;
+            border-right: 1px solid var(--line);
+            background: var(--bg);
+            padding: 22px 16px;
+            overflow-y: auto;
+        }
+
+        .side-logo {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #000;
+            text-decoration: none;
+            padding: 0 10px;
+            margin-bottom: 22px;
+        }
+
+        .side-links { display: flex; flex-direction: column; gap: 2px; }
+
+        .side-links a {
+            display: block;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-links a:hover { color: var(--ink); background: #fafafa; }
+        .side-links a.active { color: #000; background: #f2f2f2; }
+
+        .side-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .side-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 10px;
+            margin-bottom: 4px;
+        }
+
+        .side-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .side-level-grid a {
+            display: block;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
+        .side-level-grid a.active { color: #fff; background: #191919; }
+
+        .site-main { margin-left: 200px; }
+
+        /* Top bar: resume button only */
+        .top-bar {
+            border-bottom: 1px solid var(--line);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .nav-resume-btn {
+            padding: 8px 16px;
+            background: #191919;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .nav-resume-btn:hover { background: #000; }
+
+        @media (max-width: 760px) {
+            .site-side {
+                position: static;
+                width: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--line);
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .side-logo { margin-bottom: 0; padding: 0; }
+            .side-links { flex-direction: row; gap: 2px; }
+            .side-links a { padding: 6px 8px; font-size: 11px; }
+            .side-section { margin-top: 0; padding-top: 0; border-top: none; flex-basis: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+            .side-section-label { padding: 0; margin-bottom: 0; }
+            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
+            .site-main { margin-left: 0; }
+            .top-bar { padding: 10px 16px; }
+        }
+
+    </style>
+  </head>
+  <body>
+    <aside class="site-side">
+        <a href="/" class="side-logo">AR</a>
+        <nav class="side-links">
+            <a href="/">Home</a>
+            <a href="/projects.html">AI Projects</a>
+            <a href="#">Games</a>
+        </nav>
+        <div class="side-section">
+            <div class="side-section-label">Object Detect</div>
+            <nav class="side-links">
+                <a href="/object-detect" class="active">Summary</a>
+            </nav>
+            <nav class="side-level-grid">
+                <a href="/object-detect/level-1" title="Level 1">1</a>
+                <a href="/object-detect/level-2" title="Level 2">2</a>
+                <a href="/object-detect/level-3" title="Level 3">3</a>
+                <a href="/object-detect/level-4" title="Level 4">4</a>
+                <a href="/object-detect/level-5" title="Level 5">5</a>
+                <a href="/object-detect/level-6" title="Level 6">6</a>
+                <a href="/object-detect/level-7" title="Level 7">7</a>
+                <a href="/object-detect/level-8" title="Level 8">8</a>
+                <a href="/object-detect/level-9" title="Level 9">9</a>
+                <a href="/object-detect/level-10" title="Level 10">10</a>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="site-main">
+    <div class="top-bar">
+        <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
+    </div>
+        <div class="wrap">
+          <header class="page-header">
+            <div class="eyebrow">Object Detect</div>
+            <h1>Summary</h1>
+            <p class="dek">
+              A local object detection and counting pipeline for manufacturing and robotics use cases, built up in ten levels: from classical computer vision to deep learning, open-vocabulary detection, video tracking, and hardware-scaling analysis.
+            </p>
+          </header>
+
+          <div class="intro-video">
+            <p class="video-eyebrow">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              >
+                <circle cx="8" cy="8" r="6.5" />
+                <path
+                  d="M6.5 5.5l4 2.5-4 2.5z"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </svg>
+              Watch First
+            </p>
+            <div class="video-embed-single">
+              <iframe
+                src="https://www.youtube.com/embed/owyWbPvuC4k"
+                title="Project walkthrough — Avi explains the object detection project"
+                loading="lazy"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                  web-share;
+                "
+                allowfullscreen
+                onload="
+                  if (typeof gtag === 'function') {
+                    gtag('event', 'embed_viewed', {
+                      embed_name: 'summary_intro_video',
+                    });
+                  }
+                "
+              ></iframe>
+            </div>
+            <p class="video-caption">
+              A short walkthrough of this project, in my own words &mdash; the
+              fastest way to understand what it is and why it's built this way
+              before digging into the ten levels below.
+            </p>
+          </div>
+
+          <div class="panel-body">
+            <p>
+              Rather than one app, this is a progressive series of ten "levels"
+              demonstrating increasing technical sophistication
+              <br />
+              classical computer vision &rarr; learned classifiers &rarr; deep
+              learning &rarr; open-vocabulary detection &rarr; video tracking
+              &rarr; hardware-scaling analysis
+            </p>
+          </div>
+
+          <div class="panel-title">Environment</div>
+          <div class="panel-desc">Runs locally, not in the cloud.</div>
+          <ul class="result-list">
+            <li>
+              macOS, Intel-based MacBook Air &mdash; not Apple Silicon, which
+              mattered a lot for package compatibility.
+            </li>
+            <li>
+              Python 3.11 in a project-local venv, downgraded from 3.13 because
+              <strong
+                >PyTorch dropped Intel Mac support starting at version
+                2.3</strong
+              >
+              &mdash; <code>torch==2.2.2</code> was the last compatible version,
+              which constrained every downstream package choice: numpy pinned
+              <code>&lt;2</code> to match torch 2.2.2's expected ABI,
+              opencv-python pinned <code>&lt;5</code> (v5 moved Haar cascades to
+              a contrib-only module), transformers pinned to
+              <code>4.46.3</code> (newer versions require
+              <code>torch&gt;=2.5</code>).
+            </li>
+          </ul>
+
+          <div class="panel-title">Level Roadmap</div>
+          <div class="panel-desc">
+            Ten graduated levels, from classical computer vision to a
+            forward-looking hardware-scaling analysis.
+          </div>
+          <table class="level-table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Approach</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="/object-detect/level-1">1</a></td>
+                <td>
+                  Haar Cascade — learned classifier (AdaBoost), hand-crafted
+                  features (faces)
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-2">2</a></td>
+                <td>
+                  HOG + SVM — learned classifier, hand-crafted features
+                  (pedestrians)
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-3">3</a></td>
+                <td>
+                  YOLOv8 — deep learning, general-purpose (COCO, 80 classes)
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-4">4</a></td>
+                <td>
+                  YOLOv8 on a real manufacturing scene — the vocabulary-gap
+                  pivot
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-5">5</a></td>
+                <td>
+                  YOLO-World — open-vocabulary detection, any object by text
+                  prompt
+                </td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-6">6</a></td>
+                <td>Grounding DINO — stronger open-vocabulary detection</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-7">7</a></td>
+                <td>Video object tracking + unique counting (BoT-SORT)</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-8">8</a></td>
+                <td>Video speed estimation + CSV data export</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-9">9</a></td>
+                <td>Writeup: scaling to the HP ZGX Nano AI Station</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-10">10</a></td>
+                <td>Writeup: scaling to the HP ZGX Fury AI Station</td>
+                <td><span class="level-status done">Done</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="panel-title">Overall Narrative Arc</div>
+          <div class="panel-body">
+            <p>
+              <strong>Technical progression:</strong> hand-designed features +
+              learned classifier (L1, L2) &rarr; fully learned features and
+              classifier, end-to-end (L3) &rarr; open-vocabulary/zero-shot (L5,
+              L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward
+              look (L9, L10).
+            </p>
+            <p>
+              <strong>Consistent theme:</strong> every level includes an
+              honestly documented limitation or failure, not just wins — tilted
+              faces missed in L1, a deliberately-kept zero-detection result in
+              L2, a wrong-viewpoint failure in L3, COCO's missing industrial
+              vocabulary in L4, imprecise language-matching in L5, heavy compute
+              cost in L6, a motorcycle-filtering oversight in L7,
+              explicitly-flagged approximate speed in L8.
+            </p>
+          </div>
+
+          <footer>&copy; 2026 Avi Ravishankar</footer>
+        </div>
+      </div>
+    
+  </body>
+</html>
