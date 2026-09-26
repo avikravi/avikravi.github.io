@@ -1,6 +1,16 @@
-/* Games hub — an arcade "game select" screen living inside the main-site layout.
-   Page chrome (sidebar, top bar) stays light-editorial; the arcade screen itself
-   is its own dark, neon, pixel-font world. Tokens below are scoped to the arcade. */
+/* AI Arcade — a standalone, full-screen arcade "game select" page (no site
+   sidebar; the sidebar's "AI Arcade" link opens it in a new tab). Its own dark,
+   neon, pixel-font world. Tokens below are scoped to the arcade. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body.arcade-page {
+    min-height: 100vh;
+    background: #0b0a1f;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
 
 .arcade {
     --arc-bg: #0b0a1f;
@@ -16,14 +26,12 @@
     --pixel: "Press Start 2P", ui-monospace, monospace;
 
     position: relative;
-    margin: 32px 0 40px;
-    border-radius: 18px;
+    min-height: 100vh;
     overflow: hidden;
     background:
         radial-gradient(ellipse at 50% 0%, rgba(255, 64, 179, 0.22), transparent 60%),
         linear-gradient(180deg, var(--arc-bg) 0%, var(--arc-bg-2) 100%);
     color: var(--arc-text);
-    box-shadow: 0 0 0 6px #191919, 0 0 0 7px #3a3a3a, 0 24px 60px rgba(0, 0, 0, 0.25);
     isolation: isolate;
 }
 
@@ -75,7 +83,9 @@
 .arcade-inner {
     position: relative;
     z-index: 2;
-    padding: 22px 28px 34px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 22px 28px 48px;
 }
 
 /* HUD row */
@@ -90,6 +100,19 @@
 }
 
 .arcade-hud .hud-live { color: var(--arc-cyan); }
+
+.hud-right { display: flex; align-items: center; gap: 18px; }
+
+.hud-exit {
+    color: var(--arc-pink);
+    text-decoration: none;
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 64, 179, 0.5);
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.hud-exit:hover, .hud-exit:focus-visible { background: var(--arc-pink); color: #fff; outline: none; }
 .arcade-hud .hud-live::before {
     content: "";
     display: inline-block;
@@ -104,12 +127,12 @@
 /* Title */
 .arcade-title {
     text-align: center;
-    margin: 34px 0 6px;
+    margin: 7vh 0 6px;
 }
 
 .arcade-title h1 {
     font-family: var(--pixel);
-    font-size: clamp(22px, 4.2vw, 40px);
+    font-size: clamp(28px, 6vw, 60px);
     line-height: 1.25;
     letter-spacing: 0.04em;
     color: var(--arc-yellow);
@@ -348,7 +371,6 @@
 }
 
 @media (max-width: 760px) {
-    .arcade { margin: 20px 0 28px; border-radius: 14px; }
     .arcade-inner { padding: 16px 16px 26px; }
     .arcade-hud { font-size: 8px; }
     .arcade-title { margin-top: 24px; }

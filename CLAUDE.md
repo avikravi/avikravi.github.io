@@ -703,37 +703,42 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
 object-detect/          URL: /object-detect and /object-detect/level-1 through -10. Public copy
                          of the /hp Object Detect pages with the main-site sidebar. See "Nav bar
                          consistency" below for how it was made and why it's maintained separately.
-games/                  URL: /games. Added 2026-09-25. Games hub, reached from the main sidebar's
-                         "Games" link (all 13 main-site sidebar pages now point it at /games instead
-                         of "#"). Per Avi, it's split into games/index.html + games/style.css +
-                         games/script.js (not all-inline like other pages). index.html keeps the
-                         standard main-site chrome inline (sidebar/top-bar CSS copied from
-                         index.html, Games marked active); style.css holds only the arcade
-                         styling, scoped under `.arcade` with its own `--arc-*` tokens (dark neon,
-                         synthwave grid floor, CRT scanlines, "Press Start 2P" pixel font from
-                         Google Fonts). This is a deliberate dark "screen inside the light page".
-                         Don't leak `--arc-*` tokens elsewhere. Layout: HUD row ("1P READY",
-                         "GAMES: N"), "SELECT YOUR GAME" title, blinking "PRESS START", then a
-                         centered `.game-grid` of `.game-card`s. `.playable` cards are links (hover/
-                         focus/arrow-key selection shows a glowing border plus a blinking ▶
+games/                  URL: /games. "AI Arcade." Added 2026-09-25. The sidebar's "AI Arcade"
+                         link opens it in a NEW TAB. It is a standalone full-screen page with NO
+                         site sidebar/top bar (per Avi: "a totally separate page"). The only way
+                         back is the pink "EXIT ↩" link in the HUD (to /). Split into
+                         games/index.html + games/style.css + games/script.js (not all-inline
+                         like other pages). style.css holds everything, with its own `--arc-*`
+                         tokens scoped under `.arcade` (dark neon, synthwave grid floor, CRT
+                         scanlines, "Press Start 2P" pixel font from Google Fonts). Don't leak
+                         `--arc-*` tokens into light-editorial pages. Layout: HUD row ("1P READY",
+                         "GAMES: N", EXIT), big "AI ARCADE" title, blinking "SELECT YOUR GAME",
+                         then a centered `.game-grid` of `.game-card`s. `.playable` cards are links
+                         (hover/focus/arrow-key selection shows a glowing border plus a blinking ▶
                          cursor); one `.locked` dashed "Coming Soon" slot sits after the real games.
                          script.js: twinkling canvas starfield, the Thermostat Panic card's animated
-                         dial (temperature creeps up, card shakes and "sweats" at 88°+, then resets),
+                         dial (temperature creeps up, card shakes and "sweats" at 80°+, then resets),
                          Left/Right + Enter game select (Up/Down deliberately NOT captured so page
                          scrolling still works), and a `game_select` GA4 event (`game_name`) on
                          click. All motion respects prefers-reduced-motion. To add a game: copy the
                          Thermostat `<a class="game-card playable">` block, give it its own art,
-                         `href`, and `data-game`, bump the HUD's "GAMES: N", and keep the locked slot
-                         last. Each game lives in its own subfolder (games/thermostat/ for
-                         Thermostat Panic). Thermostat Panic (games/thermostat/: index.html,
+                         `href`, and `data-game`, bump the HUD's "GAMES: N", keep the locked slot
+                         last, and skin the game itself with the same arcade tokens (see
+                         games/thermostat/style.css). Each game lives in its own subfolder.
+                         Thermostat Panic (games/thermostat/: index.html,
                          style.css, script.js) is Avi's own plain-JS game, originally hosted at
                          thermostat-panic.surge.sh. Keep the room at 68-72°F for 60s while random
                          events (storm, guest, open door, AC failure) jolt the temperature;
                          overcorrections are counted; top-5 leaderboard saved in localStorage.
-                         It keeps its own simple styling on purpose (no site sidebar). The only
-                         changes made on integration (2026-09-25) were the standard GA snippet +
-                         self-exclusion in its <head>, a viewport meta, and a "← All games" link
-                         (#back-to-games) back to /games. Its leftover CNAME, README.md (has
+                         It has no site sidebar. As of 2026-09-25 it's restyled with the arcade skin
+                         (games/thermostat/style.css: same `--arc-*` tokens, pixel font, grid floor,
+                         scanlines, glowing cyan gauge tube, round blue −/red + arcade buttons,
+                         yellow Start button, shaking pink event pop-ups, "High Scores" panel).
+                         script.js gameplay was NOT changed; keep #gauge-container's 300px content
+                         height (script.js GAUGE_HEIGHT). Integration edits to its markup: the
+                         standard GA snippet +
+                         self-exclusion in its <head>, a viewport meta, and a "← AI Arcade" link
+                         (#back-to-games) back to /games, the pixel-font link, "High Scores" heading. Its leftover CNAME, README.md (has
                          Avi's NetID) and screenshot*.png (show his browser bookmarks) are
                          gitignored, not published. The hub card's dial uses the game's real
                          50-90°F range, and its tagline describes the real rules.
@@ -847,6 +852,8 @@ Font stack: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 
 Conventions: fixed nav bar with blurred background, gradient logo text ("AR"), uppercase nav links, pink "active" state, gradient "Download Resume" button; animated grid background (`body::before`) + radial gradient overlay (`body::after`); gradient `h2` (pink → blue) section headers; cards with `rgba(26,26,46,0.6)` background, 2px low-opacity-accent border, `border-radius: 16px`, `backdrop-filter: blur(10px)`.
 
 ### Nav bar consistency (now split by design system)
+
+**Sidebar v2 (2026-09-25, later the same day, per Avi) — this is the current state, superseding the details in the next two paragraphs where they conflict:** main links are **Home, Projects, AI Arcade, Object Detect** (renamed from "AI Projects"/"Games"). "AI Arcade" links to `/games` with `target="_blank" rel="noopener"`, so the arcade opens in a new tab as its own standalone page. "Object Detect" is now a main-size link (to `/object-detect`, shown in black via `.current` on any object-detect page) instead of a small section label. Under it, an indented `.side-sub` block (thin left border) holds a smaller "Summary" `.side-sub-link` and the 1-10 `.side-level-grid`. The old `.side-section`/`.side-section-label` classes and divider are gone. Same block on all 13 sidebar pages (`index.html`, `projects.html`, the 11 `object-detect/` pages); `games/` no longer has the sidebar.
 
 **As of 2026-09-25, `index.html` no longer uses the top nav described below.** Per Avi, the homepage now has a clean, fixed left sidebar (`.site-side`, 200px, white with a `--line` right border, light-editorial tokens — NOT the dark `/hp` sidebar) with an "AR" wordmark and three links: Home (`index.html`), AI Projects (`projects.html`), Games (`#` placeholder, no page yet). The top of the page (`.top-bar`) holds only one thing: the "Download Resume" button, right-aligned. The "Research" link was dropped from the homepage nav. Below 760px the sidebar collapses into a horizontal strip above the top bar (CSS only, no JS). Same day, Avi said this sidebar must be consistent and always present on every main-site page, so `projects.html` got the identical sidebar/top-bar block (CSS + HTML copied verbatim from `index.html`; only the `class="active"` link differs). **This sidebar is now the main-site nav.** Any new main-site page (e.g. a future Games page) must get the same `.site-side` + `.top-bar` block copied from `index.html`, wrap its content in `<div class="site-main">`, and be added as a link to the sidebar on every page. It does NOT apply to `/hp` pages (own dark sidebar), `tracker.html` (neon, unlinked), or `agents/` (standalone). The old top-nav notes below are kept for history; the "identical nav on index/projects" rule still holds, now for the sidebar. Also 2026-09-25: below the three main links, the sidebar has an "Object Detect" section (`.side-section` with `.side-section-label`, a "Summary" link, and a 5-column `.side-level-grid` of numbered links 1-10; the current page gets `.active`, a solid black cell for levels). It links to a **public copy** of the object detection project at `/object-detect` (summary) and `/object-detect/level-1` through `/level-10`, NOT to `/hp`. Per Avi, this is to show the general public the pipeline, separate from the HP application material. All sidebar/top-bar links use absolute paths (`/`, `/projects.html`, `/AvinashResume2026.pdf`) so the same block works at every folder depth. On mobile the section wraps to its own row, with the level grid as 10 columns.
 

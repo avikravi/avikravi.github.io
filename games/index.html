@@ -27,264 +27,72 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games | Avi Ravishankar</title>
-    <meta name="description" content="Pick a game and play. Small browser games built by Avi Ravishankar.">
+    <title>AI Arcade | Avi Ravishankar</title>
+    <meta name="description" content="AI Arcade: pick a game and play. Small browser games built by Avi Ravishankar.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #ffffff;
-            --ink: #191919;
-            --ink-soft: #3d3d3d;
-            --ink-faint: #767676;
-            --line: #e5e5e5;
-            --blue: #1967b1;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--ink-soft);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-
-        /* Left sidebar nav */
-        .site-side {
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            width: 200px;
-            border-right: 1px solid var(--line);
-            background: var(--bg);
-            padding: 22px 16px;
-            overflow-y: auto;
-        }
-
-        .side-logo {
-            display: block;
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: #000;
-            text-decoration: none;
-            padding: 0 10px;
-            margin-bottom: 22px;
-        }
-
-        .side-links { display: flex; flex-direction: column; gap: 2px; }
-
-        .side-links a {
-            display: block;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            text-decoration: none;
-            transition: color 0.15s, background 0.15s;
-        }
-
-        .side-links a:hover { color: var(--ink); background: #fafafa; }
-        .side-links a.active { color: #000; background: #f2f2f2; }
-
-        .side-section {
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px solid var(--line);
-        }
-
-        .side-section-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.07em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            padding: 0 10px;
-            margin-bottom: 4px;
-        }
-
-        .side-level-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 3px;
-            margin-top: 3px;
-        }
-
-        .side-level-grid a {
-            display: block;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--ink-faint);
-            text-decoration: none;
-            transition: color 0.15s, background 0.15s;
-        }
-
-        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
-        .side-level-grid a.active { color: #fff; background: #191919; }
-
-        .site-main { margin-left: 200px; }
-
-        /* Top bar: resume button only */
-        .top-bar {
-            border-bottom: 1px solid var(--line);
-            padding: 14px 24px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .nav-resume-btn {
-            padding: 8px 16px;
-            background: #191919;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 11.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-
-        .nav-resume-btn:hover { background: #000; }
-
-        @media (max-width: 760px) {
-            .site-side {
-                position: static;
-                width: auto;
-                border-right: none;
-                border-bottom: 1px solid var(--line);
-                padding: 12px 16px;
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                flex-wrap: wrap;
-            }
-            .side-logo { margin-bottom: 0; padding: 0; }
-            .side-links { flex-direction: row; gap: 2px; }
-            .side-links a { padding: 6px 8px; font-size: 11px; }
-            .side-section { margin-top: 0; padding-top: 0; border-top: none; flex-basis: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-            .side-section-label { padding: 0; margin-bottom: 0; }
-            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
-            .site-main { margin-left: 0; }
-            .top-bar { padding: 10px 16px; }
-        }
-
-        footer {
-            padding: 28px 0 48px;
-            border-top: 1px solid var(--line);
-            font-size: 13px;
-            color: var(--ink-faint);
-        }
-    </style>
     <link rel="stylesheet" href="/games/style.css">
 </head>
-<body>
-    <aside class="site-side">
-        <a href="/" class="side-logo">AR</a>
-        <nav class="side-links">
-            <a href="/">Home</a>
-            <a href="/projects.html">AI Projects</a>
-            <a href="/games" class="active">Games</a>
-        </nav>
-        <div class="side-section">
-            <div class="side-section-label">Object Detect</div>
-            <nav class="side-links">
-                <a href="/object-detect">Summary</a>
-            </nav>
-            <nav class="side-level-grid">
-                <a href="/object-detect/level-1" title="Level 1">1</a>
-                <a href="/object-detect/level-2" title="Level 2">2</a>
-                <a href="/object-detect/level-3" title="Level 3">3</a>
-                <a href="/object-detect/level-4" title="Level 4">4</a>
-                <a href="/object-detect/level-5" title="Level 5">5</a>
-                <a href="/object-detect/level-6" title="Level 6">6</a>
-                <a href="/object-detect/level-7" title="Level 7">7</a>
-                <a href="/object-detect/level-8" title="Level 8">8</a>
-                <a href="/object-detect/level-9" title="Level 9">9</a>
-                <a href="/object-detect/level-10" title="Level 10">10</a>
-            </nav>
-        </div>
-    </aside>
+<body class="arcade-page">
+    <section class="arcade" aria-labelledby="arcadeTitle">
+        <canvas class="arcade-stars" aria-hidden="true"></canvas>
+        <div class="arcade-floor" aria-hidden="true"></div>
+        <div class="arcade-inner">
+            <div class="arcade-hud">
+                <span class="hud-live">1P READY</span>
+                <span class="hud-right">GAMES: 1 <a class="hud-exit" href="/">EXIT &#8617;</a></span>
+            </div>
 
-    <div class="site-main">
-    <div class="top-bar">
-        <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
-    </div>
+            <div class="arcade-title">
+                <h1 id="arcadeTitle">AI ARCADE</h1>
+                <p class="press-start">SELECT YOUR GAME</p>
+            </div>
 
-    <div class="wrap">
-        <section class="arcade" aria-labelledby="arcadeTitle">
-            <canvas class="arcade-stars" aria-hidden="true"></canvas>
-            <div class="arcade-floor" aria-hidden="true"></div>
-            <div class="arcade-inner">
-                <div class="arcade-hud" aria-hidden="true">
-                    <span class="hud-live">1P READY</span>
-                    <span>GAMES: 1</span>
-                </div>
+            <div class="game-grid">
+                <a class="game-card playable" href="/games/thermostat/" data-game="thermostat_panic">
+                    <div class="game-art" data-dial aria-hidden="true">
+                        <span class="game-badge">NEW</span>
+                        <svg class="dial" viewBox="0 0 132 132">
+                            <defs>
+                                <linearGradient id="dialGradient" x1="0" y1="1" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="#4da3ff"/>
+                                    <stop offset="55%" stop-color="#ffe45c"/>
+                                    <stop offset="100%" stop-color="#ff5a36"/>
+                                </linearGradient>
+                            </defs>
+                            <path class="dial-ring" d="M 23.6 90.5 A 49 49 0 1 1 108.4 90.5"/>
+                            <path class="dial-arc" d="M 23.6 90.5 A 49 49 0 1 1 108.4 90.5"/>
+                            <circle class="dial-face" cx="66" cy="66" r="36"/>
+                            <g class="dial-needle">
+                                <line x1="66" y1="66" x2="66" y2="30"/>
+                                <circle cx="66" cy="66" r="5"/>
+                            </g>
+                            <text class="dial-temp" x="66" y="96">70&deg;</text>
+                            <text class="dial-unit" x="66" y="108">TEMP</text>
+                        </svg>
+                        <span class="drop d1"></span><span class="drop d2"></span><span class="drop d3"></span>
+                    </div>
+                    <div class="game-meta">
+                        <div class="game-name">THERMOSTAT PANIC</div>
+                        <p class="game-tagline">Keep the room at 68&ndash;72&deg;F for 60 seconds while storms, guests, and open doors wreck the temperature. Don&rsquo;t overcorrect!</p>
+                    </div>
+                    <span class="play-btn">&#9654; PLAY</span>
+                </a>
 
-                <div class="arcade-title">
-                    <h1 id="arcadeTitle">SELECT YOUR GAME</h1>
-                    <p class="press-start" aria-hidden="true">PRESS START</p>
-                </div>
-
-                <div class="game-grid">
-                    <a class="game-card playable" href="/games/thermostat/" data-game="thermostat_panic">
-                        <div class="game-art" data-dial aria-hidden="true">
-                            <span class="game-badge">NEW</span>
-                            <svg class="dial" viewBox="0 0 132 132">
-                                <defs>
-                                    <linearGradient id="dialGradient" x1="0" y1="1" x2="1" y2="0">
-                                        <stop offset="0%" stop-color="#4da3ff"/>
-                                        <stop offset="55%" stop-color="#ffe45c"/>
-                                        <stop offset="100%" stop-color="#ff5a36"/>
-                                    </linearGradient>
-                                </defs>
-                                <path class="dial-ring" d="M 23.6 90.5 A 49 49 0 1 1 108.4 90.5"/>
-                                <path class="dial-arc" d="M 23.6 90.5 A 49 49 0 1 1 108.4 90.5"/>
-                                <circle class="dial-face" cx="66" cy="66" r="36"/>
-                                <g class="dial-needle">
-                                    <line x1="66" y1="66" x2="66" y2="30"/>
-                                    <circle cx="66" cy="66" r="5"/>
-                                </g>
-                                <text class="dial-temp" x="66" y="96">70&deg;</text>
-                                <text class="dial-unit" x="66" y="108">TEMP</text>
-                            </svg>
-                            <span class="drop d1"></span><span class="drop d2"></span><span class="drop d3"></span>
-                        </div>
-                        <div class="game-meta">
-                            <div class="game-name">THERMOSTAT PANIC</div>
-                            <p class="game-tagline">Keep the room at 68&ndash;72&deg;F for 60 seconds while storms, guests, and open doors wreck the temperature. Don&rsquo;t overcorrect!</p>
-                        </div>
-                        <span class="play-btn">&#9654; PLAY</span>
-                    </a>
-
-                    <div class="game-card locked" aria-label="More games coming soon">
-                        <div class="game-art" aria-hidden="true"><span class="lock-q">?</span></div>
-                        <div class="game-meta">
-                            <div class="game-name">COMING SOON</div>
-                            <p class="game-tagline">More games are loading. Check back later.</p>
-                        </div>
+                <div class="game-card locked" aria-label="More games coming soon">
+                    <div class="game-art" aria-hidden="true"><span class="lock-q">?</span></div>
+                    <div class="game-meta">
+                        <div class="game-name">COMING SOON</div>
+                        <p class="game-tagline">More games are loading. Check back later.</p>
                     </div>
                 </div>
-
-                <p class="arcade-hint">Click a game to play<span class="keys">, or use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> and <kbd>ENTER</kbd></span>.</p>
             </div>
-        </section>
 
-        <footer>
-            <p>&copy; 2026 Avi Ravishankar</p>
-        </footer>
-    </div>
-    </div>
+            <p class="arcade-hint">Click a game to play<span class="keys">, or use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> and <kbd>ENTER</kbd></span>.</p>
+        </div>
+    </section>
+
 
     <script src="/games/script.js"></script>
 </body>
