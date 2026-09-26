@@ -102,67 +102,6 @@
         max-width: 620px;
       }
 
-      .intro-video {
-        margin: 28px 0 32px;
-        max-width: 420px;
-      }
-
-      .video-eyebrow {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--blue);
-        margin-bottom: 10px;
-      }
-
-      .video-eyebrow svg {
-        width: 14px;
-        height: 14px;
-        flex-shrink: 0;
-      }
-
-      .video-embed-single {
-        aspect-ratio: 16 / 9;
-        background: #0a0a0f;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        overflow: hidden;
-      }
-
-      .video-embed-single iframe {
-        display: block;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
-
-      .video-caption {
-        margin-top: 10px;
-        font-size: 13px;
-        color: var(--ink-faint);
-        line-height: 1.5;
-      }
-
-      .slides-embed {
-        margin-top: 32px;
-        height: 720px;
-        background: #0a0a0f;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        overflow: hidden;
-      }
-
-      .slides-embed iframe {
-        display: block;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
-
       .panel-title {
         font-size: 19px;
         font-weight: 700;
@@ -176,32 +115,6 @@
         max-width: 720px;
         margin-bottom: 18px;
         line-height: 1.6;
-      }
-
-      .level-status {
-        display: inline-block;
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        padding: 4px 10px;
-        border-radius: 4px;
-        border: 1px solid currentColor;
-      }
-      .level-status.done {
-        color: #1e7145;
-      }
-      .level-status.priority {
-        color: var(--blue);
-      }
-      .level-status.optional {
-        color: var(--ink-faint);
-      }
-      .level-status.goal {
-        color: #a8461f;
-      }
-      .level-status.pending {
-        color: var(--ink-faint);
       }
 
       .panel-body {
@@ -282,10 +195,6 @@
       .level-table td:first-child {
         width: 50px;
       }
-      .level-table th:last-child,
-      .level-table td:last-child {
-        width: 180px;
-      }
       .level-table td a {
         color: var(--blue);
         font-weight: 700;
@@ -293,44 +202,6 @@
       }
       .level-table td a:hover {
         text-decoration: underline;
-      }
-
-      .roadmap-note {
-        margin-top: 16px;
-        font-size: 13px;
-        color: var(--ink-faint);
-        line-height: 1.6;
-        padding: 12px 14px;
-        border-left: 2px solid var(--line);
-      }
-
-      .panel-empty {
-        margin-top: 32px;
-        padding: 56px 24px;
-        border: 1px dashed var(--line);
-        border-radius: 10px;
-        text-align: center;
-      }
-
-      .empty-tag {
-        display: inline-block;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        border: 1px dashed var(--line);
-        border-radius: 3px;
-        padding: 6px 12px;
-        margin-bottom: 14px;
-      }
-
-      .panel-empty p {
-        font-size: 14.5px;
-        color: var(--ink-faint);
-        max-width: 440px;
-        margin: 0 auto;
-        line-height: 1.6;
       }
 
       footer {
@@ -348,10 +219,7 @@
         header.page-header {
           padding: 32px 0 0;
         }
-        .slides-embed {
-          height: 560px;
         }
-      }
 
         /* Left sidebar nav */
         .site-side {
@@ -521,62 +389,93 @@
             </p>
           </header>
 
-          <div class="intro-video">
-            <p class="video-eyebrow">
-              <svg
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-              >
-                <circle cx="8" cy="8" r="6.5" />
-                <path
-                  d="M6.5 5.5l4 2.5-4 2.5z"
-                  fill="currentColor"
-                  stroke="none"
-                />
-              </svg>
-              Watch First
-            </p>
-            <div class="video-embed-single">
-              <iframe
-                src="https://www.youtube.com/embed/owyWbPvuC4k"
-                title="Project walkthrough — Avi explains the object detection project"
-                loading="lazy"
-                allow="
-                  accelerometer;
-                  autoplay;
-                  clipboard-write;
-                  encrypted-media;
-                  gyroscope;
-                  picture-in-picture;
-                  web-share;
-                "
-                allowfullscreen
-                onload="
-                  if (typeof gtag === 'function') {
-                    gtag('event', 'embed_viewed', {
-                      embed_name: 'summary_intro_video',
-                    });
-                  }
-                "
-              ></iframe>
-            </div>
-            <p class="video-caption">
-              A short walkthrough of this project, in my own words &mdash; the
-              fastest way to understand what it is and why it's built this way
-              before digging into the ten levels below.
-            </p>
+          <div class="panel-title">Level Roadmap</div>
+          <div class="panel-desc">
+            Ten graduated levels, from classical computer vision to a
+            forward-looking hardware-scaling analysis.
           </div>
+          <table class="level-table">
+            <thead>
+              <tr>
+                <th>Level</th>
+                <th>Approach</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="/object-detect/level-1">1</a></td>
+                <td>
+                  Haar Cascade — learned classifier (AdaBoost), hand-crafted
+                  features (faces)
+                </td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-2">2</a></td>
+                <td>
+                  HOG + SVM — learned classifier, hand-crafted features
+                  (pedestrians)
+                </td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-3">3</a></td>
+                <td>
+                  YOLOv8 — deep learning, general-purpose (COCO, 80 classes)
+                </td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-4">4</a></td>
+                <td>
+                  YOLOv8 on a real manufacturing scene — the vocabulary-gap
+                  pivot
+                </td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-5">5</a></td>
+                <td>
+                  YOLO-World — open-vocabulary detection, any object by text
+                  prompt
+                </td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-6">6</a></td>
+                <td>Grounding DINO — stronger open-vocabulary detection</td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-7">7</a></td>
+                <td>Video object tracking + unique counting (BoT-SORT)</td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-8">8</a></td>
+                <td>Video speed estimation + CSV data export</td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-9">9</a></td>
+                <td>Writeup: scaling to the HP ZGX Nano AI Station</td>
+              </tr>
+              <tr>
+                <td><a href="/object-detect/level-10">10</a></td>
+                <td>Writeup: scaling to the HP ZGX Fury AI Station</td>
+              </tr>
+            </tbody>
+          </table>
 
+          <div class="panel-title">How the Levels Build</div>
           <div class="panel-body">
             <p>
-              Rather than one app, this is a progressive series of ten "levels"
-              demonstrating increasing technical sophistication
-              <br />
-              classical computer vision &rarr; learned classifiers &rarr; deep
-              learning &rarr; open-vocabulary detection &rarr; video tracking
-              &rarr; hardware-scaling analysis
+              <strong>Technical progression:</strong> hand-designed features +
+              learned classifier (L1, L2) &rarr; fully learned features and
+              classifier, end-to-end (L3) &rarr; open-vocabulary/zero-shot (L5,
+              L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward
+              look (L9, L10).
+            </p>
+            <p>
+              <strong>Consistent theme:</strong> every level includes an
+              honestly documented limitation or failure, not just wins — tilted
+              faces missed in L1, a deliberately-kept zero-detection result in
+              L2, a wrong-viewpoint failure in L3, COCO's missing industrial
+              vocabulary in L4, imprecise language-matching in L5, heavy compute
+              cost in L6, a motorcycle-filtering oversight in L7,
+              explicitly-flagged approximate speed in L8.
             </p>
           </div>
 
@@ -602,107 +501,6 @@
               <code>torch&gt;=2.5</code>).
             </li>
           </ul>
-
-          <div class="panel-title">Level Roadmap</div>
-          <div class="panel-desc">
-            Ten graduated levels, from classical computer vision to a
-            forward-looking hardware-scaling analysis.
-          </div>
-          <table class="level-table">
-            <thead>
-              <tr>
-                <th>Level</th>
-                <th>Approach</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><a href="/object-detect/level-1">1</a></td>
-                <td>
-                  Haar Cascade — learned classifier (AdaBoost), hand-crafted
-                  features (faces)
-                </td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-2">2</a></td>
-                <td>
-                  HOG + SVM — learned classifier, hand-crafted features
-                  (pedestrians)
-                </td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-3">3</a></td>
-                <td>
-                  YOLOv8 — deep learning, general-purpose (COCO, 80 classes)
-                </td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-4">4</a></td>
-                <td>
-                  YOLOv8 on a real manufacturing scene — the vocabulary-gap
-                  pivot
-                </td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-5">5</a></td>
-                <td>
-                  YOLO-World — open-vocabulary detection, any object by text
-                  prompt
-                </td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-6">6</a></td>
-                <td>Grounding DINO — stronger open-vocabulary detection</td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-7">7</a></td>
-                <td>Video object tracking + unique counting (BoT-SORT)</td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-8">8</a></td>
-                <td>Video speed estimation + CSV data export</td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-9">9</a></td>
-                <td>Writeup: scaling to the HP ZGX Nano AI Station</td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-              <tr>
-                <td><a href="/object-detect/level-10">10</a></td>
-                <td>Writeup: scaling to the HP ZGX Fury AI Station</td>
-                <td><span class="level-status done">Done</span></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="panel-title">Overall Narrative Arc</div>
-          <div class="panel-body">
-            <p>
-              <strong>Technical progression:</strong> hand-designed features +
-              learned classifier (L1, L2) &rarr; fully learned features and
-              classifier, end-to-end (L3) &rarr; open-vocabulary/zero-shot (L5,
-              L6) &rarr; temporal/video (L7, L8) &rarr; hardware-scaling forward
-              look (L9, L10).
-            </p>
-            <p>
-              <strong>Consistent theme:</strong> every level includes an
-              honestly documented limitation or failure, not just wins — tilted
-              faces missed in L1, a deliberately-kept zero-detection result in
-              L2, a wrong-viewpoint failure in L3, COCO's missing industrial
-              vocabulary in L4, imprecise language-matching in L5, heavy compute
-              cost in L6, a motorcycle-filtering oversight in L7,
-              explicitly-flagged approximate speed in L8.
-            </p>
-          </div>
 
           <footer>&copy; 2026 Avi Ravishankar</footer>
         </div>
