@@ -225,90 +225,124 @@
         .site-side {
             position: fixed;
             top: 0; left: 0; bottom: 0;
-            width: 200px;
+            width: 232px;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
             border-right: 1px solid var(--line);
-            background: var(--bg);
-            padding: 22px 16px;
+            padding: 18px 14px 24px;
             overflow-y: auto;
         }
 
-        .side-logo {
-            display: block;
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: #000;
+        .side-brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 4px 8px 18px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--line);
             text-decoration: none;
-            padding: 0 10px;
-            margin-bottom: 22px;
         }
+
+        .side-brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .side-brand-name { display: block; font-size: 14px; font-weight: 700; color: #000; line-height: 1.25; }
+        .side-brand-role { display: block; font-size: 12px; color: var(--ink-faint); line-height: 1.35; }
 
         .side-links { display: flex; flex-direction: column; gap: 2px; }
 
         .side-links a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 11px;
             padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ink-soft);
             text-decoration: none;
-            transition: color 0.15s, background 0.15s;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
         }
 
-        .side-links a:hover { color: var(--ink); background: #fafafa; }
-        .side-links a.active { color: #000; background: #f2f2f2; }
+        .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
+        .side-ext { width: 14px; height: 14px; margin-left: auto; color: var(--ink-faint); }
 
-        /* Object Detect sub-items: indented, smaller than the main links */
+        .side-links a:hover { background: #efefef; color: #000; }
+        .side-links a:hover .side-icon { color: #000; }
+
+        .side-links a.active {
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .side-links a.active .side-icon { color: #000; }
+
+        .side-links a:focus-visible,
+        .side-sub-link:focus-visible,
+        .side-level-grid a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        /* Object Detect sub-items, indented under their parent */
         .side-sub {
-            margin: 2px 0 0 10px;
-            padding-left: 8px;
+            margin: 4px 0 6px 19px;
+            padding-left: 12px;
             border-left: 1px solid var(--line);
         }
 
         .side-sub-link {
             display: block;
-            padding: 5px 8px;
-            border-radius: 5px;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
             color: var(--ink-faint);
             text-decoration: none;
-            transition: color 0.15s, background 0.15s;
+            transition: background 0.15s, color 0.15s;
         }
 
-        .side-sub-link:hover { color: var(--ink); background: #fafafa; }
-        .side-sub-link.active { color: #000; background: #f2f2f2; }
+        .side-sub-link:hover { background: #efefef; color: #000; }
+        .side-sub-link.active { color: #000; font-weight: 600; }
 
-        .side-links a.current { color: #000; }
+        .side-sub-label {
+            padding: 8px 10px 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+        }
 
         .side-level-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 3px;
-            margin-top: 3px;
+            gap: 5px;
+            padding: 0 2px 0 6px;
         }
 
         .side-level-grid a {
-            display: block;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--ink-faint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 28px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink-soft);
             text-decoration: none;
-            transition: color 0.15s, background 0.15s;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
         }
 
-        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
-        .side-level-grid a.active { color: #fff; background: #191919; }
+        .side-level-grid a:hover { border-color: #191919; color: #000; }
+        .side-level-grid a.active { background: #191919; border-color: #191919; color: #fff; }
 
-        .site-main { margin-left: 200px; }
+        .site-main { margin-left: 232px; }
 
         /* Top bar: resume button only */
         .top-bar {
@@ -339,17 +373,18 @@
                 width: auto;
                 border-right: none;
                 border-bottom: 1px solid var(--line);
-                padding: 12px 16px;
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                flex-wrap: wrap;
+                padding: 14px 16px;
             }
-            .side-logo { margin-bottom: 0; padding: 0; }
-            .side-links { flex-direction: row; flex-wrap: wrap; gap: 2px; }
-            .side-links a { padding: 6px 8px; font-size: 11px; }
-            .side-sub { margin: 0; padding-left: 0; border-left: none; flex-basis: 100%; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
+            .side-brand { padding: 0 0 12px; margin-bottom: 10px; }
+            .side-brand img { width: 32px; height: 32px; }
+            .side-links { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+            .side-links a { padding: 7px 10px; font-size: 13px; }
+            .side-icon { display: none; }
+            .side-ext { display: none; }
+            .side-sub { margin: 8px 0 0; padding: 0; border-left: none; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+            .side-sub-label { display: none; }
+            .side-level-grid { flex: 1 1 100%; grid-template-columns: repeat(10, 1fr); gap: 4px; padding: 4px 0 0; }
+            .side-level-grid a { height: 30px; }
             .site-main { margin-left: 0; }
             .top-bar { padding: 10px 16px; }
         }
@@ -358,16 +393,23 @@
   </head>
   <body>
     <aside class="site-side">
-        <a href="/" class="side-logo">AR</a>
-        <nav class="side-links">
-            <a href="/">Home</a>
-            <a href="/projects.html">Projects</a>
-            <a href="/games" target="_blank" rel="noopener">AI Arcade</a>
-            <a href="/object-detect" class="current">Object Detect</a>
+        <a href="/" class="side-brand">
+            <img src="/headshot.jpg" alt="">
+            <span>
+                <span class="side-brand-name">Avi Ravishankar</span>
+                <span class="side-brand-role">Data Scientist &middot; PM</span>
+            </span>
+        </a>
+        <nav class="side-links" aria-label="Main">
+            <a href="/"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
+            <a href="/projects.html"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Projects</a>
+            <a href="/games" target="_blank" rel="noopener"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="17.5" cy="13.8" r="1" fill="currentColor" stroke="none"/></svg>AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <a href="/object-detect" class="active"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Object Detect</a>
         </nav>
         <div class="side-sub">
-            <a href="/object-detect" class="side-sub-link active">Summary</a>
-            <nav class="side-level-grid">
+            <a href="/object-detect" class="side-sub-link active" aria-current="page">Summary</a>
+            <div class="side-sub-label">Levels</div>
+            <nav class="side-level-grid" aria-label="Object Detect levels">
                 <a href="/object-detect/level-1" title="Level 1">1</a>
                 <a href="/object-detect/level-2" title="Level 2">2</a>
                 <a href="/object-detect/level-3" title="Level 3">3</a>
