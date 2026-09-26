@@ -1,0 +1,364 @@
+/* Games hub — an arcade "game select" screen living inside the main-site layout.
+   Page chrome (sidebar, top bar) stays light-editorial; the arcade screen itself
+   is its own dark, neon, pixel-font world. Tokens below are scoped to the arcade. */
+
+.arcade {
+    --arc-bg: #0b0a1f;
+    --arc-bg-2: #15123a;
+    --arc-grid: rgba(255, 64, 179, 0.35);
+    --arc-pink: #ff40b3;
+    --arc-cyan: #35f2ff;
+    --arc-yellow: #ffe45c;
+    --arc-hot: #ff5a36;
+    --arc-cool: #4da3ff;
+    --arc-text: #f4f1ff;
+    --arc-dim: #9d98c7;
+    --pixel: "Press Start 2P", ui-monospace, monospace;
+
+    position: relative;
+    margin: 32px 0 40px;
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(255, 64, 179, 0.22), transparent 60%),
+        linear-gradient(180deg, var(--arc-bg) 0%, var(--arc-bg-2) 100%);
+    color: var(--arc-text);
+    box-shadow: 0 0 0 6px #191919, 0 0 0 7px #3a3a3a, 0 24px 60px rgba(0, 0, 0, 0.25);
+    isolation: isolate;
+}
+
+/* Stars */
+.arcade-stars {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* Synthwave perspective floor */
+.arcade-floor {
+    position: absolute;
+    left: -50%;
+    right: -50%;
+    bottom: 0;
+    height: 55%;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        linear-gradient(var(--arc-grid) 2px, transparent 2px),
+        linear-gradient(90deg, var(--arc-grid) 2px, transparent 2px);
+    background-size: 60px 60px;
+    transform: perspective(300px) rotateX(60deg);
+    transform-origin: 50% 100%;
+    mask-image: linear-gradient(to top, #000 10%, transparent 90%);
+    -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 90%);
+    animation: floor-scroll 1.6s linear infinite;
+}
+
+@keyframes floor-scroll {
+    from { background-position: 0 0; }
+    to { background-position: 0 60px; }
+}
+
+/* CRT scanlines + vignette */
+.arcade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px),
+        radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+    z-index: 3;
+}
+
+.arcade-inner {
+    position: relative;
+    z-index: 2;
+    padding: 22px 28px 34px;
+}
+
+/* HUD row */
+.arcade-hud {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--pixel);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--arc-dim);
+}
+
+.arcade-hud .hud-live { color: var(--arc-cyan); }
+.arcade-hud .hud-live::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    background: var(--arc-cyan);
+    box-shadow: 0 0 8px var(--arc-cyan);
+    animation: blink 1.2s steps(2, start) infinite;
+}
+
+/* Title */
+.arcade-title {
+    text-align: center;
+    margin: 34px 0 6px;
+}
+
+.arcade-title h1 {
+    font-family: var(--pixel);
+    font-size: clamp(22px, 4.2vw, 40px);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    color: var(--arc-yellow);
+    text-shadow:
+        3px 3px 0 var(--arc-pink),
+        6px 6px 0 rgba(53, 242, 255, 0.55),
+        0 0 24px rgba(255, 228, 92, 0.45);
+}
+
+.press-start {
+    margin-top: 18px;
+    font-family: var(--pixel);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--arc-cyan);
+    animation: blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes blink { to { visibility: hidden; } }
+
+/* Game grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 300px));
+    justify-content: center;
+    gap: 22px;
+    margin-top: 34px;
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    padding: 18px 18px 20px;
+    text-decoration: none;
+    color: var(--arc-text);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    outline: none;
+}
+
+.game-card.playable:hover,
+.game-card.playable.selected,
+.game-card.playable:focus-visible {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--arc-yellow);
+    box-shadow: 0 0 0 2px rgba(255, 228, 92, 0.25), 0 0 34px rgba(255, 64, 179, 0.45);
+}
+
+/* Blinking "selector" arrow on the chosen card */
+.game-card.playable::before {
+    content: "\25B6";
+    position: absolute;
+    left: -26px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--arc-yellow);
+    text-shadow: 0 0 10px var(--arc-yellow);
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.game-card.playable.selected::before,
+.game-card.playable:hover::before,
+.game-card.playable:focus-visible::before {
+    opacity: 1;
+    animation: nudge 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes nudge { to { transform: translate(5px, -50%); } }
+
+.game-art {
+    position: relative;
+    height: 170px;
+    border-radius: 10px;
+    background:
+        radial-gradient(circle at 50% 60%, rgba(255, 90, 54, 0.25), transparent 65%),
+        #07061a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.game-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: var(--pixel);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 5px 7px;
+    border-radius: 4px;
+    background: var(--arc-pink);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(255, 64, 179, 0.6);
+}
+
+/* Thermostat dial */
+.dial { width: 132px; height: 132px; }
+
+.dial-ring { fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 10; }
+.dial-arc { fill: none; stroke: url(#dialGradient); stroke-width: 10; stroke-linecap: round; }
+.dial-face { fill: #120f2e; stroke: rgba(255, 255, 255, 0.18); stroke-width: 2; }
+
+.dial-needle {
+    transform-origin: 66px 66px;
+    transform: rotate(-120deg);
+    transition: transform 0.25s ease-out;
+}
+
+.dial-needle line { stroke: var(--arc-yellow); stroke-width: 4; stroke-linecap: round; }
+.dial-needle circle { fill: var(--arc-yellow); }
+
+.dial-temp {
+    font-family: var(--pixel);
+    font-size: 15px;
+    fill: var(--arc-cool);
+    text-anchor: middle;
+    transition: fill 0.25s;
+}
+
+.dial-unit { font-family: var(--pixel); font-size: 7px; fill: var(--arc-dim); text-anchor: middle; }
+
+.game-art.hot .dial-temp { fill: var(--arc-hot); }
+.game-art.hot { animation: shake 0.28s linear infinite; }
+
+@keyframes shake {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(-1.5px, 1px); }
+    75% { transform: translate(1.5px, -1px); }
+}
+
+/* Sweat drops that fly off when things get too hot */
+.drop {
+    position: absolute;
+    width: 6px;
+    height: 9px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: var(--arc-cyan);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.game-art.hot .drop { animation: drop-fly 0.9s ease-out infinite; }
+.drop.d1 { left: 28%; top: 30%; }
+.drop.d2 { right: 28%; top: 34%; animation-delay: 0.3s !important; }
+.drop.d3 { left: 50%; top: 18%; animation-delay: 0.55s !important; }
+
+@keyframes drop-fly {
+    0% { opacity: 0; transform: translate(0, 0); }
+    20% { opacity: 1; }
+    100% { opacity: 0; transform: translate(var(--dx, -14px), 26px); }
+}
+
+.drop.d2 { --dx: 14px; }
+.drop.d3 { --dx: 0px; }
+
+.game-meta { margin-top: 16px; }
+
+.game-name {
+    font-family: var(--pixel);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--arc-yellow);
+}
+
+.game-tagline {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--arc-dim);
+}
+
+.play-btn {
+    margin-top: 16px;
+    align-self: flex-start;
+    font-family: var(--pixel);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background: var(--arc-yellow);
+    color: #1a1400;
+    box-shadow: 0 4px 0 #b39a10;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.game-card.playable:active .play-btn { transform: translateY(3px); box-shadow: 0 1px 0 #b39a10; }
+
+/* Locked "coming soon" slot */
+.game-card.locked {
+    border-style: dashed;
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: default;
+}
+
+.game-card.locked .game-art {
+    background: repeating-linear-gradient(45deg, #0d0b24 0 10px, #110e2c 10px 20px);
+}
+
+.lock-q {
+    font-family: var(--pixel);
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.18);
+    animation: float 2.4s ease-in-out infinite;
+}
+
+@keyframes float { 50% { transform: translateY(-8px); } }
+
+.game-card.locked .game-name { color: var(--arc-dim); }
+
+.arcade-hint {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--arc-dim);
+}
+
+.arcade-hint kbd {
+    font-family: var(--pixel);
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom-width: 3px;
+    color: var(--arc-text);
+    margin: 0 2px;
+}
+
+@media (max-width: 760px) {
+    .arcade { margin: 20px 0 28px; border-radius: 14px; }
+    .arcade-inner { padding: 16px 16px 26px; }
+    .arcade-hud { font-size: 8px; }
+    .arcade-title { margin-top: 24px; }
+    .game-grid { grid-template-columns: 1fr; margin-top: 26px; }
+    .game-card.playable::before { display: none; }
+    .arcade-hint .keys { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .arcade-floor, .press-start, .arcade-hud .hud-live::before, .lock-q,
+    .game-art.hot, .game-art.hot .drop, .game-card.playable::before { animation: none !important; }
+    .game-card { transition: none; }
+}

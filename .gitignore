@@ -8,3 +8,10 @@ zgx-nano-notes.md
 objectdetect/
 weights/
 .DS_Store
+
+# Thermostat Panic leftovers from its old surge.sh deploy / class submission —
+# not used by the game. Screenshots show Avi's browser bookmarks bar; README
+# has his course NetID. Keep these local only.
+games/thermostat/CNAME
+games/thermostat/README.md
+games/thermostat/screenshot*.png

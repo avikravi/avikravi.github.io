@@ -703,6 +703,40 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
 object-detect/          URL: /object-detect and /object-detect/level-1 through -10. Public copy
                          of the /hp Object Detect pages with the main-site sidebar. See "Nav bar
                          consistency" below for how it was made and why it's maintained separately.
+games/                  URL: /games. Added 2026-09-25. Games hub, reached from the main sidebar's
+                         "Games" link (all 13 main-site sidebar pages now point it at /games instead
+                         of "#"). Per Avi, it's split into games/index.html + games/style.css +
+                         games/script.js (not all-inline like other pages). index.html keeps the
+                         standard main-site chrome inline (sidebar/top-bar CSS copied from
+                         index.html, Games marked active); style.css holds only the arcade
+                         styling, scoped under `.arcade` with its own `--arc-*` tokens (dark neon,
+                         synthwave grid floor, CRT scanlines, "Press Start 2P" pixel font from
+                         Google Fonts). This is a deliberate dark "screen inside the light page".
+                         Don't leak `--arc-*` tokens elsewhere. Layout: HUD row ("1P READY",
+                         "GAMES: N"), "SELECT YOUR GAME" title, blinking "PRESS START", then a
+                         centered `.game-grid` of `.game-card`s. `.playable` cards are links (hover/
+                         focus/arrow-key selection shows a glowing border plus a blinking ▶
+                         cursor); one `.locked` dashed "Coming Soon" slot sits after the real games.
+                         script.js: twinkling canvas starfield, the Thermostat Panic card's animated
+                         dial (temperature creeps up, card shakes and "sweats" at 88°+, then resets),
+                         Left/Right + Enter game select (Up/Down deliberately NOT captured so page
+                         scrolling still works), and a `game_select` GA4 event (`game_name`) on
+                         click. All motion respects prefers-reduced-motion. To add a game: copy the
+                         Thermostat `<a class="game-card playable">` block, give it its own art,
+                         `href`, and `data-game`, bump the HUD's "GAMES: N", and keep the locked slot
+                         last. Each game lives in its own subfolder (games/thermostat/ for
+                         Thermostat Panic). Thermostat Panic (games/thermostat/: index.html,
+                         style.css, script.js) is Avi's own plain-JS game, originally hosted at
+                         thermostat-panic.surge.sh. Keep the room at 68-72°F for 60s while random
+                         events (storm, guest, open door, AC failure) jolt the temperature;
+                         overcorrections are counted; top-5 leaderboard saved in localStorage.
+                         It keeps its own simple styling on purpose (no site sidebar). The only
+                         changes made on integration (2026-09-25) were the standard GA snippet +
+                         self-exclusion in its <head>, a viewport meta, and a "← All games" link
+                         (#back-to-games) back to /games. Its leftover CNAME, README.md (has
+                         Avi's NetID) and screenshot*.png (show his browser bookmarks) are
+                         gitignored, not published. The hub card's dial uses the game's real
+                         50-90°F range, and its tagline describes the real rules.
 agents/index.html       URL: /agents — "Cleanie's Homebase." Added 2026-09-19. A standalone,
                          whimsical visual — NOT part of the light-editorial system or the /hp
                          sidebar, its own one-off "video-game screenshot" design system. Not
@@ -880,7 +914,7 @@ As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (g
 </script>
 ```
 
-There's no shared layout/build step in this repo, so the snippet is duplicated into all 35 HTML files individually (24 + the 11 `object-detect/` pages added 2026-09-25, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
+There's no shared layout/build step in this repo, so the snippet is duplicated into all 37 HTML files individually (24 + the 11 `object-detect/` pages, `games/index.html` and `games/thermostat/index.html` added 2026-09-25, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
 
 Every page under `hp/` (all 18: `index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, `p66-example/index.html`, `30-60-90/index.html`, `object-detect-summary/index.html`, `object-detect-level-1/index.html` through `object-detect-level-10/index.html`) passes an extra `content_group: 'HP Portfolio'` parameter in its `gtag('config', ...)` call — a deliberate deviation from the plain snippet used elsewhere, added 2026-09-13 so Avi can filter GA4 reports (Engagement > Pages and screens, Path exploration) down to just visitors exploring the HP portfolio, separate from the rest of the site. Each page already has a distinct `<title>`, which combined with `content_group` is what makes per-page dwell time, click-through paths, and unique-visitor counts within `/hp` reportable in GA4 without any further code — this needs no additional event tracking, since GA4's default collection already measures page views, per-page engagement time, and users automatically on every full-page navigation. If a new `hp/` page is added, its `gtag('config', ...)` call must include this same `content_group` parameter — copy the pattern from any existing `hp/*/index.html` file.
 
