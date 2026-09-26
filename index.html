@@ -92,6 +92,43 @@
         .side-links a:hover { color: var(--ink); background: #fafafa; }
         .side-links a.active { color: #000; background: #f2f2f2; }
 
+        .side-section {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--line);
+        }
+
+        .side-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            padding: 0 10px;
+            margin-bottom: 4px;
+        }
+
+        .side-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .side-level-grid a {
+            display: block;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-faint);
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .side-level-grid a:hover { color: var(--ink); background: #f2f2f2; }
+
         .site-main { margin-left: 200px; }
 
         /* Top bar: resume button only */
@@ -127,10 +164,14 @@
                 display: flex;
                 align-items: center;
                 gap: 14px;
+                flex-wrap: wrap;
             }
             .side-logo { margin-bottom: 0; padding: 0; }
             .side-links { flex-direction: row; gap: 2px; }
             .side-links a { padding: 6px 8px; font-size: 11px; }
+            .side-section { margin-top: 0; padding-top: 0; border-top: none; flex-basis: 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+            .side-section-label { padding: 0; margin-bottom: 0; }
+            .side-level-grid { grid-template-columns: repeat(10, 1fr); margin-top: 0; flex: 1 1 220px; }
             .site-main { margin-left: 0; }
             .top-bar { padding: 10px 16px; }
         }
@@ -346,6 +387,24 @@
             <a href="projects.html">AI Projects</a>
             <a href="#">Games</a>
         </nav>
+        <div class="side-section">
+            <div class="side-section-label">Object Detect</div>
+            <nav class="side-links">
+                <a href="/hp/object-detect-summary">Summary</a>
+            </nav>
+            <nav class="side-level-grid">
+                <a href="/hp/object-detect-level-1" title="Level 1">1</a>
+                <a href="/hp/object-detect-level-2" title="Level 2">2</a>
+                <a href="/hp/object-detect-level-3" title="Level 3">3</a>
+                <a href="/hp/object-detect-level-4" title="Level 4">4</a>
+                <a href="/hp/object-detect-level-5" title="Level 5">5</a>
+                <a href="/hp/object-detect-level-6" title="Level 6">6</a>
+                <a href="/hp/object-detect-level-7" title="Level 7">7</a>
+                <a href="/hp/object-detect-level-8" title="Level 8">8</a>
+                <a href="/hp/object-detect-level-9" title="Level 9">9</a>
+                <a href="/hp/object-detect-level-10" title="Level 10">10</a>
+            </nav>
+        </div>
     </aside>
 
     <div class="site-main">
