@@ -338,34 +338,25 @@
             flex-direction: column;
             background: #fafafa;
             border-right: 1px solid var(--line);
-            padding: 18px 14px 24px;
+            padding: 20px 14px 24px;
             overflow-y: auto;
         }
 
         .side-brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 4px 8px 18px;
+            display: block;
+            padding: 4px 10px 18px;
             margin-bottom: 14px;
             border-bottom: 1px solid var(--line);
             text-decoration: none;
         }
 
-        .side-brand img {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .side-brand-name { display: block; font-size: 14px; font-weight: 700; color: #000; line-height: 1.25; }
-        .side-brand-role { display: block; font-size: 12px; color: var(--ink-faint); line-height: 1.35; }
+        .side-brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #000; line-height: 1.25; }
+        .side-brand-role { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-faint); line-height: 1.35; }
 
         .side-links { display: flex; flex-direction: column; gap: 2px; }
 
-        .side-links a {
+        .side-links a,
+        .side-group-head {
             display: flex;
             align-items: center;
             gap: 11px;
@@ -379,68 +370,77 @@
         }
 
         .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
-        .side-ext { width: 14px; height: 14px; margin-left: auto; color: var(--ink-faint); }
+        .side-ext { width: 13px; height: 13px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
 
-        .side-links a:hover { background: #efefef; color: #000; }
-        .side-links a:hover .side-icon { color: #000; }
+        .side-links a:hover,
+        .side-group-head:hover { background: #efefef; color: #000; }
+        .side-links a:hover .side-icon,
+        .side-group-head:hover .side-icon { color: #000; }
 
-        .side-links a.active {
+        .side-links a.active,
+        .side-group-head.active,
+        .side-sub-link.active {
             background: #fff;
             color: #000;
             font-weight: 600;
             box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(0, 0, 0, 0.05);
         }
-        .side-links a.active .side-icon { color: #000; }
+        .side-links a.active .side-icon,
+        .side-group-head.active .side-icon,
+        .side-group-head.current .side-icon { color: #000; }
+        .side-group-head.current { color: #000; font-weight: 600; }
 
         .side-links a:focus-visible,
+        .side-group-head:focus-visible,
         .side-sub-link:focus-visible,
         .side-level-grid a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 
-        /* Object Detect sub-items, indented under their parent */
+        /* Projects section: its own group, individual projects indented under it */
+        .side-group {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--line);
+        }
+
         .side-sub {
-            margin: 4px 0 6px 19px;
-            padding-left: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 4px 0 0 19px;
+            padding-left: 10px;
             border-left: 1px solid var(--line);
         }
 
         .side-sub-link {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 6px 10px;
             border-radius: 6px;
-            font-size: 13px;
-            color: var(--ink-faint);
+            font-size: 13.5px;
+            color: var(--ink-soft);
             text-decoration: none;
             transition: background 0.15s, color 0.15s;
         }
 
         .side-sub-link:hover { background: #efefef; color: #000; }
-        .side-sub-link.active { color: #000; font-weight: 600; }
-
-        .side-sub-label {
-            padding: 8px 10px 6px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-        }
 
         .side-level-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 5px;
-            padding: 0 2px 0 6px;
+            padding: 4px 2px 6px 10px;
         }
 
         .side-level-grid a {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 28px;
+            height: 26px;
             border: 1px solid var(--line);
             border-radius: 6px;
             background: #fff;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--ink-soft);
             text-decoration: none;
@@ -479,19 +479,22 @@
             .site-side {
                 position: static;
                 width: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 4px;
                 border-right: none;
                 border-bottom: 1px solid var(--line);
                 padding: 14px 16px;
             }
-            .side-brand { padding: 0 0 12px; margin-bottom: 10px; }
-            .side-brand img { width: 32px; height: 32px; }
-            .side-links { flex-direction: row; flex-wrap: wrap; gap: 4px; }
-            .side-links a { padding: 7px 10px; font-size: 13px; }
-            .side-icon { display: none; }
-            .side-ext { display: none; }
-            .side-sub { margin: 8px 0 0; padding: 0; border-left: none; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-            .side-sub-label { display: none; }
-            .side-level-grid { flex: 1 1 100%; grid-template-columns: repeat(10, 1fr); gap: 4px; padding: 4px 0 0; }
+            .side-brand { flex-basis: 100%; padding: 0 0 12px; margin-bottom: 6px; }
+            .side-links, .side-group { display: contents; }
+            .side-links a, .side-group-head { padding: 7px 10px; font-size: 13px; }
+            .side-icon, .side-ext { display: none; }
+            .side-sub { flex-basis: 100%; flex-direction: row; flex-wrap: wrap; margin: 2px 0 0; padding: 0; border-left: none; }
+            .side-sub-link { padding: 6px 9px; font-size: 12.5px; }
+            .side-level-grid { flex-basis: 100%; grid-template-columns: repeat(10, 1fr); gap: 4px; padding: 4px 0 0; order: 99; }
+            .site-side:not(.in-od) .side-level-grid { display: none; }
             .side-level-grid a { height: 30px; }
             .site-main { margin-left: 0; }
             .top-bar { padding: 10px 16px; }
@@ -500,34 +503,33 @@
     </style>
 </head>
 <body>
-    <aside class="site-side">
+    <aside class="site-side in-od">
         <a href="/" class="side-brand">
-            <img src="/headshot.jpg" alt="">
-            <span>
-                <span class="side-brand-name">Avi Ravishankar</span>
-                <span class="side-brand-role">Data Scientist &middot; PM</span>
-            </span>
+            <span class="side-brand-name">Avi Ravishankar</span>
+            <span class="side-brand-role">AI/ML Engineer</span>
         </a>
         <nav class="side-links" aria-label="Main">
             <a href="/"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
-            <a href="/projects.html"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Projects</a>
             <a href="/games" target="_blank" rel="noopener"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><circle cx="15.5" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="17.5" cy="13.8" r="1" fill="currentColor" stroke="none"/></svg>AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            <a href="/object-detect" class="active"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>Object Detect</a>
         </nav>
-        <div class="side-sub">
-            <a href="/object-detect" class="side-sub-link">Summary</a>
-            <div class="side-sub-label">Levels</div>
-            <nav class="side-level-grid" aria-label="Object Detect levels">
-                <a href="/object-detect/level-1" title="Level 1">1</a>
-                <a href="/object-detect/level-2" title="Level 2">2</a>
-                <a href="/object-detect/level-3" title="Level 3" class="active" aria-current="page">3</a>
-                <a href="/object-detect/level-4" title="Level 4">4</a>
-                <a href="/object-detect/level-5" title="Level 5">5</a>
-                <a href="/object-detect/level-6" title="Level 6">6</a>
-                <a href="/object-detect/level-7" title="Level 7">7</a>
-                <a href="/object-detect/level-8" title="Level 8">8</a>
-                <a href="/object-detect/level-9" title="Level 9">9</a>
-                <a href="/object-detect/level-10" title="Level 10">10</a>
+        <div class="side-group">
+            <a href="/projects.html" class="side-group-head current"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Projects</a>
+            <nav class="side-sub" aria-label="Projects">
+                <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" class="side-sub-link" target="_blank" rel="noopener">Robotic Surgery<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                <a href="/object-detect" class="side-sub-link">Object Detect</a>
+                <div class="side-level-grid" aria-label="Object Detect levels">
+                    <a href="/object-detect/level-1" title="Level 1">1</a>
+                    <a href="/object-detect/level-2" title="Level 2">2</a>
+                    <a href="/object-detect/level-3" title="Level 3" class="active" aria-current="page">3</a>
+                    <a href="/object-detect/level-4" title="Level 4">4</a>
+                    <a href="/object-detect/level-5" title="Level 5">5</a>
+                    <a href="/object-detect/level-6" title="Level 6">6</a>
+                    <a href="/object-detect/level-7" title="Level 7">7</a>
+                    <a href="/object-detect/level-8" title="Level 8">8</a>
+                    <a href="/object-detect/level-9" title="Level 9">9</a>
+                    <a href="/object-detect/level-10" title="Level 10">10</a>
+                </div>
+                <a href="/projects.html#clutch-sports-data" class="side-sub-link">Clutch Sports Data</a>
             </nav>
         </div>
     </aside>
