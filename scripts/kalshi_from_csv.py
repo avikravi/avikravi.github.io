@@ -15,11 +15,13 @@ Don't commit the CSV itself: it contains order and market IDs.
 
 import csv
 import sys
+from decimal import Decimal
 
-from kalshi_common import build_dashboard, group_fills, make_bet, money, parse_time, write_if_changed
+from kalshi_common import build_dashboard, dec_str, group_fills, make_bet, parse_time, to_decimal, write_if_changed
+from kalshi_rules import ZERO, app_display_cents
 
-# Read off the Kalshi app on Oct 10, 2026.
-SNAPSHOT = {"date": "2026-10-10", "cash": 28.01, "open_value": 7.30}
+# Read off the Kalshi app on Oct 10, 2026 (exact strings, no floats).
+SNAPSHOT = {"date": "2026-10-10", "cash": Decimal("28.01"), "open_value": Decimal("7.30")}
 
 # Markets still open on the snapshot date.
 OPEN_TICKERS = {
@@ -50,18 +52,23 @@ SEED_TITLES = {
 }
 
 
-def formula_fee(row, yes_price):
-    """Kalshi's taker fee, 0.07 x contracts x P x (1 - P), left unrounded.
+FEE_RATE = Decimal("0.07")
+HUNDRED = Decimal("100")
+ONE = Decimal("1")
 
-    Used ONLY for an open position's cost basis. The CSV's Fee_In_Dollars is
-    rounded per fill and runs ~1-2c low, so a cost basis built from it misses
-    the app's display; the unrounded formula matches it for all three open
-    positions. Every fee TOTAL uses Fee_In_Dollars, Kalshi's own record.
-    Maker fills were $0 in every row of the CSV.
+
+def formula_fee(row, yes_price):
+    """Kalshi's taker fee, 0.07 x contracts x P x (1 - P), computed exactly.
+
+    Used ONLY for an open position's cost basis. The CSV's Fee_In_Dollars runs
+    ~1-2c low (it is truncated), so a cost basis built from it misses the
+    app's display; the exact formula matches it for all three open positions.
+    Every fee TOTAL uses Fee_In_Dollars, Kalshi's own record. Maker fills were
+    $0 in every row of the CSV.
     """
     if row["Order_Type"] != "Taker":
-        return 0.0
-    return 0.07 * float(row["Amount_In_Dollars"]) * yes_price * (1 - yes_price)
+        return ZERO
+    return FEE_RATE * to_decimal(row["Amount_In_Dollars"]) * yes_price * (ONE - yes_price)
 
 
 def read_fills(csv_path):
@@ -74,7 +81,7 @@ def read_fills(csv_path):
             # Price_In_Cents is ALWAYS the Yes price, whatever the Direction.
             # A "No" fill at P means the No side traded at (100 - P) cents; if
             # it closes a Yes position, Yes was sold at P cents.
-            yes_price = float(row["Price_In_Cents"]) / 100
+            yes_price = to_decimal(row["Price_In_Cents"]) / HUNDRED
             fills.append(
                 {
                     "ticker": row["Market_Ticker"],
@@ -82,9 +89,9 @@ def read_fills(csv_path):
                     # Despite the column name, this is the contract count:
                     # it matches the order's "Filled" quantity, and the fees
                     # only reconcile (to $3.23) when read that way.
-                    "count": float(row["Amount_In_Dollars"]),
-                    "price": round(yes_price if side == "yes" else 1 - yes_price, 6),
-                    "fee": float(row["Fee_In_Dollars"] or 0),
+                    "count": to_decimal(row["Amount_In_Dollars"]),
+                    "price": yes_price if side == "yes" else ONE - yes_price,
+                    "fee": to_decimal(row["Fee_In_Dollars"] or "0"),
                     "cost_fee": formula_fee(row, yes_price),
                     "is_taker": row["Order_Type"] == "Taker",
                     "time": parse_time(row["Original_Date"]),
@@ -93,20 +100,24 @@ def read_fills(csv_path):
     return fills
 
 
-# The app rounds to the cent and the CSV's fee column is rounded per fill, so
-# allow a cent and a half of drift on these older checks.
-CHECK_TOLERANCE = 0.015
+# The CSV's Fee_In_Dollars column is truncated to whole cents, so figures
+# built from it can sit up to 1c (plus the app's own half-cent display
+# rounding) away from the app. This slack applies ONLY to these CSV-vs-app
+# sanity checks; nothing computed or stored uses it.
+CSV_FEE_TRUNCATION_SLACK = Decimal("0.015")
 
 
 def expect(label, actual, target):
-    if abs(actual - target) > CHECK_TOLERANCE:
-        raise SystemExit("CSV check failed: {} = {:.4f}, app shows {:.2f}".format(label, actual, target))
+    target = Decimal(target)
+    if abs(actual - target) > CSV_FEE_TRUNCATION_SLACK:
+        raise SystemExit("CSV check failed: {} = {}, app shows {}".format(label, dec_str(actual), dec_str(target)))
 
 
 def expect_cents(label, actual, target):
-    """Exact match to the cent, after the app's half-up rounding."""
-    if money(actual) != target:
-        raise SystemExit("CSV check failed: {} = {:.2f}, app shows {:.2f}".format(label, money(actual), target))
+    """Exact match to the cent, after the app's half-up display rounding (kalshi_rules)."""
+    target = Decimal(target)
+    if app_display_cents(actual) != target:
+        raise SystemExit("CSV check failed: {} = {}, app shows {}".format(label, dec_str(actual), dec_str(target)))
 
 
 def fills_for(fills, ticker, side):
@@ -124,38 +135,35 @@ def check_against_app(fills, bets_by_ticker):
     canada = "KXWCGROUPWIN-26B-CAN"
 
     if mexico in bets_by_ticker:
-        # Direction No, price 95 -> "Sold Yes at 95c", $1.81.
+        # Direction No, price 95 -> "Sold Yes at 95c", $1.81 (exactly $1.805).
         closing = fills_for(fills, mexico, "no")
-        expect("Mexico sold-Yes proceeds", sum(fill["count"] * (1 - fill["price"]) for fill in closing), 1.81)
+        expect_cents("Mexico sold-Yes proceeds", sum((fill["count"] * (ONE - fill["price"]) for fill in closing), ZERO), "1.81")
 
     if penix in bets_by_ticker:
         # Direction No, price 17 -> "Bought No at 83.9c" incl. fee, $1.01.
         opening = fills_for(fills, penix, "no")
-        expect("Penix No cost incl. fee", sum(fill["count"] * fill["price"] + fill["fee"] for fill in opening), 1.01)
+        expect_cents("Penix No cost incl. fee", sum((fill["count"] * fill["price"] + fill["fee"] for fill in opening), ZERO), "1.01")
 
     if doubs in bets_by_ticker:
         # Direction No, price 59 -> "Bought No at 42.6c", $2.18.
         opening = fills_for(fills, doubs, "no")
-        total = sum(fill["count"] * fill["price"] + fill["fee"] for fill in opening)
-        contracts = sum(fill["count"] for fill in opening)
-        expect("Doubs No cost incl. fee", total, 2.18)
-        expect("Doubs No price per contract", total / contracts, 0.426)
+        total = sum((fill["count"] * fill["price"] + fill["cost_fee"] for fill in opening), ZERO)
+        contracts = sum((fill["count"] for fill in opening), ZERO)
+        expect_cents("Doubs No cost incl. fee", total, "2.18")
+        expect("Doubs No price per contract", total / contracts, "0.426")
 
     if canada in bets_by_ticker:
         # Bought 74 Yes @ 14c = $10.99 with fees; sold Yes @ 33c = $23.27 net
-        # of the $1.14 fee; profit +$12.28.
+        # of the fee; profit +$12.28. The CSV's truncated $1.14 sell fee (the
+        # API says $1.15) leaves the last two 1c off, hence expect() there.
         opening = fills_for(fills, canada, "yes")
         closing = fills_for(fills, canada, "no")
-        expect("Canada Yes cost incl. fees", sum(fill["count"] * fill["price"] + fill["fee"] for fill in opening), 10.99)
-        expect(
-            "Canada sold-Yes proceeds net of fee",
-            sum(fill["count"] * (1 - fill["price"]) - fill["fee"] for fill in closing),
-            23.27,
-        )
-        expect("Canada profit", bets_by_ticker[canada]["profit"], 12.28)
-        # The dashboard row itself, on the app's basis.
-        expect_cents("Canada row cost incl. fees", bets_by_ticker[canada]["cost"], 10.99)
-        expect("Canada row payout net of fee", bets_by_ticker[canada]["payout"], 23.27)
+        expect_cents("Canada Yes cost incl. fees", sum((fill["count"] * fill["price"] + fill["fee"] for fill in opening), ZERO), "10.99")
+        expect("Canada sold-Yes proceeds net of fee",
+               sum((fill["count"] * (ONE - fill["price"]) - fill["fee"] for fill in closing), ZERO), "23.27")
+        expect("Canada profit", bets_by_ticker[canada]["profit"], "12.28")
+        expect_cents("Canada row cost incl. fees", bets_by_ticker[canada]["cost"], "10.99")
+        expect("Canada row payout net of fee", bets_by_ticker[canada]["payout"], "23.27")
 
     # The display-only formula fee should never stray far from what the CSV recorded.
     for fill in fills:
@@ -163,17 +171,17 @@ def check_against_app(fills, bets_by_ticker):
 
     # Open-position cost basis including fees, as the app shows it.
     app_cost_basis = {
-        "KXNFLRECYDS-26OCT11CHIGB-GBMGOLDEN0-40": ("Golden", 1.99),
-        "KXNFLRECYDS-26OCT11LVNE-NERDOUBS87-40": ("Doubs", 2.18),
-        "KXNFLRECYDS-26OCT11CLENYJ-CLEDBOSTON12-60": ("Boston", 3.50),
+        "KXNFLRECYDS-26OCT11CHIGB-GBMGOLDEN0-40": ("Golden", "1.99"),
+        "KXNFLRECYDS-26OCT11LVNE-NERDOUBS87-40": ("Doubs", "2.18"),
+        "KXNFLRECYDS-26OCT11CLENYJ-CLEDBOSTON12-60": ("Boston", "3.50"),
     }
     present = [ticker for ticker in app_cost_basis if ticker in bets_by_ticker]
     for ticker in present:
         name, target = app_cost_basis[ticker]
         expect_cents(name + " open cost basis incl. fees", bets_by_ticker[ticker]["cost"], target)
     if len(present) == len(app_cost_basis):
-        total = sum(bets_by_ticker[ticker]["cost"] for ticker in present)
-        expect_cents("open cost basis total", total, 7.67)
+        total = sum((bets_by_ticker[ticker]["cost"] for ticker in present), ZERO)
+        expect_cents("open cost basis total", total, "7.67")
 
 
 def main():
@@ -202,23 +210,22 @@ def main():
         series_note="Seeded from a CSV export. Bets that ran to settlement show as pending "
         "until the live API sync fills in their payouts.",
     )
-    # Fee totals must come from Kalshi's own Fee_In_Dollars column, never the
-    # display-only formula fee.
-    expect_cents("dashboard trading fees vs CSV Fee_In_Dollars sum", dashboard["summary"]["trading_fees"],
-                 money(sum(fill["fee"] for fill in fills)))
-    expect_cents("dashboard taker fees vs CSV Fee_In_Dollars sum", dashboard["fees"]["taker_fees"],
-                 money(sum(fill["fee"] for fill in fills if fill["is_taker"])))
+    # Fee totals must come from Kalshi's own Fee_In_Dollars column, exactly.
+    if to_decimal(dashboard["summary"]["trading_fees"]) != sum((fill["fee"] for fill in fills), ZERO):
+        raise SystemExit("CSV check failed: trading fees are not the exact Fee_In_Dollars sum")
 
     # With most settlements unknown, a per-bet curve would be misleading, so
     # the CSV chart only shows the two points we actually know.
-    net = dashboard["summary"]["net_pnl"]
+    deposit_fee = Decimal("0.20")
+    net = to_decimal(dashboard["summary"]["net_pnl"])
     dashboard["pnl_series"] = [
-        {"date": "2025-12-02", "day": -0.20, "pnl": -0.20, "items": [{"label": "Deposit fee", "amount": -0.20}]},
+        {"date": "2025-12-02", "day": dec_str(-deposit_fee), "pnl": dec_str(-deposit_fee),
+         "items": [{"label": "Deposit fee", "amount": dec_str(-deposit_fee)}]},
         {
             "date": SNAPSHOT["date"],
-            "day": money(net + 0.20),
-            "pnl": net,
-            "items": [{"label": "Net change to the CSV snapshot (per-bet dates need the API)", "amount": money(net + 0.20)}],
+            "day": dec_str(net + deposit_fee),
+            "pnl": dec_str(net),
+            "items": [{"label": "Net change to the CSV snapshot (per-bet dates need the API)", "amount": dec_str(net + deposit_fee)}],
         },
     ]
 

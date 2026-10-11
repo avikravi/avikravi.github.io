@@ -25,13 +25,16 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # Offline tests, including the reconciliation guard. No secrets needed.
+      # Offline QA gate, no secrets needed: exactness lint, golden values and
+      # identities, property-based tests, headless display test (Chrome is
+      # preinstalled on the runner; CI=true makes a missing/hung browser fail),
+      # and the mutation check. Any failure stops the job before data.json.
       - name: Run tests
         run: python -m unittest discover -s tests -v
 
       # This repo is public, so these logs are public. The script prints one
       # reconciliation line; secrets are passed as env vars and GitHub masks them.
-      # If cash doesn't reconcile it exits non-zero BEFORE writing data.json,
+      # If cash doesn't reconcile EXACTLY it exits non-zero BEFORE writing data.json,
       # so the commit step below never runs and the site keeps the last good data.
       - name: Fetch from Kalshi API
         env:

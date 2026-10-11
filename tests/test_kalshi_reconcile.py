@@ -1,4 +1,4 @@
-"""Tests for the reconciliation guard in scripts/kalshi_fetch.py.
+"""Tests for the zero-tolerance reconciliation guard in scripts/kalshi_fetch.py.
 
 Run from the repo root:
     python -m unittest discover -s tests -v
@@ -10,14 +10,15 @@ import contextlib
 import io
 import json
 import os
-import sys
 import tempfile
 import unittest
+from decimal import Decimal
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+import kalshi_fixtures as fx
+import kalshi_fetch
+from kalshi_common import write_if_changed
 
-import kalshi_fetch  # noqa: E402
-from kalshi_common import write_if_changed  # noqa: E402
+D = Decimal
 
 # Three markets, using the deposits/credits in kalshi_common ($10 + $25 in,
 # $0.20 deposit fee):
@@ -32,57 +33,21 @@ from kalshi_common import write_if_changed  # noqa: E402
 #   + settlement payouts    10.00
 #   - purchase costs         7.50   (4.00 + 1.50 + 2.00)
 #   - all fees               0.42   (0.10 + 0.05 + 0.03 + 0.04 + 0.20 deposit)
-#   = 41.08
-GOOD_CASH_CENTS = 4108
-OPEN_VALUE_CENTS = 220  # 4 x 55c
-
-
-def make_fill(num, ticker, side, count, price, fee, taker=True):
-    return {
-        "fill_id": "fill-%d" % num,
-        "order_id": "order-%d" % num,
-        "ticker": ticker,
-        "outcome_side": side,
-        "count_fp": "%.2f" % count,
-        "yes_price_dollars": "%.4f" % (price if side == "yes" else 1 - price),
-        "no_price_dollars": "%.4f" % (price if side == "no" else 1 - price),
-        "is_taker": taker,
-        "fee_cost": "%.4f" % fee,
-        "created_time": "2026-10-0%dT12:00:00Z" % (num + 1),
-    }
-
-
+#   = 41.08 exactly
 FILLS = [
-    make_fill(0, "AAA", "yes", 10, 0.40, 0.10),
-    make_fill(1, "BBB", "no", 5, 0.30, 0.05),
-    make_fill(2, "BBB", "yes", 5, 0.20, 0.03),
-    make_fill(3, "CCC", "yes", 4, 0.50, 0.04),
+    fx.api_fill(0, "AAA", "order-0", "yes", "10.00", "0.4000", "0.10", True, "2026-10-01T12:00:00Z"),
+    fx.api_fill(1, "BBB", "order-1", "no", "5.00", "0.7000", "0.05", True, "2026-10-02T12:00:00Z"),
+    fx.api_fill(2, "BBB", "order-2", "yes", "5.00", "0.2000", "0.03", True, "2026-10-03T12:00:00Z"),
+    fx.api_fill(3, "CCC", "order-3", "yes", "4.00", "0.5000", "0.04", True, "2026-10-04T12:00:00Z"),
 ]
+POSITIONS = [{"ticker": "CCC", "position_fp": "4.00"}]
+BIDS = {"CCC": ("0.55", "0.45")}
 
 
-class FakeClient:
-    def __init__(self, cash_cents=GOOD_CASH_CENTS, settlement_cents=1000):
-        self.cash_cents = cash_cents
-        self.settlement_cents = settlement_cents
-
-    def get(self, endpoint, params=None, allow_missing=False):
-        if endpoint == "/portfolio/balance":
-            return {"balance": self.cash_cents, "portfolio_value": OPEN_VALUE_CENTS}
-        if endpoint.startswith("/markets/"):
-            code = endpoint.rsplit("/", 1)[-1]
-            return {"market": {"title": "Test market " + code, "result": "", "yes_bid_dollars": "0.55", "no_bid_dollars": "0.44"}}
-        return None
-
-    def paginate(self, endpoint, list_key, extra=None):
-        pages = {
-            "/portfolio/fills": FILLS,
-            "/historical/fills": [],
-            "/portfolio/settlements": [
-                {"ticker": "AAA", "revenue": self.settlement_cents, "settled_time": "2026-10-05T00:00:00Z"}
-            ],
-            "/portfolio/positions": [{"ticker": "CCC", "position_fp": "4.00"}],
-        }
-        return pages[endpoint]
+def client(cash="41.08", settlement_cents=1000):
+    settlements = [{"ticker": "AAA", "revenue": settlement_cents, "settled_time": "2026-10-05T00:00:00Z", "fee_cost": "0"}]
+    return fx.FakeClient(fills=FILLS, settlements=settlements, positions=POSITIONS, cash=cash, portfolio_cents=220,
+                         bids=BIDS, titles={})
 
 
 class RecordingWriter:
@@ -94,76 +59,65 @@ class RecordingWriter:
         return True
 
 
-def run_quietly(client, writer):
+def run_quietly(fake, writer):
     output = io.StringIO()
     with contextlib.redirect_stdout(output):
-        kalshi_fetch.run(client, writer=writer)
-    return output.getvalue().strip()
+        kalshi_fetch.run(fake, writer=writer)
+    return output.getvalue().strip().splitlines()
 
 
 class ReconcileTests(unittest.TestCase):
     def test_expected_cash_matches_hand_arithmetic(self):
-        dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(FakeClient())
-        self.assertAlmostEqual(kalshi_fetch.expected_cash(fills, payouts), 41.08, places=6)
+        dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(client())
+        self.assertEqual(kalshi_fetch.expected_cash(fills, payouts), D("41.08"))
 
-    def test_consistent_data_writes_and_prints_one_line(self):
+    def test_consistent_data_writes_and_prints(self):
         writer = RecordingWriter()
-        printed = run_quietly(FakeClient(), writer)
+        lines = run_quietly(client(), writer)
         self.assertEqual(len(writer.calls), 1)
-        self.assertEqual(printed, "reconciled: cash diff $0.00, net +$8.28 (data.json updated)")
-        self.assertEqual(len(printed.splitlines()), 1)
+        self.assertTrue(lines[0].startswith("ledger precision: "))
+        self.assertEqual(lines[1], "reconciled exactly: expected cash $41.08 = actual cash $41.08, diff $0; "
+                                   "net $8.28 (data.json updated)")
 
     def test_one_dollar_settlement_error_blocks_write(self):
         # The API claims AAA paid $11.00, but cash only reflects $10.00.
         writer = RecordingWriter()
         with self.assertRaises(kalshi_fetch.ReconciliationError) as caught:
-            run_quietly(FakeClient(settlement_cents=1100), writer)
+            run_quietly(client(settlement_cents=1100), writer)
         self.assertEqual(writer.calls, [])
         message = str(caught.exception)
         self.assertEqual(
             message,
-            "Reconciliation failed: expected cash $42.08, actual cash $41.08, diff $-1.00. data.json not updated.",
+            "Reconciliation failed: actual cash $41.08; at $0.0001 precision expected cash $42.08, diff $-1; "
+            "at $0.01 precision expected cash $42.08, diff $-1. data.json not updated.",
         )
-        # Only totals: no market names, codes or IDs leak into the public log.
-        for secret_ish in ("AAA", "BBB", "CCC", "Test market", "fill-", "order-"):
+        for secret_ish in ("AAA", "BBB", "CCC", "Kalshi market", "fill-", "order-"):
             self.assertNotIn(secret_ish, message)
 
     def test_blocked_run_leaves_data_json_untouched_and_exits_nonzero(self):
         with tempfile.TemporaryDirectory() as scratch:
             path = os.path.join(scratch, "data.json")
-            last_good = {"source": "csv", "summary": {"net_pnl": 0.31}, "updated": "2026-10-10T00:00:00Z"}
             with open(path, "w", encoding="utf-8") as handle:
-                json.dump(last_good, handle)
+                json.dump({"source": "csv", "summary": {"net_pnl": "0.31"}, "updated": "2026-10-10T00:00:00Z"}, handle)
             with open(path, "rb") as handle:
                 before = handle.read()
-
-            def writer(dashboard):
-                return write_if_changed(dashboard, path=path)
-
             with self.assertRaises(SystemExit) as caught:
-                run_quietly(FakeClient(cash_cents=GOOD_CASH_CENTS - 100), writer)
+                run_quietly(client(cash="41.07"), lambda dashboard: write_if_changed(dashboard, path=path))
             self.assertNotIn(caught.exception.code, (0, None))
             with open(path, "rb") as handle:
                 self.assertEqual(handle.read(), before)
 
-    def test_four_cents_is_within_tolerance(self):
-        writer = RecordingWriter()
-        printed = run_quietly(FakeClient(cash_cents=GOOD_CASH_CENTS + 4), writer)
-        self.assertEqual(len(writer.calls), 1)
-        self.assertTrue(printed.startswith("reconciled: cash diff $0.04"))
-
-    def test_six_cents_is_blocked(self):
-        writer = RecordingWriter()
-        with self.assertRaises(kalshi_fetch.ReconciliationError):
-            run_quietly(FakeClient(cash_cents=GOOD_CASH_CENTS - 6), writer)
-        self.assertEqual(writer.calls, [])
+    def test_smallest_differences_are_blocked(self):
+        for cash in ("41.0801", "41.0799", "41.09", "41.080001"):
+            with self.assertRaises(kalshi_fetch.ReconciliationError, msg=cash):
+                run_quietly(client(cash=cash), RecordingWriter())
 
     def test_net_pnl_mismatch_blocks(self):
-        dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(FakeClient())
-        dashboard["summary"]["net_pnl"] += 1.00
+        dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(client())
+        dashboard["summary"]["net_pnl"] = "9.28"
         with self.assertRaises(kalshi_fetch.ReconciliationError) as caught:
             kalshi_fetch.reconcile(dashboard, fills, payouts, cash, portfolio)
-        self.assertIn("expected net P&L $+8.28, dashboard net P&L $+9.28, diff $+1.00", str(caught.exception))
+        self.assertIn("expected net P&L $8.28, dashboard net P&L $9.28, diff $1", str(caught.exception))
 
 
 if __name__ == "__main__":

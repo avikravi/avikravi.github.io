@@ -225,6 +225,10 @@
         .pill.lost { background: var(--loss-bg); color: var(--loss); }
         tfoot td { color: var(--ink-soft); font-weight: 600; border-top: 1px solid var(--line); border-bottom: 0; }
         .empty { color: var(--ink-faint); padding: 18px 16px; }
+        details.data-view { margin-top: 10px; }
+        details.data-view summary { cursor: pointer; color: var(--ink-soft); font-size: 13px; padding: 4px 0; }
+        details.data-view table { margin-top: 8px; }
+        details.data-view td, details.data-view th { padding: 7px 12px; font-size: 13px; }
         .narrow-only { display: none; }
 
         .error {
@@ -399,11 +403,30 @@
                     <h2>Cumulative P&amp;L</h2>
                     <p class="section-desc">Tap or hover a step to see that day's bets.</p>
                     <div class="card"><div class="chart-box"><canvas id="pnlChart" role="img" aria-label="Step chart of cumulative profit and loss, one step per day"></canvas></div></div>
+                    <details class="data-view">
+                        <summary>Show daily values</summary>
+                        <div class="card table-card">
+                            <table>
+                                <thead><tr><th>Date</th><th class="num">Day</th><th class="num">Running total</th></tr></thead>
+                                <tbody id="seriesBody"></tbody>
+                            </table>
+                        </div>
+                    </details>
                 </div>
                 <div class="block">
                     <h2>P&amp;L by category</h2>
                     <p class="section-desc" id="catNote">Settled and sold bets only.</p>
                     <div class="card"><div class="chart-box cats"><canvas id="catChart" role="img" aria-label="Bar chart of profit and loss by category"></canvas></div></div>
+                    <details class="data-view">
+                        <summary>Show category values</summary>
+                        <div class="card table-card">
+                            <table>
+                                <thead><tr><th>Category</th><th class="num">Finished bets</th><th class="num">P&amp;L</th></tr></thead>
+                                <tbody id="catBody"></tbody>
+                                <tfoot id="catFoot"></tfoot>
+                            </table>
+                        </div>
+                    </details>
                 </div>
             </section>
 
@@ -483,6 +506,7 @@
                     <p><strong>Taker</strong> fills are orders that trade right away against an order already on the book. They pay Kalshi's trading fee. <span id="takerLine"></span></p>
                     <p><strong>Maker</strong> fills are limit orders that sit on the book until someone else trades against them. <span id="makerLine"></span></p>
                     <p>On these bets, waiting for a price instead of taking one avoided the fee.</p>
+                    <p id="roundingLine"></p>
                     <div class="fee-source" id="feeSource"></div>
                 </div>
             </section>
@@ -509,6 +533,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script>
     (function () {
+        // EXACTNESS RULE: every amount in data.json is an exact decimal string
+        // computed in Python. This script never does arithmetic on money. It
+        // only rearranges characters for display (sign, "$", trailing zeros,
+        // at least 2 decimals). Chart.js needs numbers to position marks, so
+        // Number() appears only on lines marked "plot-coordinate"; every label
+        // and tooltip uses the stored strings. tests/test_kalshi_lint.py checks this.
         var css = getComputedStyle(document.documentElement);
         var COLORS = {
             gain: css.getPropertyValue('--gain').trim(),
@@ -524,28 +554,40 @@
 
         function $(id) { return document.getElementById(id); }
 
-        // ---------- Formatting ----------
-        function usd(value) { return '$' + Math.abs(value).toFixed(2); }
-        // Whole dollars without cents ("$10"), otherwise "$10.50".
-        function dollars(value) { return Math.abs(value % 1) < 0.005 ? '$' + Math.round(value) : usd(value); }
-        // Gains/losses always carry a sign so meaning never rests on color alone.
-        function signed(value) {
-            if (value === null || value === undefined) return '—';
-            if (Math.abs(value) < 0.005) return '$0.00';
-            return (value > 0 ? '+' : '−') + usd(value);
+        // ---------- Money formatting: string operations only ----------
+        function isZeroStr(str) { return /^[-+]?0*(\.0*)?$/.test(str); }
+        function isNegStr(str) { return str.charAt(0) === '-' && !isZeroStr(str); }
+        // "-1.48780" -> "1.4878", "2" -> "2.00": trim trailing zeros, keep at least 2 decimals.
+        function digits(str) {
+            var parts = str.replace(/^[-+]/, '').split('.');
+            var whole = parts[0].replace(/^0+(?=\d)/, '') || '0';
+            var frac = (parts[1] || '').replace(/0+$/, '');
+            while (frac.length < 2) frac += '0';
+            return whole + '.' + frac;
         }
-        function tone(value) {
-            if (value === null || value === undefined || Math.abs(value) < 0.005) return '';
-            return value > 0 ? 'gain' : 'loss';
+        function plain(str) {
+            if (str === null || str === undefined) return '—';
+            return (isNegStr(str) ? '−' : '') + '$' + digits(str);
         }
+        function signed(str) {
+            if (str === null || str === undefined) return '—';
+            if (isZeroStr(str)) return '$' + digits(str);
+            return (isNegStr(str) ? '−' : '+') + '$' + digits(str);
+        }
+        function tone(str) {
+            if (str === null || str === undefined || isZeroStr(str)) return '';
+            return isNegStr(str) ? 'loss' : 'gain';
+        }
+        function formatMoney(str, format) { return format === 'signed' ? signed(str) : plain(str); }
+
         function fmtDate(iso, withYear) {
             var parts = iso.split('-');
-            var label = MONTHS[Number(parts[1]) - 1] + ' ' + Number(parts[2]);
+            var label = MONTHS[Number(parts[1]) - 1] + ' ' + Number(parts[2]); // date-part
             return withYear ? label + ', ' + parts[0] : label;
         }
         function dayMs(iso) {
             var parts = iso.split('-');
-            return Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+            return Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])); // date-part
         }
         function clip(label, size) { return label.length > size ? label.slice(0, size - 1) + '…' : label; }
         function el(tag, className, text) {
@@ -554,12 +596,19 @@
             if (text !== undefined) node.textContent = text;
             return node;
         }
-        function setValue(id, text, cls) {
-            var node = $(id);
-            node.textContent = text;
+        // Show one stored money string. data-field / data-format let the display
+        // test check every rendered amount against data.json.
+        function markMoney(node, str, format, field) {
+            node.textContent = formatMoney(str, format);
+            node.dataset.field = field;
+            node.dataset.format = format;
             node.classList.remove('gain', 'loss');
-            if (cls) node.classList.add(cls);
+            if (format === 'signed' && tone(str)) node.classList.add(tone(str));
+            return node;
         }
+        function setMoney(id, str, format, field) { return markMoney($(id), str, format, field); }
+        function moneyEl(tag, className, str, format, field) { return markMoney(el(tag, className), str, format, field); }
+        function setText(id, text) { $(id).textContent = text; }
 
         // ---------- Routing: one panel at a time, driven by the URL hash ----------
         // Each nav click is a normal hash link, so the browser's back/forward
@@ -605,73 +654,75 @@
         // ---------- Summary, sidebar, overview, fees, about ----------
         function renderSummary(data) {
             var s = data.summary;
+            var fees = data.fees;
             var updated = new Date(data.updated);
-            $('sideUpdated').textContent = 'Last updated ' + updated.toLocaleString(undefined, {
+            setText('sideUpdated', 'Last updated ' + updated.toLocaleString(undefined, {
                 month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
-            });
-            $('sideSource').textContent = data.source === 'csv' ? 'from a CSV export' : 'live from Kalshi';
-            setValue('sideNet', signed(s.net_pnl), tone(s.net_pnl));
+            }));
+            setText('sideSource', data.source === 'csv' ? 'from a CSV export' : 'live from Kalshi');
+            setMoney('sideNet', s.net_pnl, 'signed', 'summary.net_pnl');
 
-            setValue('netPnl', signed(s.net_pnl), tone(s.net_pnl));
-            $('netNote').textContent = 'After all fees. Started with ' + dollars(s.deposited) + ' + a ' + dollars(s.credits) + ' bonus.';
+            setMoney('netPnl', s.net_pnl, 'signed', 'summary.net_pnl');
+            setText('netNote', 'After all fees. Started with ' + plain(s.deposited) + ' + a ' + plain(s.credits) + ' bonus.');
 
-            setValue('accountValue', usd(s.account_value));
-            $('accountSub').textContent = usd(s.cash) + ' cash + ' + usd(s.open_value) + ' open';
-            setValue('deposited', usd(s.deposited));
-            setValue('credits', usd(s.credits));
-            setValue('feesPaid', usd(s.total_fees));
-            $('feesSub').textContent = usd(s.trading_fees) + ' trading + ' + usd(s.deposit_fees) + ' deposit';
+            setMoney('accountValue', s.account_value, 'plain', 'summary.account_value');
+            setText('accountSub', plain(s.cash) + ' cash + ' + plain(s.open_value) + ' open');
+            setMoney('deposited', s.deposited, 'plain', 'summary.deposited');
+            setMoney('credits', s.credits, 'plain', 'summary.credits');
+            setMoney('feesPaid', s.total_fees, 'plain', 'summary.total_fees');
+            setText('feesSub', plain(s.trading_fees) + ' trading + ' + plain(s.deposit_fees) + ' deposit');
 
-            if (s.win_rate === null) {
+            if (s.win_rate_approx_pct === null || s.win_rate_approx_pct === undefined) {
                 // No percentage while results are pending: the known ones are
                 // mostly bets sold early, which skews toward winners.
-                setValue('winRate', '—');
-                $('winSub').textContent = s.pending ? s.wins + ' won · ' + s.pending + ' pending API sync' : 'No settled bets yet';
+                setText('winRate', '—');
+                setText('winSub', s.pending ? s.wins + ' won · ' + s.pending + ' pending API sync' : 'No settled bets yet');
             } else {
-                // Sold-early and settled bets only; open positions never count.
-                setValue('winRate', Math.round(s.win_rate * 100) + '%');
-                $('winSub').textContent = s.wins + ' won / ' + s.losses + ' lost · ' + s.open + ' open';
+                // A ratio, not money: the one rounded figure on the page, marked "≈".
+                setText('winRate', '≈' + s.win_rate_approx_pct + '%');
+                setText('winSub', s.wins + ' won / ' + s.losses + ' lost · ' + s.open + ' open');
             }
 
-            setValue('betCount', String(s.bets));
-            var bits = [s.open + ' open'];
-            if (s.pending) bits.push(s.pending + ' pending');
-            $('betSub').textContent = bits.join(' · ');
+            setText('betCount', String(s.bets));
+            setText('betSub', s.open + ' open' + (s.pending ? ' · ' + s.pending + ' pending' : ''));
 
             [['best', s.best_bet], ['worst', s.worst_bet]].forEach(function (pair) {
                 if (!pair[1]) return;
-                setValue(pair[0] + 'Profit', signed(pair[1].profit), tone(pair[1].profit));
-                $(pair[0] + 'Title').textContent = pair[1].title;
+                setMoney(pair[0] + 'Profit', pair[1].profit, 'signed', 'summary.' + pair[0] + '_bet.profit');
+                setText(pair[0] + 'Title', pair[1].title);
             });
 
             // Fees panel
-            var fees = data.fees;
-            setValue('feeTotal', usd(s.total_fees));
-            setValue('feeTrading', usd(s.trading_fees));
-            setValue('feeDeposit', usd(s.deposit_fees));
-            setValue('feeFills', String(fees.maker_fills + fees.taker_fills));
-            $('feeFillsSub').textContent = fees.taker_fills + ' taker · ' + fees.maker_fills + ' maker';
-            $('takerLine').textContent = 'Your ' + fees.taker_fills + ' taker fills paid ' + usd(fees.taker_fees) + '.';
-            $('makerLine').textContent = 'Your ' + fees.maker_fills + ' maker fills paid ' + usd(fees.maker_fees) + '.';
+            setMoney('feeTotal', s.total_fees, 'plain', 'summary.total_fees');
+            setMoney('feeTrading', s.trading_fees, 'plain', 'summary.trading_fees');
+            setMoney('feeDeposit', s.deposit_fees, 'plain', 'summary.deposit_fees');
+            setText('feeFills', String(fees.maker_fills + fees.taker_fills));
+            setText('feeFillsSub', fees.taker_fills + ' taker · ' + fees.maker_fills + ' maker');
+            setText('takerLine', 'Your ' + fees.taker_fills + ' taker fills paid ' + plain(fees.taker_fees) + '.');
+            setText('makerLine', 'Your ' + fees.maker_fills + ' maker fills paid ' + plain(fees.maker_fees) + '.');
+            if (fees.rounding && !isZeroStr(fees.rounding)) {
+                setText('roundingLine', 'Trading fees include ' + plain(fees.rounding) + ' of Kalshi rounding fees, less '
+                    + plain(fees.rebates) + ' of rebates. Kalshi keeps balances to whole cents and charges the leftover fraction of a cent on each fill.');
+            }
             var FEE_SOURCES = {
                 csv_fee_column: 'Source: the fee column in Kalshi’s activity export.',
-                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API).'
+                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API), plus Kalshi’s documented cent-rounding.'
             };
-            $('feeSource').textContent = FEE_SOURCES[fees.source] || '';
+            setText('feeSource', FEE_SOURCES[fees.source] || '');
 
             // About panel
-            $('aboutNet').textContent =
+            setText('aboutNet',
                 'Net P&L is the account value (cash plus open positions at Kalshi’s own value) minus the '
-                + dollars(s.deposited) + ' deposit and the ' + dollars(s.credits) + ' referral bonus. Every trading fee and the '
-                + usd(s.deposit_fees) + ' deposit fee is already taken out. Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. '
-                + 'The bonus counts as money in, not profit.';
-            $('aboutWin').textContent =
-                'Win rate counts only finished bets: settled, or sold before settlement. Open positions don’t count either way.';
-            $('aboutSource').textContent = data.source === 'csv'
+                + plain(s.deposited) + ' deposit and the ' + plain(s.credits) + ' referral bonus. Every trading fee and the '
+                + plain(s.deposit_fees) + ' deposit fee is already taken out. Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. '
+                + 'The bonus counts as money in, not profit. Every amount is shown exactly as calculated, to the fraction of a cent; nothing is rounded.');
+            setText('aboutWin',
+                'Win rate counts only finished bets: settled, or sold before settlement. Open positions don’t count either way.');
+            setText('aboutSource', data.source === 'csv'
                 ? 'Built from a Kalshi activity export (CSV). Bets that ran to settlement show as pending until the live sync runs.'
-                : 'Pulled from Kalshi’s Trade API every 6 hours by a GitHub Action. Before publishing, the numbers are checked: '
-                  + 'cash must match deposits, bonus, bets and fees to within 5¢, or the update is skipped and the last good data stays up.';
-            $('seriesNote').textContent = data.pnl_series_note || '';
+                : 'Pulled from Kalshi’s Trade API every 6 hours by a GitHub Action. Before publishing, the numbers must reconcile exactly: '
+                  + 'deposits, bonus, bets and fees have to add up to Kalshi’s cash balance to the cent, or the update is skipped and the last good data stays up.');
+            setText('seriesNote', data.pnl_series_note || '');
         }
 
         // ---------- Charts ----------
@@ -696,6 +747,13 @@
             };
         }
 
+        // Axis tick labels come from Chart.js's own scale (they are positions on
+        // the axis, not stored amounts), formatted with the same "$" rules.
+        function axisLabel(scale, value, index, ticks) {
+            var text = String(Chart.Ticks.formatters.numeric.call(scale, value, index, ticks)).replace(/,/g, '');
+            return signed(text);
+        }
+
         // Step chart: one point per day (same-day results already combined in
         // data.json), held flat until the next day's step. Green fill above $0,
         // red below, with a solid $0 baseline.
@@ -703,7 +761,7 @@
             var series = data.pnl_series || [];
             if (!series.length) return;
             var points = series.map(function (row) {
-                return { x: dayMs(row.date), y: row.pnl, date: row.date, day: row.day, items: row.items || [] };
+                return { x: dayMs(row.date), y: Number(row.pnl), row: row }; // plot-coordinate
             });
             var opts = baseChartOptions();
             opts.interaction = { mode: 'nearest', axis: 'x', intersect: false };
@@ -711,13 +769,13 @@
             opts.plugins.tooltip.bodyFont = { size: 12 };
             opts.plugins.tooltip.footerFont = { size: 12.5, weight: '600' };
             opts.plugins.tooltip.callbacks = {
-                title: function (items) { return fmtDate(items[0].raw.date, true); },
+                title: function (items) { return fmtDate(items[0].raw.row.date, true); },
                 label: function (item) {
-                    return item.raw.items.map(function (entry) { return signed(entry.amount) + '  ' + clip(entry.label, 34); });
+                    return item.raw.row.items.map(function (entry) { return signed(entry.amount) + '  ' + clip(entry.label, 34); });
                 },
                 footer: function (items) {
-                    var raw = items[0].raw;
-                    return ['Day ' + signed(raw.day), 'Running total ' + signed(raw.y)];
+                    var row = items[0].raw.row;
+                    return ['Day ' + signed(row.day), 'Running total ' + signed(row.pnl)];
                 }
             };
             opts.scales = {
@@ -742,11 +800,14 @@
                         lineWidth: function (ctx) { return ctx.tick.value === 0 ? 1.5 : 1; }
                     },
                     border: { display: false },
-                    ticks: { color: COLORS.faint, maxTicksLimit: small ? 4 : 7, callback: function (value) { return signed(value); } }
+                    ticks: {
+                        color: COLORS.faint, maxTicksLimit: small ? 4 : 7,
+                        callback: function (value, index, ticks) { return axisLabel(this, value, index, ticks); }
+                    }
                 }
             };
 
-            function signColor(value) { return value >= 0 ? COLORS.gain : COLORS.loss; }
+            function stepColor(row) { return isNegStr(row.pnl) ? COLORS.loss : COLORS.gain; }
 
             new Chart($(canvasId), {
                 type: 'line',
@@ -756,13 +817,13 @@
                         stepped: true,
                         borderWidth: 2,
                         // Each step's flat run sits at the previous day's total, so color by it.
-                        segment: { borderColor: function (ctx) { return signColor(ctx.p0.parsed.y); } },
+                        segment: { borderColor: function (ctx) { return stepColor(points[ctx.p0DataIndex].row); } },
                         borderColor: COLORS.gain,
                         fill: { target: { value: 0 }, above: 'rgba(33, 201, 122, 0.16)', below: 'rgba(242, 85, 90, 0.18)' },
                         pointRadius: small || points.length > 60 ? 0 : 3,
                         pointHitRadius: 10,
                         pointHoverRadius: 6,
-                        pointBackgroundColor: function (ctx) { return signColor(ctx.raw ? ctx.raw.y : 0); },
+                        pointBackgroundColor: function (ctx) { return ctx.raw ? stepColor(ctx.raw.row) : COLORS.gain; },
                         pointBorderColor: COLORS.surface,
                         pointBorderWidth: 1.5
                     }]
@@ -771,16 +832,44 @@
             });
         }
 
+        function renderSeriesTable(data) {
+            var body = $('seriesBody');
+            (data.pnl_series || []).forEach(function (row, index) {
+                var tr = el('tr');
+                tr.appendChild(el('td', '', fmtDate(row.date, true)));
+                tr.appendChild(moneyEl('td', 'num', row.day, 'signed', 'pnl_series.' + index + '.day'));
+                tr.appendChild(moneyEl('td', 'num', row.pnl, 'signed', 'pnl_series.' + index + '.pnl'));
+                body.appendChild(tr);
+            });
+        }
+
+        function renderCategoryTable(data) {
+            var cats = (data.categories || []).filter(function (cat) { return cat.resolved > 0; });
+            var body = $('catBody');
+            cats.forEach(function (cat) {
+                var tr = el('tr');
+                tr.appendChild(el('td', '', cat.name));
+                tr.appendChild(el('td', 'num', String(cat.resolved)));
+                tr.appendChild(moneyEl('td', 'num', cat.profit, 'signed', 'categories.' + data.categories.indexOf(cat) + '.profit'));
+                body.appendChild(tr);
+            });
+            var foot = el('tr');
+            foot.appendChild(el('td', '', 'Total realized'));
+            foot.appendChild(el('td', 'num', String(data.summary.resolved)));
+            foot.appendChild(moneyEl('td', 'num', data.summary.realized_pnl, 'signed', 'summary.realized_pnl'));
+            $('catFoot').appendChild(foot);
+        }
+
         function renderCategoryChart(data) {
             var allCats = data.categories || [];
             var cats = allCats.filter(function (cat) { return cat.resolved > 0; });
             var waiting = allCats.filter(function (cat) { return cat.pending > 0; })
                 .map(function (cat) { return cat.name + ' (' + cat.pending + ')'; });
             if (waiting.length) {
-                $('catNote').textContent = 'Settled and sold bets only. Still pending: ' + waiting.join(', ') + '.';
+                setText('catNote', 'Settled and sold bets only. Still pending: ' + waiting.join(', ') + '.');
             }
             if (!cats.length) return;
-            $('catChart').parentNode.style.height = Math.max(140, cats.length * 40 + 50) + 'px';
+            $('catChart').parentNode.style.height = Math.max(140, cats.length * 40 + 50) + 'px'; // layout
 
             var opts = baseChartOptions();
             opts.indexAxis = 'y';
@@ -795,7 +884,10 @@
                 x: {
                     grid: { color: function (ctx) { return ctx.tick.value === 0 ? COLORS.faint : COLORS.line; } },
                     border: { display: false },
-                    ticks: { color: COLORS.faint, maxTicksLimit: 7, callback: function (value) { return signed(value); } }
+                    ticks: {
+                        color: COLORS.faint, maxTicksLimit: 7,
+                        callback: function (value, index, ticks) { return axisLabel(this, value, index, ticks); }
+                    }
                 },
                 y: {
                     grid: { display: false },
@@ -807,11 +899,11 @@
             new Chart($('catChart'), {
                 type: 'bar',
                 data: {
-                    // Direct labels: name + signed value, so the bar's color is never the only cue.
+                    // Direct labels: name + exact signed value, so color is never the only cue.
                     labels: cats.map(function (cat) { return cat.name + '  ' + signed(cat.profit); }),
                     datasets: [{
-                        data: cats.map(function (cat) { return cat.profit; }),
-                        backgroundColor: cats.map(function (cat) { return cat.profit >= 0 ? COLORS.gain : COLORS.loss; }),
+                        data: cats.map(function (cat) { return Number(cat.profit); }), // plot-coordinate
+                        backgroundColor: cats.map(function (cat) { return isNegStr(cat.profit) ? COLORS.loss : COLORS.gain; }),
                         borderRadius: 4,
                         borderSkipped: false,
                         barThickness: 16,
@@ -824,13 +916,17 @@
 
         // ---------- Tables ----------
         // narrowText shows only on small screens, where its own column is hidden.
-        function betCell(bet, extra, narrowText) {
+        function betCell(bet, extraNodes, narrowText) {
             var cell = el('td');
             cell.appendChild(el('div', 'bet-title', bet.title));
             var meta = el('div', 'bet-meta');
             meta.appendChild(el('span', 'side-tag', bet.side.toUpperCase()));
             if (narrowText) meta.appendChild(el('span', 'narrow-only', narrowText + ' · '));
-            meta.appendChild(document.createTextNode(bet.category + (extra ? ' · ' + extra : '')));
+            meta.appendChild(document.createTextNode(bet.category));
+            extraNodes.forEach(function (node) {
+                meta.appendChild(document.createTextNode(' · '));
+                meta.appendChild(node);
+            });
             cell.appendChild(meta);
             return cell;
         }
@@ -850,68 +946,66 @@
                 emptyRow(body, 'No open positions right now.', 4);
                 return;
             }
-            var anyValue = false;
-            rows.forEach(function (bet) {
+            rows.forEach(function (bet, index) {
                 var row = el('tr');
-                row.appendChild(betCell(bet, 'opened ' + fmtDate(bet.date), bet.contracts ? bet.contracts.toFixed(2) + ' contracts' : ''));
-                row.appendChild(el('td', 'num wide-only', bet.contracts ? bet.contracts.toFixed(2) : '—'));
-                row.appendChild(el('td', 'num', usd(bet.cost)));
-                if (bet.value !== null && bet.value !== undefined) anyValue = true;
-                row.appendChild(el('td', 'num', bet.value === null || bet.value === undefined ? '—' : usd(bet.value)));
+                var field = 'open_positions.' + index;
+                row.appendChild(betCell(bet, [el('span', '', 'opened ' + fmtDate(bet.date))], bet.contracts ? digits(bet.contracts) + ' contracts' : ''));
+                row.appendChild(el('td', 'num wide-only', bet.contracts ? digits(bet.contracts) : '—'));
+                row.appendChild(moneyEl('td', 'num', bet.cost, 'plain', field + '.cost'));
+                row.appendChild(moneyEl('td', 'num', bet.value, 'plain', field + '.value'));
                 body.appendChild(row);
             });
-            // Total = sum of the rows (each valued at the current bid), so the
-            // column adds up. Blank if any row has no bid.
-            var totalCost = rows.reduce(function (sum, bet) { return sum + bet.cost; }, 0);
-            var allValued = rows.every(function (bet) { return bet.value !== null && bet.value !== undefined; });
-            var totalValue = rows.reduce(function (sum, bet) { return sum + (bet.value || 0); }, 0);
+            // Totals are computed in Python (data.open_totals), never here.
+            var totals = data.open_totals || {};
             var foot = el('tr');
             var label = el('td', '', 'Total');
             label.appendChild(el('div', 'bet-meta', 'at current bid'));
             foot.appendChild(label);
             foot.appendChild(el('td', 'num wide-only', ''));
-            foot.appendChild(el('td', 'num', usd(totalCost)));
-            foot.appendChild(el('td', 'num', allValued ? usd(totalValue) : '—'));
+            foot.appendChild(moneyEl('td', 'num', totals.cost, 'plain', 'open_totals.cost'));
+            foot.appendChild(moneyEl('td', 'num', totals.value, 'plain', 'open_totals.value'));
             $('openFoot').appendChild(foot);
 
-            $('openNote').textContent = anyValue
+            setText('openNote', totals.value !== null && totals.value !== undefined
                 ? 'Value = contracts × the current bid for the side held. The Account value tile uses Kalshi’s own portfolio value ('
-                  + usd(data.summary.open_value) + '), which can differ by a few cents.'
-                : 'Per-position values arrive with the live API sync.';
+                  + plain(data.summary.open_value) + '), which can differ by a few cents.'
+                : 'Per-position values arrive with the live API sync.');
         }
 
         // Settled bets: green "Won" / red "Lost". Sold early: neutral "Sold",
         // with the profit itself colored by sign.
         function resultPill(bet) {
             if (bet.status === 'sold') return el('span', 'pill', 'Sold');
-            if (bet.status === 'settled') return bet.profit > 0 ? el('span', 'pill won', 'Won') : el('span', 'pill lost', 'Lost');
+            if (bet.status === 'settled') return isNegStr(bet.profit) || isZeroStr(bet.profit) ? el('span', 'pill lost', 'Lost') : el('span', 'pill won', 'Won');
             return el('span', 'pill', bet.status === 'pending' ? 'Pending API' : bet.status);
         }
 
         function renderRecent(data) {
             var body = $('recentBody');
-            var finished = (data.recent_bets || []).filter(function (bet) {
-                return bet.status === 'settled' || bet.status === 'sold';
-            });
-            if (!finished.length) {
-                emptyRow(body, 'No finished bets yet.', 5);
-            }
-            finished.forEach(function (bet) {
+            var bets = data.recent_bets || [];
+            var shown = 0;
+            bets.forEach(function (bet, index) {
+                if (bet.status !== 'settled' && bet.status !== 'sold') return;
+                shown += 1;
+                var field = 'recent_bets.' + index;
                 var row = el('tr');
-                row.appendChild(betCell(bet, 'fee ' + usd(bet.fee), bet.resolved ? fmtDate(bet.resolved) : ''));
+                row.dataset.row = field;
+                row.appendChild(betCell(bet, [el('span', '', 'fee '), moneyEl('span', '', bet.fee, 'plain', field + '.fee')],
+                    bet.resolved ? fmtDate(bet.resolved) : ''));
                 row.appendChild(el('td', 'wide-only', bet.resolved ? fmtDate(bet.resolved, true) : '—'));
-                row.appendChild(el('td', 'num', usd(bet.cost)));
-                row.appendChild(el('td', 'num wide-only', bet.payout === null || bet.payout === undefined ? '—' : usd(bet.payout)));
+                row.appendChild(moneyEl('td', 'num', bet.cost, 'plain', field + '.cost'));
+                row.appendChild(moneyEl('td', 'num wide-only', bet.payout, 'plain', field + '.payout'));
                 var profitCell = el('td', 'num');
-                profitCell.appendChild(el('div', tone(bet.profit), signed(bet.profit)));
+                profitCell.appendChild(moneyEl('div', '', bet.profit, 'signed', field + '.profit'));
                 var pill = resultPill(bet);
                 pill.style.marginTop = '4px';
                 profitCell.appendChild(pill);
                 row.appendChild(profitCell);
                 body.appendChild(row);
             });
+            if (!shown) emptyRow(body, 'No finished bets yet.', 5);
             if (data.summary.pending) {
-                $('pendingNote').textContent = data.summary.pending + ' more bets have finished but their payouts aren’t in the data yet. They appear once the live Kalshi sync runs.';
+                setText('pendingNote', data.summary.pending + ' more bets have finished but their payouts aren’t in the data yet. They appear once the live Kalshi sync runs.');
             }
         }
 
@@ -927,11 +1021,14 @@
                 renderSummary(data);
                 renderOpen(data);
                 renderRecent(data);
+                renderSeriesTable(data);
+                renderCategoryTable(data);
                 dataReady = data;
+                document.body.dataset.rendered = 'true';
                 drawChartsFor(currentPanel(), data);
             })
             .catch(function (err) {
-                $('sideUpdated').textContent = '';
+                setText('sideUpdated', '');
                 var box = $('error');
                 box.hidden = false;
                 box.textContent = 'Couldn’t load the dashboard data (' + err.message + '). Try refreshing in a minute.';

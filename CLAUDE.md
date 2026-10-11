@@ -33,6 +33,7 @@ scripts/
                          .github/workflows/kalshi.yml every 6h with KALSHI_API_KEY_ID /
                          KALSHI_PRIVATE_KEY secrets. Signs requests per docs.kalshi.com (RSA-PSS
                          SHA-256, or Ed25519, over timestamp+GET+path-without-query).
+                         (Superseded 2026-10-11 by "Kalshi dashboard: exact money" below: zero tolerance.)
                          RECONCILIATION GUARD (2026-10-10): before writing, run() checks
                          expected cash (deposits + credits + sale proceeds + settlement payouts
                          - purchase costs - all fees, from API data alone) against
@@ -1069,6 +1070,40 @@ All of these guard with `typeof gtag === 'function'` before calling it, matching
 - Line endings: this repo is edited from both Windows and other environments; expect harmless LF→CRLF warnings from git on Windows — these are not errors.
 - Keep commits scoped and the commit message descriptive of the actual content change (e.g. "Add application: Rivian", not "update").
 - **Never mention compensation, salary, or pay figures anywhere on the site.** As of 2026-08-27, Avi explicitly asked that no page ever reference a dollar comp figure — this came up because a chat reply (not any page) mentioned a target salary number, and he wants the whole public site to stay silent on compensation entirely, not just the page that prompted it. If asked to discuss comp in future work, do it in chat only, never in a file that gets published.
+
+## Kalshi dashboard: exact money (NON-NEGOTIABLE)
+
+Added 2026-10-11 at Avi's explicit instruction; this overrides any older note in this file about rounding,
+tolerances or `money()`. The math must be EXACT everywhere:
+
+- **Computation:** every amount, price, contract count and fee is a `decimal.Decimal` parsed straight from Kalshi's
+  string (`kalshi_common.to_decimal`, which refuses floats). Context precision 50. No `float(`, no `round(`, no float
+  literals, no fixed-precision format specs (`{:.2f}`, `%.2f`) in `scripts/kalshi_*.py`. Every derived value is exact
+  arithmetic: cost = contracts × price + opening fees; payout = sale proceeds − closing fees (+ settlement);
+  profit = payout − cost; category totals, chart day totals and running totals are exact sums.
+- **Kalshi's own rounding** lives ONLY in `scripts/kalshi_rules.py` (the only file allowed to call `quantize`):
+  the documented fee-rounding rule (balance change floored to the member's precision, rounding fee, per-order rebate
+  accumulator, from docs.kalshi.com/getting_started/fee_rounding) and `app_display_cents` (used only to compare against
+  figures read off the app in the CSV fallback). Kalshi documents two balance precisions ($0.01 retail, $0.0001
+  direct); `kalshi_fetch.choose_balance_precision` uses whichever reconciles EXACTLY and records it in
+  `data.json` `ledger.balance_precision_matched`. Never assume one.
+- **Storage:** every amount in `kalshi/data.json` is a full-precision decimal STRING (`kalshi_common.dec_str`: no
+  exponent, trailing zeros trimmed, never rounded). Never a JSON number. Totals (open totals, realized P&L, category
+  totals, chart day/running totals, best/worst) are computed in Python and stored.
+- **Display:** the page does NO arithmetic on money; it only formats stored strings (trim trailing zeros, at least 2
+  decimals: `$2.00`, `$1.997`, `+$1.4878`). `Number()` is allowed only on lines marked `// plot-coordinate`
+  (Chart.js positions), `// date-part` or `// layout`; labels and tooltips use the strings. The one rounded figure is
+  the win-rate percentage (a ratio, not money), shown with "≈". Axis tick labels come from Chart.js's scale.
+- **Reconciliation:** zero tolerance. Expected cash (deposits + credits + sale proceeds + settlement payouts −
+  purchase costs − all fees, from API data alone) must EQUAL `balance_dollars`, and net P&L must equal cash +
+  portfolio value − money in, digit for digit. Otherwise the write is blocked and the exact differences are printed.
+- **Tests (run in the workflow before any write):** `test_kalshi_lint` (AST + page lint for the rules above),
+  `test_kalshi_exact` (golden values, every identity, round-trip, zero-tolerance reconcile, cent rule + docs
+  accumulator example), `test_kalshi_property` (hypothesis vs. an independent ledger simulation),
+  `test_kalshi_display` (headless Chrome render: every shown amount == its stored string, every row adds up on
+  screen; locally on a Mac where headless Chrome hangs it skips, use its `--serve` mode; in CI a hang fails),
+  `test_kalshi_mutation` (reintroduces a float() parse and 2-decimal rounding; both must be caught).
+  Never weaken a test or add a tolerance to make data fit; find the real rule instead.
 
 ## Reporting format (end every task with this)
 

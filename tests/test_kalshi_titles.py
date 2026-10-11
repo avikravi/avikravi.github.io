@@ -1,15 +1,12 @@
 """Tests for titles, categories and resolution dates in scripts/kalshi_fetch.py."""
 
-import os
-import sys
 import unittest
 from datetime import datetime, timezone
+from decimal import Decimal
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
-
-import kalshi_fetch  # noqa: E402
-from kalshi_common import category_for  # noqa: E402
-from kalshi_common import parse_time  # noqa: E402
+import kalshi_paths  # noqa: F401
+import kalshi_fetch
+from kalshi_common import category_for, parse_time
 
 NOW = datetime(2026, 10, 11, tzinfo=timezone.utc)
 
@@ -113,16 +110,16 @@ class SoldBetDateTests(unittest.TestCase):
         from kalshi_common import group_fills, make_bet
 
         fills = [
-            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "yes", "count": 74, "price": 0.14, "fee": 0.63,
-             "is_taker": True, "time": parse_time("2026-01-22T07:15:00Z")},
-            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "no", "count": 74, "price": 0.67, "fee": 1.14,
-             "is_taker": True, "time": parse_time("2026-06-18T17:47:00Z")},
+            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "yes", "count": Decimal("74"), "price": Decimal("0.14"),
+             "fee": Decimal("0.63"), "is_taker": True, "time": parse_time("2026-01-22T07:15:00Z")},
+            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "no", "count": Decimal("74"), "price": Decimal("0.67"),
+             "fee": Decimal("1.15"), "is_taker": True, "time": parse_time("2026-06-18T17:47:00Z")},
         ]
         entry = group_fills(fills)[0]
-        bet = make_bet(entry, "Canada", settlement_payout=0.0, resolved_time=parse_time("2026-06-24T22:00:00Z"))
+        bet = make_bet(entry, "Canada", settlement_payout=Decimal("0"), resolved_time=parse_time("2026-06-24T22:00:00Z"))
         self.assertEqual(bet["status"], "sold")
         self.assertEqual(bet["resolved"], "2026-06-18")
-        self.assertEqual(bet["profit"], 12.29)
+        self.assertEqual(bet["profit"], Decimal("12.28"))  # 23.27 - 10.99, exactly
 
 
 if __name__ == "__main__":

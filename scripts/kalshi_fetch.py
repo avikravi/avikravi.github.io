@@ -32,6 +32,8 @@ from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa
 from kalshi_common import (
     CREDITS,
     DEPOSITS,
+    dec_str,
+    to_decimal,
     TITLE_MAX,
     TITLE_OVERRIDES,
     WORLD_CUP_PARLAYS,
@@ -42,6 +44,7 @@ from kalshi_common import (
     parse_time,
     write_if_changed,
 )
+from kalshi_rules import CENT, DOCUMENTED_PRECISIONS, ZERO, apply_fee_rounding, decimal_places, is_on_grid
 
 API_HOST = os.environ.get("KALSHI_API_HOST", "https://external-api.kalshi.com")
 API_PREFIX = "/trade-api/v2"
@@ -117,15 +120,24 @@ def normalize_fill(raw):
     price_key = "yes_price_dollars" if side == "yes" else "no_price_dollars"
     stamp = raw.get("created_time")
     moment = parse_time(stamp) if stamp else parse_time(time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(raw["ts"])))
+    fill_key = raw.get("fill_id") or raw.get("trade_id")
+    count_text = raw.get("count_fp") or "0"
+    price_text = raw.get(price_key) or "0"
+    fee_text = raw.get("fee_cost") or "0"
     return {
-        "fill_key": raw.get("fill_id") or raw.get("trade_id"),
+        "fill_key": fill_key,
+        # Internal only (fee-rounding accumulator is per order); never written out.
+        "order_key": raw.get("order_id") or fill_key,
         "ticker": raw.get("ticker") or raw.get("market_ticker"),
         "side": side,
-        "count": float(raw.get("count_fp") or 0),
-        "price": float(raw.get(price_key) or 0),
-        "fee": float(raw.get("fee_cost") or 0),
+        # Exact Decimals straight from Kalshi's strings.
+        "count": to_decimal(count_text),
+        "price": to_decimal(price_text),
+        "fee_reported": to_decimal(fee_text),
         "is_taker": bool(raw.get("is_taker")),
         "time": moment,
+        "seq": raw.get("ts") or 0,
+        "places": {"count": decimal_places(count_text), "price": decimal_places(price_text), "fee": decimal_places(fee_text)},
     }
 
 
@@ -142,6 +154,7 @@ def fetch_fills(client):
         seen.add(fill["fill_key"])
         del fill["fill_key"]  # used only for de-duping, never written out
         fills.append(fill)
+    # Fees are set later by choose_balance_precision() / apply_fee_rounding().
     return fills
 
 
@@ -271,56 +284,102 @@ def resolution_time(settlement, info, entry, now):
     return entry["last_time"], "last_fill"
 
 
-RECONCILE_TOLERANCE = 0.05
-
-
 class ReconciliationError(SystemExit):
-    """Raised (exit code 1) when API data doesn't add up; data.json is left alone."""
+    """Raised (exit code 1) when API data doesn't add up exactly; data.json is left alone."""
+
+
+def money_in_total():
+    return sum((row["amount"] for row in DEPOSITS), ZERO) + sum((row["amount"] for row in CREDITS), ZERO)
 
 
 def expected_cash(fills, settlement_payouts):
-    """Cash the account should hold, from API data alone.
+    """Cash the account should hold, from API data alone, exactly.
 
     deposits + credits + sale proceeds + settlement payouts - purchase costs - all fees
 
     Every fill is recorded as a buy of its side (selling YES at P is buying NO
     at 1 - P), so "sale proceeds - purchase costs" is computed as
-    (matched YES+NO pairs x $1) - (every fill's count x price). The two forms
-    are the same money; this one needs no buy/sell flag.
+    (matched YES+NO pairs x $1) - (every fill's count x price). Fees are what
+    actually left the balance (kalshi_rules.apply_fee_rounding).
     """
-    money_in = sum(row["amount"] for row in DEPOSITS) + sum(row["amount"] for row in CREDITS)
-    deposit_fees = sum(row["fee"] for row in DEPOSITS)
-    spent = sum(fill["count"] * fill["price"] for fill in fills)
-    trading_fees = sum(fill["fee"] for fill in fills)
-    pair_payouts = sum(min(entry["count"]["yes"], entry["count"]["no"]) for entry in group_fills(fills))
-    return money_in + pair_payouts + sum(settlement_payouts) - spent - trading_fees - deposit_fees
+    deposit_fees = sum((row["fee"] for row in DEPOSITS), ZERO)
+    spent = sum((fill["count"] * fill["price"] for fill in fills), ZERO)
+    trading_fees = sum((fill["fee"] for fill in fills), ZERO)
+    pair_payouts = sum((min(entry["count"]["yes"], entry["count"]["no"]) for entry in group_fills(fills)), ZERO)
+    return money_in_total() + pair_payouts + sum(settlement_payouts, ZERO) - spent - trading_fees - deposit_fees
 
 
 def reconcile(dashboard, fills, settlement_payouts, actual_cash, portfolio_value):
-    """Block the write unless the numbers add up. Returns the success line.
+    """Block the write unless the numbers add up EXACTLY. Returns the success line.
 
-    Failure messages carry only the compared totals and their difference.
+    Zero tolerance: Decimal equality at Kalshi's own precision (the balance is
+    a whole number of cents; every modeled per-fill change is on that grid).
+    Failure messages carry only the compared totals and their difference,
+    with every digit.
     """
     expected = expected_cash(fills, settlement_payouts)
     cash_diff = actual_cash - expected
-    if abs(cash_diff) > RECONCILE_TOLERANCE:
+    if cash_diff != ZERO:
         raise ReconciliationError(
-            "Reconciliation failed: expected cash ${:.2f}, actual cash ${:.2f}, diff ${:+.2f}. "
-            "data.json not updated.".format(expected, actual_cash, cash_diff)
+            "Reconciliation failed: expected cash ${}, actual cash ${}, diff ${}. data.json not updated.".format(
+                dec_str(expected), dec_str(actual_cash), dec_str(cash_diff)
+            )
         )
 
-    money_in = sum(row["amount"] for row in DEPOSITS) + sum(row["amount"] for row in CREDITS)
-    expected_net = actual_cash + portfolio_value - money_in
-    published_net = dashboard["summary"]["net_pnl"]
+    expected_net = actual_cash + portfolio_value - money_in_total()
+    published_net = to_decimal(dashboard["summary"]["net_pnl"])
     net_diff = published_net - expected_net
-    if abs(net_diff) > RECONCILE_TOLERANCE:
+    if net_diff != ZERO:
         raise ReconciliationError(
-            "Reconciliation failed: expected net P&L ${:+.2f}, dashboard net P&L ${:+.2f}, diff ${:+.2f}. "
-            "data.json not updated.".format(expected_net, published_net, net_diff)
+            "Reconciliation failed: expected net P&L ${}, dashboard net P&L ${}, diff ${}. data.json not updated.".format(
+                dec_str(expected_net), dec_str(published_net), dec_str(net_diff)
+            )
         )
-    return "reconciled: cash diff ${:.2f}, net {}${:.2f}".format(
-        abs(cash_diff), "+" if published_net >= 0 else "-", abs(published_net)
+    return "reconciled exactly: expected cash ${} = actual cash ${}, diff $0; net ${}".format(
+        dec_str(expected), dec_str(actual_cash), dec_str(published_net)
     )
+
+
+def choose_balance_precision(fills, settlement_payouts, actual_cash):
+    """Which documented Kalshi balance precision reproduces the cash EXACTLY?
+
+    Applies Kalshi's fee-rounding rule (kalshi_rules.apply_fee_rounding) at
+    each documented precision and returns the first whose expected cash equals
+    the actual cash to the last digit. No tolerance. If none matches, blocks
+    the write and reports every candidate's exact difference.
+    """
+    misses = []
+    for precision in DOCUMENTED_PRECISIONS:
+        apply_fee_rounding(fills, precision)
+        diff = actual_cash - expected_cash(fills, settlement_payouts)
+        if diff == ZERO:
+            return precision
+        misses.append("at ${} precision expected cash ${}, diff ${}".format(
+            dec_str(precision), dec_str(actual_cash - diff), dec_str(diff)))
+    raise ReconciliationError(
+        "Reconciliation failed: actual cash ${}; {}. data.json not updated.".format(dec_str(actual_cash), "; ".join(misses))
+    )
+
+
+def ledger_report(balance, fills, settlements, precision):
+    """Precision facts about Kalshi's data (types and digit counts, aggregate only)."""
+    on_grid = sum(1 for fill in fills if is_on_grid(-(fill["count"] * fill["price"]) - fill["fee_reported"], CENT))
+    cents_view = to_decimal(balance["balance"]) / 100 if isinstance(balance.get("balance"), int) else None
+    return {
+        "balance": "integer cents" if isinstance(balance.get("balance"), int) else type(balance.get("balance")).__name__,
+        "balance_dollars_places": decimal_places(balance.get("balance_dollars", "")),
+        "balance_cents_field_matches_dollars": cents_view == to_decimal(balance.get("balance_dollars") or "0"),
+        "portfolio_value": "integer cents" if isinstance(balance.get("portfolio_value"), int) else "other",
+        "balance_precision_matched": dec_str(precision),
+        "fee_cost_max_places": max((fill["places"]["fee"] for fill in fills), default=0),
+        "price_max_places": max((fill["places"]["price"] for fill in fills), default=0),
+        "count_max_places": max((fill["places"]["count"] for fill in fills), default=0),
+        "settlement_revenue": "integer cents" if all(isinstance(item.get("revenue"), int) for item in settlements) else "other",
+        "fills": len(fills),
+        "fills_whose_cash_change_is_whole_cents": on_grid,
+        "fills_with_modeled_rounding_fee": sum(1 for fill in fills if fill["rounding_fee"] != ZERO),
+        "settlements_with_fee_cost": sum(1 for item in settlements if to_decimal(item.get("fee_cost") or "0") != ZERO),
+    }
 
 
 def build_from_api(client):
@@ -329,17 +388,37 @@ def build_from_api(client):
     Returns (dashboard, fills, settlement_payouts, cash, portfolio_value).
     """
     balance = client.get("/portfolio/balance")
-    cash = balance["balance"] / 100
-    portfolio_value = balance["portfolio_value"] / 100
+    # Cash at full precision from Kalshi's fixed-point string. The integer-cents
+    # "balance" field can hide sub-cent cash, so it's only reported, not used.
+    cash = to_decimal(balance["balance_dollars"]) if balance.get("balance_dollars") else to_decimal(balance["balance"]) / 100
+    portfolio_value = to_decimal(balance["portfolio_value"]) / 100
 
     fills = fetch_fills(client)
-    settlements = {
-        item["ticker"]: item for item in client.paginate("/portfolio/settlements", "settlements")
-    }
+    settlement_list = client.paginate("/portfolio/settlements", "settlements")
+    settlements = {item["ticker"]: item for item in settlement_list}
     held = {
-        item["ticker"]: float(item.get("position_fp") or 0)
+        item["ticker"]: to_decimal(item.get("position_fp") or "0")
         for item in client.paginate("/portfolio/positions", "market_positions", {"count_filter": "position"})
     }
+
+    # Settlement payouts first (they don't depend on fees), then find the
+    # balance precision that makes the cash match exactly, which fixes every
+    # fill's real fee before any bet is built.
+    payouts_by_ticker = {}
+    for entry in group_fills([dict(fill, fee=ZERO) for fill in fills]):
+        ticker = entry["ticker"]
+        settlement = settlements.get(ticker)
+        if settlement is not None:
+            payouts_by_ticker[ticker] = to_decimal(settlement["revenue"]) / 100
+    infos = {}
+    for entry in group_fills([dict(fill, fee=ZERO) for fill in fills]):
+        ticker = entry["ticker"]
+        infos[ticker] = market_info(client, ticker)
+        if ticker not in payouts_by_ticker and infos[ticker]["result"] in ("yes", "no"):
+            won = infos[ticker]["result"]
+            # Archived out of /portfolio/settlements: winning contracts pay $1.
+            payouts_by_ticker[ticker] = max(entry["count"][won] - entry["count"]["no" if won == "yes" else "yes"], ZERO)
+    precision = choose_balance_precision(fills, list(payouts_by_ticker.values()), cash)
 
     bets = []
     settlement_payouts = []
@@ -347,34 +426,28 @@ def build_from_api(client):
     now = datetime.now(timezone.utc)
     for entry in group_fills(fills):
         ticker = entry["ticker"]
-        info = market_info(client, ticker)
+        info = infos[ticker]
         settlement = settlements.get(ticker)
-        payout = None
+        payout = payouts_by_ticker.get(ticker)
         resolved_time = None
-        if settlement is not None:
-            payout = settlement["revenue"] / 100
-        elif info["result"] in ("yes", "no"):
-            # Archived out of /portfolio/settlements: winning contracts pay $1.
-            remaining = entry["count"][info["result"]] - entry["count"]["no" if info["result"] == "yes" else "yes"]
-            payout = max(remaining, 0.0)
         if payout is not None:
             settlement_payouts.append(payout)
             resolved_time, source_name = resolution_time(settlement, info, entry, now)
             # Bets sold off before settlement resolve on their sale date (make_bet),
             # so only count the ones that actually rode to settlement.
-            if abs(entry["count"]["yes"] - entry["count"]["no"]) >= 0.005:
+            if entry["count"]["yes"] != entry["count"]["no"]:
                 resolution_sources[source_name] = resolution_sources.get(source_name, 0) + 1
 
-        position = held.get(ticker, 0.0)
-        is_open = payout is None and abs(position) > 0
+        position = held.get(ticker, ZERO)
+        is_open = payout is None and position != ZERO
         open_value = None
         if is_open:
             # Value = contracts x the current BID for the side held (yes_bid for
             # a YES position, no_bid for NO): what selling right now would
             # actually fetch. Mid flatters thin markets with wide spreads, and
             # last-trade can be hours stale. No bid -> leave it blank ("—").
-            bid = info["yes_bid"] if position > 0 else info["no_bid"]
-            open_value = abs(position) * float(bid) if bid not in (None, "") else None
+            bid = info["yes_bid"] if position > ZERO else info["no_bid"]
+            open_value = abs(position) * to_decimal(bid) if bid not in (None, "") else None
         bets.append(make_bet(entry, info["title"], payout, resolved_time, is_open, open_value, info["category"]))
 
     dashboard = build_dashboard(
@@ -387,6 +460,7 @@ def build_from_api(client):
         series_note="One step per day: bets count on the day they settled or were sold. "
         "The last step is today, with open positions at Kalshi's value.",
         resolution_sources=resolution_sources,
+        ledger=ledger_report(balance, fills, settlement_list, precision),
     )
     return dashboard, fills, settlement_payouts, cash, portfolio_value
 
@@ -394,9 +468,11 @@ def build_from_api(client):
 def run(client, writer=write_if_changed):
     """Build, reconcile, then write. A failed reconciliation never reaches writer."""
     dashboard, fills, settlement_payouts, cash, portfolio_value = build_from_api(client)
+    # Precision facts first (types and digit counts only), so they're in the
+    # log even if reconciliation blocks the write.
+    print("ledger precision: " + ", ".join("{}={}".format(key, value) for key, value in dashboard["ledger"].items()))
     line = reconcile(dashboard, fills, settlement_payouts, cash, portfolio_value)
     wrote = writer(dashboard)
-    # One line, aggregates only: safe for a public log.
     print("{} ({})".format(line, "data.json updated" if wrote else "data.json unchanged"))
 
 

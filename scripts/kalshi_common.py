@@ -7,13 +7,20 @@ the sanitized kalshi/data.json the page reads.
 PRIVACY: nothing in the dict returned by build_dashboard() may contain an order
 ID, fill ID, market ticker/ID, or account identifier. Tickers are used only as
 internal grouping keys and are dropped before writing.
+
+EXACTNESS (non-negotiable, see CLAUDE.md): every amount, price, contract count
+and fee is a decimal.Decimal parsed straight from its string form. No float,
+no round(), no quantize (Kalshi's own rounding rules live in kalshi_rules.py
+and nowhere else). data.json stores every amount as a full-precision string.
 """
 
 import json
 import os
 from collections import OrderedDict
-from decimal import ROUND_HALF_UP, Decimal
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+
+from kalshi_rules import ZERO
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(REPO_ROOT, "kalshi", "data.json")
@@ -21,10 +28,10 @@ DATA_PATH = os.path.join(REPO_ROOT, "kalshi", "data.json")
 # Money put into the account. The Trade API has no deposits endpoint, so these
 # are maintained by hand. Add a row here whenever you deposit or get a credit.
 DEPOSITS = [
-    {"date": "2025-12-02", "amount": 10.00, "fee": 0.20},
+    {"date": "2025-12-02", "amount": Decimal("10.00"), "fee": Decimal("0.20")},
 ]
 CREDITS = [
-    {"date": "2026-02-03", "amount": 25.00, "reason": "Referral bonus"},
+    {"date": "2026-02-03", "amount": Decimal("25.00"), "reason": "Referral bonus"},
 ]
 
 # Ticker prefix -> dashboard category. First match wins, so keep longer
@@ -114,14 +121,27 @@ def local_date(moment):
     return moment.astimezone(LOCAL_TZ).strftime("%Y-%m-%d")
 
 
-def money(amount):
-    """Round to cents half-up, like Kalshi's app ($1.805 -> $1.81, not $1.80)."""
-    if amount is None:
+def to_decimal(value):
+    """Exact Decimal from an API/CSV string (or an int, e.g. cents). Floats are refused."""
+    if isinstance(value, Decimal):
+        return value
+    if isinstance(value, bool) or isinstance(value, float):
+        raise TypeError("refusing to build a Decimal from {!r}: parse the original string".format(value))
+    if value is None or value == "":
+        return ZERO
+    return Decimal(value) if isinstance(value, int) else Decimal(str(value).strip())
+
+
+def dec_str(value):
+    """Full-precision string for data.json: no exponent, trailing zeros trimmed, never rounded."""
+    if value is None:
         return None
-    # Go through a 9-place string first so float noise (1.8049999...) can't
-    # tip a half-cent the wrong way.
-    exact = Decimal("{:.9f}".format(float(amount)))
-    return float(exact.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    text = format(value, "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    if text in ("-0", ""):
+        text = "0"
+    return text
 
 
 def group_fills(fills):
@@ -129,14 +149,14 @@ def group_fills(fills):
 
     Each fill is a dict: ticker, side ("yes"/"no", the outcome it buys exposure
     to), count, price (dollars for that side), fee, is_taker, time (datetime),
-    and optionally cost_fee (see below). Selling YES at 67c is the same as
-    buying NO at 33c, so every fill is treated as a buy of its side. A YES + NO
-    pair always pays exactly $1, which is how closed-early positions are
-    valued without any settlement data.
+    and optionally cost_fee (see below). All amounts are Decimal. Selling YES
+    at 67c is the same as buying NO at 33c, so every fill is treated as a buy
+    of its side. A YES + NO pair always pays exactly $1, which is how
+    closed-early positions are valued without any settlement data.
 
-    fee is Kalshi's own fee record and feeds every fee total. cost_fee is only
-    for showing an open position's cost basis the way the app does; it
-    defaults to fee (the API's fee_cost is already exact).
+    fee is the fee that actually left the balance and feeds every fee total.
+    cost_fee is only for showing an open position's cost basis the way the
+    app does (CSV mode); it defaults to fee.
     """
     markets = OrderedDict()
     for fill in sorted(fills, key=lambda item: item["time"]):
@@ -147,10 +167,10 @@ def group_fills(fills):
                 "opening_side": fill["side"],
                 "first_time": fill["time"],
                 "last_time": fill["time"],
-                "count": {"yes": 0.0, "no": 0.0},
-                "cost": {"yes": 0.0, "no": 0.0},
-                "fee": {"yes": 0.0, "no": 0.0},
-                "cost_fee": {"yes": 0.0, "no": 0.0},
+                "count": {"yes": ZERO, "no": ZERO},
+                "cost": {"yes": ZERO, "no": ZERO},
+                "fee": {"yes": ZERO, "no": ZERO},
+                "cost_fee": {"yes": ZERO, "no": ZERO},
             },
         )
         side = fill["side"]
@@ -163,24 +183,25 @@ def group_fills(fills):
 
 
 def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=False, open_value=None, category=None):
-    """Turn a grouped market into a sanitized bet record.
+    """Turn a grouped market into a bet record (Decimal amounts, serialized later).
 
-    Money is on the app's basis: cost includes the fees paid to open the
-    position, payout is net of the fees paid to close it, and
-    profit = payout - cost.
+    Money is on the app's basis, exactly:
+      cost   = contracts x price + the fees paid to open
+      payout = proceeds from selling back early (each YES+NO pair pays $1,
+               minus what the closing side cost) - the fees paid to close
+               + any settlement payout
+      profit = payout - cost
 
-    settlement_payout: dollars received at settlement, or None if unknown.
+    settlement_payout: dollars received at settlement (Decimal), or None if unknown.
     is_open: the market hasn't settled yet and contracts are still held.
     """
     opening = entry["opening_side"]
     closing = "no" if opening == "yes" else "yes"
     pairs = min(entry["count"]["yes"], entry["count"]["no"])
-    remaining = round(entry["count"][opening] - entry["count"][closing], 2)
-    # Selling back early: each matched YES+NO pair pays $1, minus what the
-    # closing side cost and its fees.
-    early_proceeds = (pairs - entry["cost"][closing] - entry["fee"][closing]) if pairs > 0 else 0.0
+    remaining = entry["count"][opening] - entry["count"][closing]
+    early_proceeds = (pairs - entry["cost"][closing] - entry["fee"][closing]) if pairs > ZERO else ZERO
 
-    if abs(remaining) < 0.005:
+    if remaining == ZERO:
         status = "sold"
         payout = early_proceeds
     elif settlement_payout is not None:
@@ -195,9 +216,10 @@ def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=F
 
     if status == "open":
         fee = entry["cost_fee"][opening]
+        cost = entry["cost"][opening] + fee
     else:
         fee = entry["fee"][opening] + entry["fee"][closing]
-    cost = entry["cost"][opening] + (fee if status == "open" else entry["fee"][opening])
+        cost = entry["cost"][opening] + entry["fee"][opening]
     profit = None if payout is None else payout - cost
     # A bet sold off early resolves on its sale date, even if the market later
     # settled; anything else uses the settlement time when one is known.
@@ -208,13 +230,13 @@ def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=F
         "title": title,
         "side": opening.capitalize(),
         "category": category or category_for(entry["ticker"]),
-        "cost": money(cost),
-        "payout": money(payout),
-        "profit": money(profit),
-        "fee": money(fee),
+        "cost": cost,
+        "payout": payout,
+        "profit": profit,
+        "fee": fee,
         "status": status,
         "contracts": abs(remaining) if status == "open" else None,
-        "value": money(open_value) if status == "open" else None,
+        "value": open_value if status == "open" else None,
     }
 
 
@@ -223,29 +245,45 @@ def fee_breakdown(fills):
     taker = [fill for fill in fills if fill["is_taker"]]
     return {
         "maker_fills": len(maker),
-        "maker_fees": money(sum(fill["fee"] for fill in maker)),
+        "maker_fees": dec_str(sum((fill["fee"] for fill in maker), ZERO)),
         "taker_fills": len(taker),
-        "taker_fees": money(sum(fill["fee"] for fill in taker)),
+        "taker_fees": dec_str(sum((fill["fee"] for fill in taker), ZERO)),
+        # What Kalshi's fill records say, plus the modeled rounding fees and
+        # rebates (kalshi_rules.apply_fee_rounding). trading = reported +
+        # rounding - rebates, exactly.
+        "reported": dec_str(sum((fill.get("fee_reported", fill["fee"]) for fill in fills), ZERO)),
+        "rounding": dec_str(sum((fill.get("rounding_fee", ZERO) for fill in fills), ZERO)),
+        "rebates": dec_str(sum((fill.get("rebate", ZERO) for fill in fills), ZERO)),
     }
 
 
+def approx_percent(part, whole):
+    """Whole-number percent for the win-rate tile (a ratio, not money; shown with "≈")."""
+    return (part * 200 + whole) // (whole * 2)
+
+
+def bet_json(bet, keys):
+    return {key: (dec_str(bet[key]) if isinstance(bet[key], Decimal) else bet[key]) for key in keys}
+
+
 def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_series=None, series_note="",
-                    resolution_sources=None):
-    deposited = sum(row["amount"] for row in DEPOSITS)
-    deposit_fees = sum(row["fee"] for row in DEPOSITS)
-    credited = sum(row["amount"] for row in CREDITS)
-    trading_fees = sum(fill["fee"] for fill in fills)
+                    resolution_sources=None, ledger=None):
+    """Assemble data.json. All arithmetic happens here, exactly; the page only formats strings."""
+    deposited = sum((row["amount"] for row in DEPOSITS), ZERO)
+    deposit_fees = sum((row["fee"] for row in DEPOSITS), ZERO)
+    credited = sum((row["amount"] for row in CREDITS), ZERO)
+    trading_fees = sum((fill["fee"] for fill in fills), ZERO)
     account_value = cash + open_value
     net_pnl = account_value - deposited - credited
 
     # Resolved = sold early or settled. Open positions never count toward the
     # win rate; they neither help it nor block it.
     resolved = [bet for bet in bets if bet["profit"] is not None]
-    wins = [bet for bet in resolved if bet["profit"] > 0]
+    wins = [bet for bet in resolved if bet["profit"] > ZERO]
     pending = [bet for bet in bets if bet["status"] == "pending"]
     open_bets = [bet for bet in bets if bet["status"] == "open"]
 
-    by_category = OrderedDict((name, {"profit": 0.0, "resolved": 0, "pending": 0}) for name in CATEGORY_ORDER)
+    by_category = OrderedDict((name, {"profit": ZERO, "resolved": 0, "pending": 0}) for name in CATEGORY_ORDER)
     for bet in bets:
         bucket = by_category[bet["category"]]
         if bet["profit"] is not None:
@@ -254,10 +292,11 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
         elif bet["status"] == "pending":
             bucket["pending"] += 1
     categories = [
-        {"name": name, "profit": money(bucket["profit"]), "resolved": bucket["resolved"], "pending": bucket["pending"]}
+        {"name": name, "profit": dec_str(bucket["profit"]), "resolved": bucket["resolved"], "pending": bucket["pending"]}
         for name, bucket in by_category.items()
         if bucket["resolved"] or bucket["pending"]
     ]
+    realized = sum((bet["profit"] for bet in resolved), ZERO)
 
     if pnl_series is None:
         pnl_series = daily_series(resolved, deposit_fees, net_pnl)
@@ -268,19 +307,21 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
     newest_first = sorted(finished, key=lambda bet: (bet["resolved"], bet["date"]), reverse=True)
     best = max(resolved, key=lambda bet: bet["profit"]) if resolved else None
     worst = min(resolved, key=lambda bet: bet["profit"]) if resolved else None
+    open_values = [bet["value"] for bet in open_bets]
     return {
         "source": source,
         "summary": {
-            "net_pnl": money(net_pnl),
-            "account_value": money(account_value),
-            "cash": money(cash),
-            "open_value": money(open_value),
-            "deposited": money(deposited),
-            "credits": money(credited),
+            "net_pnl": dec_str(net_pnl),
+            "account_value": dec_str(account_value),
+            "cash": dec_str(cash),
+            "open_value": dec_str(open_value),
+            "deposited": dec_str(deposited),
+            "credits": dec_str(credited),
             "credit_reasons": [row["reason"] for row in CREDITS],
-            "trading_fees": money(trading_fees),
-            "deposit_fees": money(deposit_fees),
-            "total_fees": money(trading_fees + deposit_fees),
+            "trading_fees": dec_str(trading_fees),
+            "deposit_fees": dec_str(deposit_fees),
+            "total_fees": dec_str(trading_fees + deposit_fees),
+            "realized_pnl": dec_str(realized),
             "bets": len(bets),
             "resolved": len(resolved),
             "wins": len(wins),
@@ -290,11 +331,12 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
             # "pending" = finished but result unknown (CSV mode only). While any
             # exist, the known results are mostly bets sold early, which skew
             # toward winners, so show no percentage.
-            "win_rate": round(len(wins) / len(resolved), 3) if resolved and not pending else None,
-            "best_bet": {"title": best["title"], "profit": best["profit"]} if best else None,
-            "worst_bet": {"title": worst["title"], "profit": worst["profit"]} if worst else None,
+            "win_rate_approx_pct": approx_percent(len(wins), len(resolved)) if resolved and not pending else None,
+            "best_bet": {"title": best["title"], "profit": dec_str(best["profit"])} if best else None,
+            "worst_bet": {"title": worst["title"], "profit": dec_str(worst["profit"])} if worst else None,
         },
         "fees": dict(fee_breakdown(fills), source=fee_source),
+        "ledger": ledger or {},
         "pnl_series": pnl_series,
         "pnl_series_note": series_note,
         # How each settled bet's date was found (counts only). "last_fill" means
@@ -303,22 +345,15 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
         "resolution_dates": resolution_sources or {},
         "categories": categories,
         "open_positions": [
-            {
-                "date": bet["date"],
-                "title": bet["title"],
-                "side": bet["side"],
-                "contracts": bet["contracts"],
-                "cost": bet["cost"],
-                "value": bet["value"],
-                "category": bet["category"],
-            }
-            for bet in open_bets
+            bet_json(bet, ("date", "title", "side", "contracts", "cost", "value", "category")) for bet in open_bets
         ],
+        "open_totals": {
+            "cost": dec_str(sum((bet["cost"] for bet in open_bets), ZERO)),
+            # Sum of the rows at the current bid; null if any row has no bid.
+            "value": dec_str(sum(open_values, ZERO)) if open_values and None not in open_values else None,
+        },
         "recent_bets": [
-            {
-                key: bet[key]
-                for key in ("date", "resolved", "title", "side", "cost", "payout", "profit", "fee", "category", "status")
-            }
+            bet_json(bet, ("date", "resolved", "title", "side", "cost", "payout", "profit", "fee", "category", "status"))
             for bet in newest_first[:20]
         ],
     }
@@ -331,11 +366,11 @@ MAX_DAY_ITEMS = 8
 def daily_series(resolved, deposit_fees, net_pnl, today=None):
     """One point per day for the step chart: that day's results and the running total.
 
-    Each point is {date, day, pnl, items}, where items lists what moved the
-    total that day ({label, amount}) and pnl is the running total after it.
-    Same-day results are combined into one step. The final point is today and
-    ends exactly at net_pnl; the gap between realized results and net P&L is
-    the open positions' mark, listed as its own item.
+    Each point is {date, day, pnl, items} with amounts as exact strings: items
+    list what moved the total that day ({label, amount}), day is their exact
+    sum, and pnl is the exact running total after it. The final point is today
+    and ends exactly at net_pnl; the gap between realized results and net P&L
+    is the open positions' mark, listed as its own item.
     """
     today = today or local_date(datetime.now(timezone.utc))
     days = OrderedDict()
@@ -344,22 +379,22 @@ def daily_series(resolved, deposit_fees, net_pnl, today=None):
     for bet in sorted(resolved, key=lambda item: (item["resolved"], -item["profit"])):
         days.setdefault(bet["resolved"], []).append({"label": bet["title"], "amount": bet["profit"]})
 
-    realized = sum(item["amount"] for items in days.values() for item in items)
+    realized = sum((item["amount"] for items in days.values() for item in items), ZERO)
     open_mark = net_pnl - realized
-    if abs(open_mark) >= 0.005 or today not in days:
+    if open_mark != ZERO or today not in days:
         days.setdefault(today, []).append({"label": OPEN_POSITIONS_LABEL, "amount": open_mark})
 
     points = []
-    running = 0.0
+    running = ZERO
     for day in sorted(days):
         items = days[day]
-        day_total = sum(item["amount"] for item in items)
+        day_total = sum((item["amount"] for item in items), ZERO)
         running += day_total
-        shown = [{"label": item["label"], "amount": money(item["amount"])} for item in items[:MAX_DAY_ITEMS]]
+        shown = [{"label": item["label"], "amount": dec_str(item["amount"])} for item in items[:MAX_DAY_ITEMS]]
         if len(items) > MAX_DAY_ITEMS:
-            rest = sum(item["amount"] for item in items[MAX_DAY_ITEMS:])
-            shown.append({"label": "{} more".format(len(items) - MAX_DAY_ITEMS), "amount": money(rest)})
-        points.append({"date": day, "day": money(day_total), "pnl": money(running), "items": shown})
+            rest = sum((item["amount"] for item in items[MAX_DAY_ITEMS:]), ZERO)
+            shown.append({"label": "{} more".format(len(items) - MAX_DAY_ITEMS), "amount": dec_str(rest)})
+        points.append({"date": day, "day": dec_str(day_total), "pnl": dec_str(running), "items": shown})
     return points
 
 
