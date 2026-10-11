@@ -50,7 +50,7 @@
       "pnl": 0.3
     },
     {
-      "date": "2026-06-24",
+      "date": "2026-06-18",
       "pnl": 12.58
     },
     {
@@ -175,6 +175,7 @@
   "recent_bets": [
     {
       "date": "2026-10-10",
+      "resolved": null,
       "title": "Denzel Boston: 60+ receiving yards",
       "side": "No",
       "cost": 3.5,
@@ -186,6 +187,7 @@
     },
     {
       "date": "2026-10-10",
+      "resolved": null,
       "title": "Romeo Doubs: 40+ receiving yards",
       "side": "No",
       "cost": 2.18,
@@ -197,6 +199,7 @@
     },
     {
       "date": "2026-10-10",
+      "resolved": null,
       "title": "Matthew Golden: 40+ receiving yards",
       "side": "No",
       "cost": 1.99,
@@ -208,6 +211,7 @@
     },
     {
       "date": "2026-09-27",
+      "resolved": "2026-09-27",
       "title": "Texans vs Colts: Texans win",
       "side": "Yes",
       "cost": 5.0,
@@ -219,6 +223,7 @@
     },
     {
       "date": "2026-09-24",
+      "resolved": "2026-09-26",
       "title": "Andrea Kimi Antonelli to finish in first",
       "side": "Yes",
       "cost": 3.2,
@@ -230,6 +235,7 @@
     },
     {
       "date": "2026-09-24",
+      "resolved": "2026-09-24",
       "title": "Packers vs Falcons: Packers win",
       "side": "Yes",
       "cost": 0.99,
@@ -241,6 +247,7 @@
     },
     {
       "date": "2026-09-24",
+      "resolved": "2026-09-24",
       "title": "Bijan Robinson: 1+ touchdowns",
       "side": "Yes",
       "cost": 2.0,
@@ -252,6 +259,7 @@
     },
     {
       "date": "2026-09-24",
+      "resolved": "2026-09-24",
       "title": "Michael Penix Jr.: 275+ passing yards",
       "side": "No",
       "cost": 1.01,
@@ -263,6 +271,7 @@
     },
     {
       "date": "2026-07-01",
+      "resolved": "2026-07-01",
       "title": "USA vs Bosnia and Herzegovina: To Advance: USA advances",
       "side": "Yes",
       "cost": 1.1,
@@ -274,6 +283,7 @@
     },
     {
       "date": "2026-06-30",
+      "resolved": "2026-06-30",
       "title": "Bitcoin $58,500+ on Jun 30, 2026",
       "side": "Yes",
       "cost": 9.88,
@@ -285,6 +295,7 @@
     },
     {
       "date": "2026-06-30",
+      "resolved": "2026-06-30",
       "title": "Mexico vs Ecuador: To Advance: Mexico advances",
       "side": "Yes",
       "cost": 1.25,
@@ -296,6 +307,7 @@
     },
     {
       "date": "2026-06-25",
+      "resolved": "2026-06-25",
       "title": "yes Ivory Coast,yes Germany,yes Netherlands",
       "side": "Yes",
       "cost": 7.58,
@@ -307,6 +319,7 @@
     },
     {
       "date": "2026-05-06",
+      "resolved": "2026-05-06",
       "title": "Jaden McDaniels: 10+ points",
       "side": "Yes",
       "cost": 5.0,
@@ -318,6 +331,7 @@
     },
     {
       "date": "2026-02-04",
+      "resolved": "2026-02-04",
       "title": "Boston at Houston Winner?",
       "side": "Yes",
       "cost": 4.29,
@@ -329,6 +343,7 @@
     },
     {
       "date": "2026-02-03",
+      "resolved": "2026-02-03",
       "title": "Nevada at Boise St. Winner?",
       "side": "Yes",
       "cost": 4.35,
@@ -340,6 +355,7 @@
     },
     {
       "date": "2026-01-22",
+      "resolved": "2026-06-18",
       "title": "Will Canada finish first in World Cup Group B?",
       "side": "Yes",
       "cost": 10.99,
@@ -351,6 +367,7 @@
     },
     {
       "date": "2025-12-02",
+      "resolved": "2025-12-24",
       "title": "Honduras president: Nasry Asfura",
       "side": "Yes",
       "cost": 3.88,
@@ -361,5 +378,5 @@
       "status": "settled"
     }
   ],
-  "updated": "2026-10-11T05:19:21Z"
+  "updated": "2026-10-11T05:20:27Z"
 }
