@@ -54,13 +54,28 @@ scripts/
                          portfolio_value (what reconciles), with a footnote that they can differ.
                          Workflow runs-on is pinned to ubuntu-24.04.
                          TITLE RULE: ": To Advance:" collapses to ": " ("USA vs Bosnia: USA advances").
+                         Parlay titles "yes X,yes Y,no Z" become "Parlay: X, Y, not Z" ("WC Parlay:"
+                         when every mve_selected_legs ticker starts with KXWC, or the ticker is in
+                         WORLD_CUP_PARLAYS), clipped to TITLE_MAX (40) with "…".
+                         LAYOUT (2026-10-11): desktop-first, with its OWN fixed left sidebar (240px,
+                         --sidebar bg, right border): title + live dot + small net P&L, 6 hash links
+                         with inline-SVG icons (#overview #performance #bets #open #fees #about;
+                         active = green left bar + bright text), "Last updated"/source at the bottom.
+                         One .panel visible at a time, chosen by location.hash (hashchange handler;
+                         unknown/empty hash -> overview), so back/forward walk the sections and
+                         document.title tracks the panel. Charts draw lazily the first time their
+                         panel is shown (hidden canvases have no size). Content max-width 1000px.
+                         <=1100px: tiles go 2 across. <=860px: the sidebar becomes a sticky top bar
+                         with a 3x2 link grid; wide-only table columns hide and their values move
+                         into each row's subtitle (narrow-only). Still must have no horizontal
+                         scroll at 380px.
                          PAGE (2026-10-11): pnl_series is one point per day ({date, day, pnl, items})
                          from daily_series(); the chart is a stepped line (stepped: true = hold the
                          old total until the next day), green fill above $0 / red below, solid $0
                          line, tooltip = date, that day's items, day total, running total. Last
                          point is today and ends at net P&L (open positions' mark is its own item).
                          recent_bets = finished bets only (settled or sold), newest resolved first,
-                         showing the resolved date; pills: settled -> green Won / red Lost, sold ->
+                         showing the resolved date (Bets panel, with Resolved/Payout columns on desktop); pills: settled -> green Won / red Lost, sold ->
                          neutral Sold with profit colored by sign. Hero line is one sentence; the
                          full net-P&L explanation lives in the footer. summary.best_bet/worst_bet
                          ({title, profit}) feed the Best/Worst tiles (.tiles.pair, always 2 across).

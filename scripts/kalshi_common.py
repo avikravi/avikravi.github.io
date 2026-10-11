@@ -63,7 +63,13 @@ TITLE_OVERRIDES = {
     "KXHONDURASPRES-25-NASF": "Honduras president: Nasry Asfura",
     "KXBTCD-26JUN3019-T58499.99": "Bitcoin $58,500+ on Jun 30, 2026",
     "KXWCGROUPWIN-26B-CAN": "Canada wins WC Group B",
+    "KXWCADVANCE-26JUL01USABIH-USA": "USA vs Bosnia: USA advances",
 }
+
+# Parlays known to be all World Cup legs, for when the API doesn't return the
+# legs themselves (normally detected from mve_selected_legs).
+WORLD_CUP_PARLAYS = {"KXMVESPORTSMULTIGAMEEXTENDED-S20260905EFE5661-C299BAD43AB"}
+TITLE_MAX = 40
 
 try:
     from zoneinfo import ZoneInfo

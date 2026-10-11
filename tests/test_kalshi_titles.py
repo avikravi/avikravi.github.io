@@ -47,6 +47,30 @@ class TitleTests(unittest.TestCase):
         self.assertEqual(title_for("KXWCGROUPWIN-26B-CAN", {"title": "Will Canada finish first in World Cup Group B?"}),
                          "Canada wins WC Group B")
 
+    def test_usa_override(self):
+        self.assertEqual(title_for("KXWCADVANCE-26JUL01USABIH-USA", {"title": "USA vs Bosnia and Herzegovina: To Advance"}),
+                         "USA vs Bosnia: USA advances")
+
+    def test_world_cup_parlay_from_legs_is_clipped(self):
+        market = {"title": "yes Ivory Coast,yes Germany,yes Netherlands",
+                  "mve_selected_legs": [{"market_ticker": "KXWCGAME-A"}, {"market_ticker": "KXWCGAME-B"}]}
+        title = title_for("KXMVESPORTSMULTIGAMEEXTENDED-NEW", market)
+        self.assertEqual(title, "WC Parlay: Ivory Coast, Germany, Nether…")
+        self.assertLessEqual(len(title), 40)
+
+    def test_known_world_cup_parlay_without_legs(self):
+        title = title_for("KXMVESPORTSMULTIGAMEEXTENDED-S20260905EFE5661-C299BAD43AB",
+                          {"title": "yes Ivory Coast,yes Germany,yes Netherlands"})
+        self.assertTrue(title.startswith("WC Parlay: Ivory Coast, Germany"))
+
+    def test_mixed_parlay_and_no_legs(self):
+        market = {"title": "yes Chiefs,no Lakers",
+                  "mve_selected_legs": [{"market_ticker": "KXNFLGAME-A"}, {"market_ticker": "KXNBAGAME-B"}]}
+        self.assertEqual(title_for("KXMVE-X", market), "Parlay: Chiefs, not Lakers")
+
+    def test_non_parlay_comma_title_untouched(self):
+        self.assertEqual(title_for("KXOTHER-X", {"title": "Paris, France: rain"}), "Paris, France: rain")
+
     def test_bare_winner_without_event_stays_as_is(self):
         self.assertEqual(title_for("KXNFLGAME-Z", {"title": "Dallas wins"}, ""), "Dallas wins")
 

@@ -32,7 +32,9 @@ from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa
 from kalshi_common import (
     CREDITS,
     DEPOSITS,
+    TITLE_MAX,
     TITLE_OVERRIDES,
+    WORLD_CUP_PARLAYS,
     build_dashboard,
     category_for,
     group_fills,
@@ -145,6 +147,8 @@ def fetch_fills(client):
 
 # A title that is only "<team> wins": no colon, no "at"/"vs" naming an opponent.
 BARE_WINNER = re.compile(r"^(?P<team>[^:]+?) wins?$", re.IGNORECASE)
+# Parlay titles come back as "yes Ivory Coast,yes Germany,yes Netherlands".
+PARLAY_LEG = re.compile(r"^\s*(yes|no)\s+(.+?)\s*$", re.IGNORECASE)
 TO_ADVANCE = re.compile(r":\s*To Advance:\s*", re.IGNORECASE)
 HAS_OPPONENT = re.compile(r"\b(at|vs\.?|v\.?)\b", re.IGNORECASE)
 
@@ -153,6 +157,33 @@ def clean_event_title(title):
     """'Boston at Houston Winner?' -> 'Boston at Houston'."""
     cleaned = re.sub(r"\s*(winner)?\s*\?$", "", title.strip(), flags=re.IGNORECASE)
     return cleaned.strip()
+
+
+def clip_title(title, limit=TITLE_MAX):
+    return title if len(title) <= limit else title[: limit - 1].rstrip(" ,") + "…"
+
+
+def parlay_title(ticker, market, title):
+    """"yes X,yes Y,no Z" -> "Parlay: X, Y, not Z" ("WC Parlay" if every leg is World Cup).
+
+    Returns None when the title isn't a list of yes/no legs.
+    """
+    parts = title.split(",")
+    if len(parts) < 2:
+        return None
+    legs = []
+    for part in parts:
+        leg = PARLAY_LEG.match(part)
+        if not leg:
+            return None
+        legs.append(leg.group(2) if leg.group(1).lower() == "yes" else "not " + leg.group(2))
+
+    leg_tickers = [leg.get("market_ticker") or "" for leg in market.get("mve_selected_legs") or []]
+    if leg_tickers:
+        world_cup = all(code.upper().startswith("KXWC") for code in leg_tickers)
+    else:
+        world_cup = ticker in WORLD_CUP_PARLAYS
+    return clip_title(("WC Parlay: " if world_cup else "Parlay: ") + ", ".join(legs))
 
 
 def readable_title(ticker, market, event_title_lookup):
@@ -169,6 +200,10 @@ def readable_title(ticker, market, event_title_lookup):
 
     # "USA vs Bosnia: To Advance: USA advances" -> "USA vs Bosnia: USA advances"
     title = TO_ADVANCE.sub(": ", title)
+
+    parlay = parlay_title(ticker, market, title)
+    if parlay:
+        return parlay
 
     # "Houston wins" says nothing about who they played: prefix the event.
     bare = BARE_WINNER.match(title)
