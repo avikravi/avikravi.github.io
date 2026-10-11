@@ -34,7 +34,7 @@
       "pnl": -0.2
     },
     {
-      "date": "2025-12-02",
+      "date": "2025-12-24",
       "pnl": 1.92
     },
     {
@@ -50,7 +50,7 @@
       "pnl": 0.3
     },
     {
-      "date": "2026-06-18",
+      "date": "2026-06-24",
       "pnl": 12.58
     },
     {
@@ -95,6 +95,10 @@
     }
   ],
   "pnl_series_note": "Cumulative profit of settled and sold bets by date; the last point is today's net P&L including open positions.",
+  "resolution_dates": {
+    "market_settlement_ts": 7,
+    "settlement": 3
+  },
   "categories": [
     {
       "name": "NFL",
@@ -109,9 +113,15 @@
       "pending": 0
     },
     {
+      "name": "College",
+      "profit": 1.65,
+      "resolved": 1,
+      "pending": 0
+    },
+    {
       "name": "Soccer",
-      "profit": 13.03,
-      "resolved": 3,
+      "profit": 5.45,
+      "resolved": 4,
       "pending": 0
     },
     {
@@ -131,12 +141,6 @@
       "profit": 2.12,
       "resolved": 1,
       "pending": 0
-    },
-    {
-      "name": "Other",
-      "profit": -5.93,
-      "resolved": 2,
-      "pending": 0
     }
   ],
   "open_positions": [
@@ -155,7 +159,7 @@
       "side": "No",
       "contracts": 5.1,
       "cost": 2.18,
-      "value": 1.99,
+      "value": 2.04,
       "category": "NFL"
     },
     {
@@ -204,7 +208,7 @@
     },
     {
       "date": "2026-09-27",
-      "title": "Houston wins",
+      "title": "Texans vs Colts: Texans win",
       "side": "Yes",
       "cost": 5.0,
       "payout": 0.0,
@@ -226,7 +230,7 @@
     },
     {
       "date": "2026-09-24",
-      "title": "Green Bay wins",
+      "title": "Packers vs Falcons: Packers win",
       "side": "Yes",
       "cost": 0.99,
       "payout": 0.0,
@@ -270,7 +274,7 @@
     },
     {
       "date": "2026-06-30",
-      "title": "Bitcoin price on Jun 30, 2026?: $58,500 or above",
+      "title": "Bitcoin $58,500+ on Jun 30, 2026",
       "side": "Yes",
       "cost": 9.88,
       "payout": 12.32,
@@ -298,7 +302,7 @@
       "payout": 0.0,
       "profit": -7.58,
       "fee": 0.27,
-      "category": "Other",
+      "category": "Soccer",
       "status": "settled"
     },
     {
@@ -331,7 +335,7 @@
       "payout": 6.0,
       "profit": 1.65,
       "fee": 0.09,
-      "category": "Other",
+      "category": "College",
       "status": "settled"
     },
     {
@@ -347,7 +351,7 @@
     },
     {
       "date": "2025-12-02",
-      "title": "Who will be elected President of Honduras in 2025?: Nasry Asfura",
+      "title": "Honduras president: Nasry Asfura",
       "side": "Yes",
       "cost": 3.88,
       "payout": 6.0,
@@ -357,5 +361,5 @@
       "status": "settled"
     }
   ],
-  "updated": "2026-10-11T05:01:33Z"
+  "updated": "2026-10-11T05:19:21Z"
 }
