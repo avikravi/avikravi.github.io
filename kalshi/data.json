@@ -19,7 +19,15 @@
     "losses": 5,
     "pending": 0,
     "open": 3,
-    "win_rate": 0.643
+    "win_rate": 0.643,
+    "best_bet": {
+      "title": "Canada wins WC Group B",
+      "profit": 12.28
+    },
+    "worst_bet": {
+      "title": "yes Ivory Coast,yes Germany,yes Netherlands",
+      "profit": -7.58
+    }
   },
   "fees": {
     "maker_fills": 3,
@@ -31,70 +39,161 @@
   "pnl_series": [
     {
       "date": "2025-12-02",
-      "pnl": -0.2
+      "day": -0.2,
+      "pnl": -0.2,
+      "items": [
+        {
+          "label": "Deposit fee",
+          "amount": -0.2
+        }
+      ]
     },
     {
       "date": "2025-12-24",
-      "pnl": 1.92
+      "day": 2.12,
+      "pnl": 1.92,
+      "items": [
+        {
+          "label": "Honduras president: Nasry Asfura",
+          "amount": 2.12
+        }
+      ]
     },
     {
       "date": "2026-02-03",
-      "pnl": 3.57
+      "day": 1.65,
+      "pnl": 3.57,
+      "items": [
+        {
+          "label": "Nevada at Boise St. Winner?",
+          "amount": 1.65
+        }
+      ]
     },
     {
       "date": "2026-02-04",
-      "pnl": -0.72
+      "day": -4.29,
+      "pnl": -0.72,
+      "items": [
+        {
+          "label": "Boston at Houston Winner?",
+          "amount": -4.29
+        }
+      ]
     },
     {
       "date": "2026-05-06",
-      "pnl": 0.3
+      "day": 1.02,
+      "pnl": 0.3,
+      "items": [
+        {
+          "label": "Jaden McDaniels: 10+ points",
+          "amount": 1.02
+        }
+      ]
     },
     {
       "date": "2026-06-18",
-      "pnl": 12.58
+      "day": 12.28,
+      "pnl": 12.58,
+      "items": [
+        {
+          "label": "Canada wins WC Group B",
+          "amount": 12.28
+        }
+      ]
     },
     {
       "date": "2026-06-25",
-      "pnl": 5.0
+      "day": -7.58,
+      "pnl": 5.0,
+      "items": [
+        {
+          "label": "yes Ivory Coast,yes Germany,yes Netherlands",
+          "amount": -7.58
+        }
+      ]
     },
     {
       "date": "2026-06-30",
-      "pnl": 7.44
-    },
-    {
-      "date": "2026-06-30",
-      "pnl": 8.0
+      "day": 3.0,
+      "pnl": 8.0,
+      "items": [
+        {
+          "label": "Bitcoin $58,500+ on Jun 30, 2026",
+          "amount": 2.44
+        },
+        {
+          "label": "Mexico vs Ecuador: Mexico advances",
+          "amount": 0.56
+        }
+      ]
     },
     {
       "date": "2026-07-01",
-      "pnl": 8.19
+      "day": 0.19,
+      "pnl": 8.19,
+      "items": [
+        {
+          "label": "USA vs Bosnia and Herzegovina: USA advances",
+          "amount": 0.19
+        }
+      ]
     },
     {
       "date": "2026-09-24",
-      "pnl": 7.2
-    },
-    {
-      "date": "2026-09-24",
-      "pnl": 8.69
-    },
-    {
-      "date": "2026-09-24",
-      "pnl": 8.87
+      "day": 0.68,
+      "pnl": 8.87,
+      "items": [
+        {
+          "label": "Bijan Robinson: 1+ touchdowns",
+          "amount": 1.49
+        },
+        {
+          "label": "Michael Penix Jr.: 275+ passing yards",
+          "amount": 0.18
+        },
+        {
+          "label": "Packers vs Falcons: Packers win",
+          "amount": -0.99
+        }
+      ]
     },
     {
       "date": "2026-09-26",
-      "pnl": 5.67
+      "day": -3.2,
+      "pnl": 5.67,
+      "items": [
+        {
+          "label": "Andrea Kimi Antonelli to finish in first",
+          "amount": -3.2
+        }
+      ]
     },
     {
       "date": "2026-09-27",
-      "pnl": 0.67
+      "day": -5.0,
+      "pnl": 0.67,
+      "items": [
+        {
+          "label": "Texans vs Colts: Texans win",
+          "amount": -5.0
+        }
+      ]
     },
     {
       "date": "2026-10-11",
-      "pnl": 0.21
+      "day": -0.46,
+      "pnl": 0.21,
+      "items": [
+        {
+          "label": "Open positions (marked at Kalshi's value)",
+          "amount": -0.46
+        }
+      ]
     }
   ],
-  "pnl_series_note": "Cumulative profit of settled and sold bets by date; the last point is today's net P&L including open positions.",
+  "pnl_series_note": "One step per day: bets count on the day they settled or were sold. The last step is today, with open positions at Kalshi's value.",
   "resolution_dates": {
     "market_settlement_ts": 7,
     "settlement": 3
@@ -174,42 +273,6 @@
   ],
   "recent_bets": [
     {
-      "date": "2026-10-10",
-      "resolved": null,
-      "title": "Denzel Boston: 60+ receiving yards",
-      "side": "No",
-      "cost": 3.5,
-      "payout": null,
-      "profit": null,
-      "fee": 0.09,
-      "category": "NFL",
-      "status": "open"
-    },
-    {
-      "date": "2026-10-10",
-      "resolved": null,
-      "title": "Romeo Doubs: 40+ receiving yards",
-      "side": "No",
-      "cost": 2.18,
-      "payout": null,
-      "profit": null,
-      "fee": 0.09,
-      "category": "NFL",
-      "status": "open"
-    },
-    {
-      "date": "2026-10-10",
-      "resolved": null,
-      "title": "Matthew Golden: 40+ receiving yards",
-      "side": "No",
-      "cost": 1.99,
-      "payout": null,
-      "profit": null,
-      "fee": 0.09,
-      "category": "NFL",
-      "status": "open"
-    },
-    {
       "date": "2026-09-27",
       "resolved": "2026-09-27",
       "title": "Texans vs Colts: Texans win",
@@ -272,7 +335,7 @@
     {
       "date": "2026-07-01",
       "resolved": "2026-07-01",
-      "title": "USA vs Bosnia and Herzegovina: To Advance: USA advances",
+      "title": "USA vs Bosnia and Herzegovina: USA advances",
       "side": "Yes",
       "cost": 1.1,
       "payout": 1.29,
@@ -296,7 +359,7 @@
     {
       "date": "2026-06-30",
       "resolved": "2026-06-30",
-      "title": "Mexico vs Ecuador: To Advance: Mexico advances",
+      "title": "Mexico vs Ecuador: Mexico advances",
       "side": "Yes",
       "cost": 1.25,
       "payout": 1.81,
@@ -316,6 +379,18 @@
       "fee": 0.27,
       "category": "Soccer",
       "status": "settled"
+    },
+    {
+      "date": "2026-01-22",
+      "resolved": "2026-06-18",
+      "title": "Canada wins WC Group B",
+      "side": "Yes",
+      "cost": 10.99,
+      "payout": 23.27,
+      "profit": 12.28,
+      "fee": 1.78,
+      "category": "Soccer",
+      "status": "sold"
     },
     {
       "date": "2026-05-06",
@@ -354,18 +429,6 @@
       "status": "settled"
     },
     {
-      "date": "2026-01-22",
-      "resolved": "2026-06-18",
-      "title": "Will Canada finish first in World Cup Group B?",
-      "side": "Yes",
-      "cost": 10.99,
-      "payout": 23.27,
-      "profit": 12.28,
-      "fee": 1.78,
-      "category": "Soccer",
-      "status": "sold"
-    },
-    {
       "date": "2025-12-02",
       "resolved": "2025-12-24",
       "title": "Honduras president: Nasry Asfura",
@@ -378,5 +441,5 @@
       "status": "settled"
     }
   ],
-  "updated": "2026-10-11T05:20:27Z"
+  "updated": "2026-10-11T05:26:09Z"
 }
