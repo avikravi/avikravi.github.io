@@ -3,26 +3,27 @@
 Fills are API-shaped (strings, like Kalshi sends). Expected values are worked
 out by hand below as Decimal literals, independently of the pipeline.
 
-Golden fills (fee_cost values for Robinson/Penix/Mexico are the trade fee
-rounded up to $0.0001, matching what the dashboard showed; Canada's are the
-two charged amounts that reproduce the app's $10.99 / $23.27):
+Golden fills. Every fee_cost below was VERIFIED against Kalshi's live API on
+2026-10-11 (the first exact run). Canada's sell fee is 1.1453, not the 1.15
+inferred earlier from the app's cent display: the app's "$23.27 / +$12.28" are
+cent-rounded views of the exact 23.2747 / 12.2847.
   Robinson  buy 3.52 YES @ 0.55, fee 0.0610; sell 3.52 YES @ 0.99 (maker, fee 0)
             cost 1.936 + 0.061 = 1.997; payout 3.52 x 0.99 = 3.4848; profit 1.4878
   Penix     buy 1.20 NO @ 0.83, fee 0.0119; sell 1.20 NO @ 0.99 (maker)
             cost 0.996 + 0.0119 = 1.0079; payout 1.188; profit 0.1801
   Mexico    buy 1.90 YES @ 0.64, fee 0.0307; sell 1.90 YES @ 0.95 (maker)
             cost 1.216 + 0.0307 = 1.2467; payout 1.805; profit 0.5583
-  Canada    buy 64 + 10 YES @ 0.14 (one order), fees 0.54 + 0.09; sell 74 YES @ 0.33, fee 1.15
-            cost 10.36 + 0.63 = 10.99; payout 24.42 - 1.15 = 23.27; profit 12.28
+  Canada    buy 64 + 10 YES @ 0.14 (one order), fees 0.54 + 0.09; sell 74 YES @ 0.33, fee 1.1453
+            cost 10.36 + 0.63 = 10.99; payout 24.42 - 1.1453 = 23.2747; profit 12.2847
   Bitcoin   buy 12.32 YES @ 0.79, fee 0.1431; settles YES, revenue 1232c
             cost 9.7328 + 0.1431 = 9.8759; payout 12.32; profit 2.4441
   Texans    buy 16.42 YES @ 0.29, fee 0.2367; settles NO, revenue 0
             cost 4.7618 + 0.2367 = 4.9985; payout 0; profit -4.9985
   Golden    buy 5.80 NO @ 0.33, fee 0.0895; still open, NO bid 0.31
             cost 1.914 + 0.0895 = 2.0035; value 5.80 x 0.31 = 1.798
-Cash = 35.00 in - 0.20 deposit fee + 1.4878 + 0.1801 + 0.5583 + 12.28 + 2.4441
-       - 4.9985 - 2.0035 = 44.7483 (every change is on the $0.0001 grid)
-Portfolio value (Kalshi's own figure) = 180 cents. Net = 44.7483 + 1.80 - 35 = 11.5483.
+Cash = 35.00 in - 0.20 deposit fee + 1.4878 + 0.1801 + 0.5583 + 12.2847 + 2.4441
+       - 4.9985 - 2.0035 = 44.753 (every change is on the $0.0001 grid)
+Portfolio value (Kalshi's own figure) = 180 cents. Net = 44.753 + 1.80 - 35 = 11.553.
 """
 
 from decimal import ROUND_FLOOR, Decimal
@@ -67,7 +68,7 @@ GOLDEN_FILLS = [
     api_fill(6, MEXICO, "o-mex-sell", "no", "1.90", "0.9500", "0", False, "2026-07-01T02:32:00Z"),
     api_fill(7, CANADA, "o-can-buy", "yes", "64.00", "0.1400", "0.54", True, "2026-01-22T07:15:00Z"),
     api_fill(8, CANADA, "o-can-buy", "yes", "10.00", "0.1400", "0.09", True, "2026-01-22T07:15:01Z"),
-    api_fill(9, CANADA, "o-can-sell", "no", "74.00", "0.3300", "1.15", True, "2026-06-18T17:47:00Z"),
+    api_fill(9, CANADA, "o-can-sell", "no", "74.00", "0.3300", "1.1453", True, "2026-06-18T17:47:00Z"),
     api_fill(10, BITCOIN, "o-btc", "yes", "12.32", "0.7900", "0.1431", True, "2026-06-30T22:49:00Z"),
     api_fill(11, TEXANS, "o-hou", "yes", "16.42", "0.2900", "0.2367", True, "2026-09-27T18:31:00Z"),
     api_fill(12, GOLDEN, "o-gold", "no", "5.80", "0.6700", "0.0895", True, "2026-10-11T03:24:00Z"),
@@ -78,7 +79,7 @@ GOLDEN_SETTLEMENTS = [
     {"ticker": TEXANS, "revenue": 0, "settled_time": "2026-09-28T03:00:00Z", "fee_cost": "0"},
 ]
 GOLDEN_POSITIONS = [{"ticker": GOLDEN, "position_fp": "-5.80"}]
-GOLDEN_CASH = "44.7483"
+GOLDEN_CASH = "44.753"
 GOLDEN_PORTFOLIO_CENTS = 180
 
 # Expected rows, by title, worked out by hand above.
@@ -86,12 +87,12 @@ GOLDEN_ROWS = {
     "Bijan Robinson TD": (D("1.997"), D("3.4848"), D("1.4878")),
     "Penix 275+": (D("1.0079"), D("1.188"), D("0.1801")),
     "Mexico advances": (D("1.2467"), D("1.805"), D("0.5583")),
-    "Canada wins WC Group B": (D("10.99"), D("23.27"), D("12.28")),
+    "Canada wins WC Group B": (D("10.99"), D("23.2747"), D("12.2847")),
     "Bitcoin $58,500+ on Jun 30, 2026": (D("9.8759"), D("12.32"), D("2.4441")),
     "Texans vs Colts: Texans win": (D("4.9985"), D("0"), D("-4.9985")),
 }
-GOLDEN_CATEGORIES = {"NFL": D("-3.3306"), "Soccer": D("12.8383"), "Crypto": D("2.4441")}
-GOLDEN_NET = D("11.5483")
+GOLDEN_CATEGORIES = {"NFL": D("-3.3306"), "Soccer": D("12.843"), "Crypto": D("2.4441")}
+GOLDEN_NET = D("11.553")
 GOLDEN_OPEN = {"cost": D("2.0035"), "value": D("1.798")}
 TITLES = {ROBINSON: "Bijan Robinson TD", PENIX: "Penix 275+", MEXICO: "Mexico advances", GOLDEN: "Golden 40+"}
 

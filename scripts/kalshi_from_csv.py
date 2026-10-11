@@ -153,9 +153,10 @@ def check_against_app(fills, bets_by_ticker):
         expect("Doubs No price per contract", total / contracts, "0.426")
 
     if canada in bets_by_ticker:
-        # Bought 74 Yes @ 14c = $10.99 with fees; sold Yes @ 33c = $23.27 net
-        # of the fee; profit +$12.28. The CSV's truncated $1.14 sell fee (the
-        # API says $1.15) leaves the last two 1c off, hence expect() there.
+        # Bought 74 Yes @ 14c = $10.99 with fees; sold Yes @ 33c for $23.2747
+        # net of the fee (the app shows $23.27); profit +$12.2847 (app: +$12.28).
+        # The CSV's truncated $1.14 sell fee (the API says $1.1453) leaves these
+        # within the CSV slack, hence expect() there.
         opening = fills_for(fills, canada, "yes")
         closing = fills_for(fills, canada, "no")
         expect_cents("Canada Yes cost incl. fees", sum((fill["count"] * fill["price"] + fill["fee"] for fill in opening), ZERO), "10.99")

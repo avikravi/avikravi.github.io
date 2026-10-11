@@ -211,7 +211,7 @@ class DisplayTests(unittest.TestCase):
         prefix = "recent_bets.{}.".format(robinson)
         self.assertEqual((shown[prefix + "cost"], shown[prefix + "payout"], shown[prefix + "profit"]),
                          ("$1.997", "$3.4848", "+$1.4878"))
-        self.assertEqual(shown["summary.net_pnl"], "+$11.5483")
+        self.assertEqual(shown["summary.net_pnl"], "+$11.553")
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):

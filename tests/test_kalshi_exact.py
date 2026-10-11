@@ -45,7 +45,7 @@ class GoldenTests(unittest.TestCase):
         self.assertEqual(self.rows["Penix 275+"]["payout"], "1.188")
         self.assertEqual(self.rows["Mexico advances"]["payout"], "1.805")
         self.assertEqual((self.rows["Canada wins WC Group B"]["cost"], self.rows["Canada wins WC Group B"]["payout"],
-                          self.rows["Canada wins WC Group B"]["profit"]), ("10.99", "23.27", "12.28"))
+                          self.rows["Canada wins WC Group B"]["profit"]), ("10.99", "23.2747", "12.2847"))
 
     def test_categories_net_and_open(self):
         cats = {cat["name"]: D(cat["profit"]) for cat in self.dashboard["categories"]}
@@ -102,12 +102,12 @@ class CentRuleTests(unittest.TestCase):
 
 class ReconcileExactTests(unittest.TestCase):
     def test_smallest_unit_off_is_blocked_with_every_digit(self):
-        client = fx.FakeClient(cash="44.7484")  # one $0.0001 more than the ledger supports
+        client = fx.FakeClient(cash="44.7531")  # one $0.0001 more than the ledger supports
         with self.assertRaises(kalshi_fetch.ReconciliationError) as caught:
             kalshi_fetch.build_from_api(client)
         message = str(caught.exception)
-        self.assertIn("actual cash $44.7484", message)
-        self.assertIn("at $0.0001 precision expected cash $44.7483, diff $0.0001", message)
+        self.assertIn("actual cash $44.7531", message)
+        self.assertIn("at $0.0001 precision expected cash $44.753, diff $0.0001", message)
         self.assertIn("data.json not updated", message)
         for secret_ish in ("KX", "fill-", "o-rob", "Robinson"):
             self.assertNotIn(secret_ish, message)
@@ -115,7 +115,7 @@ class ReconcileExactTests(unittest.TestCase):
     def test_blocked_run_never_writes(self):
         written = []
         with self.assertRaises(SystemExit):
-            kalshi_fetch.run(fx.FakeClient(cash="44.7482"), writer=written.append)
+            kalshi_fetch.run(fx.FakeClient(cash="44.7529"), writer=written.append)
         self.assertEqual(written, [])
 
     def test_exact_run_writes_and_prints_full_digits(self):
@@ -126,8 +126,8 @@ class ReconcileExactTests(unittest.TestCase):
         lines = output.getvalue().strip().splitlines()
         self.assertEqual(len(written), 1)
         self.assertTrue(lines[0].startswith("ledger precision: "))
-        self.assertEqual(lines[1], "reconciled exactly: expected cash $44.7483 = actual cash $44.7483, diff $0; "
-                                   "net $11.5483 (data.json updated)")
+        self.assertEqual(lines[1], "reconciled exactly: expected cash $44.753 = actual cash $44.753, diff $0; "
+                                   "net $11.553 (data.json updated)")
 
     def test_net_mismatch_blocks(self):
         dashboard, fills = fx.golden_dashboard()
