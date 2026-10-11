@@ -42,14 +42,6 @@ jobs:
           KALSHI_PRIVATE_KEY: ${{ secrets.KALSHI_PRIVATE_KEY }}
         run: python scripts/kalshi_fetch.py
 
+      # Prints one line: "No changes: ..." or "Committed kalshi/data.json as <hash> and pushed."
       - name: Commit data.json if it changed
-        run: |
-          if git diff --quiet -- kalshi/data.json; then
-            echo "No changes."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add kalshi/data.json
-          git commit -m "Update Kalshi dashboard data"
-          git push
+        run: bash scripts/commit_data.sh

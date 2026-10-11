@@ -110,6 +110,11 @@ scripts/
                          neutral Sold with profit colored by sign. Hero line is one sentence; the
                          full net-P&L explanation lives in the footer. summary.best_bet/worst_bet
                          ({title, profit}) feed the Best/Worst tiles (.tiles.pair, always 2 across).
+  commit_data.sh        Workflow's last step: commits + pushes kalshi/data.json only if it changed.
+                         Prints exactly one line: "No changes: ..." or "Committed kalshi/data.json as
+                         <hash> and pushed." (Kept as a script, not inline YAML, because GitHub echoes
+                         an inline run: block's source into the log, which showed the "No changes."
+                         text even on runs that committed.)
   kalshi_from_csv.py    Fallback: builds data.json from a Kalshi "Recent Activity" CSV export.
                          Its Amount_In_Dollars column is really the contract count, and
                          Price_In_Cents is ALWAYS the Yes price (a "No" fill at P traded No at
