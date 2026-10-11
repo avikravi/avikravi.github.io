@@ -347,15 +347,25 @@ BET_KEYS = ("kind", "tag", "date", "resolved", "event_date", "title", "side", "c
             "net_payout", "profit", "fills", "settlement", "live", "legs")
 
 
-def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_series=None, series_note="",
+def build_dashboard(bets, fills, cash, kalshi_open_value, source, fee_source, pnl_series=None, series_note="",
                     resolution_sources=None, ledger=None):
-    """Assemble data.json. All arithmetic happens here, exactly; the page only formats strings."""
+    """Assemble data.json. All arithmetic happens here, exactly; the page only formats strings.
+
+    Headline net P&L (live API data) = realized P&L - deposit fees + unrealized
+    P&L of open bets at the current bid. That is exactly the sum of every row's
+    profit minus the deposit fees, so the headline always equals what the Bets
+    table adds up to. (When cash reconciles it also equals cash + open bets at
+    bid - money in; kalshi_fetch.reconcile checks that.) Kalshi's own
+    portfolio value is kept only as a labeled secondary figure.
+
+    CSV fallback: no bids and finished bets with unknown payouts, so the rows
+    can't add up; the headline there is the app snapshot (cash + Kalshi's open
+    value - money in), labeled net_pnl_basis = "snapshot".
+    """
     deposited = sum((row["amount"] for row in DEPOSITS), ZERO)
     deposit_fees = sum((row["fee"] for row in DEPOSITS), ZERO)
     credited = sum((row["amount"] for row in CREDITS), ZERO)
     trading_fees = sum((fill["fee"] for fill in fills), ZERO)
-    account_value = cash + open_value
-    net_pnl = account_value - deposited - credited
 
     # Resolved = sold early or settled. Open positions never count toward the
     # win rate or realized P&L; their profit is unrealized (at the current bid).
@@ -364,6 +374,20 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
     pending = [bet for bet in bets if bet["status"] == "pending"]
     open_bets = [bet for bet in bets if bet["status"] == "open"]
     open_profits = [bet["profit"] for bet in open_bets]
+    valued_open = [bet for bet in open_bets if bet["profit"] is not None]
+    realized_total = sum((bet["profit"] for bet in resolved), ZERO)
+    unrealized_total = sum((bet["profit"] for bet in valued_open), ZERO)
+
+    if source == "csv":
+        net_basis = "snapshot"
+        open_value = kalshi_open_value
+        account_value = cash + open_value
+        net_pnl = account_value - deposited - credited
+    else:
+        net_basis = "bets_at_bid"
+        open_value = sum((bet["live"]["amount"] for bet in valued_open), ZERO)
+        account_value = cash + open_value
+        net_pnl = realized_total - deposit_fees + unrealized_total
 
     by_category = OrderedDict((name, {"profit": ZERO, "resolved": 0, "pending": 0}) for name in CATEGORY_ORDER)
     for bet in bets:
@@ -395,9 +419,17 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
         "source": source,
         "summary": {
             "net_pnl": dec_str(net_pnl),
+            # How net_pnl was computed: "bets_at_bid" = realized - deposit fees +
+            # unrealized at current bid (sum of rows - deposit fees); "snapshot" = CSV mode.
+            "net_pnl_basis": net_basis,
             "account_value": dec_str(account_value),
             "cash": dec_str(cash),
+            # Open bets at the current bid (what the rows use).
             "open_value": dec_str(open_value),
+            # Kalshi's own portfolio value for the same bets (secondary, labeled on the page).
+            "kalshi_open_value": dec_str(kalshi_open_value),
+            # Open bets with no current bid (left out of the headline and the totals).
+            "unvalued_open": len(open_bets) - len(valued_open),
             "deposited": dec_str(deposited),
             "credits": dec_str(credited),
             "credit_reasons": [row["reason"] for row in CREDITS],
@@ -452,7 +484,7 @@ def max_places(node):
     return 0
 
 
-OPEN_POSITIONS_LABEL = "Open positions (marked at Kalshi's value)"
+OPEN_POSITIONS_LABEL = "Open bets at current bid (unrealized)"
 MAX_DAY_ITEMS = 8
 
 

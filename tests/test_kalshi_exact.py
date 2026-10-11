@@ -138,7 +138,7 @@ class ReconcileExactTests(unittest.TestCase):
         self.assertEqual(len(written), 1)
         self.assertTrue(lines[0].startswith("ledger precision: "))
         self.assertEqual(lines[1], "reconciled exactly: expected cash $44.753 = actual cash $44.753, diff $0; "
-                                   "net $11.553 (data.json updated)")
+                                   "net $11.551 (data.json updated)")
 
     def test_net_mismatch_blocks(self):
         dashboard, fills = fx.golden_dashboard()
@@ -147,6 +147,51 @@ class ReconcileExactTests(unittest.TestCase):
         with self.assertRaises(kalshi_fetch.ReconciliationError) as caught:
             kalshi_fetch.reconcile(dashboard, fills, payouts, D(fx.GOLDEN_CASH), D("1.80"))
         self.assertIn("diff $0.0001", str(caught.exception))
+
+
+class HeadlineTests(unittest.TestCase):
+    """Headline net P&L == sum of every row's profit - deposit fee, exactly, in every state."""
+
+    def check(self, dashboard):
+        summ = dashboard["summary"]
+        rows = sum((D(bet["profit"]) for bet in dashboard["bets"] if bet["profit"] is not None), D(0))
+        self.assertEqual(summ["net_pnl_basis"], "bets_at_bid")
+        self.assertEqual(D(summ["net_pnl"]), rows - D(summ["deposit_fees"]))
+        self.assertEqual(D(summ["net_pnl"]), D(summ["realized_pnl"]) - D(summ["deposit_fees"]) + D(summ["unrealized_pnl"]))
+        self.assertEqual(D(summ["net_pnl"]), D(summ["account_value"]) - D(summ["deposited"]) - D(summ["credits"]))
+        self.assertEqual(dashboard["pnl_series"][-1]["pnl"], summ["net_pnl"])  # chart ends at the headline
+        return summ
+
+    def test_with_an_open_bet(self):
+        dashboard, _fills = fx.golden_dashboard()
+        summ = self.check(dashboard)
+        self.assertEqual(summ["net_pnl"], "11.551")
+        self.assertEqual((summ["open_value"], summ["kalshi_open_value"]), ("1.798", "1.8"))
+
+    def test_with_no_open_bets(self):
+        fills = [fill for fill in fx.GOLDEN_FILLS if fill["ticker"] != fx.GOLDEN]
+        # Cash without the Golden buy: 44.753 + 2.0035 = 46.7565
+        dashboard, _fills = fx.golden_dashboard(fills=fills, positions=[], cash="46.7565", portfolio_cents=0)
+        summ = self.check(dashboard)
+        self.assertEqual((summ["open"], summ["unrealized_pnl"], summ["net_pnl"]), (0, "0", "11.7565"))
+
+    def test_live_prices_move_the_headline_with_the_rows_not_kalshi(self):
+        # Game day: the bid jumps to 0.90 while Kalshi still reports $1.80. Cash is unchanged,
+        # so reconciliation still passes; the headline follows the rows (5.8 x 0.90 = 5.22).
+        dashboard, _fills = fx.golden_dashboard(bids={fx.GOLDEN: ("0.10", "0.90")})
+        summ = self.check(dashboard)
+        self.assertEqual((summ["open_value"], summ["kalshi_open_value"]), ("5.22", "1.8"))
+        self.assertEqual(summ["unrealized_pnl"], "3.2165")   # 5.22 - 2.0035
+        self.assertEqual(summ["net_pnl"], "14.973")  # 11.9565 - 0.20 + 3.2165
+
+    def test_live_numbers_from_the_bug_report(self):
+        # The live state that exposed the bug: rows at bid summed to +2.3498 while the old
+        # headline used Kalshi's $10.22 and showed +3.2344. Rebuild that state's arithmetic.
+        realized, fee = D("0.8826"), D("0.20")
+        unrealized = (D("3.264") - D("2.1774")) + (D("1.914") - D("1.9936")) + (D("4.1574") - D("3.4972"))
+        self.assertEqual(unrealized, D("1.6672"))
+        self.assertEqual(realized - fee + unrealized, D("2.3498"))
+        self.assertEqual(D("28.0144") + D("3.264") + D("1.914") + D("4.1574") - D("35"), D("2.3498"))
 
 
 class RoundTripTests(unittest.TestCase):

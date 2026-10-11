@@ -1131,7 +1131,16 @@ tolerances or `money()`. The math must be EXACT everywhere:
   the win-rate percentage (a ratio, not money), shown with "≈". Axis tick labels come from Chart.js's scale.
 - **Reconciliation:** zero tolerance. Expected cash (deposits + credits + sale proceeds + settlement payouts −
   purchase costs − all fees, from API data alone) must EQUAL `balance_dollars`, and net P&L must equal cash +
-  portfolio value − money in, digit for digit. Otherwise the write is blocked and the exact differences are printed.
+  open bets at the current bid − money in, digit for digit. Otherwise the write is blocked and the exact differences
+  are printed.
+- **Headline net P&L (2026-10-11):** = realized P&L − deposit fees + unrealized P&L of open bets at the current bid,
+  i.e. exactly the sum of every Bets row's profit minus the deposit fee (`summary.net_pnl_basis = "bets_at_bid"`).
+  Account value = cash + open bets at bid. Kalshi's own `portfolio_value` (cents) is NOT used for the headline; it's
+  stored as `summary.kalshi_open_value` and shown as a secondary line ("Kalshi values open bets at $X"), because on
+  game days it drifts from the bids and made the headline disagree with the rows. Open bets with no bid are counted
+  in `summary.unvalued_open` and left out. CSV fallback keeps its snapshot basis (`"snapshot"`). Tested: headline ==
+  rows − deposit fee in every state (no open bets, open bets, moved prices), and on screen (All time footer −
+  deposit fee == headline).
 - **Tests (run in the workflow before any write):** `test_kalshi_lint` (AST + page lint for the rules above),
   `test_kalshi_exact` (golden values, every identity, round-trip, zero-tolerance reconcile, cent rule + docs
   accumulator example), `test_kalshi_property` (hypothesis vs. an independent ledger simulation),

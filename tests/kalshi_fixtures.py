@@ -23,7 +23,9 @@ cent-rounded views of the exact 23.2747 / 12.2847.
             cost 1.914 + 0.0895 = 2.0035; value 5.80 x 0.31 = 1.798
 Cash = 35.00 in - 0.20 deposit fee + 1.4878 + 0.1801 + 0.5583 + 12.2847 + 2.4441
        - 4.9985 - 2.0035 = 44.753 (every change is on the $0.0001 grid)
-Portfolio value (Kalshi's own figure) = 180 cents. Net = 44.753 + 1.80 - 35 = 11.553.
+Headline net = realized 11.9565 - 0.20 deposit fee + unrealized -0.2055 (Golden at its
+0.31 bid: 1.798 - 2.0035) = 11.551 = cash 44.753 + open at bid 1.798 - 35.
+Kalshi's own portfolio value (180 cents = $1.80) is shown only as a secondary figure.
 """
 
 from decimal import ROUND_FLOOR, Decimal
@@ -92,7 +94,7 @@ GOLDEN_ROWS = {
     "Texans vs Colts: Texans win": (D("4.9985"), D("0"), D("-4.9985")),
 }
 GOLDEN_CATEGORIES = {"NFL": D("-3.3306"), "Soccer": D("12.843"), "Crypto": D("2.4441")}
-GOLDEN_NET = D("11.553")
+GOLDEN_NET = D("11.551")
 GOLDEN_OPEN = {"cost": D("2.0035"), "value": D("1.798")}
 TITLES = {ROBINSON: "Bijan Robinson TD", PENIX: "Penix 275+", MEXICO: "Mexico advances", GOLDEN: "Golden 40+"}
 
@@ -113,7 +115,7 @@ PARLAY_MARKETS = {
     "KXWCGAME-26JUN25-NED": {"yes_sub_title": "Netherlands", "result": "no"},
 }
 FULL_CASH = "37.1777"  # GOLDEN_CASH 44.753 - 7.5753
-FULL_NET = D("3.9777")  # 37.1777 + 1.80 - 35
+FULL_NET = D("3.9757")  # 4.3812 realized - 0.20 fee - 0.2055 unrealized = 37.1777 + 1.798 - 35
 EXPECTED_LEGS = [
     {"name": "Ivory Coast", "side": "Yes", "result": "hit"},
     {"name": "Germany", "side": "Yes", "result": "hit"},
@@ -274,6 +276,16 @@ def identity_failures(dashboard, fills=None):
         problems.append("net != account - deposits - credits")
     if D(summ["account_value"]) != D(summ["cash"]) + D(summ["open_value"]):
         problems.append("account != cash + open value")
+    if summ.get("net_pnl_basis") == "bets_at_bid":
+        # The headline is exactly what the rows add up to, minus the deposit fee.
+        rows_total = sum((D(bet["profit"]) for bet in bets if bet["profit"] is not None
+                          and bet["status"] in ("sold", "settled", "open")), D(0))
+        if D(summ["net_pnl"]) != rows_total - D(summ["deposit_fees"]):
+            problems.append("headline {} != sum of row profits {} - deposit fee {}".format(
+                summ["net_pnl"], rows_total, summ["deposit_fees"]))
+        live_total = sum((D(bet["live"]["amount"]) for bet in bets if bet["status"] == "open" and bet["live"]), D(0))
+        if D(summ["open_value"]) != live_total:
+            problems.append("open value {} != sum of open bets at bid {}".format(summ["open_value"], live_total))
 
     # Fees: total == trading + deposit; trading == exact sum of every fill's fee;
     # trading == reported + rounding - rebates; maker + taker == trading.

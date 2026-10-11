@@ -362,6 +362,16 @@ class DisplayTests(unittest.TestCase):
         opened = self.doms["open"].find(lambda node: node.attrs.get("data-total") == "footer.profit")
         self.assertEqual(parse_shown(opened.text()), D(summary["unrealized_pnl"]))
 
+    def test_all_time_footer_minus_deposit_fee_is_the_headline(self):
+        footer = self.doms["all"].find(lambda node: node.attrs.get("data-total") == "footer.profit")
+        headline = self.doms["overview"].find(lambda node: node.attrs.get("id") == "netPnl")
+        fee = self.doms["overview"].find(lambda node: node.attrs.get("data-field") == "summary.deposit_fees")
+        self.assertEqual(parse_shown(footer.text(), "signed") - parse_shown(fee.text(), "plain"),
+                         parse_shown(headline.text(), "signed"))
+        self.assertEqual(parse_shown(headline.text(), "signed"), fx.FULL_NET)
+        kalshi = self.doms["overview"].find(lambda node: node.attrs.get("id") == "kalshiLine").text()
+        self.assertTrue(kalshi.startswith("Kalshi values open bets at $1.80; this page uses the current bid ($1.798)."), kalshi)
+
     def test_url_filter_state(self):
         open_dom = self.doms["open"]
         rows = self.bet_rows(open_dom)

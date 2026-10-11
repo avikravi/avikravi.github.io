@@ -166,6 +166,9 @@
         .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
         .hero-value { font-size: 52px; font-weight: 700; line-height: 1.05; margin: 8px 0 6px; letter-spacing: -0.02em; }
         .hero-note { color: var(--ink-soft); font-size: 14px; margin: 0; }
+        .hero-derive { color: var(--ink-faint); font-size: 13px; margin: 6px 0 0; }
+        .hero-derive span { color: var(--ink-soft); }
+        .hero-kalshi { color: var(--ink-faint); font-size: 12.5px; margin: 4px 0 0; }
         .open-link {
             display: inline-flex; align-items: center; gap: 8px;
             color: var(--ink-soft); text-decoration: none; font-size: 13.5px;
@@ -481,6 +484,8 @@
                             <div class="label">Net P&amp;L after fees</div>
                             <div class="hero-value" id="netPnl">—</div>
                             <p class="hero-note" id="netNote"></p>
+                            <p class="hero-derive" id="netDerive"></p>
+                            <p class="hero-kalshi" id="kalshiLine"></p>
                         </div>
                         <a class="open-link" id="openLink" href="#bets?status=open" hidden><span class="pulse" aria-hidden="true"></span><span id="openLinkText"></span></a>
                     </div>
@@ -885,13 +890,39 @@
 
             setMoney('netPnl', s.net_pnl, 'signed', 'summary.net_pnl');
             setText('netNote', 'After all fees. Started with ' + plain(s.deposited) + ' + a ' + plain(s.credits) + ' bonus.');
+            if (s.net_pnl_basis === 'bets_at_bid') {
+                // The headline is exactly what the Bets rows add up to, minus the deposit fee.
+                var derive = $('netDerive');
+                derive.textContent = '= realized ';
+                derive.appendChild(moneyEl('span', '', s.realized_pnl, 'signed', 'summary.realized_pnl'));
+                derive.appendChild(document.createTextNode(' − deposit fee '));
+                derive.appendChild(moneyEl('span', '', s.deposit_fees, 'plain', 'summary.deposit_fees'));
+                derive.appendChild(document.createTextNode(' + unrealized '));
+                derive.appendChild(moneyEl('span', '', s.unrealized_pnl, 'signed', 'summary.unrealized_pnl'));
+                derive.appendChild(document.createTextNode(' (open bets at current bid)'));
+                if (s.open) {
+                    var kalshi = $('kalshiLine');
+                    kalshi.textContent = 'Kalshi values open bets at ';
+                    kalshi.appendChild(moneyEl('span', '', s.kalshi_open_value, 'plain', 'summary.kalshi_open_value'));
+                    kalshi.appendChild(document.createTextNode('; this page uses the current bid ('));
+                    kalshi.appendChild(moneyEl('span', '', s.open_value, 'plain', 'summary.open_value'));
+                    kalshi.appendChild(document.createTextNode(').'));
+                }
+                if (s.unvalued_open) {
+                    $('kalshiLine').appendChild(document.createTextNode(' ' + s.unvalued_open
+                        + ' open bet(s) have no current bid and aren’t counted yet.'));
+                }
+            } else {
+                setText('netDerive', '= Kalshi app snapshot (cash + open positions) − money in.');
+            }
             if (s.open) {
                 $('openLink').hidden = false;
                 setText('openLinkText', s.open + ' open bet' + (s.open === 1 ? '' : 's') + ' →');
             }
 
             setMoney('accountValue', s.account_value, 'plain', 'summary.account_value');
-            setText('accountSub', plain(s.cash) + ' cash + ' + plain(s.open_value) + ' open');
+            setText('accountSub', plain(s.cash) + ' cash + ' + plain(s.open_value)
+                + (s.net_pnl_basis === 'bets_at_bid' ? ' open at bid' : ' open'));
             setMoney('deposited', s.deposited, 'plain', 'summary.deposited');
             setMoney('credits', s.credits, 'plain', 'summary.credits');
             setMoney('feesPaid', s.total_fees, 'plain', 'summary.total_fees');
@@ -937,10 +968,12 @@
 
             // About panel
             setText('aboutNet',
-                'Net P&L is the account value (cash plus open positions at Kalshi’s own value) minus the '
-                + plain(s.deposited) + ' deposit and the ' + plain(s.credits) + ' referral bonus. Every trading fee and the '
-                + plain(s.deposit_fees) + ' deposit fee is already taken out. Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. '
-                + 'The bonus counts as money in, not profit. Every amount is shown exactly as calculated, to the fraction of a cent; nothing is rounded.');
+                'Net P&L is every bet’s profit added up (finished bets, plus open bets valued at the current bid) minus the '
+                + plain(s.deposit_fees) + ' deposit fee, so it always equals what the Bets table adds up to. It also equals cash plus open bets at '
+                + 'the current bid, minus the ' + plain(s.deposited) + ' deposit and the ' + plain(s.credits) + ' referral bonus. '
+                + 'Kalshi’s own value for open bets can differ from the bid; it’s shown separately on the Overview. '
+                + 'Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. The bonus counts as money in, not profit. '
+                + 'Every amount is shown exactly as calculated, to the fraction of a cent; nothing is rounded.');
             setText('aboutWin',
                 'Win rate counts only finished bets: settled, or sold before settlement. Open bets don’t count either way.');
             setText('aboutSource', data.source === 'csv'

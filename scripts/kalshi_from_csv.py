@@ -204,7 +204,7 @@ def main():
         bets,
         fills,
         cash=SNAPSHOT["cash"],
-        open_value=SNAPSHOT["open_value"],
+        kalshi_open_value=SNAPSHOT["open_value"],
         source="csv",
         fee_source="csv_fee_column",
         pnl_series=None,

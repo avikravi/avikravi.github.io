@@ -361,7 +361,10 @@ def reconcile(dashboard, fills, settlement_payouts, actual_cash, portfolio_value
             )
         )
 
-    expected_net = actual_cash + portfolio_value - money_in_total()
+    # The headline (sum of rows - deposit fees) must also equal Kalshi's cash
+    # plus the open bets at the current bid, minus money in. Exact.
+    open_at_bid = to_decimal(dashboard["summary"]["open_value"])
+    expected_net = actual_cash + open_at_bid - money_in_total()
     published_net = to_decimal(dashboard["summary"]["net_pnl"])
     net_diff = published_net - expected_net
     if net_diff != ZERO:
@@ -490,7 +493,7 @@ def build_from_api(client):
         bets,
         fills,
         cash=cash,
-        open_value=portfolio_value,
+        kalshi_open_value=portfolio_value,
         source="api",
         fee_source="api_fee_cost",
         series_note="One step per day: bets count on the day they settled or were sold. "
