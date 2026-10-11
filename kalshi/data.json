@@ -1,32 +1,32 @@
 {
-  "source": "csv",
+  "source": "api",
   "summary": {
-    "net_pnl": 0.31,
-    "account_value": 35.31,
+    "net_pnl": 0.21,
+    "account_value": 35.21,
     "cash": 28.01,
-    "open_value": 7.3,
+    "open_value": 7.2,
     "deposited": 10.0,
     "credits": 25.0,
     "credit_reasons": [
       "Referral bonus"
     ],
-    "trading_fees": 3.23,
+    "trading_fees": 3.29,
     "deposit_fees": 0.2,
-    "total_fees": 3.43,
+    "total_fees": 3.49,
     "bets": 17,
-    "resolved": 4,
-    "wins": 4,
-    "losses": 0,
-    "pending": 10,
+    "resolved": 14,
+    "wins": 9,
+    "losses": 5,
+    "pending": 0,
     "open": 3,
-    "win_rate": null
+    "win_rate": 0.643
   },
   "fees": {
     "maker_fills": 3,
     "maker_fees": 0.0,
     "taker_fills": 21,
-    "taker_fees": 3.23,
-    "source": "csv_fee_column"
+    "taker_fees": 3.29,
+    "source": "api_fee_cost"
   },
   "pnl_series": [
     {
@@ -34,88 +34,144 @@
       "pnl": -0.2
     },
     {
-      "date": "2026-10-10",
-      "pnl": 0.31
+      "date": "2025-12-02",
+      "pnl": 1.92
+    },
+    {
+      "date": "2026-02-03",
+      "pnl": 3.57
+    },
+    {
+      "date": "2026-02-04",
+      "pnl": -0.72
+    },
+    {
+      "date": "2026-05-06",
+      "pnl": 0.3
+    },
+    {
+      "date": "2026-06-18",
+      "pnl": 12.58
+    },
+    {
+      "date": "2026-06-25",
+      "pnl": 5.0
+    },
+    {
+      "date": "2026-06-30",
+      "pnl": 7.44
+    },
+    {
+      "date": "2026-06-30",
+      "pnl": 8.0
+    },
+    {
+      "date": "2026-07-01",
+      "pnl": 8.19
+    },
+    {
+      "date": "2026-09-24",
+      "pnl": 7.2
+    },
+    {
+      "date": "2026-09-24",
+      "pnl": 8.69
+    },
+    {
+      "date": "2026-09-24",
+      "pnl": 8.87
+    },
+    {
+      "date": "2026-09-26",
+      "pnl": 5.67
+    },
+    {
+      "date": "2026-09-27",
+      "pnl": 0.67
+    },
+    {
+      "date": "2026-10-11",
+      "pnl": 0.21
     }
   ],
-  "pnl_series_note": "Seeded from a CSV export. Bets that ran to settlement show as pending until the live API sync fills in their payouts.",
+  "pnl_series_note": "Cumulative profit of settled and sold bets by date; the last point is today's net P&L including open positions.",
   "categories": [
     {
       "name": "NFL",
-      "profit": 1.67,
-      "resolved": 2,
-      "pending": 2
+      "profit": -4.32,
+      "resolved": 4,
+      "pending": 0
     },
     {
       "name": "NBA",
-      "profit": 0.0,
-      "resolved": 0,
-      "pending": 2
+      "profit": -3.27,
+      "resolved": 2,
+      "pending": 0
     },
     {
       "name": "Soccer",
-      "profit": 12.85,
-      "resolved": 2,
-      "pending": 1
+      "profit": 13.03,
+      "resolved": 3,
+      "pending": 0
     },
     {
       "name": "F1",
-      "profit": 0.0,
-      "resolved": 0,
-      "pending": 1
+      "profit": -3.2,
+      "resolved": 1,
+      "pending": 0
     },
     {
       "name": "Crypto",
-      "profit": 0.0,
-      "resolved": 0,
-      "pending": 1
+      "profit": 2.44,
+      "resolved": 1,
+      "pending": 0
     },
     {
       "name": "Politics",
-      "profit": 0.0,
-      "resolved": 0,
-      "pending": 1
+      "profit": 2.12,
+      "resolved": 1,
+      "pending": 0
     },
     {
       "name": "Other",
-      "profit": 0.0,
-      "resolved": 0,
-      "pending": 2
+      "profit": -5.93,
+      "resolved": 2,
+      "pending": 0
     }
   ],
   "open_positions": [
     {
       "date": "2026-10-10",
-      "title": "Denzel Boston 60+ receiving yards",
+      "title": "Denzel Boston: 60+ receiving yards",
       "side": "No",
       "contracts": 5.33,
       "cost": 3.5,
-      "value": null,
+      "value": 3.36,
       "category": "NFL"
     },
     {
       "date": "2026-10-10",
-      "title": "Romeo Doubs 40+ receiving yards",
+      "title": "Romeo Doubs: 40+ receiving yards",
       "side": "No",
       "contracts": 5.1,
       "cost": 2.18,
-      "value": null,
+      "value": 1.99,
       "category": "NFL"
     },
     {
       "date": "2026-10-10",
-      "title": "Matthew Golden 40+ receiving yards",
+      "title": "Matthew Golden: 40+ receiving yards",
       "side": "No",
       "contracts": 5.8,
       "cost": 1.99,
-      "value": null,
+      "value": 1.8,
       "category": "NFL"
     }
   ],
   "recent_bets": [
     {
       "date": "2026-10-10",
-      "title": "Denzel Boston 60+ receiving yards",
+      "title": "Denzel Boston: 60+ receiving yards",
       "side": "No",
       "cost": 3.5,
       "payout": null,
@@ -126,7 +182,7 @@
     },
     {
       "date": "2026-10-10",
-      "title": "Romeo Doubs 40+ receiving yards",
+      "title": "Romeo Doubs: 40+ receiving yards",
       "side": "No",
       "cost": 2.18,
       "payout": null,
@@ -137,7 +193,7 @@
     },
     {
       "date": "2026-10-10",
-      "title": "Matthew Golden 40+ receiving yards",
+      "title": "Matthew Golden: 40+ receiving yards",
       "side": "No",
       "cost": 1.99,
       "payout": null,
@@ -148,40 +204,40 @@
     },
     {
       "date": "2026-09-27",
-      "title": "Texans vs. Colts: Houston wins",
+      "title": "Houston wins",
       "side": "Yes",
-      "cost": 4.99,
-      "payout": null,
-      "profit": null,
-      "fee": 0.23,
+      "cost": 5.0,
+      "payout": 0.0,
+      "profit": -5.0,
+      "fee": 0.24,
       "category": "NFL",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-09-24",
-      "title": "Azerbaijan GP winner: Kimi Antonelli",
+      "title": "Andrea Kimi Antonelli to finish in first",
       "side": "Yes",
-      "cost": 3.19,
-      "payout": null,
-      "profit": null,
+      "cost": 3.2,
+      "payout": 0.0,
+      "profit": -3.2,
       "fee": 0.12,
       "category": "F1",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-09-24",
-      "title": "Falcons vs. Packers: Green Bay wins",
+      "title": "Green Bay wins",
       "side": "Yes",
       "cost": 0.99,
-      "payout": null,
-      "profit": null,
+      "payout": 0.0,
+      "profit": -0.99,
       "fee": 0.02,
       "category": "NFL",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-09-24",
-      "title": "Bijan Robinson anytime touchdown",
+      "title": "Bijan Robinson: 1+ touchdowns",
       "side": "Yes",
       "cost": 2.0,
       "payout": 3.48,
@@ -192,7 +248,7 @@
     },
     {
       "date": "2026-09-24",
-      "title": "Michael Penix Jr. 275+ passing yards",
+      "title": "Michael Penix Jr.: 275+ passing yards",
       "side": "No",
       "cost": 1.01,
       "payout": 1.19,
@@ -203,29 +259,29 @@
     },
     {
       "date": "2026-07-01",
-      "title": "World Cup: USA advances vs. Bosnia",
+      "title": "USA vs Bosnia and Herzegovina: To Advance: USA advances",
       "side": "Yes",
-      "cost": 1.09,
-      "payout": null,
-      "profit": null,
+      "cost": 1.1,
+      "payout": 1.29,
+      "profit": 0.19,
       "fee": 0.01,
       "category": "Soccer",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-06-30",
-      "title": "Bitcoin above $58,500 on Jun 30",
+      "title": "Bitcoin price on Jun 30, 2026?: $58,500 or above",
       "side": "Yes",
-      "cost": 9.87,
-      "payout": null,
-      "profit": null,
+      "cost": 9.88,
+      "payout": 12.32,
+      "profit": 2.44,
       "fee": 0.14,
       "category": "Crypto",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-06-30",
-      "title": "World Cup: Mexico advances vs. Ecuador",
+      "title": "Mexico vs Ecuador: To Advance: Mexico advances",
       "side": "Yes",
       "cost": 1.25,
       "payout": 1.81,
@@ -236,70 +292,70 @@
     },
     {
       "date": "2026-06-25",
-      "title": "Multi-game sports parlay",
+      "title": "yes Ivory Coast,yes Germany,yes Netherlands",
       "side": "Yes",
-      "cost": 7.57,
-      "payout": null,
-      "profit": null,
+      "cost": 7.58,
+      "payout": 0.0,
+      "profit": -7.58,
       "fee": 0.27,
       "category": "Other",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-05-06",
-      "title": "Jaden McDaniels 10+ points",
+      "title": "Jaden McDaniels: 10+ points",
       "side": "Yes",
       "cost": 5.0,
-      "payout": null,
-      "profit": null,
+      "payout": 6.02,
+      "profit": 1.02,
       "fee": 0.06,
       "category": "NBA",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-02-04",
-      "title": "Celtics vs. Rockets: Houston wins",
+      "title": "Boston at Houston Winner?",
       "side": "Yes",
       "cost": 4.29,
-      "payout": null,
-      "profit": null,
+      "payout": 0.0,
+      "profit": -4.29,
       "fee": 0.09,
       "category": "NBA",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-02-03",
-      "title": "Nevada vs. Boise State: Boise State wins",
+      "title": "Nevada at Boise St. Winner?",
       "side": "Yes",
       "cost": 4.35,
-      "payout": null,
-      "profit": null,
+      "payout": 6.0,
+      "profit": 1.65,
       "fee": 0.09,
       "category": "Other",
-      "status": "pending"
+      "status": "settled"
     },
     {
       "date": "2026-01-22",
-      "title": "World Cup Group B winner: Canada",
+      "title": "Will Canada finish first in World Cup Group B?",
       "side": "Yes",
       "cost": 10.99,
-      "payout": 23.28,
-      "profit": 12.29,
-      "fee": 1.77,
+      "payout": 23.27,
+      "profit": 12.28,
+      "fee": 1.78,
       "category": "Soccer",
       "status": "sold"
     },
     {
       "date": "2025-12-02",
-      "title": "Honduras presidential election: Asfura wins",
+      "title": "Who will be elected President of Honduras in 2025?: Nasry Asfura",
       "side": "Yes",
       "cost": 3.88,
-      "payout": null,
-      "profit": null,
+      "payout": 6.0,
+      "profit": 2.12,
       "fee": 0.1,
       "category": "Politics",
-      "status": "pending"
+      "status": "settled"
     }
   ],
-  "updated": "2026-10-11T04:40:58Z"
+  "updated": "2026-10-11T05:01:33Z"
 }
