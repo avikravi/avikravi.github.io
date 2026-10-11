@@ -145,6 +145,7 @@ def fetch_fills(client):
 
 # A title that is only "<team> wins": no colon, no "at"/"vs" naming an opponent.
 BARE_WINNER = re.compile(r"^(?P<team>[^:]+?) wins?$", re.IGNORECASE)
+TO_ADVANCE = re.compile(r":\s*To Advance:\s*", re.IGNORECASE)
 HAS_OPPONENT = re.compile(r"\b(at|vs\.?|v\.?)\b", re.IGNORECASE)
 
 
@@ -165,6 +166,9 @@ def readable_title(ticker, market, event_title_lookup):
     sub_title = market.get("yes_sub_title") or ""
     if sub_title and sub_title.lower() not in title.lower():
         title = "{}: {}".format(title, sub_title) if title else sub_title
+
+    # "USA vs Bosnia: To Advance: USA advances" -> "USA vs Bosnia: USA advances"
+    title = TO_ADVANCE.sub(": ", title)
 
     # "Houston wins" says nothing about who they played: prefix the event.
     bare = BARE_WINNER.match(title)
@@ -345,8 +349,8 @@ def build_from_api(client):
         open_value=portfolio_value,
         source="api",
         fee_source="api_fee_cost",
-        series_note="Cumulative profit of settled and sold bets by date; the last point is today's "
-        "net P&L including open positions.",
+        series_note="One step per day: bets count on the day they settled or were sold. "
+        "The last step is today, with open positions at Kalshi's value.",
         resolution_sources=resolution_sources,
     )
     return dashboard, fills, settlement_payouts, cash, portfolio_value

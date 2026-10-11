@@ -62,6 +62,7 @@ TITLE_OVERRIDES = {
     "KXNFLGAME-26SEP24ATLGB-GB": "Packers vs Falcons: Packers win",
     "KXHONDURASPRES-25-NASF": "Honduras president: Nasry Asfura",
     "KXBTCD-26JUN3019-T58499.99": "Bitcoin $58,500+ on Jun 30, 2026",
+    "KXWCGROUPWIN-26B-CAN": "Canada wins WC Group B",
 }
 
 try:
@@ -253,9 +254,14 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
     ]
 
     if pnl_series is None:
-        pnl_series = realized_series(resolved, deposit_fees, net_pnl)
+        pnl_series = daily_series(resolved, deposit_fees, net_pnl)
 
-    newest_first = sorted(bets, key=lambda bet: bet["date"], reverse=True)
+    # Recent bets = finished bets only (settled or sold), newest result first.
+    # Open positions have their own table.
+    finished = [bet for bet in bets if bet["status"] in ("settled", "sold")]
+    newest_first = sorted(finished, key=lambda bet: (bet["resolved"], bet["date"]), reverse=True)
+    best = max(resolved, key=lambda bet: bet["profit"]) if resolved else None
+    worst = min(resolved, key=lambda bet: bet["profit"]) if resolved else None
     return {
         "source": source,
         "summary": {
@@ -279,6 +285,8 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
             # exist, the known results are mostly bets sold early, which skew
             # toward winners, so show no percentage.
             "win_rate": round(len(wins) / len(resolved), 3) if resolved and not pending else None,
+            "best_bet": {"title": best["title"], "profit": best["profit"]} if best else None,
+            "worst_bet": {"title": worst["title"], "profit": worst["profit"]} if worst else None,
         },
         "fees": dict(fee_breakdown(fills), source=fee_source),
         "pnl_series": pnl_series,
@@ -310,14 +318,42 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
     }
 
 
-def realized_series(resolved, deposit_fees, net_pnl):
-    """Cumulative realized P&L by resolution date, ending at today's net P&L."""
-    running = -deposit_fees
-    points = [{"date": DEPOSITS[0]["date"], "pnl": money(running)}] if DEPOSITS else []
-    for bet in sorted(resolved, key=lambda item: item["resolved"]):
-        running += bet["profit"]
-        points.append({"date": bet["resolved"], "pnl": money(running)})
-    points.append({"date": local_date(datetime.now(timezone.utc)), "pnl": money(net_pnl)})
+OPEN_POSITIONS_LABEL = "Open positions (marked at Kalshi's value)"
+MAX_DAY_ITEMS = 8
+
+
+def daily_series(resolved, deposit_fees, net_pnl, today=None):
+    """One point per day for the step chart: that day's results and the running total.
+
+    Each point is {date, day, pnl, items}, where items lists what moved the
+    total that day ({label, amount}) and pnl is the running total after it.
+    Same-day results are combined into one step. The final point is today and
+    ends exactly at net_pnl; the gap between realized results and net P&L is
+    the open positions' mark, listed as its own item.
+    """
+    today = today or local_date(datetime.now(timezone.utc))
+    days = OrderedDict()
+    if DEPOSITS and deposit_fees:
+        days.setdefault(DEPOSITS[0]["date"], []).append({"label": "Deposit fee", "amount": -deposit_fees})
+    for bet in sorted(resolved, key=lambda item: (item["resolved"], -item["profit"])):
+        days.setdefault(bet["resolved"], []).append({"label": bet["title"], "amount": bet["profit"]})
+
+    realized = sum(item["amount"] for items in days.values() for item in items)
+    open_mark = net_pnl - realized
+    if abs(open_mark) >= 0.005 or today not in days:
+        days.setdefault(today, []).append({"label": OPEN_POSITIONS_LABEL, "amount": open_mark})
+
+    points = []
+    running = 0.0
+    for day in sorted(days):
+        items = days[day]
+        day_total = sum(item["amount"] for item in items)
+        running += day_total
+        shown = [{"label": item["label"], "amount": money(item["amount"])} for item in items[:MAX_DAY_ITEMS]]
+        if len(items) > MAX_DAY_ITEMS:
+            rest = sum(item["amount"] for item in items[MAX_DAY_ITEMS:])
+            shown.append({"label": "{} more".format(len(items) - MAX_DAY_ITEMS), "amount": money(rest)})
+        points.append({"date": day, "day": money(day_total), "pnl": money(running), "items": shown})
     return points
 
 

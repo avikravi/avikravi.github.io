@@ -112,6 +112,9 @@
         }
         .tile-value { font-size: 22px; font-weight: 700; margin-top: 4px; }
         .tile-sub { color: var(--ink-faint); font-size: 12.5px; margin-top: 2px; }
+        /* Best / worst bet: always two across, tucked under the stat grid. */
+        .tiles.pair { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: -14px; }
+        .tile-title { color: var(--ink-soft); font-size: 13px; margin-top: 4px; overflow-wrap: anywhere; }
 
         .gain { color: var(--gain); }
         .loss { color: var(--loss); }
@@ -188,6 +191,7 @@
             white-space: nowrap;
         }
         .pill.won { background: var(--gain-bg); color: var(--gain); }
+        .profit-cell .pill { margin-top: 4px; }
         .pill.lost { background: var(--loss-bg); color: var(--loss); }
         tfoot td { color: var(--ink-soft); font-weight: 600; border-top: 1px solid var(--line); }
         .empty { color: var(--ink-faint); padding: 16px 14px; }
@@ -199,8 +203,9 @@
             padding-top: 16px;
             color: var(--ink-faint);
             font-size: 13px;
-            text-align: center;
         }
+        footer p { margin: 0 0 10px; }
+        footer .disclaimer { text-align: center; margin: 14px 0 0; }
 
         .error {
             background: var(--loss-bg);
@@ -278,10 +283,23 @@
             </div>
         </div>
 
+        <div class="tiles pair">
+            <div class="tile">
+                <div class="label">Best bet</div>
+                <div class="tile-value" id="bestProfit">—</div>
+                <div class="tile-title" id="bestTitle"></div>
+            </div>
+            <div class="tile">
+                <div class="label">Worst bet</div>
+                <div class="tile-value" id="worstProfit">—</div>
+                <div class="tile-title" id="worstTitle"></div>
+            </div>
+        </div>
+
         <section>
             <h2>Cumulative P&amp;L</h2>
             <p class="section-desc" id="seriesNote"></p>
-            <div class="card"><div class="chart-box"><canvas id="pnlChart" role="img" aria-label="Line chart of cumulative profit and loss over time"></canvas></div></div>
+            <div class="card"><div class="chart-box"><canvas id="pnlChart" role="img" aria-label="Step chart of cumulative profit and loss, one step per day"></canvas></div></div>
         </section>
 
         <div class="two-col">
@@ -333,11 +351,11 @@
 
         <section>
             <h2>Recent bets</h2>
-            <p class="section-desc">Last 20, newest first. Same basis as the Kalshi app: cost includes fees, profit is after fees.</p>
+            <p class="section-desc">Last 20 finished bets, newest result first. Cost includes fees; profit is after fees. Open bets are in Open positions above.</p>
             <div class="card table-card">
                 <table>
                     <thead>
-                        <tr><th>Bet</th><th class="num">Cost<span class="th-sub">incl. fees</span></th><th class="num">Profit<span class="th-sub">after fees</span></th></tr>
+                        <tr><th>Bet<span class="th-sub">resolved</span></th><th class="num">Cost<span class="th-sub">incl. fees</span></th><th class="num">Profit<span class="th-sub">after fees</span></th></tr>
                     </thead>
                     <tbody id="recentBody"></tbody>
                 </table>
@@ -345,7 +363,10 @@
             <p class="note" id="pendingNote"></p>
         </section>
 
-        <footer>Not financial advice. Small stakes, for fun.</footer>
+        <footer>
+            <p id="footDetail"></p>
+            <p class="disclaimer">Not financial advice. Small stakes, for fun.</p>
+        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -368,6 +389,10 @@
             return '$' + Math.abs(value).toFixed(2);
         }
         // Gains/losses always carry a sign so meaning never rests on color alone.
+        // Whole dollars without cents ("$10"), otherwise "$10.50".
+        function dollars(value) {
+            return Math.abs(value % 1) < 0.005 ? '$' + Math.round(value) : usd(value);
+        }
         function signed(value) {
             if (value === null || value === undefined) return '—';
             if (Math.abs(value) < 0.005) return '$0.00';
@@ -406,7 +431,18 @@
             }) + (data.source === 'csv' ? ' · from a CSV export' : ' · live from Kalshi');
 
             setValue('netPnl', signed(s.net_pnl), tone(s.net_pnl));
-            $('netNote').textContent = 'Account value minus every dollar put in (deposit + referral bonus), so all fees are already taken out. Kalshi’s own profile number doesn’t subtract fees.';
+            $('netNote').textContent = 'After all fees. Started with ' + dollars(s.deposited) + ' + a ' + dollars(s.credits) + ' bonus.';
+            $('footDetail').textContent =
+                'How net P&L is calculated: account value (cash plus open positions at Kalshi’s own value) minus the '
+                + dollars(s.deposited) + ' deposit and the ' + dollars(s.credits) + ' referral bonus. Every trading fee and the '
+                + usd(s.deposit_fees) + ' deposit fee is already taken out. Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. '
+                + 'The bonus counts as money in, not profit.';
+
+            [['best', s.best_bet], ['worst', s.worst_bet]].forEach(function (pair) {
+                if (!pair[1]) return;
+                setValue(pair[0] + 'Profit', signed(pair[1].profit), tone(pair[1].profit));
+                $(pair[0] + 'Title').textContent = pair[1].title;
+            });
 
             setValue('accountValue', usd(s.account_value));
             $('accountSub').textContent = usd(s.cash) + ' cash + ' + usd(s.open_value) + ' open';
@@ -476,20 +512,37 @@
             };
         }
 
+        function clip(label, size) {
+            return label.length > size ? label.slice(0, size - 1) + '…' : label;
+        }
+
+        // Step chart: one point per day (same-day results already combined in
+        // data.json), held flat until the next day's step. Green fill above $0,
+        // red below, with a solid $0 baseline.
         function renderPnlChart(data) {
             var series = data.pnl_series || [];
             $('seriesNote').textContent = data.pnl_series_note || '';
             if (!window.Chart || !series.length) return;
 
-            var points = series.map(function (row) { return { x: dayMs(row.date), y: row.pnl, date: row.date }; });
-            var last = points[points.length - 1].y;
-            var lineColor = last >= 0 ? COLORS.gain : COLORS.loss;
+            var points = series.map(function (row) {
+                return { x: dayMs(row.date), y: row.pnl, date: row.date, day: row.day, items: row.items || [] };
+            });
             var opts = baseChartOptions();
             opts.interaction = { mode: 'nearest', axis: 'x', intersect: false };
             opts.layout = { padding: { top: 8, right: 10, left: 4 } };
+            opts.plugins.tooltip.bodyFont = { size: 11.5 };
+            opts.plugins.tooltip.footerFont = { size: 12, weight: '600' };
             opts.plugins.tooltip.callbacks = {
                 title: function (items) { return fmtDate(items[0].raw.date, true); },
-                label: function (item) { return 'Net P&L ' + signed(item.raw.y); }
+                label: function (item) {
+                    return item.raw.items.map(function (entry) {
+                        return signed(entry.amount) + '  ' + clip(entry.label, 30);
+                    });
+                },
+                footer: function (items) {
+                    var raw = items[0].raw;
+                    return ['Day ' + signed(raw.day), 'Running total ' + signed(raw.y)];
+                }
             };
             opts.scales = {
                 x: {
@@ -507,28 +560,34 @@
                     }
                 },
                 y: {
+                    beginAtZero: true,
                     grid: {
-                        color: function (ctx) { return ctx.tick.value === 0 ? COLORS.faint : COLORS.line; }
+                        color: function (ctx) { return ctx.tick.value === 0 ? COLORS.ink : COLORS.line; },
+                        lineWidth: function (ctx) { return ctx.tick.value === 0 ? 1.5 : 1; }
                     },
                     border: { display: false },
                     ticks: { color: COLORS.faint, maxTicksLimit: 6, callback: function (value) { return signed(value); } }
                 }
             };
 
+            function signColor(value) { return value >= 0 ? COLORS.gain : COLORS.loss; }
+
             new Chart($('pnlChart'), {
                 type: 'line',
                 data: {
                     datasets: [{
                         data: points,
-                        borderColor: lineColor,
+                        stepped: true,
                         borderWidth: 2,
-                        backgroundColor: lineColor,
-                        pointRadius: points.length > 30 ? 0 : 4,
+                        // Each step's flat run sits at the previous day's total, so color by it.
+                        segment: { borderColor: function (ctx) { return signColor(ctx.p0.parsed.y); } },
+                        borderColor: COLORS.gain,
+                        fill: { target: { value: 0 }, above: 'rgba(33, 201, 122, 0.16)', below: 'rgba(242, 85, 90, 0.18)' },
+                        pointRadius: points.length > 60 ? 0 : 3,
                         pointHoverRadius: 6,
+                        pointBackgroundColor: function (ctx) { return signColor(ctx.raw ? ctx.raw.y : 0); },
                         pointBorderColor: COLORS.surface,
-                        pointBorderWidth: 2,
-                        tension: 0,
-                        stepped: false
+                        pointBorderWidth: 1.5
                     }]
                 },
                 options: opts
@@ -588,12 +647,12 @@
             });
         }
 
-        function betCell(bet, extra) {
+        function betCell(bet, extra, shownDate) {
             var cell = el('td');
             cell.appendChild(el('div', 'bet-title', bet.title));
             var meta = el('div', 'bet-meta');
             meta.appendChild(el('span', 'side', bet.side.toUpperCase()));
-            meta.appendChild(document.createTextNode(fmtDate(bet.date) + ' · ' + bet.category + (extra ? ' · ' + extra : '')));
+            meta.appendChild(document.createTextNode(fmtDate(shownDate || bet.date) + ' · ' + bet.category + (extra ? ' · ' + extra : '')));
             cell.appendChild(meta);
             return cell;
         }
@@ -641,24 +700,34 @@
             $('openFoot').appendChild(note);
         }
 
-        var STATUS_LABEL = { settled: 'Settled', sold: 'Sold early', open: 'Open', pending: 'Pending API' };
+        // Settled bets: green "Won" / red "Lost". Sold early: neutral "Sold",
+        // with the profit itself colored by sign.
+        function resultPill(bet) {
+            if (bet.status === 'sold') return el('span', 'pill', 'Sold');
+            if (bet.status === 'settled') return bet.profit > 0 ? el('span', 'pill won', 'Won') : el('span', 'pill lost', 'Lost');
+            return el('span', 'pill', bet.status === 'pending' ? 'Pending API' : bet.status);
+        }
 
         function renderRecent(data) {
             var body = $('recentBody');
-            (data.recent_bets || []).forEach(function (bet) {
+            var finished = (data.recent_bets || []).filter(function (bet) {
+                return bet.status === 'settled' || bet.status === 'sold';
+            });
+            if (!finished.length) {
+                var empty = el('tr');
+                var cell = el('td', 'empty', 'No finished bets yet.');
+                cell.colSpan = 3;
+                empty.appendChild(cell);
+                body.appendChild(empty);
+                return;
+            }
+            finished.forEach(function (bet) {
                 var row = el('tr');
-                row.appendChild(betCell(bet, 'fee ' + usd(bet.fee)));
+                row.appendChild(betCell(bet, 'fee ' + usd(bet.fee), bet.resolved));
                 row.appendChild(el('td', 'num', usd(bet.cost)));
-                var profitCell = el('td', 'num');
-                if (bet.profit === null || bet.profit === undefined) {
-                    profitCell.appendChild(el('span', 'pill ' + bet.status, STATUS_LABEL[bet.status] || bet.status));
-                } else {
-                    profitCell.appendChild(el('div', tone(bet.profit), signed(bet.profit)));
-                    var pillClass = bet.profit > 0 ? 'won' : 'lost';
-                    var pill = el('span', 'pill ' + pillClass, STATUS_LABEL[bet.status] || bet.status);
-                    pill.style.marginTop = '4px';
-                    profitCell.appendChild(pill);
-                }
+                var profitCell = el('td', 'num profit-cell');
+                profitCell.appendChild(el('div', tone(bet.profit), signed(bet.profit)));
+                profitCell.appendChild(resultPill(bet));
                 row.appendChild(profitCell);
                 body.appendChild(row);
             });

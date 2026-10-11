@@ -37,6 +37,16 @@ class TitleTests(unittest.TestCase):
         self.assertEqual(title_for("KXNBAGAME-Y", {"title": "Boston at Houston: Houston wins"}, "Boston at Houston"),
                          "Boston at Houston: Houston wins")
 
+    def test_to_advance_is_collapsed(self):
+        market = {"title": "USA vs Bosnia and Herzegovina: To Advance", "yes_sub_title": "USA advances"}
+        self.assertEqual(title_for("KXWCADVANCE-X", market), "USA vs Bosnia and Herzegovina: USA advances")
+        self.assertEqual(title_for("KXWCADVANCE-Y", {"title": "Mexico vs Ecuador: To Advance: Mexico advances"}),
+                         "Mexico vs Ecuador: Mexico advances")
+
+    def test_canada_override(self):
+        self.assertEqual(title_for("KXWCGROUPWIN-26B-CAN", {"title": "Will Canada finish first in World Cup Group B?"}),
+                         "Canada wins WC Group B")
+
     def test_bare_winner_without_event_stays_as_is(self):
         self.assertEqual(title_for("KXNFLGAME-Z", {"title": "Dallas wins"}, ""), "Dallas wins")
 

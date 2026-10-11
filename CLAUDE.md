@@ -53,6 +53,17 @@ scripts/
                          of rows at the current bid; the Account value tile stays on Kalshi's own
                          portfolio_value (what reconciles), with a footnote that they can differ.
                          Workflow runs-on is pinned to ubuntu-24.04.
+                         TITLE RULE: ": To Advance:" collapses to ": " ("USA vs Bosnia: USA advances").
+                         PAGE (2026-10-11): pnl_series is one point per day ({date, day, pnl, items})
+                         from daily_series(); the chart is a stepped line (stepped: true = hold the
+                         old total until the next day), green fill above $0 / red below, solid $0
+                         line, tooltip = date, that day's items, day total, running total. Last
+                         point is today and ends at net P&L (open positions' mark is its own item).
+                         recent_bets = finished bets only (settled or sold), newest resolved first,
+                         showing the resolved date; pills: settled -> green Won / red Lost, sold ->
+                         neutral Sold with profit colored by sign. Hero line is one sentence; the
+                         full net-P&L explanation lives in the footer. summary.best_bet/worst_bet
+                         ({title, profit}) feed the Best/Worst tiles (.tiles.pair, always 2 across).
   kalshi_from_csv.py    Fallback: builds data.json from a Kalshi "Recent Activity" CSV export.
                          Its Amount_In_Dollars column is really the contract count, and
                          Price_In_Cents is ALWAYS the Yes price (a "No" fill at P traded No at
@@ -76,6 +87,7 @@ scripts/
                          payouts aren't in the CSV, so those bets show "Pending API".
 tests/
   test_kalshi_titles.py Title overrides/opponent rule, parlay-leg categories, resolution-date order.
+  test_kalshi_series.py Daily step-chart series (one point per day, ends at net P&L).
   test_kalshi_reconcile.py  Offline unittest for the guard (fake API client; a deliberate $1
                          settlement error must block the write). Run: python -m unittest discover
                          -s tests -v. The Kalshi workflow runs it before every fetch.

@@ -211,9 +211,15 @@ def main():
 
     # With most settlements unknown, a per-bet curve would be misleading, so
     # the CSV chart only shows the two points we actually know.
+    net = dashboard["summary"]["net_pnl"]
     dashboard["pnl_series"] = [
-        {"date": "2025-12-02", "pnl": -0.20},
-        {"date": SNAPSHOT["date"], "pnl": dashboard["summary"]["net_pnl"]},
+        {"date": "2025-12-02", "day": -0.20, "pnl": -0.20, "items": [{"label": "Deposit fee", "amount": -0.20}]},
+        {
+            "date": SNAPSHOT["date"],
+            "day": money(net + 0.20),
+            "pnl": net,
+            "items": [{"label": "Net change to the CSV snapshot (per-bet dates need the API)", "amount": money(net + 0.20)}],
+        },
     ]
 
     wrote = write_if_changed(dashboard)
