@@ -74,5 +74,22 @@ class ResolutionDateTests(unittest.TestCase):
         self.assertEqual(kalshi_fetch.resolution_time(None, {}, self.entry, NOW)[1], "last_fill")
 
 
+class SoldBetDateTests(unittest.TestCase):
+    def test_sold_bet_resolves_on_sale_date_not_settlement(self):
+        from kalshi_common import group_fills, make_bet
+
+        fills = [
+            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "yes", "count": 74, "price": 0.14, "fee": 0.63,
+             "is_taker": True, "time": parse_time("2026-01-22T07:15:00Z")},
+            {"ticker": "KXWCGROUPWIN-26B-CAN", "side": "no", "count": 74, "price": 0.67, "fee": 1.14,
+             "is_taker": True, "time": parse_time("2026-06-18T17:47:00Z")},
+        ]
+        entry = group_fills(fills)[0]
+        bet = make_bet(entry, "Canada", settlement_payout=0.0, resolved_time=parse_time("2026-06-24T22:00:00Z"))
+        self.assertEqual(bet["status"], "sold")
+        self.assertEqual(bet["resolved"], "2026-06-18")
+        self.assertEqual(bet["profit"], 12.29)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -192,7 +192,9 @@ def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=F
         fee = entry["fee"][opening] + entry["fee"][closing]
     cost = entry["cost"][opening] + (fee if status == "open" else entry["fee"][opening])
     profit = None if payout is None else payout - cost
-    when = resolved_time or entry["last_time"]
+    # A bet sold off early resolves on its sale date, even if the market later
+    # settled; anything else uses the settlement time when one is known.
+    when = entry["last_time"] if status == "sold" else (resolved_time or entry["last_time"])
     return {
         "date": local_date(entry["first_time"]),
         "resolved": local_date(when) if payout is not None else None,
@@ -299,7 +301,10 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
             for bet in open_bets
         ],
         "recent_bets": [
-            {key: bet[key] for key in ("date", "title", "side", "cost", "payout", "profit", "fee", "category", "status")}
+            {
+                key: bet[key]
+                for key in ("date", "resolved", "title", "side", "cost", "payout", "profit", "fee", "category", "status")
+            }
             for bet in newest_first[:20]
         ],
     }

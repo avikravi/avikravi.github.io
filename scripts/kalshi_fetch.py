@@ -321,7 +321,8 @@ def build_from_api(client):
         if payout is not None:
             settlement_payouts.append(payout)
             resolved_time, source_name = resolution_time(settlement, info, entry, now)
-            # Bets sold off before settlement resolve on their sale date in make_bet.
+            # Bets sold off before settlement resolve on their sale date (make_bet),
+            # so only count the ones that actually rode to settlement.
             if abs(entry["count"]["yes"] - entry["count"]["no"]) >= 0.005:
                 resolution_sources[source_name] = resolution_sources.get(source_name, 0) + 1
 
