@@ -619,18 +619,26 @@
                 body.appendChild(row);
             });
             var totalCost = rows.reduce(function (sum, bet) { return sum + bet.cost; }, 0);
+            // Total = sum of the rows (each valued at the current bid), so the
+            // column adds up. Blank if any row has no bid.
+            var allValued = rows.every(function (bet) { return bet.value !== null && bet.value !== undefined; });
+            var totalValue = rows.reduce(function (sum, bet) { return sum + (bet.value || 0); }, 0);
             var foot = el('tr');
-            foot.appendChild(el('td', '', 'Total'));
+            var label = el('td', '', 'Total');
+            label.appendChild(el('div', 'bet-meta', 'at current bid'));
+            foot.appendChild(label);
             foot.appendChild(el('td', 'num', usd(totalCost)));
-            foot.appendChild(el('td', 'num', usd(data.summary.open_value)));
+            foot.appendChild(el('td', 'num', allValued ? usd(totalValue) : '—'));
             $('openFoot').appendChild(foot);
-            if (!anyValue) {
-                var hint = el('tr');
-                var hintCell = el('td', 'bet-meta', 'Per-position values arrive with the live API sync; the total is current.');
-                hintCell.colSpan = 3;
-                hint.appendChild(hintCell);
-                $('openFoot').appendChild(hint);
-            }
+
+            var note = el('tr');
+            var noteCell = el('td', 'bet-meta', anyValue
+                ? 'Value = contracts × the current bid for the side held. The Account value tile uses Kalshi’s own portfolio value ('
+                  + usd(data.summary.open_value) + '), which can differ by a few cents.'
+                : 'Per-position values arrive with the live API sync.');
+            noteCell.colSpan = 3;
+            note.appendChild(noteCell);
+            $('openFoot').appendChild(note);
         }
 
         var STATUS_LABEL = { settled: 'Settled', sold: 'Sold early', open: 'Open', pending: 'Pending API' };

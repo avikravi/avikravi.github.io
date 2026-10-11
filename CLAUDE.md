@@ -41,6 +41,18 @@ scripts/
                          showing only the totals and diff, and never writes data.json. Success
                          prints one line: "reconciled: cash diff $0.00, net +$X.XX (...)". Keep
                          build_from_api() write-free so this stays testable.
+                         TITLES/CATEGORIES/DATES (2026-10-11): titles = TITLE_OVERRIDES (in
+                         kalshi_common.py, keyed by ticker, keep < ~40 chars) else the API title; a
+                         bare "X wins" gets the event's matchup prefixed ("Dallas at New York G:
+                         Dallas wins"). Categories: CATEGORY_OVERRIDES, else parlay legs
+                         (mve_selected_legs) when all legs agree, else ticker prefix; KXNCAA ->
+                         "College", World Cup parlays -> Soccer. Settled bets' dates come from the
+                         portfolio settlement's settled_time, else the market's settlement_ts, else
+                         close_time (if past), else the last fill; data.json resolution_dates counts
+                         which source each settled bet used. Open-positions total on the page = sum
+                         of rows at the current bid; the Account value tile stays on Kalshi's own
+                         portfolio_value (what reconciles), with a footnote that they can differ.
+                         Workflow runs-on is pinned to ubuntu-24.04.
   kalshi_from_csv.py    Fallback: builds data.json from a Kalshi "Recent Activity" CSV export.
                          Its Amount_In_Dollars column is really the contract count, and
                          Price_In_Cents is ALWAYS the Yes price (a "No" fill at P traded No at
@@ -63,6 +75,7 @@ scripts/
                          wide spreads, last can be stale); no bid -> "—". CSV mode shows "—". Settled
                          payouts aren't in the CSV, so those bets show "Pending API".
 tests/
+  test_kalshi_titles.py Title overrides/opponent rule, parlay-leg categories, resolution-date order.
   test_kalshi_reconcile.py  Offline unittest for the guard (fake API client; a deliberate $1
                          settlement error must block the write). Run: python -m unittest discover
                          -s tests -v. The Kalshi workflow runs it before every fetch.

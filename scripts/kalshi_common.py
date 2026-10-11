@@ -30,6 +30,7 @@ CREDITS = [
 # Ticker prefix -> dashboard category. First match wins, so keep longer
 # prefixes above shorter ones that share a start.
 CATEGORY_PREFIXES = [
+    ("KXNCAA", "College"),
     ("KXNFL", "NFL"),
     ("KXNBA", "NBA"),
     ("KXWC", "Soccer"),
@@ -45,7 +46,23 @@ CATEGORY_PREFIXES = [
     ("KXSENATE", "Politics"),
     ("KXHOUSE", "Politics"),
 ]
-CATEGORY_ORDER = ["NFL", "NBA", "Soccer", "F1", "Crypto", "Politics", "Other"]
+CATEGORY_ORDER = ["NFL", "NBA", "College", "Soccer", "F1", "Crypto", "Politics", "Other"]
+
+# Per-market fixes, keyed by market ticker (tickers stay in code, never in
+# data.json). Parlays are normally categorized from their legs (see
+# kalshi_fetch.category_from_legs); this pins the one we know about in case
+# the legs aren't returned.
+CATEGORY_OVERRIDES = {
+    "KXMVESPORTSMULTIGAMEEXTENDED-S20260905EFE5661-C299BAD43AB": "Soccer",  # World Cup parlay
+}
+
+# Hand-written titles that win over the API's. Keep them under ~40 chars.
+TITLE_OVERRIDES = {
+    "KXNFLGAME-26SEP27HOUIND-HOU": "Texans vs Colts: Texans win",
+    "KXNFLGAME-26SEP24ATLGB-GB": "Packers vs Falcons: Packers win",
+    "KXHONDURASPRES-25-NASF": "Honduras president: Nasry Asfura",
+    "KXBTCD-26JUN3019-T58499.99": "Bitcoin $58,500+ on Jun 30, 2026",
+}
 
 try:
     from zoneinfo import ZoneInfo
@@ -56,6 +73,8 @@ except ImportError:  # Python 3.8 has no zoneinfo; CDT is close enough.
 
 
 def category_for(ticker):
+    if ticker in CATEGORY_OVERRIDES:
+        return CATEGORY_OVERRIDES[ticker]
     upper = ticker.upper()
     for prefix, name in CATEGORY_PREFIXES:
         if upper.startswith(prefix):
@@ -136,7 +155,7 @@ def group_fills(fills):
     return list(markets.values())
 
 
-def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=False, open_value=None):
+def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=False, open_value=None, category=None):
     """Turn a grouped market into a sanitized bet record.
 
     Money is on the app's basis: cost includes the fees paid to open the
@@ -179,7 +198,7 @@ def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=F
         "resolved": local_date(when) if payout is not None else None,
         "title": title,
         "side": opening.capitalize(),
-        "category": category_for(entry["ticker"]),
+        "category": category or category_for(entry["ticker"]),
         "cost": money(cost),
         "payout": money(payout),
         "profit": money(profit),
@@ -201,7 +220,8 @@ def fee_breakdown(fills):
     }
 
 
-def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_series=None, series_note=""):
+def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_series=None, series_note="",
+                    resolution_sources=None):
     deposited = sum(row["amount"] for row in DEPOSITS)
     deposit_fees = sum(row["fee"] for row in DEPOSITS)
     credited = sum(row["amount"] for row in CREDITS)
@@ -261,6 +281,10 @@ def build_dashboard(bets, fills, cash, open_value, source, fee_source, pnl_serie
         "fees": dict(fee_breakdown(fills), source=fee_source),
         "pnl_series": pnl_series,
         "pnl_series_note": series_note,
+        # How each settled bet's date was found (counts only). "last_fill" means
+        # no settlement or close time was available and the bet's last trade
+        # date was used instead.
+        "resolution_dates": resolution_sources or {},
         "categories": categories,
         "open_positions": [
             {

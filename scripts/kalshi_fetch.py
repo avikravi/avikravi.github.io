@@ -20,14 +20,26 @@ status and the endpoint path.
 
 import base64
 import os
+import re
 import sys
 import time
+from datetime import datetime, timezone
 
 import requests
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa
 
-from kalshi_common import CREDITS, DEPOSITS, build_dashboard, group_fills, make_bet, parse_time, write_if_changed
+from kalshi_common import (
+    CREDITS,
+    DEPOSITS,
+    TITLE_OVERRIDES,
+    build_dashboard,
+    category_for,
+    group_fills,
+    make_bet,
+    parse_time,
+    write_if_changed,
+)
 
 API_HOST = os.environ.get("KALSHI_API_HOST", "https://external-api.kalshi.com")
 API_PREFIX = "/trade-api/v2"
@@ -131,27 +143,93 @@ def fetch_fills(client):
     return fills
 
 
+# A title that is only "<team> wins": no colon, no "at"/"vs" naming an opponent.
+BARE_WINNER = re.compile(r"^(?P<team>[^:]+?) wins?$", re.IGNORECASE)
+HAS_OPPONENT = re.compile(r"\b(at|vs\.?|v\.?)\b", re.IGNORECASE)
+
+
+def clean_event_title(title):
+    """'Boston at Houston Winner?' -> 'Boston at Houston'."""
+    cleaned = re.sub(r"\s*(winner)?\s*\?$", "", title.strip(), flags=re.IGNORECASE)
+    return cleaned.strip()
+
+
+def readable_title(ticker, market, event_title_lookup):
+    """Override map first, then the API title, with the opponent added to a bare "X wins"."""
+    if ticker in TITLE_OVERRIDES:
+        return TITLE_OVERRIDES[ticker]
+
+    title = market.get("title") or ""
+    if not title:
+        title = event_title_lookup() or ""
+    sub_title = market.get("yes_sub_title") or ""
+    if sub_title and sub_title.lower() not in title.lower():
+        title = "{}: {}".format(title, sub_title) if title else sub_title
+
+    # "Houston wins" says nothing about who they played: prefix the event.
+    bare = BARE_WINNER.match(title)
+    if bare and not HAS_OPPONENT.search(bare.group("team")):
+        event = clean_event_title(event_title_lookup() or "")
+        if event and event.lower() != title.lower():
+            title = "{}: {}".format(event, title)
+    return title or "Kalshi market"
+
+
+def category_from_legs(market):
+    """A parlay takes its legs' category when every leg agrees (e.g. all World Cup -> Soccer)."""
+    legs = market.get("mve_selected_legs") or []
+    names = {category_for(leg.get("market_ticker") or "") for leg in legs}
+    if len(names) == 1:
+        name = names.pop()
+        return None if name == "Other" else name
+    return None
+
+
 def market_info(client, ticker):
-    """Readable title, result and a mark price for one market."""
+    """Readable title, category, result, timing and bids for one market."""
     data = client.get("/markets/" + ticker, allow_missing=True)
     if data is None:
         data = client.get("/historical/markets/" + ticker, allow_missing=True)
     market = (data or {}).get("market") or {}
 
-    title = market.get("title") or ""
-    event_ticker = market.get("event_ticker")
-    if not title and event_ticker:
-        event = client.get("/events/" + event_ticker, allow_missing=True) or {}
-        title = (event.get("event") or {}).get("title") or ""
-    sub_title = market.get("yes_sub_title") or ""
-    if sub_title and sub_title.lower() not in title.lower():
-        title = "{}: {}".format(title, sub_title) if title else sub_title
+    event_cache = {}
+
+    def event_title_lookup():
+        event_ticker = market.get("event_ticker")
+        if not event_ticker:
+            return ""
+        if "title" not in event_cache:
+            event = client.get("/events/" + event_ticker, allow_missing=True) or {}
+            event_cache["title"] = (event.get("event") or {}).get("title") or ""
+        return event_cache["title"]
+
     return {
-        "title": title or "Kalshi market",
+        "title": readable_title(ticker, market, event_title_lookup),
+        "category": category_from_legs(market),
         "result": market.get("result") or "",
+        "settlement_ts": market.get("settlement_ts"),
+        "close_time": market.get("close_time"),
         "yes_bid": market.get("yes_bid_dollars"),
         "no_bid": market.get("no_bid_dollars"),
     }
+
+
+def resolution_time(settlement, info, entry, now):
+    """Best-known settlement moment and where it came from.
+
+    Order: the portfolio settlement record, the market's settlement_ts, the
+    market's close_time (ignored if it's in the future), then the bet's last
+    fill as a last resort.
+    """
+    if settlement is not None and settlement.get("settled_time"):
+        return parse_time(settlement["settled_time"]), "settlement"
+    if info.get("settlement_ts"):
+        return parse_time(info["settlement_ts"]), "market_settlement_ts"
+    if info.get("close_time"):
+        closed = parse_time(info["close_time"])
+        if closed <= now:
+            return closed, "market_close_time"
+    return entry["last_time"], "last_fill"
 
 
 RECONCILE_TOLERANCE = 0.05
@@ -226,6 +304,8 @@ def build_from_api(client):
 
     bets = []
     settlement_payouts = []
+    resolution_sources = {}
+    now = datetime.now(timezone.utc)
     for entry in group_fills(fills):
         ticker = entry["ticker"]
         info = market_info(client, ticker)
@@ -234,14 +314,16 @@ def build_from_api(client):
         resolved_time = None
         if settlement is not None:
             payout = settlement["revenue"] / 100
-            resolved_time = parse_time(settlement["settled_time"])
         elif info["result"] in ("yes", "no"):
             # Archived out of /portfolio/settlements: winning contracts pay $1.
             remaining = entry["count"][info["result"]] - entry["count"]["no" if info["result"] == "yes" else "yes"]
             payout = max(remaining, 0.0)
-            resolved_time = entry["last_time"]
         if payout is not None:
             settlement_payouts.append(payout)
+            resolved_time, source_name = resolution_time(settlement, info, entry, now)
+            # Bets sold off before settlement resolve on their sale date in make_bet.
+            if abs(entry["count"]["yes"] - entry["count"]["no"]) >= 0.005:
+                resolution_sources[source_name] = resolution_sources.get(source_name, 0) + 1
 
         position = held.get(ticker, 0.0)
         is_open = payout is None and abs(position) > 0
@@ -253,7 +335,7 @@ def build_from_api(client):
             # last-trade can be hours stale. No bid -> leave it blank ("—").
             bid = info["yes_bid"] if position > 0 else info["no_bid"]
             open_value = abs(position) * float(bid) if bid not in (None, "") else None
-        bets.append(make_bet(entry, info["title"], payout, resolved_time, is_open, open_value))
+        bets.append(make_bet(entry, info["title"], payout, resolved_time, is_open, open_value, info["category"]))
 
     dashboard = build_dashboard(
         bets,
@@ -264,6 +346,7 @@ def build_from_api(client):
         fee_source="api_fee_cost",
         series_note="Cumulative profit of settled and sold bets by date; the last point is today's "
         "net P&L including open positions.",
+        resolution_sources=resolution_sources,
     )
     return dashboard, fills, settlement_payouts, cash, portfolio_value
 
