@@ -58,18 +58,48 @@ scripts/
                          Parlay titles "yes X,yes Y,no Z" become "Parlay: X, Y, not Z" ("WC Parlay:"
                          when every mve_selected_legs ticker starts with KXWC, or the ticker is in
                          WORLD_CUP_PARLAYS), clipped to TITLE_MAX (40) with "…".
-                         LAYOUT (2026-10-11): desktop-first, with its OWN fixed left sidebar (240px,
-                         --sidebar bg, right border): title + live dot + small net P&L, 6 hash links
-                         with inline-SVG icons (#overview #performance #bets #open #fees #about;
-                         active = green left bar + bright text), "Last updated"/source at the bottom.
-                         One .panel visible at a time, chosen by location.hash (hashchange handler;
-                         unknown/empty hash -> overview), so back/forward walk the sections and
-                         document.title tracks the panel. Charts draw lazily the first time their
-                         panel is shown (hidden canvases have no size). Content max-width 1000px.
-                         <=1100px: tiles go 2 across. <=860px: the sidebar becomes a sticky top bar
-                         with a 3x2 link grid; wide-only table columns hide and their values move
-                         into each row's subtitle (narrow-only). Still must have no horizontal
-                         scroll at 380px.
+                         LAYOUT (2026-10-11, revised): desktop-first (1280px+), its OWN fixed left
+                         sidebar (240px): title + live dot + small net P&L, 5 hash links with
+                         inline-SVG icons (#overview #performance #bets #fees #about; active =
+                         green left bar + aria-current="page"), "Last updated" at the bottom. No
+                         separate Open section: open bets live in Bets (old #open redirects to
+                         #bets?status=open). One .panel at a time by location.hash (query part after
+                         "?" = Bets filter state); back/forward walk sections, filter changes use
+                         history.replaceState. Below 900px the sidebar is an off-canvas drawer behind
+                         a "Menu" button in a slim sticky top bar. Overview has a "N open bets ->"
+                         link to #bets?status=open.
+                         BETS PAGE: every bet ever (no limit). Top: journey timeline (SVG, dot per
+                         bet at its event_date = resolved date, or placed date if open; green won /
+                         red lost / gray-blue sold / hollow pulsing open; hover tip; drag = date-range
+                         brush), range chips (All time, This NFL season, Last 30 days, one per year),
+                         "Showing: ... · N bets" + "Reset to all time" (keeps status/categories).
+                         Then a status segmented control (All/Open/Won/Lost/Sold, faceted counts) and
+                         multi-select category chips. All state in the URL:
+                         #bets?status=open&cat=NFL,Soccer&from=YYYY-MM-DD&to=...&range=nfl. Then a
+                         color legend and the equation table: Zone A Date | Bet | Side | Contracts x
+                         Price | = Stake | + Buy fees | = Cost; Zone B Payout | - Sell fees | = Net
+                         payout; Zone C = Profit | Status. "=" columns bold with a subtle background.
+                         Colors: money out ink, fees amber ("+"/"-", "$0 maker"), money back teal,
+                         profit green/red; open bets: Zone B italic + "live" tag (value at current
+                         bid), profit unrealized (lighter, dashed underline). "Open now" group first,
+                         then month groups (by event_date, newest first) with month profit, then a
+                         sticky footer of exact totals. Every row has a chevron: fills (time, buy/sell,
+                         contracts, price, amount, fee, maker/taker) + settlement or live-bid line,
+                         which sum exactly to the row; parlays ("Parlay · N legs" + WC/sport tag) also
+                         list legs (hit / missed / unknown from mve_selected_legs[].
+                         yes_settlement_value_dollars, else the leg market's result) and "All legs
+                         must hit to win". The table fits 1280px; narrower, it scrolls inside its card.
+                         JS MONEY MATH: kalshi/exact.js (BigInt, fixed SCALE 18 decimal places,
+                         refuses numbers/exponents/longer decimals) is the ONLY money arithmetic;
+                         kalshi/bets.js (pure filter/facet/group/totals logic, shared with Node tests)
+                         calls it. data.json max_decimal_places must stay <= SCALE (tested).
+                         DATA: data.json "bets" = every bet with kind, tag, date, resolved,
+                         event_date, title, side, category, status (open/settled/sold/pending),
+                         outcome (open/won/lost/sold/pending), unrealized, contracts, remaining,
+                         price (null if bought at several prices), stake, buy_fees, cost, payout,
+                         sell_fees, net_payout, profit, fills[], settlement, live, legs[] (no tickers
+                         or IDs). summary adds unrealized_pnl, started, won/lost/sold/sold_profitable.
+                         Nothing filter-dependent is precomputed; the page sums via exact.js.
                          PAGE (2026-10-11): pnl_series is one point per day ({date, day, pnl, items})
                          from daily_series(); the chart is a stepped line (stepped: true = hold the
                          old total until the next day), green fill above $0 / red below, solid $0
@@ -1103,6 +1133,13 @@ tolerances or `money()`. The math must be EXACT everywhere:
   `test_kalshi_display` (headless Chrome render: every shown amount == its stored string, every row adds up on
   screen; locally on a Mac where headless Chrome hangs it skips, use its `--serve` mode; in CI a hang fails),
   `test_kalshi_mutation` (reintroduces a float() parse and 2-decimal rounding; both must be caught).
+  `test_kalshi_js` (Node, via tests/js/harness.js: exact.js vs Decimal property test; bets.js filtering, facet
+  counts, month groups, Open group and footer totals vs an independent Python implementation for ~170 filter
+  states on the fixture and on live data.json; URL state round-trip and "Reset to all time"). The display test
+  renders #bets, #bets?status=open, #bets?status=lost&cat=NFL, #bets?from=2026-09-01 and #overview and checks
+  every amount, every row's equation (open bets too), fills summing to rows, month/footer totals, All time
+  footer = realized + unrealized, parlay legs and nav. Arithmetic on money in the page or bets.js fails the lint;
+  it must go through exact.js.
   Never weaken a test or add a tolerance to make data fit; find the real rule instead.
 
 ## Reporting format (end every task with this)

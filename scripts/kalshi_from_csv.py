@@ -164,7 +164,7 @@ def check_against_app(fills, bets_by_ticker):
                sum((fill["count"] * (ONE - fill["price"]) - fill["fee"] for fill in closing), ZERO), "23.27")
         expect("Canada profit", bets_by_ticker[canada]["profit"], "12.28")
         expect_cents("Canada row cost incl. fees", bets_by_ticker[canada]["cost"], "10.99")
-        expect("Canada row payout net of fee", bets_by_ticker[canada]["payout"], "23.27")
+        expect("Canada row payout net of fee", bets_by_ticker[canada]["net_payout"], "23.27")
 
     # The display-only formula fee should never stray far from what the CSV recorded.
     for fill in fills:

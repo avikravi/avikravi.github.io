@@ -18,7 +18,7 @@ D = Decimal
 
 
 def rows_by_title(dashboard):
-    return {bet["title"]: bet for bet in dashboard["recent_bets"]}
+    return {bet["title"]: bet for bet in dashboard["bets"]}
 
 
 class GoldenTests(unittest.TestCase):
@@ -32,11 +32,12 @@ class GoldenTests(unittest.TestCase):
     def test_every_golden_row_exact(self):
         for title, (cost, payout, profit) in fx.GOLDEN_ROWS.items():
             row = self.rows[title]
-            self.assertEqual((D(row["cost"]), D(row["payout"]), D(row["profit"])), (cost, payout, profit), title)
+            self.assertEqual((D(row["cost"]), D(row["net_payout"]), D(row["profit"])), (cost, payout, profit), title)
 
     def test_robinson_full_precision_strings(self):
         row = self.rows["Bijan Robinson TD"]
-        self.assertEqual((row["cost"], row["payout"], row["profit"]), ("1.997", "3.4848", "1.4878"))
+        self.assertEqual((row["stake"], row["buy_fees"], row["cost"]), ("1.936", "0.061", "1.997"))
+        self.assertEqual((row["payout"], row["sell_fees"], row["net_payout"], row["profit"]), ("3.4848", "0", "3.4848", "1.4878"))
         self.assertEqual(D("3.52") * D("0.55") + D("0.0610"), D(row["cost"]))
 
     def test_penix_mexico_canada(self):
@@ -44,14 +45,22 @@ class GoldenTests(unittest.TestCase):
         self.assertEqual(D(self.rows["Penix 275+"]["cost"]), D("0.996") + D("0.0119"))
         self.assertEqual(self.rows["Penix 275+"]["payout"], "1.188")
         self.assertEqual(self.rows["Mexico advances"]["payout"], "1.805")
-        self.assertEqual((self.rows["Canada wins WC Group B"]["cost"], self.rows["Canada wins WC Group B"]["payout"],
-                          self.rows["Canada wins WC Group B"]["profit"]), ("10.99", "23.2747", "12.2847"))
+        canada = self.rows["Canada wins WC Group B"]
+        self.assertEqual((canada["stake"], canada["buy_fees"], canada["cost"]), ("10.36", "0.63", "10.99"))
+        self.assertEqual((canada["payout"], canada["sell_fees"], canada["net_payout"], canada["profit"]),
+                         ("24.42", "1.1453", "23.2747", "12.2847"))
 
     def test_categories_net_and_open(self):
         cats = {cat["name"]: D(cat["profit"]) for cat in self.dashboard["categories"]}
         self.assertEqual(cats, fx.GOLDEN_CATEGORIES)
         self.assertEqual(D(self.dashboard["summary"]["net_pnl"]), fx.GOLDEN_NET)
-        self.assertEqual({key: D(value) for key, value in self.dashboard["open_totals"].items()}, fx.GOLDEN_OPEN)
+        golden = self.rows["Golden 40+"]
+        self.assertEqual((D(golden["cost"]), D(golden["payout"])), (fx.GOLDEN_OPEN["cost"], fx.GOLDEN_OPEN["value"]))
+        self.assertTrue(golden["unrealized"])
+        # Open bets obey the same equation, with the live bid as the payout.
+        self.assertEqual((golden["live"]["contracts"], golden["live"]["bid"], golden["live"]["amount"]), ("5.8", "0.31", "1.798"))
+        self.assertEqual(golden["profit"], "-0.2055")
+        self.assertEqual(self.dashboard["summary"]["unrealized_pnl"], "-0.2055")
 
     def test_precision_detected(self):
         self.assertEqual(self.dashboard["ledger"]["balance_precision_matched"], "0.0001")
@@ -78,7 +87,9 @@ class CentRuleTests(unittest.TestCase):
     def test_cent_precision_chosen_and_rounding_modeled(self):
         self.assertEqual(self.dashboard["ledger"]["balance_precision_matched"], "0.01")
         row = rows_by_title(self.dashboard)["Bijan Robinson TD"]
-        self.assertEqual((row["cost"], row["payout"], row["profit"]), ("2", "3.48", "1.48"))
+        # buy: 1.936 + (0.061 + 0.003 rounding) = 2; sell: 3.4848 - 0.0048 rounding = 3.48
+        self.assertEqual((row["stake"], row["buy_fees"], row["cost"]), ("1.936", "0.064", "2"))
+        self.assertEqual((row["payout"], row["sell_fees"], row["net_payout"], row["profit"]), ("3.4848", "0.0048", "3.48", "1.48"))
         self.assertEqual(self.dashboard["fees"]["rounding"], "0.0078")
         self.assertEqual(fx.identity_failures(self.dashboard, self.fills), [])
 

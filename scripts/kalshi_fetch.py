@@ -32,9 +32,9 @@ from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa
 from kalshi_common import (
     CREDITS,
     DEPOSITS,
+    ONE,
     dec_str,
     to_decimal,
-    TITLE_MAX,
     TITLE_OVERRIDES,
     WORLD_CUP_PARLAYS,
     build_dashboard,
@@ -172,15 +172,8 @@ def clean_event_title(title):
     return cleaned.strip()
 
 
-def clip_title(title, limit=TITLE_MAX):
-    return title if len(title) <= limit else title[: limit - 1].rstrip(" ,") + "…"
-
-
-def parlay_title(ticker, market, title):
-    """"yes X,yes Y,no Z" -> "Parlay: X, Y, not Z" ("WC Parlay" if every leg is World Cup).
-
-    Returns None when the title isn't a list of yes/no legs.
-    """
+def title_legs(title):
+    """"yes X,yes Y,no Z" -> [("yes", "X"), ("yes", "Y"), ("no", "Z")]; None if it isn't a parlay title."""
     parts = title.split(",")
     if len(parts) < 2:
         return None
@@ -189,14 +182,53 @@ def parlay_title(ticker, market, title):
         leg = PARLAY_LEG.match(part)
         if not leg:
             return None
-        legs.append(leg.group(2) if leg.group(1).lower() == "yes" else "not " + leg.group(2))
+        legs.append((leg.group(1).lower(), leg.group(2)))
+    return legs
 
-    leg_tickers = [leg.get("market_ticker") or "" for leg in market.get("mve_selected_legs") or []]
-    if leg_tickers:
-        world_cup = all(code.upper().startswith("KXWC") for code in leg_tickers)
-    else:
-        world_cup = ticker in WORLD_CUP_PARLAYS
-    return clip_title(("WC Parlay: " if world_cup else "Parlay: ") + ", ".join(legs))
+
+def leg_result(side, settlement_value, leg_market):
+    """hit / missed / unknown for one parlay leg.
+
+    Kalshi's mve_selected_legs[].yes_settlement_value_dollars is the YES payout
+    of that leg once determined ($1 or $0); a YES leg hits on $1, a NO leg on
+    $0. Falls back to the leg market's own result, else unknown.
+    """
+    if settlement_value not in (None, ""):
+        yes_paid = to_decimal(settlement_value) == ONE
+        return "hit" if yes_paid == (side == "yes") else "missed"
+    result = (leg_market or {}).get("result") or ""
+    if result in ("yes", "no"):
+        return "hit" if result == side else "missed"
+    return "unknown"
+
+
+def parlay_details(client, ticker, market, title):
+    """(legs, world_cup) for a parlay, or None. Legs carry only name, side and result (no tickers)."""
+    raw_legs = market.get("mve_selected_legs") or []
+    if raw_legs:
+        legs = []
+        for index, leg in enumerate(raw_legs):
+            side = (leg.get("side") or "yes").lower()
+            leg_market = lookup_market(client, leg.get("market_ticker") or "")
+            name = leg_market.get("yes_sub_title") or leg_market.get("title") or "Leg {}".format(index + 1)
+            legs.append({"name": name, "side": side.capitalize(),
+                         "result": leg_result(side, leg.get("yes_settlement_value_dollars"), leg_market)})
+        world_cup = all((leg.get("market_ticker") or "").upper().startswith("KXWC") for leg in raw_legs)
+        return legs, world_cup
+    parsed = title_legs(title)
+    if parsed:
+        legs = [{"name": name, "side": side.capitalize(), "result": "unknown"} for side, name in parsed]
+        return legs, ticker in WORLD_CUP_PARLAYS
+    return None
+
+
+def lookup_market(client, ticker):
+    if not ticker:
+        return {}
+    data = client.get("/markets/" + ticker, allow_missing=True)
+    if data is None:
+        data = client.get("/historical/markets/" + ticker, allow_missing=True)
+    return (data or {}).get("market") or {}
 
 
 def readable_title(ticker, market, event_title_lookup):
@@ -214,9 +246,9 @@ def readable_title(ticker, market, event_title_lookup):
     # "USA vs Bosnia: To Advance: USA advances" -> "USA vs Bosnia: USA advances"
     title = TO_ADVANCE.sub(": ", title)
 
-    parlay = parlay_title(ticker, market, title)
-    if parlay:
-        return parlay
+    parsed = title_legs(title)
+    if parsed or market.get("mve_selected_legs"):
+        return "Parlay · {} legs".format(len(market.get("mve_selected_legs") or parsed))
 
     # "Houston wins" says nothing about who they played: prefix the event.
     bare = BARE_WINNER.match(title)
@@ -238,11 +270,8 @@ def category_from_legs(market):
 
 
 def market_info(client, ticker):
-    """Readable title, category, result, timing and bids for one market."""
-    data = client.get("/markets/" + ticker, allow_missing=True)
-    if data is None:
-        data = client.get("/historical/markets/" + ticker, allow_missing=True)
-    market = (data or {}).get("market") or {}
+    """Readable title, category, parlay legs, result, timing and bids for one market."""
+    market = lookup_market(client, ticker)
 
     event_cache = {}
 
@@ -255,8 +284,14 @@ def market_info(client, ticker):
             event_cache["title"] = (event.get("event") or {}).get("title") or ""
         return event_cache["title"]
 
+    title = readable_title(ticker, market, event_title_lookup)
+    raw_title = market.get("title") or ""
+    parlay = parlay_details(client, ticker, market, raw_title) if title.startswith("Parlay · ") else None
     return {
-        "title": readable_title(ticker, market, event_title_lookup),
+        "title": title,
+        "kind": "parlay" if parlay else "single",
+        "legs": parlay[0] if parlay else [],
+        "tag": ("WC" if parlay[1] else None) if parlay else None,
         "category": category_from_legs(market),
         "result": market.get("result") or "",
         "settlement_ts": market.get("settlement_ts"),
@@ -440,15 +475,16 @@ def build_from_api(client):
 
         position = held.get(ticker, ZERO)
         is_open = payout is None and position != ZERO
-        open_value = None
+        live_bid = None
         if is_open:
             # Value = contracts x the current BID for the side held (yes_bid for
             # a YES position, no_bid for NO): what selling right now would
             # actually fetch. Mid flatters thin markets with wide spreads, and
             # last-trade can be hours stale. No bid -> leave it blank ("—").
             bid = info["yes_bid"] if position > ZERO else info["no_bid"]
-            open_value = abs(position) * to_decimal(bid) if bid not in (None, "") else None
-        bets.append(make_bet(entry, info["title"], payout, resolved_time, is_open, open_value, info["category"]))
+            live_bid = to_decimal(bid) if bid not in (None, "") else None
+        bets.append(make_bet(entry, info["title"], payout, resolved_time, is_open, live_bid, info["category"],
+                             legs=info["legs"], tag=info["tag"], kind=info["kind"]))
 
     dashboard = build_dashboard(
         bets,

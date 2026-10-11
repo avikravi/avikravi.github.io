@@ -1,22 +1,24 @@
 """Headless render of kalshi/index.html against a fixture data.json.
 
-Checks, with no tolerance:
-  - every amount the page shows (each element with data-field) equals the
-    stored string, formatted by the display rule (an independent Python
-    implementation below: trailing zeros trimmed, at least 2 decimals);
-  - every finished-bet row visibly adds up: shown payout - shown cost == shown profit;
-  - nothing on the page is a rounded version of a longer stored value.
+Renders several views (#bets, #bets?status=open, #bets?status=lost&cat=NFL,
+#bets?from=2026-09-01, #overview) and checks, with no tolerance:
+  - every amount the page shows (data-field) equals its stored string,
+    formatted by the display rule (an independent Python implementation below);
+  - every bet row visibly adds up: Stake + Buy fees = Cost,
+    Payout - Sell fees = Net payout, Net payout - Cost = Profit (open bets too);
+  - every row's fills (plus settlement / live-bid line) add up to the row;
+  - month subtotals, the Open group total and the footer totals (computed in
+    the browser by exact.js) equal Python Decimal totals for that filter, and
+    the footer equation holds; All time footer = realized + unrealized P&L;
+  - URL filter state, "Reset to all time", parlay legs, the Overview open link.
 
-Needs Google Chrome/Chromium. Skipped locally if none is installed; in CI
-(env CI set, as on GitHub Actions) a missing browser is a failure.
-
-Without a usable headless Chrome (e.g. a desktop Mac where it hangs), render
-it in any real browser instead:
+Needs Google Chrome/Chromium. In CI (env CI set) a missing or hung browser
+fails. Locally, where desktop Chrome on some Macs hangs in headless mode, it
+skips; render in a real browser instead:
     python3 tests/test_kalshi_display.py --serve 8765
-    open http://localhost:8765/index.html#bets, then POST the DOM back:
-      fetch('/dom', {method: 'POST', body: document.documentElement.outerHTML})
-    KALSHI_DISPLAY_DOM=<printed dom.html path> python3 -m unittest discover -s tests -p test_kalshi_display.py
-The same assertions then run against that captured DOM.
+    for each view below, open http://localhost:8765/index.html#<view> and POST the DOM:
+      fetch('/dom?name=<key>', {method: 'POST', body: document.documentElement.outerHTML})
+    KALSHI_DISPLAY_DOM_DIR=<printed folder> python3 -m unittest discover -s tests -p test_kalshi_display.py
 """
 
 import functools
@@ -30,12 +32,21 @@ import sys
 import tempfile
 import threading
 import unittest
+import urllib.parse
 from decimal import Decimal
 
 import kalshi_fixtures as fx
 import kalshi_paths
+from test_kalshi_js import py_filter, py_totals
 
 D = Decimal
+VIEWS = {
+    "all": "bets",
+    "open": "bets?status=open",
+    "lost_nfl": "bets?status=lost&cat=NFL",
+    "since_sep": "bets?from=2026-09-01",
+    "overview": "overview",
+}
 CHROME_CANDIDATES = [
     os.environ.get("CHROME_BIN", ""),
     "google-chrome", "google-chrome-stable", "chromium", "chromium-browser",
@@ -50,22 +61,38 @@ def find_chrome():
     return None
 
 
+# ---------- The page's display rules, re-implemented independently ----------
+def money_digits(text):
+    whole, _dot, frac = text.lstrip("+-").partition(".")
+    return (whole.lstrip("0") or "0") + "." + frac.rstrip("0").ljust(2, "0")
+
+
 def display(text, mode):
-    """The page's money display rule, re-implemented independently."""
     if text is None:
         return "—"
     negative = text.startswith("-") and D(text) != 0
-    body = text.lstrip("+-")
-    whole, _dot, frac = body.partition(".")
-    whole = whole.lstrip("0") or "0"
-    frac = frac.rstrip("0").ljust(2, "0")
-    shown = "$" + whole + "." + frac
+    if mode == "plain":
+        return ("−" if negative else "") + "$" + money_digits(text)
     if mode == "signed":
-        return shown if D(text) == 0 else ("−" if negative else "+") + shown
-    return ("−" if negative else "") + shown
+        return "$" + money_digits(text) if D(text) == 0 else ("−" if negative else "+") + "$" + money_digits(text)
+    sign = "+" if mode.startswith("fee-plus") else "−"
+    if mode.endswith("-maker") and D(text) == 0:
+        return "$0 maker"
+    return sign + "$" + money_digits(text)
 
 
-def parse_shown(text):
+def parse_shown(text, mode="plain"):
+    """Displayed amount -> Decimal.
+
+    Fee columns show their operator ("+$0.061" adds to cost, "−$1.1453" comes
+    off the payout); that sign belongs to the column, not the amount, so for
+    fee formats it's dropped. "$0 maker" is zero.
+    """
+    text = text.strip()
+    if text == "$0 maker":
+        return D(0)
+    if mode.startswith("fee"):
+        text = text.lstrip("+−")
     return D(text.replace("−", "-").replace("+", "").replace("$", ""))
 
 
@@ -76,142 +103,73 @@ def lookup(data, path):
     return node
 
 
-class FieldCollector(html.parser.HTMLParser):
+# ---------- A tiny DOM tree from the dumped HTML ----------
+class Node:
+    def __init__(self, tag, attrs, parent):
+        self.tag = tag
+        self.attrs = attrs
+        self.parent = parent
+        self.children = []
+        self.parts = []
+
+    def text(self):
+        return "".join(part if isinstance(part, str) else part.text() for part in self.parts)
+
+    def walk(self):
+        yield self
+        for child in self.children:
+            yield from child.walk()
+
+    def find_all(self, predicate):
+        return [node for node in self.walk() if predicate(node)]
+
+    def find(self, predicate):
+        found = self.find_all(predicate)
+        return found[0] if found else None
+
+
+class TreeBuilder(html.parser.HTMLParser):
     VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
 
     def __init__(self):
         super().__init__()
-        self.stack = []
-        self.fields = []  # (field, format, text)
-        self.rendered = False
+        self.root = Node("#root", {}, None)
+        self.current = self.root
 
     def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
-        if tag == "body" and attrs.get("data-rendered") == "true":
-            self.rendered = True
-        if tag in self.VOID:
-            return
-        self.stack.append([tag, attrs, []])
+        node = Node(tag, dict(attrs), self.current)
+        self.current.children.append(node)
+        self.current.parts.append(node)
+        if tag not in self.VOID:
+            self.current = node
 
     def handle_endtag(self, tag):
-        if tag in self.VOID or not self.stack:
-            return
-        while self.stack:
-            open_tag, attrs, parts = self.stack.pop()
-            text = "".join(parts)
-            if self.stack:
-                self.stack[-1][2].append(text)
-            if "data-field" in attrs:
-                self.fields.append((attrs["data-field"], attrs.get("data-format"), text.strip()))
-            if open_tag == tag:
-                break
+        node = self.current
+        while node is not self.root and node.tag != tag:
+            node = node.parent
+        if node is not self.root:
+            self.current = node.parent
 
     def handle_data(self, data):
-        if self.stack:
-            self.stack[-1][2].append(data)
+        self.current.parts.append(data)
+
+
+def parse_dom(markup):
+    builder = TreeBuilder()
+    builder.feed(markup)
+    return builder.root
 
 
 def write_fixture(folder):
-    """Fixture page + data.json (the golden pipeline output) into folder; returns the data."""
-    dashboard, _fills = fx.golden_dashboard()
+    """Fixture page + scripts + data.json (golden + parlay, real pipeline output) into folder."""
+    dashboard, _fills = fx.full_dashboard()
     dashboard["updated"] = "2026-10-11T05:00:00Z"
     data = json.loads(json.dumps(dashboard))
-    shutil.copy(os.path.join(kalshi_paths.REPO, "kalshi", "index.html"), os.path.join(folder, "index.html"))
+    for name in ("index.html", "exact.js", "bets.js"):
+        shutil.copy(os.path.join(kalshi_paths.REPO, "kalshi", name), os.path.join(folder, name))
     with open(os.path.join(folder, "data.json"), "w", encoding="utf-8") as handle:
         json.dump(data, handle)
     return data
-
-
-class DisplayTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        captured = os.environ.get("KALSHI_DISPLAY_DOM")
-        if captured:
-            cls.server = None
-            cls.tmp = None
-            with open(os.path.join(os.path.dirname(captured), "data.json"), encoding="utf-8") as handle:
-                cls.data = json.load(handle)
-            cls.collector = FieldCollector()
-            with open(captured, encoding="utf-8") as handle:
-                cls.collector.feed(handle.read())
-            return
-
-        chrome = find_chrome()
-        if not chrome:
-            if os.environ.get("CI"):
-                raise AssertionError("CI needs Chrome/Chromium for the display test")
-            raise unittest.SkipTest("no Chrome/Chromium installed")
-
-        cls.tmp = tempfile.mkdtemp()
-        cls.data = write_fixture(cls.tmp)
-
-        handler = functools.partial(QuietHandler, directory=cls.tmp)
-        cls.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
-        threading.Thread(target=cls.server.serve_forever, daemon=True).start()
-        url = "http://127.0.0.1:{}/index.html#bets".format(cls.server.server_address[1])
-
-        profile = os.path.join(cls.tmp, "profile")
-        try:
-            result = subprocess.run(
-                [chrome, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-first-run",
-                 "--no-default-browser-check", "--use-mock-keychain", "--disable-extensions",
-                 "--disable-background-networking", "--disable-component-update",
-                 # Hermetic: only the local fixture server resolves, so analytics and
-                 # the Chart.js CDN fail fast instead of stalling virtual time. Every
-                 # amount checked here is in the DOM tables, which don't need Chart.js.
-                 "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
-                 "--user-data-dir=" + profile, "--virtual-time-budget=10000", "--dump-dom", url],
-                capture_output=True, text=True, timeout=90 if os.environ.get("CI") else 40,
-            )
-        except subprocess.TimeoutExpired:
-            cls.server.shutdown()
-            shutil.rmtree(cls.tmp, ignore_errors=True)
-            if os.environ.get("CI"):
-                raise
-            # Desktop Chrome on some Macs hangs in headless mode. Locally, say so
-            # plainly and point at the --serve mode; in CI this is a failure.
-            raise unittest.SkipTest("local headless Chrome hung; use --serve mode (see module docstring)")
-        collector = FieldCollector()
-        collector.feed(result.stdout)
-        cls.collector = collector
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server:
-            cls.server.shutdown()
-        if cls.tmp:
-            shutil.rmtree(cls.tmp, ignore_errors=True)
-
-    def test_page_rendered(self):
-        self.assertTrue(self.collector.rendered, "page never finished rendering data.json")
-
-    def test_every_shown_amount_is_the_stored_string(self):
-        fields = self.collector.fields
-        self.assertGreaterEqual(len(fields), 40, "too few amounts found on the page")
-        for field, mode, shown in fields:
-            stored = lookup(self.data, field)
-            self.assertEqual(shown, display(stored, mode), field)
-            if stored is not None:
-                self.assertEqual(parse_shown(shown), D(stored), "shown value is not exactly the stored value: " + field)
-
-    def test_every_finished_row_adds_up_on_screen(self):
-        rows = {}
-        for field, _mode, shown in self.collector.fields:
-            if field.startswith("recent_bets."):
-                _prefix, index, key = field.split(".")
-                rows.setdefault(index, {})[key] = shown
-        self.assertEqual(len(rows), len(self.data["recent_bets"]))
-        for index, row in rows.items():
-            self.assertEqual(parse_shown(row["payout"]) - parse_shown(row["cost"]), parse_shown(row["profit"]),
-                             "row {} does not add up as shown: {}".format(index, row))
-
-    def test_golden_values_appear_exactly(self):
-        shown = {field: text for field, _mode, text in self.collector.fields}
-        robinson = [bet["title"] for bet in self.data["recent_bets"]].index("Bijan Robinson TD")
-        prefix = "recent_bets.{}.".format(robinson)
-        self.assertEqual((shown[prefix + "cost"], shown[prefix + "payout"], shown[prefix + "profit"]),
-                         ("$1.997", "$3.4848", "+$1.4878"))
-        self.assertEqual(shown["summary.net_pnl"], "+$11.553")
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -219,28 +177,262 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
         pass
 
     def do_POST(self):
-        """Manual mode: the browser posts its rendered DOM here."""
-        if self.path != "/dom":
+        """Manual mode: the browser posts its rendered DOM here (?name=<view key>)."""
+        parsed = urllib.parse.urlparse(self.path)
+        name = urllib.parse.parse_qs(parsed.query).get("name", ["dom"])[0]
+        if parsed.path != "/dom" or name not in list(VIEWS) + ["dom"]:
             self.send_error(404)
             return
         body = self.rfile.read(int(self.headers.get("Content-Length", "0"))).decode("utf-8")
-        target = os.path.join(self.directory, "dom.html")
+        target = os.path.join(self.directory, "dom-{}.html".format(name))
         with open(target, "w", encoding="utf-8") as handle:
             handle.write(body)
         self.send_response(204)
         self.end_headers()
-        print("saved rendered DOM to " + target, flush=True)
+        print("saved {} DOM to {}".format(name, target), flush=True)
+
+
+class DisplayTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.server = None
+        cls.tmp = None
+        cls.doms = {}
+        captured = os.environ.get("KALSHI_DISPLAY_DOM_DIR")
+        if captured:
+            with open(os.path.join(captured, "data.json"), encoding="utf-8") as handle:
+                cls.data = json.load(handle)
+            for key in VIEWS:
+                with open(os.path.join(captured, "dom-{}.html".format(key)), encoding="utf-8") as handle:
+                    cls.doms[key] = parse_dom(handle.read())
+            return
+
+        chrome = find_chrome()
+        if not chrome:
+            if os.environ.get("CI"):
+                raise AssertionError("CI needs Chrome/Chromium for the display test")
+            raise unittest.SkipTest("no Chrome/Chromium installed")
+        cls.tmp = tempfile.mkdtemp()
+        cls.data = write_fixture(cls.tmp)
+        handler = functools.partial(QuietHandler, directory=cls.tmp)
+        cls.server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=cls.server.serve_forever, daemon=True).start()
+        for key, view in VIEWS.items():
+            url = "http://127.0.0.1:{}/index.html#{}".format(cls.server.server_address[1], view)
+            profile = os.path.join(cls.tmp, "profile-" + key)
+            try:
+                result = subprocess.run(
+                    [chrome, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-first-run",
+                     "--no-default-browser-check", "--use-mock-keychain", "--disable-extensions",
+                     "--disable-background-networking", "--disable-component-update", "--window-size=1280,900",
+                     # Hermetic: only the local fixture server resolves, so analytics and
+                     # the Chart.js CDN fail fast instead of stalling virtual time.
+                     "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
+                     "--user-data-dir=" + profile, "--virtual-time-budget=10000", "--dump-dom", url],
+                    capture_output=True, text=True, timeout=90 if os.environ.get("CI") else 40,
+                )
+            except subprocess.TimeoutExpired:
+                cls.tearDownClass()
+                if os.environ.get("CI"):
+                    raise
+                # Desktop Chrome on some Macs hangs in headless mode. Locally, say so
+                # plainly and point at the --serve mode; in CI this is a failure.
+                raise unittest.SkipTest("local headless Chrome hung; use --serve mode (see module docstring)")
+            cls.doms[key] = parse_dom(result.stdout)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server:
+            cls.server.shutdown()
+            cls.server = None
+        if cls.tmp:
+            shutil.rmtree(cls.tmp, ignore_errors=True)
+            cls.tmp = None
+
+    # ---------- helpers ----------
+    def bet_rows(self, dom):
+        return dom.find_all(lambda node: node.tag == "tr" and "data-row" in node.attrs)
+
+    def fields_in(self, node):
+        """{key: Decimal shown (or None for "—")} for the amounts inside node."""
+        shown = {}
+        for child in node.walk():
+            if "data-field" in child.attrs:
+                text = child.text().strip()
+                key = child.attrs["data-field"].rsplit(".", 1)[-1]
+                shown[key] = None if text == "—" else parse_shown(text, child.attrs.get("data-format", "plain"))
+        return shown
+
+    def state_rows(self, query):
+        state = {"status": "all", "cats": [], "from": None, "to": None}
+        for key, value in urllib.parse.parse_qsl(query):
+            if key == "status":
+                state["status"] = value
+            if key == "cat":
+                state["cats"] = value.split(",")
+            if key in ("from", "to"):
+                state[key] = value
+        return py_filter(self.data["bets"], state)
+
+    # ---------- checks ----------
+    def test_every_view_rendered(self):
+        for key, dom in self.doms.items():
+            body = dom.find(lambda node: node.tag == "body")
+            self.assertEqual(body.attrs.get("data-rendered"), "true", key)
+
+    def test_every_shown_amount_is_the_stored_string(self):
+        for key, dom in self.doms.items():
+            fields = dom.find_all(lambda node: "data-field" in node.attrs)
+            self.assertGreater(len(fields), 10, key)
+            for node in fields:
+                stored = lookup(self.data, node.attrs["data-field"])
+                shown = node.text().strip()
+                label = "{}: {}".format(key, node.attrs["data-field"])
+                self.assertEqual(shown, display(stored, node.attrs["data-format"]), label)
+                if stored is not None:
+                    self.assertEqual(parse_shown(shown, node.attrs["data-format"]), D(stored), label)
+
+    def test_every_row_adds_up_on_screen_including_open(self):
+        rows = self.bet_rows(self.doms["all"])
+        self.assertEqual(len(rows), len(self.data["bets"]))  # every bet ever, no limit
+        for row in rows:
+            shown = self.fields_in(row)
+            label = row.attrs["data-row"]
+            self.assertEqual(shown["stake"] + shown["buy_fees"], shown["cost"], label)
+            if shown["payout"] is not None:
+                self.assertEqual(shown["payout"] - shown["sell_fees"], shown["net_payout"], label)
+                self.assertEqual(shown["net_payout"] - shown["cost"], shown["profit"], label)
+
+    def test_fills_add_up_to_their_row_on_screen(self):
+        dom = self.doms["all"]
+        for row in self.bet_rows(dom):
+            field = row.attrs["data-row"]
+            shown = self.fields_in(row)
+            detail = dom.find(lambda node: node.attrs.get("data-detail") == field)
+            lines = detail.find_all(lambda node: node.tag == "tr" and "data-fill" in node.attrs)
+            stake = buy_fees = payout = sell_fees = D(0)
+            for line in lines:
+                values = self.fields_in(line)
+                action = line.attrs["data-action"]
+                if action == "buy":
+                    stake += values["amount"]
+                    buy_fees += values["fee"]
+                elif action == "sell":
+                    payout += values["amount"]
+                    sell_fees += values["fee"]
+                else:  # settlement or live bid
+                    payout += values["amount"]
+            self.assertEqual(stake, shown["stake"], field)
+            self.assertEqual(buy_fees, shown["buy_fees"], field)
+            self.assertEqual(sell_fees, shown["sell_fees"], field)
+            if shown["payout"] is not None:
+                self.assertEqual(payout, shown["payout"], field)
+
+    def test_footer_month_and_open_totals(self):
+        names = ("stake", "buy_fees", "cost", "payout", "sell_fees", "net_payout", "profit")
+        for key, view in VIEWS.items():
+            if not view.startswith("bets"):
+                continue
+            dom = self.doms[key]
+            rows = self.state_rows(view.partition("?")[2])
+            expected = py_totals(rows)
+            totals = {node.attrs["data-total"]: parse_shown(node.text(), node.attrs.get("data-format", "plain"))
+                      for node in dom.walk() if "data-total" in node.attrs}
+            footer = {name: totals["footer." + name] for name in names}
+            for name in names:
+                self.assertEqual(footer[name], D(expected[name]), "{} footer {}".format(key, name))
+            self.assertEqual(footer["stake"] + footer["buy_fees"], footer["cost"], key)
+            self.assertEqual(footer["payout"] - footer["sell_fees"], footer["net_payout"], key)
+            self.assertEqual(footer["net_payout"] - footer["cost"], footer["profit"], key)
+
+            months = {}
+            for bet in rows:
+                if bet["status"] != "open":
+                    months.setdefault(bet["event_date"][:7], []).append(bet)
+            for month, bets in months.items():
+                self.assertEqual(totals["month.{}.profit".format(month)], D(py_totals(bets)["profit"]), "{} {}".format(key, month))
+            opened = [bet for bet in rows if bet["status"] == "open"]
+            if opened:
+                self.assertEqual(totals["open.profit"], D(py_totals(opened)["profit"]), key)
+
+    def test_all_time_footer_is_realized_plus_unrealized(self):
+        summary = self.data["summary"]
+        footer = self.doms["all"].find(lambda node: node.attrs.get("data-total") == "footer.profit")
+        self.assertEqual(parse_shown(footer.text()), D(summary["realized_pnl"]) + D(summary["unrealized_pnl"]))
+        opened = self.doms["open"].find(lambda node: node.attrs.get("data-total") == "footer.profit")
+        self.assertEqual(parse_shown(opened.text()), D(summary["unrealized_pnl"]))
+
+    def test_url_filter_state(self):
+        open_dom = self.doms["open"]
+        rows = self.bet_rows(open_dom)
+        self.assertEqual(len(rows), self.data["summary"]["open"])
+        self.assertTrue(all(row.attrs["data-outcome"] == "open" for row in rows))
+        pressed = open_dom.find(lambda node: node.attrs.get("data-status") == "open")
+        self.assertEqual(pressed.attrs.get("aria-pressed"), "true")
+
+        lost = self.doms["lost_nfl"]
+        self.assertEqual(len(self.bet_rows(lost)), len(self.state_rows("status=lost&cat=NFL")))
+        cat = lost.find(lambda node: node.attrs.get("data-cat") == "NFL")
+        self.assertEqual(cat.attrs.get("aria-pressed"), "true")
+
+    def test_reset_to_all_time(self):
+        dom = self.doms["since_sep"]
+        reset = dom.find(lambda node: node.attrs.get("id") == "rangeReset")
+        self.assertNotIn("hidden", reset.attrs)
+        self.assertEqual(reset.attrs.get("href"), "#bets")
+        label = dom.find(lambda node: node.attrs.get("id") == "rangeLabel").text()
+        self.assertTrue(label.startswith("Showing: Custom range · Sep 1, 2026 → "), label)
+        self.assertTrue(label.endswith(" · {} bets".format(len(self.state_rows("from=2026-09-01")))), label)
+        all_dom = self.doms["all"]
+        self.assertIn("hidden", all_dom.find(lambda node: node.attrs.get("id") == "rangeReset").attrs)
+        self.assertTrue(all_dom.find(lambda node: node.attrs.get("id") == "rangeLabel").text().startswith(
+            "Showing: All time · Dec 2, 2025 → "))
+
+    def test_parlay_legs_render(self):
+        dom = self.doms["all"]
+        legs = dom.find(lambda node: "data-legs" in node.attrs)
+        items = legs.find_all(lambda node: node.tag == "li")
+        self.assertEqual([item.attrs["data-leg"] for item in items], ["hit", "hit", "missed"])
+        self.assertTrue(items[0].text().startswith("✓ Ivory Coast (Yes): hit"), items[0].text())
+        self.assertIn("✗ Netherlands (Yes): missed", items[2].text())
+        self.assertIn("busted the parlay", items[2].text())
+        self.assertIn("All legs must hit to win.", legs.parent.text())
+        row = dom.find(lambda node: node.attrs.get("data-row") == legs.attrs["data-legs"])
+        self.assertIn("Parlay · 3 legs", row.text())
+        self.assertIn("WC", row.text())
+
+    def test_overview_open_link_and_nav(self):
+        dom = self.doms["overview"]
+        link = dom.find(lambda node: node.attrs.get("id") == "openLink")
+        self.assertEqual(link.attrs.get("href"), "#bets?status=open")
+        self.assertNotIn("hidden", link.attrs)
+        self.assertEqual(link.text().strip(), "1 open bet →")
+        nav = [node.attrs.get("href") for node in dom.find_all(
+            lambda node: node.tag == "a" and node.parent is not None and node.parent.attrs.get("id") == "nav")]
+        self.assertEqual(nav, ["#overview", "#performance", "#bets", "#fees", "#about"])
+        current = dom.find(lambda node: node.attrs.get("aria-current") == "page")
+        self.assertEqual(current.attrs.get("href"), "#overview")
+        bets_current = self.doms["all"].find(lambda node: node.attrs.get("aria-current") == "page")
+        self.assertEqual(bets_current.attrs.get("href"), "#bets")
 
 
 class DisplayRuleTests(unittest.TestCase):
+    def test_parse_shown_treats_fee_signs_as_operators(self):
+        self.assertEqual(parse_shown("−$1.1453", "fee-minus"), D("1.1453"))
+        self.assertEqual(parse_shown("+$0.061", "fee-plus"), D("0.061"))
+        self.assertEqual(parse_shown("−$4.9985", "signed"), D("-4.9985"))
+        self.assertEqual(parse_shown("$0 maker", "fee-minus-maker"), D(0))
+
     def test_rule(self):
         self.assertEqual(display("2", "plain"), "$2.00")
         self.assertEqual(display("1.997", "plain"), "$1.997")
-        self.assertEqual(display("3.4848", "plain"), "$3.4848")
         self.assertEqual(display("1.4878", "signed"), "+$1.4878")
         self.assertEqual(display("-4.9985", "signed"), "−$4.9985")
         self.assertEqual(display("0", "signed"), "$0.00")
-        self.assertEqual(display("12.280", "plain"), "$12.28")
+        self.assertEqual(display("0.061", "fee-plus"), "+$0.061")
+        self.assertEqual(display("1.1453", "fee-minus"), "−$1.1453")
+        self.assertEqual(display("0", "fee-minus-maker"), "$0 maker")
+        self.assertEqual(display("0", "fee-minus"), "−$0.00")
 
 
 if __name__ == "__main__":

@@ -97,11 +97,35 @@ GOLDEN_OPEN = {"cost": D("2.0035"), "value": D("1.798")}
 TITLES = {ROBINSON: "Bijan Robinson TD", PENIX: "Penix 275+", MEXICO: "Mexico advances", GOLDEN: "Golden 40+"}
 
 
+# A 3-leg World Cup parlay that lost because the Netherlands leg missed.
+#   buy 15.67 YES @ 0.466, fee 0.27308 -> cost 7.30222 + 0.27308 = 7.5753; settles NO -> profit -7.5753
+PARLAY = "KXMVESPORTSMULTIGAMEEXTENDED-S20260905EFE5661-C299BAD43AB"
+PARLAY_FILLS = [api_fill(13, PARLAY, "o-parlay", "yes", "15.67", "0.4660", "0.27308", True, "2026-06-25T14:57:00Z")]
+PARLAY_SETTLEMENTS = [{"ticker": PARLAY, "revenue": 0, "settled_time": "2026-06-25T23:00:00Z", "fee_cost": "0"}]
+PARLAY_MARKETS = {
+    PARLAY: {"title": "yes Ivory Coast,yes Germany,yes Netherlands", "result": "no", "mve_selected_legs": [
+        {"event_ticker": "KXWCGAME-A", "market_ticker": "KXWCGAME-26JUN25-CIV", "side": "yes", "yes_settlement_value_dollars": "1.0000"},
+        {"event_ticker": "KXWCGAME-B", "market_ticker": "KXWCGAME-26JUN25-GER", "side": "yes", "yes_settlement_value_dollars": "1.0000"},
+        {"event_ticker": "KXWCGAME-C", "market_ticker": "KXWCGAME-26JUN25-NED", "side": "yes", "yes_settlement_value_dollars": "0.0000"},
+    ]},
+    "KXWCGAME-26JUN25-CIV": {"yes_sub_title": "Ivory Coast", "result": "yes"},
+    "KXWCGAME-26JUN25-GER": {"yes_sub_title": "Germany", "result": "yes"},
+    "KXWCGAME-26JUN25-NED": {"yes_sub_title": "Netherlands", "result": "no"},
+}
+FULL_CASH = "37.1777"  # GOLDEN_CASH 44.753 - 7.5753
+FULL_NET = D("3.9777")  # 37.1777 + 1.80 - 35
+EXPECTED_LEGS = [
+    {"name": "Ivory Coast", "side": "Yes", "result": "hit"},
+    {"name": "Germany", "side": "Yes", "result": "hit"},
+    {"name": "Netherlands", "side": "Yes", "result": "missed"},
+]
+
+
 class FakeClient:
     """Stands in for the Kalshi API. Everything is strings/ints, like the real thing."""
 
     def __init__(self, fills=None, settlements=None, positions=None, cash=GOLDEN_CASH,
-                 portfolio_cents=GOLDEN_PORTFOLIO_CENTS, bids=None, titles=None):
+                 portfolio_cents=GOLDEN_PORTFOLIO_CENTS, bids=None, titles=None, markets=None):
         self.fills = GOLDEN_FILLS if fills is None else fills
         self.settlements = GOLDEN_SETTLEMENTS if settlements is None else settlements
         self.positions = GOLDEN_POSITIONS if positions is None else positions
@@ -109,6 +133,7 @@ class FakeClient:
         self.portfolio_cents = portfolio_cents
         self.bids = bids or {GOLDEN: ("0.69", "0.31")}
         self.titles = TITLES if titles is None else titles
+        self.markets = markets or {}
 
     def get(self, endpoint, params=None, allow_missing=False):
         if endpoint == "/portfolio/balance":
@@ -118,7 +143,9 @@ class FakeClient:
         if endpoint.startswith("/markets/"):
             code = endpoint.rsplit("/", 1)[-1]
             yes_bid, no_bid = self.bids.get(code, (None, None))
-            return {"market": {"title": self.titles.get(code, ""), "result": "", "yes_bid_dollars": yes_bid, "no_bid_dollars": no_bid}}
+            market = {"title": self.titles.get(code, ""), "result": "", "yes_bid_dollars": yes_bid, "no_bid_dollars": no_bid}
+            market.update(self.markets.get(code, {}))
+            return {"market": market}
         return None
 
     def paginate(self, endpoint, list_key, extra=None):
@@ -145,8 +172,53 @@ def money_fields(node, path=""):
 MONEY_KEYS = {
     "cost", "payout", "profit", "fee", "value", "pnl", "day", "amount", "net_pnl", "account_value", "cash",
     "open_value", "deposited", "credits", "trading_fees", "deposit_fees", "total_fees", "realized_pnl",
-    "maker_fees", "taker_fees", "reported", "rounding", "rebates", "contracts",
+    "unrealized_pnl", "maker_fees", "taker_fees", "reported", "rounding", "rebates", "contracts", "remaining",
+    "stake", "buy_fees", "sell_fees", "net_payout", "price", "bid", "per_contract",
 }
+
+
+def bet_identity_failures(bet):
+    """The equation identities for ONE bet, from its stored strings."""
+    problems = []
+    name = bet["title"]
+    if D(bet["stake"]) + D(bet["buy_fees"]) != D(bet["cost"]):
+        problems.append("{}: stake + buy fees != cost".format(name))
+    if bet["price"] is not None and D(bet["contracts"]) * D(bet["price"]) != D(bet["stake"]):
+        problems.append("{}: contracts x price != stake".format(name))
+    if bet["payout"] is not None:
+        if D(bet["payout"]) - D(bet["sell_fees"]) != D(bet["net_payout"]):
+            problems.append("{}: payout - sell fees != net payout".format(name))
+        if D(bet["net_payout"]) - D(bet["cost"]) != D(bet["profit"]):
+            problems.append("{}: net payout - cost != profit".format(name))
+    # Fills (plus the settlement / live-bid line) sum exactly to the row.
+    buys = [fill for fill in bet["fills"] if fill["action"] == "buy"]
+    sells = [fill for fill in bet["fills"] if fill["action"] == "sell"]
+    for fill in bet["fills"]:
+        if D(fill["contracts"]) * D(fill["price"]) != D(fill["amount"]):
+            problems.append("{}: a fill's contracts x price != amount".format(name))
+    if sum((D(fill["contracts"]) for fill in buys), D(0)) != D(bet["contracts"]):
+        problems.append("{}: buy fills' contracts != contracts".format(name))
+    if sum((D(fill["amount"]) for fill in buys), D(0)) != D(bet["stake"]):
+        problems.append("{}: buy fills don't sum to stake".format(name))
+    if sum((D(fill["fee"]) for fill in buys), D(0)) != D(bet["buy_fees"]):
+        problems.append("{}: buy fills' fees don't sum to buy fees".format(name))
+    if sum((D(fill["fee"]) for fill in sells), D(0)) != D(bet["sell_fees"]):
+        problems.append("{}: sell fills' fees don't sum to sell fees".format(name))
+    if bet["payout"] is not None:
+        back = sum((D(fill["amount"]) for fill in sells), D(0))
+        if bet["settlement"]:
+            back += D(bet["settlement"]["amount"])
+            if D(bet["settlement"]["contracts"]) * D(bet["settlement"]["per_contract"]) != D(bet["settlement"]["amount"]):
+                problems.append("{}: settlement contracts x per contract != amount".format(name))
+        if bet["live"]:
+            back += D(bet["live"]["amount"])
+            if D(bet["live"]["contracts"]) * D(bet["live"]["bid"]) != D(bet["live"]["amount"]):
+                problems.append("{}: live contracts x bid != amount".format(name))
+        if back != D(bet["payout"]):
+            problems.append("{}: sells + settlement + live bid != payout".format(name))
+    if bet["status"] == "open" and not bet["unrealized"]:
+        problems.append("{}: open bet not marked unrealized".format(name))
+    return problems
 
 
 def identity_failures(dashboard, fills=None):
@@ -160,10 +232,24 @@ def identity_failures(dashboard, fills=None):
         if isinstance(value, float):
             problems.append("{} is a float".format(path))
 
-    # Row identity: profit == payout - cost, exactly.
-    for bet in dashboard["recent_bets"]:
-        if bet["profit"] is not None and D(bet["profit"]) != D(bet["payout"]) - D(bet["cost"]):
-            problems.append("row {!r}: {} != {} - {}".format(bet["title"], bet["profit"], bet["payout"], bet["cost"]))
+    bets = dashboard["bets"]
+    if len(bets) != summ["bets"]:
+        problems.append("bets list has {} rows, summary says {}".format(len(bets), summ["bets"]))
+    for bet in bets:
+        problems += bet_identity_failures(bet)
+
+    finished = [bet for bet in bets if bet["status"] in ("sold", "settled")]
+    open_bets = [bet for bet in bets if bet["status"] == "open"]
+    realized = sum((D(bet["profit"]) for bet in finished), D(0))
+    if realized != D(summ["realized_pnl"]):
+        problems.append("realized {} != sum of finished bets {}".format(summ["realized_pnl"], realized))
+    if summ.get("unrealized_pnl") is not None:
+        unrealized = sum((D(bet["profit"]) for bet in open_bets), D(0))
+        if unrealized != D(summ["unrealized_pnl"]):
+            problems.append("unrealized {} != sum of open bets {}".format(summ["unrealized_pnl"], unrealized))
+    for key in ("won", "lost", "sold", "open", "pending"):
+        if summ[key] != sum(1 for bet in bets if bet["outcome"] == key):
+            problems.append("summary {} count is wrong".format(key))
 
     # Categories sum exactly to total realized P&L.
     cat_total = sum((D(cat["profit"]) for cat in dashboard["categories"]), D(0))
@@ -171,7 +257,7 @@ def identity_failures(dashboard, fills=None):
         problems.append("categories sum {} != realized {}".format(cat_total, summ["realized_pnl"]))
 
     # Chart: running total is the cumulative sum of days at every point; the
-    # last point is net P&L; each day is the exact sum of its items when complete.
+    # last point is net P&L; each day is the exact sum of its items.
     running = D(0)
     for point in dashboard["pnl_series"]:
         running += D(point["day"])
@@ -200,20 +286,23 @@ def identity_failures(dashboard, fills=None):
         problems.append("reported + rounding - rebates != trading fees")
     if fills is not None and sum((fill["fee"] for fill in fills), D(0)) != D(summ["trading_fees"]):
         problems.append("trading fees != exact sum of fill fees")
-
-    # Open totals are the exact sums of the rows.
-    rows = dashboard["open_positions"]
-    if sum((D(row["cost"]) for row in rows), D(0)) != D(dashboard["open_totals"]["cost"]):
-        problems.append("open cost total != sum of rows")
-    if dashboard["open_totals"]["value"] is not None:
-        if sum((D(row["value"]) for row in rows), D(0)) != D(dashboard["open_totals"]["value"]):
-            problems.append("open value total != sum of rows")
+    if dashboard.get("max_decimal_places", 0) > 18:
+        problems.append("max_decimal_places {} exceeds exact.js SCALE 18".format(dashboard["max_decimal_places"]))
     return problems
 
 
 def golden_dashboard(**kwargs):
     """Run the real pipeline (fetch -> build -> reconcile) on the golden fixture."""
     client = FakeClient(**kwargs)
+    dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(client)
+    kalshi_fetch.reconcile(dashboard, fills, payouts, cash, portfolio)
+    return dashboard, fills
+
+
+def full_dashboard():
+    """Golden fixture plus the 3-leg World Cup parlay (used by the display and JS parity tests)."""
+    client = FakeClient(fills=GOLDEN_FILLS + PARLAY_FILLS, settlements=GOLDEN_SETTLEMENTS + PARLAY_SETTLEMENTS,
+                        cash=FULL_CASH, markets=PARLAY_MARKETS)
     dashboard, fills, payouts, cash, portfolio = kalshi_fetch.build_from_api(client)
     kalshi_fetch.reconcile(dashboard, fills, payouts, cash, portfolio)
     return dashboard, fills

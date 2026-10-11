@@ -6,6 +6,7 @@ from decimal import Decimal
 
 import kalshi_paths  # noqa: F401
 import kalshi_fetch
+import kalshi_fixtures as fx
 from kalshi_common import category_for, parse_time
 
 NOW = datetime(2026, 10, 11, tzinfo=timezone.utc)
@@ -48,22 +49,34 @@ class TitleTests(unittest.TestCase):
         self.assertEqual(title_for("KXWCADVANCE-26JUL01USABIH-USA", {"title": "USA vs Bosnia and Herzegovina: To Advance"}),
                          "USA vs Bosnia: USA advances")
 
-    def test_world_cup_parlay_from_legs_is_clipped(self):
+    def test_parlay_title_counts_legs(self):
         market = {"title": "yes Ivory Coast,yes Germany,yes Netherlands",
-                  "mve_selected_legs": [{"market_ticker": "KXWCGAME-A"}, {"market_ticker": "KXWCGAME-B"}]}
-        title = title_for("KXMVESPORTSMULTIGAMEEXTENDED-NEW", market)
-        self.assertEqual(title, "WC Parlay: Ivory Coast, Germany, Nether…")
-        self.assertLessEqual(len(title), 40)
+                  "mve_selected_legs": [{"market_ticker": "KXWCGAME-A"}, {"market_ticker": "KXWCGAME-B"},
+                                        {"market_ticker": "KXWCGAME-C"}]}
+        self.assertEqual(title_for("KXMVESPORTSMULTIGAMEEXTENDED-NEW", market), "Parlay · 3 legs")
+        self.assertEqual(title_for("KXMVE-X", {"title": "yes Chiefs,no Lakers"}), "Parlay · 2 legs")
 
-    def test_known_world_cup_parlay_without_legs(self):
-        title = title_for("KXMVESPORTSMULTIGAMEEXTENDED-S20260905EFE5661-C299BAD43AB",
-                          {"title": "yes Ivory Coast,yes Germany,yes Netherlands"})
-        self.assertTrue(title.startswith("WC Parlay: Ivory Coast, Germany"))
+    def test_parlay_legs_results_and_world_cup_tag(self):
+        client = fx.FakeClient(markets=fx.PARLAY_MARKETS)
+        legs, world_cup = kalshi_fetch.parlay_details(client, fx.PARLAY, fx.PARLAY_MARKETS[fx.PARLAY],
+                                                      fx.PARLAY_MARKETS[fx.PARLAY]["title"])
+        self.assertEqual(legs, fx.EXPECTED_LEGS)
+        self.assertTrue(world_cup)
+        for leg in legs:
+            self.assertNotIn("KX", repr(leg))  # names only, never tickers
 
-    def test_mixed_parlay_and_no_legs(self):
-        market = {"title": "yes Chiefs,no Lakers",
-                  "mve_selected_legs": [{"market_ticker": "KXNFLGAME-A"}, {"market_ticker": "KXNBAGAME-B"}]}
-        self.assertEqual(title_for("KXMVE-X", market), "Parlay: Chiefs, not Lakers")
+    def test_leg_result_rules(self):
+        self.assertEqual(kalshi_fetch.leg_result("yes", "1.0000", None), "hit")
+        self.assertEqual(kalshi_fetch.leg_result("yes", "0", None), "missed")
+        self.assertEqual(kalshi_fetch.leg_result("no", "0.0000", None), "hit")
+        self.assertEqual(kalshi_fetch.leg_result("no", "1", None), "missed")
+        self.assertEqual(kalshi_fetch.leg_result("yes", None, {"result": "no"}), "missed")
+        self.assertEqual(kalshi_fetch.leg_result("yes", None, {"result": ""}), "unknown")
+
+    def test_parlay_without_api_legs_falls_back_to_title(self):
+        legs, world_cup = kalshi_fetch.parlay_details(fx.FakeClient(), fx.PARLAY, {}, "yes Chiefs,no Lakers")
+        self.assertEqual(legs, [{"name": "Chiefs", "side": "Yes", "result": "unknown"},
+                                {"name": "Lakers", "side": "No", "result": "unknown"}])
 
     def test_non_parlay_comma_title_untouched(self):
         self.assertEqual(title_for("KXOTHER-X", {"title": "Paris, France: rain"}), "Paris, France: rain")

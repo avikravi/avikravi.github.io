@@ -28,7 +28,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark">
-    <meta name="description" content="Avi's Kalshi prediction-market results: net P&L after fees, win rate, open positions and recent bets. Updates automatically.">
+    <meta name="description" content="Avi's Kalshi prediction-market results: every bet, exact to the fraction of a cent, with net P&L after fees. Updates automatically.">
     <title>Avi's Kalshi Tracker</title>
     <style>
         :root {
@@ -38,14 +38,24 @@
             --surface-2: #181b1f;
             --hover: #1a1d22;
             --line: #23272d;
+            --line-strong: #3a4049;
             --ink: #f2f4f6;
             --ink-soft: #b4bac2;
             --ink-faint: #7d858f;
             --gain: #21c97a;
+            --gain-soft: #7fdcae;
             --gain-bg: rgba(33, 201, 122, 0.12);
             --loss: #f2555a;
+            --loss-soft: #f49a9d;
             --loss-bg: rgba(242, 85, 90, 0.12);
+            --fee: #e0a94a;
+            --back: #4fc3d9;
+            --sold: #8ea6c8;
             --neutral-bg: rgba(180, 186, 194, 0.10);
+            --zone-a: rgba(224, 169, 74, 0.07);
+            --zone-b: rgba(79, 195, 217, 0.07);
+            --zone-c: rgba(33, 201, 122, 0.06);
+            --eq-bg: rgba(255, 255, 255, 0.025);
             --radius: 14px;
             --side-w: 240px;
         }
@@ -75,11 +85,11 @@
             display: flex;
             flex-direction: column;
             padding: 22px 14px 18px;
-            z-index: 10;
+            z-index: 30;
         }
         .brand { padding: 0 10px 18px; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
         .brand-row { display: flex; align-items: center; gap: 9px; }
-        .brand-dot {
+        .live-dot {
             width: 9px; height: 9px; border-radius: 50%;
             background: var(--gain);
             box-shadow: 0 0 0 4px var(--gain-bg);
@@ -120,14 +130,18 @@
         .side-foot { margin-top: auto; padding: 14px 10px 0; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-faint); }
         .side-foot div + div { margin-top: 3px; }
 
+        .topbar { display: none; }
+        .scrim { display: none; }
+
         /* ---------- Main ---------- */
         .main { margin-left: var(--side-w); min-height: 100vh; }
         .content { max-width: 1000px; padding: 40px 48px 56px; }
+        .content.wide { max-width: none; padding-left: 24px; padding-right: 24px; }
 
         .panel[hidden] { display: none; }
         .panel-head { margin-bottom: 22px; }
         .panel-head h1 { font-size: 26px; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
-        .panel-head p { color: var(--ink-faint); font-size: 14px; margin: 6px 0 0; max-width: 640px; }
+        .panel-head p { color: var(--ink-faint); font-size: 14px; margin: 6px 0 0; max-width: 720px; }
 
         h2 { font-size: 16px; margin: 0 0 4px; }
         .section-desc { color: var(--ink-faint); font-size: 13px; margin: 0 0 12px; }
@@ -149,8 +163,16 @@
 
         /* Overview */
         .hero { padding: 22px 22px 20px; margin-bottom: 14px; }
+        .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
         .hero-value { font-size: 52px; font-weight: 700; line-height: 1.05; margin: 8px 0 6px; letter-spacing: -0.02em; }
         .hero-note { color: var(--ink-soft); font-size: 14px; margin: 0; }
+        .open-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--ink-soft); text-decoration: none; font-size: 13.5px;
+            border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; white-space: nowrap;
+        }
+        .open-link:hover { color: var(--ink); border-color: var(--line-strong); }
+        .open-link[hidden] { display: none; }
 
         .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
         .tiles.pair { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 28px; }
@@ -182,108 +204,230 @@
         .about h2:first-child { margin-top: 0; }
         .disclaimer { color: var(--ink-faint); font-size: 13px; }
 
-        /* Tables */
+        /* Generic tables (Performance data views) */
         .table-card { padding: 0; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; text-align: left; vertical-align: top; }
-        th {
-            color: var(--ink-faint);
-            font-size: 11.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 600;
-            border-bottom: 1px solid var(--line);
-        }
+        th, td { padding: 10px 14px; text-align: left; vertical-align: top; }
+        th { color: var(--ink-faint); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; border-bottom: 1px solid var(--line); }
         td { border-bottom: 1px solid var(--line); }
-        tbody tr:last-child td { border-bottom: 0; }
-        tbody tr:hover td { background: rgba(255, 255, 255, 0.015); }
         .num { text-align: right; white-space: nowrap; }
-        .bet-title { font-weight: 600; overflow-wrap: anywhere; }
-        .bet-meta { color: var(--ink-faint); font-size: 12.5px; margin-top: 3px; }
-        .th-sub { display: block; font-size: 10px; letter-spacing: 0.02em; text-transform: none; font-weight: 500; }
-        .side-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 1px 6px;
-            border-radius: 5px;
-            margin-right: 4px;
-            background: var(--neutral-bg);
-            color: var(--ink-soft);
-        }
-        .pill {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 1px 8px;
-            border-radius: 999px;
-            background: var(--neutral-bg);
-            color: var(--ink-soft);
-            white-space: nowrap;
-        }
-        .pill.won { background: var(--gain-bg); color: var(--gain); }
-        .pill.lost { background: var(--loss-bg); color: var(--loss); }
-        tfoot td { color: var(--ink-soft); font-weight: 600; border-top: 1px solid var(--line); border-bottom: 0; }
         .empty { color: var(--ink-faint); padding: 18px 16px; }
         details.data-view { margin-top: 10px; }
         details.data-view summary { cursor: pointer; color: var(--ink-soft); font-size: 13px; padding: 4px 0; }
         details.data-view table { margin-top: 8px; }
         details.data-view td, details.data-view th { padding: 7px 12px; font-size: 13px; }
-        .narrow-only { display: none; }
 
-        .error {
-            background: var(--loss-bg);
-            border: 1px solid var(--loss);
-            border-radius: var(--radius);
-            padding: 14px;
-            margin-bottom: 20px;
+        .pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px;
+            background: var(--neutral-bg); color: var(--ink-soft); white-space: nowrap;
+        }
+        .pill.won { background: var(--gain-bg); color: var(--gain); }
+        .pill.lost { background: var(--loss-bg); color: var(--loss); }
+        .pill.sold { background: rgba(142, 166, 200, 0.14); color: var(--sold); }
+        .pill.open { background: rgba(79, 195, 217, 0.12); color: var(--back); }
+        .side-tag {
+            display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 5px;
+            background: var(--neutral-bg); color: var(--ink-soft);
+        }
+        .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 0 6px; border-radius: 5px; margin-left: 6px;
+            border: 1px solid var(--line-strong); color: var(--ink-soft); vertical-align: 1px; }
+
+        .pulse {
+            width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--back); display: inline-block; flex: none;
+            animation: pulse 1.8s ease-out infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 195, 217, 0.55); }
+            70% { box-shadow: 0 0 0 7px rgba(79, 195, 217, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 195, 217, 0); }
         }
 
+        /* ---------- Bets page ---------- */
+        .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip {
+            appearance: none; border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+            border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap;
+        }
+        .chip:hover { border-color: var(--line-strong); color: var(--ink); }
+        .chip[aria-pressed="true"] { background: var(--surface-2); border-color: var(--gain); color: var(--ink); }
+        .chip .count { color: var(--ink-faint); margin-left: 4px; }
+
+        .timeline-card { padding: 14px 16px 10px; margin-bottom: 12px; }
+        .timeline-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+        .timeline-wrap { position: relative; }
+        #timeline { display: block; width: 100%; height: 132px; cursor: crosshair; touch-action: none; user-select: none; }
+        #timeline .axis { stroke: var(--line-strong); stroke-width: 1; }
+        #timeline .tick text, #timeline .end-label { fill: var(--ink-faint); font-size: 11px; }
+        #timeline .tick line { stroke: var(--line); }
+        #timeline .dot { cursor: pointer; stroke: var(--surface); stroke-width: 1.5; }
+        #timeline .dot.dim { opacity: 0.18; }
+        #timeline .dot.won { fill: var(--gain); }
+        #timeline .dot.lost { fill: var(--loss); }
+        #timeline .dot.sold { fill: var(--sold); }
+        #timeline .dot.pending { fill: var(--ink-faint); }
+        #timeline .dot.open { fill: var(--surface); stroke: var(--back); stroke-width: 2; animation: ring 1.8s ease-out infinite; }
+        @keyframes ring { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: 0.35; } }
+        #timeline .dot:focus { outline: none; stroke: var(--ink); stroke-width: 2; }
+        #timeline .brush { fill: rgba(33, 201, 122, 0.10); stroke: var(--gain); stroke-width: 1; stroke-dasharray: 3 3; }
+        .tip {
+            position: absolute; pointer-events: none; z-index: 5; background: var(--surface-2); border: 1px solid var(--line-strong);
+            border-radius: 8px; padding: 7px 10px; font-size: 12.5px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px));
+        }
+        .tip[hidden] { display: none; }
+        .tip .tip-title { font-weight: 600; }
+        .tip .tip-sub { color: var(--ink-faint); font-size: 11.5px; }
+
+        .range-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+        .range-line a { color: var(--gain); text-decoration: none; font-weight: 600; }
+        .range-line a:hover { text-decoration: underline; }
+        .range-line a[hidden] { display: none; }
+
+        .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 16px 0 12px; }
+        .segmented { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+        .segmented button {
+            appearance: none; border: 0; background: transparent; color: var(--ink-soft); font: inherit; font-size: 13px;
+            padding: 6px 12px; cursor: pointer; border-right: 1px solid var(--line); white-space: nowrap;
+        }
+        .segmented button:last-child { border-right: 0; }
+        .segmented button:hover { background: var(--hover); color: var(--ink); }
+        .segmented button[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); box-shadow: inset 0 -2px 0 var(--gain); }
+        .segmented .count { color: var(--ink-faint); margin-left: 4px; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; color: var(--ink-faint); margin-bottom: 10px; }
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+        .bets-scroll { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+        table.bets { font-size: 12px; }
+        table.bets th, table.bets td { padding: 8px 5px; border-bottom: 1px solid var(--line); }
+        table.bets th:first-child, table.bets td:first-child { padding-left: 10px; }
+        table.bets .times { color: var(--ink-faint); margin: 0 3px; }
+        table.bets thead th { font-size: 10px; letter-spacing: 0.03em; line-height: 1.25; vertical-align: bottom; }
+        table.bets thead tr:nth-child(2) th { max-width: 72px; }
+        table.bets thead th .op { color: var(--ink); font-size: 13px; font-weight: 700; margin-right: 3px; letter-spacing: 0; }
+        table.bets .zone-row th { font-size: 11px; color: var(--ink-soft); padding: 7px 9px; }
+        table.bets .zone-a { background: var(--zone-a); }
+        table.bets .zone-b { background: var(--zone-b); }
+        table.bets .zone-c { background: var(--zone-c); }
+        table.bets tbody td.zone-a, table.bets tbody td.zone-c { background: transparent; }
+        table.bets .zone-start { border-left: 2px solid var(--line-strong); }
+        table.bets .eq { font-weight: 700; background: var(--eq-bg); border-left: 1px solid var(--line); }
+        table.bets td.money-out { color: var(--ink); }
+        table.bets td.fee { color: var(--fee); }
+        table.bets td.back { color: var(--back); }
+        table.bets td.live { font-style: italic; }
+        .live-tag { font-style: normal; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+            color: var(--back); border: 1px solid var(--back); border-radius: 4px; padding: 0 3px; margin-left: 4px; vertical-align: 1px; }
+        table.bets td.profit.gain { color: var(--gain); }
+        table.bets td.profit.loss { color: var(--loss); }
+        table.bets td.profit.unreal { font-weight: 600; }
+        table.bets td.profit.unreal.gain { color: var(--gain-soft); }
+        table.bets td.profit.unreal.loss { color: var(--loss-soft); }
+        table.bets td.profit.unreal > span { border-bottom: 1px dashed currentColor; }
+        table.bets .bet-cell { min-width: 118px; }
+        table.bets .bet-title { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+        table.bets .bet-sub { color: var(--ink-faint); font-size: 11.5px; margin-top: 2px; font-weight: 400; }
+        table.bets .date-cell { white-space: nowrap; }
+        .chev {
+            appearance: none; border: 0; background: transparent; color: var(--ink-faint); cursor: pointer; padding: 0 5px 0 0;
+            font-size: 12px; line-height: 1; vertical-align: 1px; transition: transform 0.15s;
+        }
+        .chev[aria-expanded="true"] { transform: rotate(90deg); color: var(--ink); }
+        .mixed { color: var(--ink-faint); font-style: italic; }
+
+        table.bets .group-row td { background: var(--surface-2); font-weight: 600; font-size: 12.5px; color: var(--ink-soft); }
+        table.bets .group-row .group-label { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+
+        table.bets .detail-row[hidden] { display: none; }
+        table.bets .detail-row > td { background: #0f1113; padding: 12px 16px 14px 34px; }
+        table.fills { width: auto; min-width: 560px; font-size: 12px; margin-bottom: 8px; }
+        table.fills th, table.fills td { padding: 4px 14px 4px 0; border-bottom: 1px solid var(--line); }
+        table.fills th { font-size: 10px; }
+        .detail-sum { color: var(--ink-soft); font-size: 12px; margin: 6px 0 0; }
+        .legs { margin: 10px 0 0; padding: 0; list-style: none; font-size: 12.5px; }
+        .legs li { padding: 3px 0; }
+        .legs .hit { color: var(--gain); font-weight: 700; }
+        .legs .missed { color: var(--loss); font-weight: 700; }
+        .legs .unknown { color: var(--ink-faint); font-weight: 700; }
+        .legs .bust { color: var(--loss); font-size: 11.5px; margin-left: 6px; }
+        .leg-note { color: var(--ink-faint); font-size: 12px; margin-top: 4px; }
+
+        table.bets tfoot td {
+            position: sticky; bottom: 0; z-index: 2; background: #15181c; font-weight: 700;
+            border-top: 2px solid var(--line-strong); border-bottom: 0;
+        }
+        table.bets tfoot td.eq { background: #1a1e23; }
+        /* Desktop (1280px+) fits the whole equation; narrower screens scroll the table, never the page. */
+        @media (max-width: 1279px) { .bets-scroll { overflow-x: auto; } }
+        .unvalued-note { color: var(--ink-faint); font-size: 12px; margin-top: 8px; }
+        .unvalued-note[hidden] { display: none; }
+
+        .error {
+            background: var(--loss-bg); border: 1px solid var(--loss); border-radius: var(--radius); padding: 14px; margin-bottom: 20px;
+        }
         :focus-visible { outline: 2px solid var(--gain); outline-offset: 2px; }
 
-        /* ---------- Narrower screens: sidebar becomes a top bar ---------- */
         @media (max-width: 1100px) {
             .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .fee-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
-        @media (max-width: 860px) {
-            .side {
-                position: sticky;
-                bottom: auto;
-                width: auto;
-                border-right: 0;
-                border-bottom: 1px solid var(--line);
-                padding: 14px 16px 10px;
+        /* ---------- Below 900px: slim top bar + menu drawer ---------- */
+        @media (max-width: 899px) {
+            .topbar {
+                display: flex; align-items: center; justify-content: space-between; gap: 10px;
+                position: sticky; top: 0; z-index: 20; background: var(--sidebar); border-bottom: 1px solid var(--line);
+                padding: 10px 14px;
             }
-            .brand { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 0 10px; margin-bottom: 8px; }
-            .brand-net { margin-top: 0; white-space: nowrap; }
-            .nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
-            .nav a { padding: 7px 8px; font-size: 13px; gap: 7px; justify-content: center; }
-            .nav a svg { width: 16px; height: 16px; }
-            .nav a[aria-current="page"]::before { left: 6px; right: 6px; top: auto; bottom: 1px; width: auto; height: 2px; }
-            .side-foot { display: none; }
+            .topbar .brand-row { gap: 8px; min-width: 0; }
+            .topbar .brand-name { font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .topbar .brand-net { margin: 0; white-space: nowrap; }
+            .menu-btn {
+                appearance: none; background: transparent; border: 1px solid var(--line); color: var(--ink); border-radius: 8px;
+                padding: 6px 10px; font: inherit; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            }
+            .side { transform: translateX(-100%); transition: transform 0.2s ease; }
+            body.nav-open .side { transform: none; box-shadow: 8px 0 32px rgba(0, 0, 0, 0.5); }
+            body.nav-open .scrim { display: block; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 25; }
             .main { margin-left: 0; }
-            .content { padding: 22px 16px 40px; }
+            .content, .content.wide { padding: 20px 14px 40px; }
             .panel-head h1 { font-size: 22px; }
-            .hero-value { font-size: 42px; }
+            .hero-value { font-size: 40px; }
             .hero { padding: 18px; }
+            .hero-top { flex-direction: column; gap: 6px; }
             .chart-box { height: 260px; }
             .chart-box.small { height: 180px; }
-            .wide-only { display: none; }
-            .narrow-only { display: inline; }
-            th, td { padding: 11px 12px; }
+            .bets-scroll { overflow-x: auto; }
+            #timeline { height: 120px; }
         }
         @media (max-width: 420px) {
             .tile-value { font-size: 20px; }
             .fee-tiles .tile-value { font-size: 18px; }
         }
+        @media (prefers-reduced-motion: reduce) {
+            .pulse, #timeline .dot.open { animation: none; }
+            .side { transition: none; }
+        }
     </style>
 </head>
 <body>
-    <aside class="side" aria-label="Sections">
+    <header class="topbar">
+        <button class="menu-btn" id="menuBtn" type="button" aria-controls="sidebar" aria-expanded="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            Menu
+        </button>
+        <div class="brand-row">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span class="brand-name">Avi's Kalshi Tracker</span>
+        </div>
+        <div class="brand-net"><strong id="topNet">—</strong></div>
+    </header>
+    <div class="scrim" id="scrim"></div>
+
+    <aside class="side" id="sidebar" aria-label="Sections">
         <div class="brand">
             <div class="brand-row">
-                <span class="brand-dot" aria-hidden="true"></span>
+                <span class="live-dot" aria-hidden="true"></span>
                 <p class="brand-name">Avi's Kalshi Tracker</p>
             </div>
             <div class="brand-net">Net P&amp;L<strong id="sideNet">—</strong></div>
@@ -302,10 +446,6 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>
                 Bets
             </a>
-            <a href="#open" data-panel="open">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                Open
-            </a>
             <a href="#fees" data-panel="fees">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
                 Fees
@@ -323,7 +463,7 @@
     </aside>
 
     <main class="main">
-        <div class="content">
+        <div class="content" id="content">
             <div id="error" class="error" hidden></div>
 
             <!-- 1. Overview -->
@@ -333,9 +473,14 @@
                 </div>
 
                 <div class="card hero">
-                    <div class="label">Net P&amp;L after fees</div>
-                    <div class="hero-value" id="netPnl">—</div>
-                    <p class="hero-note" id="netNote"></p>
+                    <div class="hero-top">
+                        <div>
+                            <div class="label">Net P&amp;L after fees</div>
+                            <div class="hero-value" id="netPnl">—</div>
+                            <p class="hero-note" id="netNote"></p>
+                        </div>
+                        <a class="open-link" id="openLink" href="#bets?status=open" hidden><span class="pulse" aria-hidden="true"></span><span id="openLinkText"></span></a>
+                    </div>
                 </div>
 
                 <div class="tiles">
@@ -434,49 +579,68 @@
             <section class="panel" id="panel-bets" data-title="Bets" hidden>
                 <div class="panel-head">
                     <h1>Bets</h1>
-                    <p>The last 20 finished bets (settled or sold early), newest result first. Cost includes fees; profit is after fees. Bets still running are under Open.</p>
+                    <p>Every bet, all time, open and closed. Each row reads left to right like an equation: what it cost, what came back, and the result. Every amount is exact.</p>
                 </div>
-                <div class="card table-card">
-                    <table>
+
+                <div class="card timeline-card">
+                    <div class="timeline-top">
+                        <div class="chips" id="rangeChips" role="group" aria-label="Date range"></div>
+                    </div>
+                    <div class="timeline-wrap" id="timelineWrap">
+                        <svg id="timeline" role="img" aria-label="Timeline of every bet. Drag to choose a date range."></svg>
+                        <div class="tip" id="timelineTip" hidden></div>
+                    </div>
+                    <div class="range-line">
+                        <span id="rangeLabel"></span>
+                        <a id="rangeReset" href="#bets" hidden>Reset to all time</a>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <div class="segmented" id="statusFilter" role="group" aria-label="Status"></div>
+                    <div class="chips" id="catFilter" role="group" aria-label="Categories"></div>
+                </div>
+
+                <div class="legend" aria-label="Color key">
+                    <span><i class="swatch" style="background: var(--ink)"></i>Money going out (stake, cost)</span>
+                    <span><i class="swatch" style="background: var(--fee)"></i>Fees (money leaving you)</span>
+                    <span><i class="swatch" style="background: var(--back)"></i>Money coming back</span>
+                    <span><i class="swatch" style="background: var(--gain)"></i>Profit</span>
+                    <span><i class="swatch" style="background: var(--loss)"></i>Loss</span>
+                    <span><i class="swatch" style="background: transparent; border: 1px dashed var(--gain-soft)"></i>Unrealized (open, at current bid)</span>
+                </div>
+
+                <div class="bets-scroll">
+                    <table class="bets" id="betsTable">
                         <thead>
+                            <tr class="zone-row">
+                                <th colspan="7" class="zone-a">Money in · what the bet cost</th>
+                                <th colspan="3" class="zone-b zone-start">Money back · what came back</th>
+                                <th colspan="2" class="zone-c zone-start">Result</th>
+                            </tr>
                             <tr>
-                                <th>Bet</th>
-                                <th class="wide-only">Resolved</th>
-                                <th class="num">Cost<span class="th-sub">incl. fees</span></th>
-                                <th class="num wide-only">Payout<span class="th-sub">after fees</span></th>
-                                <th class="num">Profit<span class="th-sub">after fees</span></th>
+                                <th class="zone-a">Date</th>
+                                <th class="zone-a">Bet</th>
+                                <th class="zone-a">Side</th>
+                                <th class="zone-a num">Contracts <span class="op">×</span>Price</th>
+                                <th class="zone-a num eq"><span class="op">=</span>Stake</th>
+                                <th class="zone-a num"><span class="op">+</span>Buy fees</th>
+                                <th class="zone-a num eq"><span class="op">=</span>Cost</th>
+                                <th class="zone-b num zone-start">Payout</th>
+                                <th class="zone-b num"><span class="op">−</span>Sell fees</th>
+                                <th class="zone-b num eq"><span class="op">=</span>Net payout</th>
+                                <th class="zone-c num eq zone-start"><span class="op">=</span>Profit</th>
+                                <th class="zone-c">Status</th>
                             </tr>
                         </thead>
-                        <tbody id="recentBody"></tbody>
+                        <tbody id="betsBody"></tbody>
+                        <tfoot id="betsFoot"></tfoot>
                     </table>
                 </div>
-                <p class="section-desc" id="pendingNote" style="margin-top: 10px;"></p>
+                <p class="unvalued-note" id="unvaluedNote" hidden></p>
             </section>
 
-            <!-- 4. Open -->
-            <section class="panel" id="panel-open" data-title="Open" hidden>
-                <div class="panel-head">
-                    <h1>Open positions</h1>
-                    <p>Bets still waiting on a result.</p>
-                </div>
-                <div class="card table-card">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Bet</th>
-                                <th class="num wide-only">Contracts</th>
-                                <th class="num">Cost<span class="th-sub">incl. fees</span></th>
-                                <th class="num">Value<span class="th-sub">at current bid</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="openBody"></tbody>
-                        <tfoot id="openFoot"></tfoot>
-                    </table>
-                </div>
-                <p class="section-desc" id="openNote" style="margin-top: 10px;"></p>
-            </section>
-
-            <!-- 5. Fees -->
+            <!-- 4. Fees -->
             <section class="panel" id="panel-fees" data-title="Fees" hidden>
                 <div class="panel-head">
                     <h1>Fees</h1>
@@ -511,7 +675,7 @@
                 </div>
             </section>
 
-            <!-- 6. About -->
+            <!-- 5. About -->
             <section class="panel" id="panel-about" data-title="About" hidden>
                 <div class="panel-head">
                     <h1>About</h1>
@@ -520,7 +684,7 @@
                     <h2>How the numbers are calculated</h2>
                     <p id="aboutNet"></p>
                     <p id="aboutWin"></p>
-                    <p>Cost includes the fees paid to open a bet. Payout is net of the fees paid to close it. Profit is payout minus cost.</p>
+                    <p>Every bet reads like an equation. Contracts × price = stake; stake + buy fees = cost. Payout − sell fees = net payout. Net payout − cost = profit. Settled bets pay $1 per winning contract (or $0); bets sold early pay contracts × sale price. Open bets show what they'd fetch if sold now at the current bid, and their profit is unrealized.</p>
                     <h2>Data source</h2>
                     <p id="aboutSource"></p>
                     <h2>Disclaimer</h2>
@@ -531,14 +695,17 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="exact.js"></script>
+    <script src="bets.js"></script>
     <script>
     (function () {
-        // EXACTNESS RULE: every amount in data.json is an exact decimal string
-        // computed in Python. This script never does arithmetic on money. It
-        // only rearranges characters for display (sign, "$", trailing zeros,
-        // at least 2 decimals). Chart.js needs numbers to position marks, so
-        // Number() appears only on lines marked "plot-coordinate"; every label
-        // and tooltip uses the stored strings. tests/test_kalshi_lint.py checks this.
+        // EXACTNESS RULE: every amount in data.json is an exact decimal string.
+        // Arithmetic on money happens ONLY in exact.js (BigInt, fixed scale);
+        // bets.js calls it for filtered totals. This script never adds,
+        // subtracts or compares money itself. Chart.js needs numbers to position
+        // marks, so Number() appears only on lines marked "plot-coordinate";
+        // "date-part" and "layout" mark calendar and pixel math.
+        // tests/test_kalshi_lint.py checks all of this.
         var css = getComputedStyle(document.documentElement);
         var COLORS = {
             gain: css.getPropertyValue('--gain').trim(),
@@ -549,8 +716,9 @@
             surface: css.getPropertyValue('--surface').trim()
         };
         var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var PANELS = ['overview', 'performance', 'bets', 'open', 'fees', 'about'];
+        var PANELS = ['overview', 'performance', 'bets', 'fees', 'about'];
         var SITE_TITLE = "Avi's Kalshi Tracker";
+        var SVG_NS = 'http://www.w3.org/2000/svg';
 
         function $(id) { return document.getElementById(id); }
 
@@ -574,11 +742,24 @@
             if (isZeroStr(str)) return '$' + digits(str);
             return (isNegStr(str) ? '−' : '+') + '$' + digits(str);
         }
+        // Fees are money leaving you: always shown with their operator.
+        function feeText(str, sign, makerOnly) {
+            if (str === null || str === undefined) return '—';
+            if (isZeroStr(str) && makerOnly) return '$0 maker';
+            return sign + '$' + digits(str);
+        }
         function tone(str) {
             if (str === null || str === undefined || isZeroStr(str)) return '';
             return isNegStr(str) ? 'loss' : 'gain';
         }
-        function formatMoney(str, format) { return format === 'signed' ? signed(str) : plain(str); }
+        var FORMATS = {
+            plain: plain,
+            signed: signed,
+            'fee-plus': function (str) { return feeText(str, '+', false); },
+            'fee-plus-maker': function (str) { return feeText(str, '+', true); },
+            'fee-minus': function (str) { return feeText(str, '−', false); },
+            'fee-minus-maker': function (str) { return feeText(str, '−', true); }
+        };
 
         function fmtDate(iso, withYear) {
             var parts = iso.split('-');
@@ -589,6 +770,11 @@
             var parts = iso.split('-');
             return Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])); // date-part
         }
+        function localToday() {
+            var now = new Date();
+            var month = String(now.getMonth() + 1).padStart(2, '0'); // date-part
+            return now.getFullYear() + '-' + month + '-' + String(now.getDate()).padStart(2, '0');
+        }
         function clip(label, size) { return label.length > size ? label.slice(0, size - 1) + '…' : label; }
         function el(tag, className, text) {
             var node = document.createElement(tag);
@@ -596,45 +782,76 @@
             if (text !== undefined) node.textContent = text;
             return node;
         }
-        // Show one stored money string. data-field / data-format let the display
-        // test check every rendered amount against data.json.
-        function markMoney(node, str, format, field) {
-            node.textContent = formatMoney(str, format);
-            node.dataset.field = field;
+        // Show one money string. data-field / data-total + data-format let the
+        // display test check every rendered amount against data.json.
+        function markMoney(node, str, format, attr, key) {
+            node.textContent = FORMATS[format](str);
+            node.setAttribute(attr, key);
             node.dataset.format = format;
+            return node;
+        }
+        function setMoney(id, str, format, field) {
+            var node = markMoney($(id), str, format, 'data-field', field);
             node.classList.remove('gain', 'loss');
             if (format === 'signed' && tone(str)) node.classList.add(tone(str));
             return node;
         }
-        function setMoney(id, str, format, field) { return markMoney($(id), str, format, field); }
-        function moneyEl(tag, className, str, format, field) { return markMoney(el(tag, className), str, format, field); }
+        function moneyEl(tag, className, str, format, field) { return markMoney(el(tag, className), str, format, 'data-field', field); }
+        function totalEl(tag, className, str, format, key) { return markMoney(el(tag, className), str, format, 'data-total', key); }
         function setText(id, text) { $(id).textContent = text; }
 
         // ---------- Routing: one panel at a time, driven by the URL hash ----------
-        // Each nav click is a normal hash link, so the browser's back/forward
-        // buttons walk through the sections you visited.
+        // "#bets?status=open" = panel "bets" with filter state after the "?".
+        // Section links are normal hash links, so back/forward walk the sections;
+        // filter changes replace the current entry instead of piling up history.
         var chartsDrawn = {};
         var dataReady = null;
 
-        function currentPanel() {
-            var name = (location.hash || '').replace('#', '');
-            return PANELS.indexOf(name) >= 0 ? name : 'overview';
+        function parseHash() {
+            var hash = (location.hash || '').replace(/^#/, '');
+            var split = hash.indexOf('?');
+            var name = split >= 0 ? hash.slice(0, split) : hash;
+            var query = split >= 0 ? hash.slice(split) : '';
+            if (name === 'open') return { name: 'bets', query: '?status=open' }; // old link
+            return { name: PANELS.indexOf(name) >= 0 ? name : 'overview', query: query };
         }
 
-        function showPanel(name) {
-            PANELS.forEach(function (panel) {
-                $('panel-' + panel).hidden = panel !== name;
-            });
+        function showPanel() {
+            var route = parseHash();
+            PANELS.forEach(function (panel) { $('panel-' + panel).hidden = panel !== route.name; });
             document.querySelectorAll('#nav a').forEach(function (link) {
-                if (link.dataset.panel === name) link.setAttribute('aria-current', 'page');
+                if (link.dataset.panel === route.name) link.setAttribute('aria-current', 'page');
                 else link.removeAttribute('aria-current');
             });
-            document.title = (name === 'overview' ? '' : $('panel-' + name).dataset.title + ' · ') + SITE_TITLE;
-            window.scrollTo(0, 0);
-            if (dataReady) drawChartsFor(name, dataReady);
+            $('content').classList.toggle('wide', route.name === 'bets');
+            document.title = (route.name === 'overview' ? '' : $('panel-' + route.name).dataset.title + ' · ') + SITE_TITLE;
+            closeNav();
+            if (dataReady) {
+                drawChartsFor(route.name, dataReady);
+                if (route.name === 'bets') renderBets(dataReady, Bets.parseState(route.query));
+            }
         }
 
-        window.addEventListener('hashchange', function () { showPanel(currentPanel()); });
+        var lastPanel = null;
+        window.addEventListener('hashchange', function () {
+            var name = parseHash().name;
+            if (name !== lastPanel) window.scrollTo(0, 0);
+            lastPanel = name;
+            showPanel();
+        });
+
+        // ---------- Menu drawer below 900px ----------
+        function closeNav() {
+            document.body.classList.remove('nav-open');
+            $('menuBtn').setAttribute('aria-expanded', 'false');
+        }
+        $('menuBtn').addEventListener('click', function () {
+            var open = !document.body.classList.contains('nav-open');
+            document.body.classList.toggle('nav-open', open);
+            $('menuBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        $('scrim').addEventListener('click', closeNav);
+        document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeNav(); });
 
         // Charts are drawn the first time their panel is visible (a hidden
         // canvas has no size to draw into).
@@ -661,9 +878,14 @@
             }));
             setText('sideSource', data.source === 'csv' ? 'from a CSV export' : 'live from Kalshi');
             setMoney('sideNet', s.net_pnl, 'signed', 'summary.net_pnl');
+            setMoney('topNet', s.net_pnl, 'signed', 'summary.net_pnl');
 
             setMoney('netPnl', s.net_pnl, 'signed', 'summary.net_pnl');
             setText('netNote', 'After all fees. Started with ' + plain(s.deposited) + ' + a ' + plain(s.credits) + ' bonus.');
+            if (s.open) {
+                $('openLink').hidden = false;
+                setText('openLinkText', s.open + ' open bet' + (s.open === 1 ? '' : 's') + ' →');
+            }
 
             setMoney('accountValue', s.account_value, 'plain', 'summary.account_value');
             setText('accountSub', plain(s.cash) + ' cash + ' + plain(s.open_value) + ' open');
@@ -680,7 +902,7 @@
             } else {
                 // A ratio, not money: the one rounded figure on the page, marked "≈".
                 setText('winRate', '≈' + s.win_rate_approx_pct + '%');
-                setText('winSub', s.wins + ' won / ' + s.losses + ' lost · ' + s.open + ' open');
+                setText('winSub', s.wins + ' profitable (' + s.won + ' won, ' + s.sold_profitable + ' sold early) · ' + s.losses + ' lost');
             }
 
             setText('betCount', String(s.bets));
@@ -702,11 +924,11 @@
             setText('makerLine', 'Your ' + fees.maker_fills + ' maker fills paid ' + plain(fees.maker_fees) + '.');
             if (fees.rounding && !isZeroStr(fees.rounding)) {
                 setText('roundingLine', 'Trading fees include ' + plain(fees.rounding) + ' of Kalshi rounding fees, less '
-                    + plain(fees.rebates) + ' of rebates. Kalshi keeps balances to whole cents and charges the leftover fraction of a cent on each fill.');
+                    + plain(fees.rebates) + ' of rebates.');
             }
             var FEE_SOURCES = {
                 csv_fee_column: 'Source: the fee column in Kalshi’s activity export.',
-                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API), plus Kalshi’s documented cent-rounding.'
+                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API).'
             };
             setText('feeSource', FEE_SOURCES[fees.source] || '');
 
@@ -717,15 +939,15 @@
                 + plain(s.deposit_fees) + ' deposit fee is already taken out. Kalshi’s profile P&L doesn’t subtract fees, so it reads higher. '
                 + 'The bonus counts as money in, not profit. Every amount is shown exactly as calculated, to the fraction of a cent; nothing is rounded.');
             setText('aboutWin',
-                'Win rate counts only finished bets: settled, or sold before settlement. Open positions don’t count either way.');
+                'Win rate counts only finished bets: settled, or sold before settlement. Open bets don’t count either way.');
             setText('aboutSource', data.source === 'csv'
                 ? 'Built from a Kalshi activity export (CSV). Bets that ran to settlement show as pending until the live sync runs.'
                 : 'Pulled from Kalshi’s Trade API every 6 hours by a GitHub Action. Before publishing, the numbers must reconcile exactly: '
-                  + 'deposits, bonus, bets and fees have to add up to Kalshi’s cash balance to the cent, or the update is skipped and the last good data stays up.');
+                  + 'deposits, bonus, bets and fees have to add up to Kalshi’s cash balance to the last digit, or the update is skipped and the last good data stays up.');
             setText('seriesNote', data.pnl_series_note || '');
         }
 
-        // ---------- Charts ----------
+        // ---------- Charts (Overview + Performance) ----------
         function baseChartOptions() {
             return {
                 responsive: true,
@@ -747,16 +969,13 @@
             };
         }
 
-        // Axis tick labels come from Chart.js's own scale (they are positions on
-        // the axis, not stored amounts), formatted with the same "$" rules.
+        // Axis tick labels come from Chart.js's own scale (positions on the axis,
+        // not stored amounts), formatted with the same "$" rules.
         function axisLabel(scale, value, index, ticks) {
             var text = String(Chart.Ticks.formatters.numeric.call(scale, value, index, ticks)).replace(/,/g, '');
             return signed(text);
         }
 
-        // Step chart: one point per day (same-day results already combined in
-        // data.json), held flat until the next day's step. Green fill above $0,
-        // red below, with a solid $0 baseline.
         function renderPnlChart(canvasId, data, small) {
             var series = data.pnl_series || [];
             if (!series.length) return;
@@ -816,7 +1035,6 @@
                         data: points,
                         stepped: true,
                         borderWidth: 2,
-                        // Each step's flat run sits at the previous day's total, so color by it.
                         segment: { borderColor: function (ctx) { return stepColor(points[ctx.p0DataIndex].row); } },
                         borderColor: COLORS.gain,
                         fill: { target: { value: 0 }, above: 'rgba(33, 201, 122, 0.16)', below: 'rgba(242, 85, 90, 0.18)' },
@@ -844,13 +1062,13 @@
         }
 
         function renderCategoryTable(data) {
-            var cats = (data.categories || []).filter(function (cat) { return cat.resolved > 0; });
             var body = $('catBody');
-            cats.forEach(function (cat) {
+            (data.categories || []).forEach(function (cat, index) {
+                if (!cat.resolved) return;
                 var tr = el('tr');
                 tr.appendChild(el('td', '', cat.name));
                 tr.appendChild(el('td', 'num', String(cat.resolved)));
-                tr.appendChild(moneyEl('td', 'num', cat.profit, 'signed', 'categories.' + data.categories.indexOf(cat) + '.profit'));
+                tr.appendChild(moneyEl('td', 'num', cat.profit, 'signed', 'categories.' + index + '.profit'));
                 body.appendChild(tr);
             });
             var foot = el('tr');
@@ -889,17 +1107,12 @@
                         callback: function (value, index, ticks) { return axisLabel(this, value, index, ticks); }
                     }
                 },
-                y: {
-                    grid: { display: false },
-                    border: { display: false },
-                    ticks: { color: COLORS.ink, font: { size: 12.5 } }
-                }
+                y: { grid: { display: false }, border: { display: false }, ticks: { color: COLORS.ink, font: { size: 12.5 } } }
             };
 
             new Chart($('catChart'), {
                 type: 'bar',
                 data: {
-                    // Direct labels: name + exact signed value, so color is never the only cue.
                     labels: cats.map(function (cat) { return cat.name + '  ' + signed(cat.profit); }),
                     datasets: [{
                         data: cats.map(function (cat) { return Number(cat.profit); }), // plot-coordinate
@@ -914,103 +1127,471 @@
             });
         }
 
-        // ---------- Tables ----------
-        // narrowText shows only on small screens, where its own column is hidden.
-        function betCell(bet, extraNodes, narrowText) {
-            var cell = el('td');
-            cell.appendChild(el('div', 'bet-title', bet.title));
-            var meta = el('div', 'bet-meta');
-            meta.appendChild(el('span', 'side-tag', bet.side.toUpperCase()));
-            if (narrowText) meta.appendChild(el('span', 'narrow-only', narrowText + ' · '));
-            meta.appendChild(document.createTextNode(bet.category));
-            extraNodes.forEach(function (node) {
-                meta.appendChild(document.createTextNode(' · '));
-                meta.appendChild(node);
+        // ---------- Bets page ----------
+        var betsState = null;
+
+        function setState(state) {
+            history.replaceState(null, '', '#bets' + Bets.stateToQuery(state));
+            renderBets(dataReady, state);
+        }
+
+        function startDate(data) {
+            var bets = data.bets || [];
+            return data.summary.started || (bets.length ? bets[bets.length - 1].event_date : localToday());
+        }
+
+        function renderBets(data, state) {
+            betsState = state;
+            var bets = data.bets || [];
+            var today = localToday();
+            var started = startDate(data);
+            var presetList = Bets.presets(today, started);
+            var rows = Bets.filterBets(bets, state);
+
+            renderRangeChips(presetList, state);
+            renderTimeline(bets, state, started, today);
+            setText('rangeLabel', Bets.rangeLabel(state, today, started, rows.length, presetList));
+            var reset = $('rangeReset');
+            reset.hidden = Bets.isAllTime(state);
+            reset.setAttribute('href', '#bets' + Bets.stateToQuery(Bets.resetRange(state)));
+            renderStatusFilter(bets, state);
+            renderCategoryFilter(bets, state);
+            renderBetsTable(bets, rows);
+        }
+
+        function renderRangeChips(presetList, state) {
+            var box = $('rangeChips');
+            box.textContent = '';
+            presetList.forEach(function (preset) {
+                var chip = el('button', 'chip', preset.label);
+                chip.type = 'button';
+                chip.dataset.range = preset.key;
+                var active = preset.key === 'all' ? Bets.isAllTime(state) : state.range === preset.key;
+                chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+                chip.addEventListener('click', function () { setState(Bets.withRange(state, preset)); });
+                box.appendChild(chip);
             });
-            cell.appendChild(meta);
-            return cell;
         }
 
-        function emptyRow(body, text, cols) {
-            var row = el('tr');
-            var cell = el('td', 'empty', text);
-            cell.colSpan = cols;
-            row.appendChild(cell);
-            body.appendChild(row);
+        function renderStatusFilter(bets, state) {
+            var counts = Bets.statusCounts(bets, state);
+            var box = $('statusFilter');
+            box.textContent = '';
+            ['all', 'open', 'won', 'lost', 'sold', 'pending'].forEach(function (status) {
+                if (status === 'pending' && !counts.pending) return;
+                var button = el('button', '', Bets.STATUS_LABELS[status]);
+                button.type = 'button';
+                button.dataset.status = status;
+                button.appendChild(el('span', 'count', String(counts[status])));
+                button.setAttribute('aria-pressed', state.status === status ? 'true' : 'false');
+                button.addEventListener('click', function () {
+                    setState({ status: status, cats: state.cats, from: state.from, to: state.to, range: state.range });
+                });
+                box.appendChild(button);
+            });
         }
 
-        function renderOpen(data) {
-            var body = $('openBody');
-            var rows = data.open_positions || [];
-            if (!rows.length) {
-                emptyRow(body, 'No open positions right now.', 4);
-                return;
+        function renderCategoryFilter(bets, state) {
+            var counts = Bets.categoryCounts(bets, state);
+            var box = $('catFilter');
+            box.textContent = '';
+            Bets.CATEGORY_ORDER.forEach(function (cat) {
+                var selected = state.cats.indexOf(cat) >= 0;
+                if (!counts[cat] && !selected) return;
+                var chip = el('button', 'chip', cat);
+                chip.type = 'button';
+                chip.dataset.cat = cat;
+                chip.appendChild(el('span', 'count', String(counts[cat] || 0)));
+                chip.setAttribute('aria-pressed', selected ? 'true' : 'false');
+                chip.addEventListener('click', function () {
+                    var cats = selected ? state.cats.filter(function (item) { return item !== cat; }) : state.cats.concat([cat]);
+                    setState({ status: state.status, cats: cats, from: state.from, to: state.to, range: state.range });
+                });
+                box.appendChild(chip);
+            });
+        }
+
+        // ---------- Journey timeline (SVG) ----------
+        function svg(tag, attrs) {
+            var node = document.createElementNS(SVG_NS, tag);
+            Object.keys(attrs || {}).forEach(function (key) { node.setAttribute(key, attrs[key]); });
+            return node;
+        }
+
+        function renderTimeline(bets, state, started, today) {
+            var box = $('timeline');
+            var wrap = $('timelineWrap');
+            var tip = $('timelineTip');
+            box.textContent = '';
+            tip.hidden = true;
+            var width = Math.max(320, wrap.clientWidth || 900); // layout
+            var height = box.clientHeight || 132;
+            var left = 16, right = 16, axisY = height - 30;
+            box.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+            var lastDay = today;
+            bets.forEach(function (bet) { if (bet.event_date > lastDay) lastDay = bet.event_date; });
+            var startMs = dayMs(started);
+            var span = Math.max(dayMs(lastDay) - startMs, 86400000); // layout
+            function xFor(iso) { return left + (dayMs(iso) - startMs) / span * (width - left - right); } // layout
+            function dayFor(x) {
+                var ms = startMs + (x - left) / (width - left - right) * span; // layout
+                return new Date(Math.min(Math.max(ms, startMs), startMs + span)).toISOString().slice(0, 10); // layout
             }
-            rows.forEach(function (bet, index) {
-                var row = el('tr');
-                var field = 'open_positions.' + index;
-                row.appendChild(betCell(bet, [el('span', '', 'opened ' + fmtDate(bet.date))], bet.contracts ? digits(bet.contracts) + ' contracts' : ''));
-                row.appendChild(el('td', 'num wide-only', bet.contracts ? digits(bet.contracts) : '—'));
-                row.appendChild(moneyEl('td', 'num', bet.cost, 'plain', field + '.cost'));
-                row.appendChild(moneyEl('td', 'num', bet.value, 'plain', field + '.value'));
-                body.appendChild(row);
-            });
-            // Totals are computed in Python (data.open_totals), never here.
-            var totals = data.open_totals || {};
-            var foot = el('tr');
-            var label = el('td', '', 'Total');
-            label.appendChild(el('div', 'bet-meta', 'at current bid'));
-            foot.appendChild(label);
-            foot.appendChild(el('td', 'num wide-only', ''));
-            foot.appendChild(moneyEl('td', 'num', totals.cost, 'plain', 'open_totals.cost'));
-            foot.appendChild(moneyEl('td', 'num', totals.value, 'plain', 'open_totals.value'));
-            $('openFoot').appendChild(foot);
 
-            setText('openNote', totals.value !== null && totals.value !== undefined
-                ? 'Value = contracts × the current bid for the side held. The Account value tile uses Kalshi’s own portfolio value ('
-                  + plain(data.summary.open_value) + '), which can differ by a few cents.'
-                : 'Per-position values arrive with the live API sync.');
+            // Axis with month ticks
+            box.appendChild(svg('line', { 'class': 'axis', x1: left, x2: width - right, y1: axisY, y2: axisY }));
+            var labelEvery = width < 600 ? 3 : 1;
+            var tickMonth = started.slice(0, 7) + '-01';
+            var count = 0;
+            while (tickMonth <= lastDay) {
+                if (tickMonth >= started) {
+                    var tickX = xFor(tickMonth);
+                    var tick = svg('g', { 'class': 'tick' });
+                    tick.appendChild(svg('line', { x1: tickX, x2: tickX, y1: axisY, y2: axisY + 4 }));
+                    if (count % labelEvery === 0) {
+                        var text = svg('text', { x: tickX, y: axisY + 16, 'text-anchor': 'middle' });
+                        text.textContent = MONTHS[Number(tickMonth.slice(5, 7)) - 1] + " '" + tickMonth.slice(2, 4); // date-part
+                        tick.appendChild(text);
+                    }
+                    box.appendChild(tick);
+                    count += 1;
+                }
+                tickMonth = Bets.addDays(tickMonth, 32).slice(0, 7) + '-01';
+            }
+            var startLabel = svg('text', { 'class': 'end-label', x: left, y: 12 });
+            startLabel.textContent = 'Started ' + fmtDate(started, true);
+            box.appendChild(startLabel);
+            var endLabel = svg('text', { 'class': 'end-label', x: width - right, y: 12, 'text-anchor': 'end' });
+            endLabel.textContent = 'Today';
+            box.appendChild(endLabel);
+
+            // Selected range
+            if (!Bets.isAllTime(state)) {
+                var fromX = xFor(state.from && state.from > started ? state.from : started);
+                var toX = xFor(state.to && state.to < lastDay ? state.to : lastDay);
+                box.appendChild(svg('rect', { 'class': 'brush', x: fromX, y: 18, width: Math.max(toX - fromX, 2), height: axisY - 18 })); // layout
+            }
+
+            // Dots: one per bet, stacked when they share a day.
+            var stackByDay = {};
+            bets.forEach(function (bet, betIndex) {
+                var level = stackByDay[bet.event_date] || 0;
+                stackByDay[bet.event_date] = level + 1;
+                var inView = Bets.filterBets([bet], state).length === 1;
+                var dot = svg('circle', {
+                    'class': 'dot ' + bet.outcome + (inView ? '' : ' dim'),
+                    cx: xFor(bet.event_date), cy: axisY - 11 - level * 12, r: 5, tabindex: 0,
+                    'aria-label': bet.title + ', ' + Bets.STATUS_LABELS[bet.outcome] + ', ' + signed(bet.profit)
+                });
+                dot.dataset.bet = String(betIndex);
+                dot.addEventListener('mouseenter', function () { showTip(bet, dot); });
+                dot.addEventListener('focus', function () { showTip(bet, dot); });
+                dot.addEventListener('mouseleave', function () { tip.hidden = true; });
+                dot.addEventListener('blur', function () { tip.hidden = true; });
+                box.appendChild(dot);
+            });
+
+            function showTip(bet, dot) {
+                tip.textContent = '';
+                tip.appendChild(el('div', 'tip-title', clip(bet.title, 44)));
+                tip.appendChild(el('div', tone(bet.profit), signed(bet.profit) + (bet.unrealized ? ' unrealized' : '')));
+                tip.appendChild(el('div', 'tip-sub', fmtDate(bet.event_date, true) + ' · ' + Bets.STATUS_LABELS[bet.outcome]));
+                var scale = wrap.clientWidth / width; // layout
+                tip.style.left = (Number(dot.getAttribute('cx')) * scale) + 'px'; // layout
+                tip.style.top = (Number(dot.getAttribute('cy')) * scale) + 'px'; // layout
+                tip.hidden = false;
+            }
+
+            // Brush: drag across the timeline to choose a date range.
+            var dragStart = null, dragRect = null;
+            function pointX(event) {
+                var bounds = box.getBoundingClientRect();
+                return (event.clientX - bounds.left) * width / bounds.width; // layout
+            }
+            box.onpointerdown = function (event) {
+                if (event.target.classList && event.target.classList.contains('dot')) return;
+                dragStart = pointX(event);
+                dragRect = svg('rect', { 'class': 'brush', x: dragStart, y: 18, width: 1, height: axisY - 18 });
+                box.appendChild(dragRect);
+                if (box.setPointerCapture) box.setPointerCapture(event.pointerId);
+            };
+            box.onpointermove = function (event) {
+                if (dragStart === null) return;
+                var now = pointX(event);
+                dragRect.setAttribute('x', Math.min(now, dragStart)); // layout
+                dragRect.setAttribute('width', Math.abs(now - dragStart)); // layout
+            };
+            box.onpointerup = function (event) {
+                if (dragStart === null) return;
+                var endX = pointX(event);
+                var startX = dragStart;
+                dragStart = null;
+                if (Math.abs(endX - startX) < 6) { renderTimeline(bets, state, started, today); return; } // layout
+                var from = dayFor(Math.min(startX, endX)); // layout
+                var to = dayFor(Math.max(startX, endX)); // layout
+                setState({ status: state.status, cats: state.cats, from: from, to: to, range: 'custom' });
+            };
         }
 
-        // Settled bets: green "Won" / red "Lost". Sold early: neutral "Sold",
-        // with the profit itself colored by sign.
-        function resultPill(bet) {
-            if (bet.status === 'sold') return el('span', 'pill', 'Sold');
-            if (bet.status === 'settled') return isNegStr(bet.profit) || isZeroStr(bet.profit) ? el('span', 'pill lost', 'Lost') : el('span', 'pill won', 'Won');
-            return el('span', 'pill', bet.status === 'pending' ? 'Pending API' : bet.status);
+        // ---------- The equation table ----------
+        function statusPill(bet) {
+            var labels = { won: 'Won', lost: 'Lost', sold: 'Sold', open: 'Open', pending: 'Pending API' };
+            var pill = el('span', 'pill ' + bet.outcome);
+            if (bet.outcome === 'open') pill.appendChild(el('span', 'pulse'));
+            pill.appendChild(document.createTextNode(labels[bet.outcome] || bet.outcome));
+            return pill;
         }
 
-        function renderRecent(data) {
-            var body = $('recentBody');
-            var bets = data.recent_bets || [];
-            var shown = 0;
-            bets.forEach(function (bet, index) {
-                if (bet.status !== 'settled' && bet.status !== 'sold') return;
-                shown += 1;
-                var field = 'recent_bets.' + index;
-                var row = el('tr');
-                row.dataset.row = field;
-                row.appendChild(betCell(bet, [el('span', '', 'fee '), moneyEl('span', '', bet.fee, 'plain', field + '.fee')],
-                    bet.resolved ? fmtDate(bet.resolved) : ''));
-                row.appendChild(el('td', 'wide-only', bet.resolved ? fmtDate(bet.resolved, true) : '—'));
-                row.appendChild(moneyEl('td', 'num', bet.cost, 'plain', field + '.cost'));
-                row.appendChild(moneyEl('td', 'num wide-only', bet.payout, 'plain', field + '.payout'));
-                var profitCell = el('td', 'num');
-                profitCell.appendChild(moneyEl('div', '', bet.profit, 'signed', field + '.profit'));
-                var pill = resultPill(bet);
-                pill.style.marginTop = '4px';
-                profitCell.appendChild(pill);
-                row.appendChild(profitCell);
-                body.appendChild(row);
+        function makerOnly(bet, action) {
+            var fills = bet.fills.filter(function (fill) { return fill.action === action; });
+            return fills.length > 0 && fills.every(function (fill) { return fill.liquidity === 'maker'; });
+        }
+
+        function betRows(bet, index) {
+            var field = 'bets.' + index;
+            var row = el('tr', 'bet-row');
+            row.dataset.row = field;
+            row.dataset.outcome = bet.outcome;
+
+            // Date (+ chevron)
+            var dateCell = el('td', 'date-cell zone-a');
+            var chev = el('button', 'chev', '▸');
+            chev.type = 'button';
+            chev.setAttribute('aria-expanded', 'false');
+            chev.setAttribute('aria-label', 'Show fills for ' + bet.title);
+            dateCell.appendChild(chev);
+            dateCell.appendChild(document.createTextNode(fmtDate(bet.event_date)));
+            if (bet.resolved && bet.resolved !== bet.date) dateCell.appendChild(el('div', 'bet-sub', 'placed ' + fmtDate(bet.date)));
+            if (!bet.resolved) dateCell.appendChild(el('div', 'bet-sub', 'placed'));
+            row.appendChild(dateCell);
+
+            // Bet
+            var betCell = el('td', 'bet-cell zone-a');
+            var title = el('div', 'bet-title', bet.title);
+            if (bet.kind === 'parlay') title.appendChild(el('span', 'tag', bet.tag || bet.category));
+            betCell.appendChild(title);
+            betCell.appendChild(el('div', 'bet-sub', bet.category + (bet.kind === 'parlay' ? ' · expand for legs' : '')));
+            row.appendChild(betCell);
+
+            var sideCell = el('td', 'zone-a');
+            sideCell.appendChild(el('span', 'side-tag', bet.side.toUpperCase()));
+            row.appendChild(sideCell);
+
+            var unitCell = el('td', 'num zone-a money-out', digits(bet.contracts));
+            unitCell.appendChild(el('span', 'times', '×'));
+            if (bet.price !== null && bet.price !== undefined) {
+                unitCell.appendChild(moneyEl('span', '', bet.price, 'plain', field + '.price'));
+            } else {
+                var mixed = el('span', 'mixed', 'mixed');
+                mixed.title = 'Bought at more than one price; expand the row to see each fill.';
+                unitCell.appendChild(mixed);
+            }
+            row.appendChild(unitCell);
+            row.appendChild(moneyEl('td', 'num zone-a money-out eq', bet.stake, 'plain', field + '.stake'));
+            row.appendChild(moneyEl('td', 'num zone-a fee', bet.buy_fees, makerOnly(bet, 'buy') ? 'fee-plus-maker' : 'fee-plus', field + '.buy_fees'));
+            row.appendChild(moneyEl('td', 'num zone-a money-out eq', bet.cost, 'plain', field + '.cost'));
+
+            // Zone B
+            var live = bet.unrealized;
+            var payoutCell = el('td', 'num back zone-start' + (live ? ' live' : ''));
+            payoutCell.appendChild(moneyEl('span', '', bet.payout, 'plain', field + '.payout'));
+            if (live && bet.payout !== null) payoutCell.appendChild(el('span', 'live-tag', 'live'));
+            row.appendChild(payoutCell);
+            row.appendChild(moneyEl('td', 'num fee' + (live ? ' live' : ''), bet.sell_fees, makerOnly(bet, 'sell') ? 'fee-minus-maker' : 'fee-minus', field + '.sell_fees'));
+            row.appendChild(moneyEl('td', 'num back eq' + (live ? ' live' : ''), bet.net_payout, 'plain', field + '.net_payout'));
+
+            // Zone C
+            var profitCell = el('td', 'num profit eq zone-start ' + tone(bet.profit) + (live ? ' unreal' : ''));
+            if (live) profitCell.title = 'Unrealized: what this bet would make if sold now at the current bid';
+            profitCell.appendChild(moneyEl('span', '', bet.profit, 'signed', field + '.profit'));
+            row.appendChild(profitCell);
+            var statusCell = el('td', 'zone-c');
+            statusCell.appendChild(statusPill(bet));
+            row.appendChild(statusCell);
+
+            var detail = detailRow(bet, index);
+            chev.addEventListener('click', function () {
+                var open = detail.hidden;
+                detail.hidden = !open;
+                chev.setAttribute('aria-expanded', open ? 'true' : 'false');
             });
-            if (!shown) emptyRow(body, 'No finished bets yet.', 5);
-            if (data.summary.pending) {
-                setText('pendingNote', data.summary.pending + ' more bets have finished but their payouts aren’t in the data yet. They appear once the live Kalshi sync runs.');
+            return [row, detail];
+        }
+
+        function feeFormat(fill) {
+            var base = fill.action === 'buy' ? 'fee-plus' : 'fee-minus';
+            return fill.liquidity === 'maker' ? base + '-maker' : base;
+        }
+
+        function detailRow(bet, index) {
+            var field = 'bets.' + index;
+            var row = el('tr', 'detail-row');
+            row.hidden = true;
+            row.dataset.detail = field;
+            var cell = el('td');
+            cell.colSpan = 12;
+
+            var table = el('table', 'fills');
+            var thead = el('thead');
+            var head = el('tr');
+            ['When', 'Action', 'Contracts', 'Price', 'Amount', 'Fee', 'Liquidity'].forEach(function (name, col) {
+                head.appendChild(el('th', col >= 2 && col <= 5 ? 'num' : '', name));
+            });
+            thead.appendChild(head);
+            table.appendChild(thead);
+            var body = el('tbody');
+            bet.fills.forEach(function (fill, fillIndex) {
+                var tr = el('tr');
+                var key = field + '.fills.' + fillIndex;
+                tr.dataset.fill = key;
+                tr.dataset.action = fill.action;
+                var when = new Date(fill.time);
+                tr.appendChild(el('td', '', when.toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })));
+                tr.appendChild(el('td', '', fill.action === 'buy' ? 'Buy' : 'Sell'));
+                tr.appendChild(el('td', 'num', digits(fill.contracts)));
+                tr.appendChild(moneyEl('td', 'num', fill.price, 'plain', key + '.price'));
+                tr.appendChild(moneyEl('td', 'num', fill.amount, 'plain', key + '.amount'));
+                tr.appendChild(moneyEl('td', 'num', fill.fee, feeFormat(fill), key + '.fee'));
+                tr.appendChild(el('td', '', fill.liquidity === 'maker' ? 'Maker' : 'Taker'));
+                body.appendChild(tr);
+            });
+            if (bet.settlement) {
+                var settle = el('tr');
+                settle.dataset.fill = field + '.settlement';
+                settle.dataset.action = 'settlement';
+                settle.appendChild(el('td', '', bet.resolved ? fmtDate(bet.resolved, true) : ''));
+                settle.appendChild(el('td', '', 'Settled'));
+                settle.appendChild(el('td', 'num', digits(bet.settlement.contracts)));
+                settle.appendChild(moneyEl('td', 'num', bet.settlement.per_contract, 'plain', field + '.settlement.per_contract'));
+                settle.appendChild(moneyEl('td', 'num', bet.settlement.amount, 'plain', field + '.settlement.amount'));
+                settle.appendChild(el('td', 'num', '—'));
+                settle.appendChild(el('td', '', 'Payout'));
+                body.appendChild(settle);
+            }
+            if (bet.live) {
+                var liveRow = el('tr');
+                liveRow.dataset.fill = field + '.live';
+                liveRow.dataset.action = 'live';
+                liveRow.appendChild(el('td', '', 'If sold now'));
+                liveRow.appendChild(el('td', '', 'Current bid'));
+                liveRow.appendChild(el('td', 'num', digits(bet.live.contracts)));
+                liveRow.appendChild(moneyEl('td', 'num', bet.live.bid, 'plain', field + '.live.bid'));
+                liveRow.appendChild(moneyEl('td', 'num', bet.live.amount, 'plain', field + '.live.amount'));
+                liveRow.appendChild(el('td', 'num', '—'));
+                liveRow.appendChild(el('td', '', 'Live'));
+                body.appendChild(liveRow);
+            }
+            table.appendChild(body);
+            cell.appendChild(table);
+
+            cell.appendChild(el('p', 'detail-sum',
+                'Buy fills add up to the stake (' + plain(bet.stake) + ') and buy fees (' + plain(bet.buy_fees) + '). '
+                + 'Sell fills' + (bet.settlement ? ' and the settlement' : '') + (bet.live ? ' and the current bid' : '')
+                + ' add up to the payout (' + plain(bet.payout) + ') and sell fees (' + plain(bet.sell_fees) + ').'));
+
+            if (bet.legs && bet.legs.length) {
+                var list = el('ul', 'legs');
+                list.dataset.legs = field;
+                bet.legs.forEach(function (leg) {
+                    var item = el('li');
+                    item.dataset.leg = leg.result;
+                    var mark = { hit: '✓', missed: '✗', unknown: '?' }[leg.result] || '?';
+                    item.appendChild(el('span', leg.result, mark + ' '));
+                    item.appendChild(document.createTextNode(leg.name + ' (' + leg.side + '): '
+                        + ({ hit: 'hit', missed: 'missed', unknown: 'result unknown' }[leg.result] || leg.result)));
+                    if (leg.result === 'missed') item.appendChild(el('span', 'bust', 'busted the parlay'));
+                    list.appendChild(item);
+                });
+                cell.appendChild(list);
+                cell.appendChild(el('div', 'leg-note', 'All legs must hit to win.'));
+            }
+            row.appendChild(cell);
+            return row;
+        }
+
+        function groupRow(label, totals, key, isOpen) {
+            var row = el('tr', 'group-row');
+            row.dataset.group = key;
+            var head = el('td');
+            head.colSpan = 10;
+            var labelBox = el('span', 'group-label');
+            if (isOpen) labelBox.appendChild(el('span', 'pulse'));
+            labelBox.appendChild(document.createTextNode(label + ' · ' + totals.count + ' bet' + (totals.count === 1 ? '' : 's')));
+            head.appendChild(labelBox);
+            row.appendChild(head);
+            var profit = el('td', 'num ' + tone(totals.profit));
+            profit.appendChild(totalEl('span', '', totals.profit, 'signed', key + '.profit'));
+            row.appendChild(profit);
+            row.appendChild(el('td', 'bet-sub', isOpen ? 'unrealized' : ''));
+            return row;
+        }
+
+        function renderBetsTable(bets, rows) {
+            var body = $('betsBody');
+            var foot = $('betsFoot');
+            body.textContent = '';
+            foot.textContent = '';
+            if (!rows.length) {
+                var empty = el('tr');
+                var cell = el('td', 'empty', 'No bets match these filters.');
+                cell.colSpan = 12;
+                empty.appendChild(cell);
+                body.appendChild(empty);
+            }
+            var groups = Bets.groupRows(rows);
+            if (groups.open.rows.length) {
+                body.appendChild(groupRow('Open now', groups.open.totals, 'open', true));
+                groups.open.rows.forEach(function (bet) {
+                    betRows(bet, bets.indexOf(bet)).forEach(function (node) { body.appendChild(node); });
+                });
+            }
+            groups.months.forEach(function (month) {
+                body.appendChild(groupRow(month.label, month.totals, 'month.' + month.key, false));
+                month.rows.forEach(function (bet) {
+                    betRows(bet, bets.indexOf(bet)).forEach(function (node) { body.appendChild(node); });
+                });
+            });
+
+            // Sticky footer: exact totals for the current filter (summed by Exact).
+            var totals = Bets.totals(rows);
+            var row = el('tr');
+            row.dataset.footer = 'true';
+            var label = el('td', 'zone-a', 'Σ ' + rows.length + ' bet' + (rows.length === 1 ? '' : 's') + ' shown');
+            label.colSpan = 4;
+            row.appendChild(label);
+            row.appendChild(totalEl('td', 'num eq', totals.stake, 'plain', 'footer.stake'));
+            row.appendChild(totalEl('td', 'num fee', totals.buy_fees, 'fee-plus', 'footer.buy_fees'));
+            row.appendChild(totalEl('td', 'num eq', totals.cost, 'plain', 'footer.cost'));
+            row.appendChild(totalEl('td', 'num back zone-start', totals.payout, 'plain', 'footer.payout'));
+            row.appendChild(totalEl('td', 'num fee', totals.sell_fees, 'fee-minus', 'footer.sell_fees'));
+            row.appendChild(totalEl('td', 'num back eq', totals.net_payout, 'plain', 'footer.net_payout'));
+            var profit = el('td', 'num profit eq zone-start ' + tone(totals.profit));
+            profit.appendChild(totalEl('span', '', totals.profit, 'signed', 'footer.profit'));
+            row.appendChild(profit);
+            row.appendChild(el('td'));
+            foot.appendChild(row);
+
+            var note = $('unvaluedNote');
+            note.hidden = !totals.unvalued;
+            if (totals.unvalued) {
+                note.textContent = totals.unvalued + ' open bet' + (totals.unvalued === 1 ? ' has' : 's have')
+                    + ' no current bid, so the payout and profit totals leave it out.';
             }
         }
 
         // ---------- Boot ----------
-        showPanel(currentPanel());
+        lastPanel = parseHash().name;
+        showPanel();
+
+        var resizeTimer = null;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                if (dataReady && betsState && parseHash().name === 'bets') {
+                    renderTimeline(dataReady.bets, betsState, startDate(dataReady), localToday());
+                }
+            }, 150);
+        });
 
         fetch('data.json', { cache: 'no-store' })
             .then(function (resp) {
@@ -1019,13 +1600,11 @@
             })
             .then(function (data) {
                 renderSummary(data);
-                renderOpen(data);
-                renderRecent(data);
                 renderSeriesTable(data);
                 renderCategoryTable(data);
                 dataReady = data;
+                showPanel();
                 document.body.dataset.rendered = 'true';
-                drawChartsFor(currentPanel(), data);
             })
             .catch(function (err) {
                 setText('sideUpdated', '');
