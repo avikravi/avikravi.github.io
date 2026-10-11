@@ -14,7 +14,13 @@
     "deposit_fees": "0.2",
     "total_fees": "3.49498",
     "realized_pnl": "0.8826",
+    "unrealized_pnl": "-0.5233",
+    "started": "2025-12-02",
     "bets": 17,
+    "won": 5,
+    "lost": 5,
+    "sold": 4,
+    "sold_profitable": 4,
     "resolved": 14,
     "wins": 9,
     "losses": 5,
@@ -26,7 +32,7 @@
       "profit": "12.2847"
     },
     "worst_bet": {
-      "title": "WC Parlay: Ivory Coast, Germany, Nether\u2026",
+      "title": "Parlay \u00b7 3 legs",
       "profit": "-7.5753"
     }
   },
@@ -128,7 +134,7 @@
       "pnl": "5.0094",
       "items": [
         {
-          "label": "WC Parlay: Ivory Coast, Germany, Nether\u2026",
+          "label": "Parlay \u00b7 3 legs",
           "amount": "-7.5753"
         }
       ]
@@ -261,208 +267,768 @@
       "pending": 0
     }
   ],
-  "open_positions": [
+  "bets": [
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-10-10",
-      "title": "Denzel Boston: 60+ receiving yards",
-      "side": "No",
-      "contracts": "5.33",
-      "cost": "3.4972",
-      "value": "3.3579",
-      "category": "NFL"
-    },
-    {
-      "date": "2026-10-10",
+      "resolved": null,
+      "event_date": "2026-10-10",
       "title": "Romeo Doubs: 40+ receiving yards",
       "side": "No",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
       "contracts": "5.1",
+      "remaining": "5.1",
+      "price": "0.41",
+      "stake": "2.091",
+      "buy_fees": "0.0864",
       "cost": "2.1774",
-      "value": "2.04",
-      "category": "NFL"
+      "payout": "1.989",
+      "sell_fees": "0",
+      "net_payout": "1.989",
+      "profit": "-0.1884",
+      "fills": [
+        {
+          "time": "2026-10-11T03:22:26Z",
+          "action": "buy",
+          "contracts": "5.1",
+          "price": "0.41",
+          "amount": "2.091",
+          "fee": "0.0864",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "5.1",
+        "bid": "0.39",
+        "amount": "1.989"
+      },
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-10-10",
+      "resolved": null,
+      "event_date": "2026-10-10",
       "title": "Matthew Golden: 40+ receiving yards",
       "side": "No",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
       "contracts": "5.8",
+      "remaining": "5.8",
+      "price": null,
+      "stake": "1.904",
+      "buy_fees": "0.0896",
       "cost": "1.9936",
-      "value": "1.798",
-      "category": "NFL"
-    }
-  ],
-  "open_totals": {
-    "cost": "7.6682",
-    "value": "7.1959"
-  },
-  "recent_bets": [
+      "payout": "1.798",
+      "sell_fees": "0",
+      "net_payout": "1.798",
+      "profit": "-0.1956",
+      "fills": [
+        {
+          "time": "2026-10-11T03:24:22Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.32",
+          "amount": "0.32",
+          "fee": "0.0153",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-10-11T03:24:22Z",
+          "action": "buy",
+          "contracts": "4.8",
+          "price": "0.33",
+          "amount": "1.584",
+          "fee": "0.0743",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "5.8",
+        "bid": "0.31",
+        "amount": "1.798"
+      },
+      "legs": []
+    },
     {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-10",
+      "resolved": null,
+      "event_date": "2026-10-10",
+      "title": "Denzel Boston: 60+ receiving yards",
+      "side": "No",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
+      "contracts": "5.33",
+      "remaining": "5.33",
+      "price": "0.64",
+      "stake": "3.4112",
+      "buy_fees": "0.086",
+      "cost": "3.4972",
+      "payout": "3.3579",
+      "sell_fees": "0",
+      "net_payout": "3.3579",
+      "profit": "-0.1393",
+      "fills": [
+        {
+          "time": "2026-10-11T03:19:28Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.64",
+          "amount": "0.64",
+          "fee": "0.0162",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-10-11T03:19:28Z",
+          "action": "buy",
+          "contracts": "4.33",
+          "price": "0.64",
+          "amount": "2.7712",
+          "fee": "0.0698",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "5.33",
+        "bid": "0.63",
+        "amount": "3.3579"
+      },
+      "legs": []
+    },
+    {
+      "kind": "single",
+      "tag": null,
       "date": "2026-09-27",
       "resolved": "2026-09-27",
+      "event_date": "2026-09-27",
       "title": "Texans vs Colts: Texans win",
       "side": "Yes",
+      "category": "NFL",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "16.42",
+      "remaining": null,
+      "price": "0.29",
+      "stake": "4.7618",
+      "buy_fees": "0.2367",
       "cost": "4.9985",
       "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
       "profit": "-4.9985",
-      "fee": "0.2367",
-      "category": "NFL",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-09-27T18:31:47Z",
+          "action": "buy",
+          "contracts": "16.42",
+          "price": "0.29",
+          "amount": "4.7618",
+          "fee": "0.2367",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "16.42",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-09-24",
       "resolved": "2026-09-26",
+      "event_date": "2026-09-26",
       "title": "Andrea Kimi Antonelli to finish in first",
       "side": "Yes",
+      "category": "F1",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "7.32",
+      "remaining": null,
+      "price": "0.42",
+      "stake": "3.0744",
+      "buy_fees": "0.1249",
       "cost": "3.1993",
       "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
       "profit": "-3.1993",
-      "fee": "0.1249",
-      "category": "F1",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-09-24T17:23:26Z",
+          "action": "buy",
+          "contracts": "7.32",
+          "price": "0.42",
+          "amount": "3.0744",
+          "fee": "0.1249",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "7.32",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-09-24",
       "resolved": "2026-09-24",
+      "event_date": "2026-09-24",
       "title": "Packers vs Falcons: Packers win",
       "side": "Yes",
+      "category": "NFL",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "1.39",
+      "remaining": null,
+      "price": "0.7",
+      "stake": "0.973",
+      "buy_fees": "0.0205",
       "cost": "0.9935",
       "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
       "profit": "-0.9935",
-      "fee": "0.0205",
-      "category": "NFL",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-09-24T17:25:47Z",
+          "action": "buy",
+          "contracts": "1.39",
+          "price": "0.7",
+          "amount": "0.973",
+          "fee": "0.0205",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "1.39",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-09-24",
       "resolved": "2026-09-24",
-      "title": "Bijan Robinson: 1+ touchdowns",
-      "side": "Yes",
-      "cost": "1.997",
-      "payout": "3.4848",
-      "profit": "1.4878",
-      "fee": "0.061",
-      "category": "NFL",
-      "status": "sold"
-    },
-    {
-      "date": "2026-09-24",
-      "resolved": "2026-09-24",
+      "event_date": "2026-09-24",
       "title": "Michael Penix Jr.: 275+ passing yards",
       "side": "No",
+      "category": "NFL",
+      "status": "sold",
+      "outcome": "sold",
+      "unrealized": false,
+      "contracts": "1.2",
+      "remaining": null,
+      "price": "0.83",
+      "stake": "0.996",
+      "buy_fees": "0.0119",
       "cost": "1.0079",
       "payout": "1.188",
+      "sell_fees": "0",
+      "net_payout": "1.188",
       "profit": "0.1801",
-      "fee": "0.0119",
-      "category": "NFL",
-      "status": "sold"
+      "fills": [
+        {
+          "time": "2026-09-25T00:24:25Z",
+          "action": "buy",
+          "contracts": "1.2",
+          "price": "0.83",
+          "amount": "0.996",
+          "fee": "0.0119",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-09-25T02:03:16Z",
+          "action": "sell",
+          "contracts": "1.2",
+          "price": "0.99",
+          "amount": "1.188",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-09-24",
+      "resolved": "2026-09-24",
+      "event_date": "2026-09-24",
+      "title": "Bijan Robinson: 1+ touchdowns",
+      "side": "Yes",
+      "category": "NFL",
+      "status": "sold",
+      "outcome": "sold",
+      "unrealized": false,
+      "contracts": "3.52",
+      "remaining": null,
+      "price": "0.55",
+      "stake": "1.936",
+      "buy_fees": "0.061",
+      "cost": "1.997",
+      "payout": "3.4848",
+      "sell_fees": "0",
+      "net_payout": "3.4848",
+      "profit": "1.4878",
+      "fills": [
+        {
+          "time": "2026-09-25T00:23:26Z",
+          "action": "buy",
+          "contracts": "3.52",
+          "price": "0.55",
+          "amount": "1.936",
+          "fee": "0.061",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-09-25T00:51:00Z",
+          "action": "sell",
+          "contracts": "3.52",
+          "price": "0.99",
+          "amount": "3.4848",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": null,
+      "legs": []
+    },
+    {
+      "kind": "single",
+      "tag": null,
       "date": "2026-07-01",
       "resolved": "2026-07-01",
+      "event_date": "2026-07-01",
       "title": "USA vs Bosnia: USA advances",
       "side": "Yes",
+      "category": "Soccer",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "1.29",
+      "remaining": null,
+      "price": "0.84",
+      "stake": "1.0836",
+      "buy_fees": "0.0122",
       "cost": "1.0958",
       "payout": "1.29",
+      "sell_fees": "0",
+      "net_payout": "1.29",
       "profit": "0.1942",
-      "fee": "0.0122",
-      "category": "Soccer",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-07-01T14:38:44Z",
+          "action": "buy",
+          "contracts": "1.29",
+          "price": "0.84",
+          "amount": "1.0836",
+          "fee": "0.0122",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "1.29",
+        "per_contract": "1",
+        "amount": "1.29"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-06-30",
       "resolved": "2026-06-30",
-      "title": "Bitcoin $58,500+ on Jun 30, 2026",
-      "side": "Yes",
-      "cost": "9.8759",
-      "payout": "12.32",
-      "profit": "2.4441",
-      "fee": "0.1431",
-      "category": "Crypto",
-      "status": "settled"
-    },
-    {
-      "date": "2026-06-30",
-      "resolved": "2026-06-30",
+      "event_date": "2026-06-30",
       "title": "Mexico vs Ecuador: Mexico advances",
       "side": "Yes",
+      "category": "Soccer",
+      "status": "sold",
+      "outcome": "sold",
+      "unrealized": false,
+      "contracts": "1.9",
+      "remaining": null,
+      "price": "0.64",
+      "stake": "1.216",
+      "buy_fees": "0.0307",
       "cost": "1.2467",
       "payout": "1.805",
+      "sell_fees": "0",
+      "net_payout": "1.805",
       "profit": "0.5583",
-      "fee": "0.0307",
-      "category": "Soccer",
-      "status": "sold"
+      "fills": [
+        {
+          "time": "2026-07-01T01:34:11Z",
+          "action": "buy",
+          "contracts": "1.9",
+          "price": "0.64",
+          "amount": "1.216",
+          "fee": "0.0307",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-07-01T02:32:19Z",
+          "action": "sell",
+          "contracts": "1.9",
+          "price": "0.95",
+          "amount": "1.805",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-06-30",
+      "resolved": "2026-06-30",
+      "event_date": "2026-06-30",
+      "title": "Bitcoin $58,500+ on Jun 30, 2026",
+      "side": "Yes",
+      "category": "Crypto",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "12.32",
+      "remaining": null,
+      "price": "0.79",
+      "stake": "9.7328",
+      "buy_fees": "0.1431",
+      "cost": "9.8759",
+      "payout": "12.32",
+      "sell_fees": "0",
+      "net_payout": "12.32",
+      "profit": "2.4441",
+      "fills": [
+        {
+          "time": "2026-06-30T22:49:54Z",
+          "action": "buy",
+          "contracts": "12.32",
+          "price": "0.79",
+          "amount": "9.7328",
+          "fee": "0.1431",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "12.32",
+        "per_contract": "1",
+        "amount": "12.32"
+      },
+      "live": null,
+      "legs": []
+    },
+    {
+      "kind": "parlay",
+      "tag": "WC",
       "date": "2026-06-25",
       "resolved": "2026-06-25",
-      "title": "WC Parlay: Ivory Coast, Germany, Nether\u2026",
+      "event_date": "2026-06-25",
+      "title": "Parlay \u00b7 3 legs",
       "side": "Yes",
+      "category": "Soccer",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "15.67",
+      "remaining": null,
+      "price": "0.466",
+      "stake": "7.30222",
+      "buy_fees": "0.27308",
       "cost": "7.5753",
       "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
       "profit": "-7.5753",
-      "fee": "0.27308",
-      "category": "Soccer",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-06-25T14:57:03Z",
+          "action": "buy",
+          "contracts": "15.67",
+          "price": "0.466",
+          "amount": "7.30222",
+          "fee": "0.27308",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "15.67",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": [
+        {
+          "name": "Ivory Coast",
+          "side": "Yes",
+          "result": "hit"
+        },
+        {
+          "name": "Germany",
+          "side": "Yes",
+          "result": "missed"
+        },
+        {
+          "name": "Netherlands",
+          "side": "Yes",
+          "result": "hit"
+        }
+      ]
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-01-22",
       "resolved": "2026-06-18",
+      "event_date": "2026-06-18",
       "title": "Canada wins WC Group B",
       "side": "Yes",
-      "cost": "10.99",
-      "payout": "23.2747",
-      "profit": "12.2847",
-      "fee": "1.7753",
       "category": "Soccer",
-      "status": "sold"
+      "status": "sold",
+      "outcome": "sold",
+      "unrealized": false,
+      "contracts": "74",
+      "remaining": null,
+      "price": "0.14",
+      "stake": "10.36",
+      "buy_fees": "0.63",
+      "cost": "10.99",
+      "payout": "24.42",
+      "sell_fees": "1.1453",
+      "net_payout": "23.2747",
+      "profit": "12.2847",
+      "fills": [
+        {
+          "time": "2026-01-22T07:15:41Z",
+          "action": "buy",
+          "contracts": "64",
+          "price": "0.14",
+          "amount": "8.96",
+          "fee": "0.54",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-01-22T07:15:41Z",
+          "action": "buy",
+          "contracts": "10",
+          "price": "0.14",
+          "amount": "1.4",
+          "fee": "0.09",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-06-18T17:47:35Z",
+          "action": "sell",
+          "contracts": "74",
+          "price": "0.33",
+          "amount": "24.42",
+          "fee": "1.1453",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": null,
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-05-06",
       "resolved": "2026-05-06",
+      "event_date": "2026-05-06",
       "title": "Jaden McDaniels: 10+ points",
       "side": "Yes",
+      "category": "NBA",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "6.02",
+      "remaining": null,
+      "price": "0.82",
+      "stake": "4.9364",
+      "buy_fees": "0.0636",
       "cost": "5",
       "payout": "6.02",
+      "sell_fees": "0",
+      "net_payout": "6.02",
       "profit": "1.02",
-      "fee": "0.0636",
-      "category": "NBA",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-05-06T23:28:42Z",
+          "action": "buy",
+          "contracts": "6.02",
+          "price": "0.82",
+          "amount": "4.9364",
+          "fee": "0.0636",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "6.02",
+        "per_contract": "1",
+        "amount": "6.02"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-02-04",
       "resolved": "2026-02-04",
+      "event_date": "2026-02-04",
       "title": "Boston at Houston Winner?",
       "side": "Yes",
+      "category": "NBA",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "6",
+      "remaining": null,
+      "price": "0.7",
+      "stake": "4.2",
+      "buy_fees": "0.09",
       "cost": "4.29",
       "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
       "profit": "-4.29",
-      "fee": "0.09",
-      "category": "NBA",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-02-05T00:00:04Z",
+          "action": "buy",
+          "contracts": "6",
+          "price": "0.7",
+          "amount": "4.2",
+          "fee": "0.09",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "6",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2026-02-03",
       "resolved": "2026-02-03",
+      "event_date": "2026-02-03",
       "title": "Nevada at Boise St. Winner?",
       "side": "Yes",
+      "category": "College",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "6",
+      "remaining": null,
+      "price": "0.71",
+      "stake": "4.26",
+      "buy_fees": "0.09",
       "cost": "4.35",
       "payout": "6",
+      "sell_fees": "0",
+      "net_payout": "6",
       "profit": "1.65",
-      "fee": "0.09",
-      "category": "College",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2026-02-04T00:40:23Z",
+          "action": "buy",
+          "contracts": "6",
+          "price": "0.71",
+          "amount": "4.26",
+          "fee": "0.09",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "6",
+        "per_contract": "1",
+        "amount": "6"
+      },
+      "live": null,
+      "legs": []
     },
     {
+      "kind": "single",
+      "tag": null,
       "date": "2025-12-02",
       "resolved": "2025-12-24",
+      "event_date": "2025-12-24",
       "title": "Honduras president: Nasry Asfura",
       "side": "Yes",
+      "category": "Politics",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "6",
+      "remaining": null,
+      "price": "0.63",
+      "stake": "3.78",
+      "buy_fees": "0.1",
       "cost": "3.88",
       "payout": "6",
+      "sell_fees": "0",
+      "net_payout": "6",
       "profit": "2.12",
-      "fee": "0.1",
-      "category": "Politics",
-      "status": "settled"
+      "fills": [
+        {
+          "time": "2025-12-03T00:00:23Z",
+          "action": "buy",
+          "contracts": "6",
+          "price": "0.63",
+          "amount": "3.78",
+          "fee": "0.1",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "6",
+        "per_contract": "1",
+        "amount": "6"
+      },
+      "live": null,
+      "legs": []
     }
   ],
-  "updated": "2026-10-11T06:20:23Z"
+  "max_decimal_places": 5,
+  "updated": "2026-10-11T07:47:26Z"
 }
