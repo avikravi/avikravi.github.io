@@ -1,10 +1,10 @@
 {
   "source": "api",
   "summary": {
-    "net_pnl": "0.2144",
-    "account_value": "35.2144",
+    "net_pnl": "0.1544",
+    "account_value": "35.1544",
     "cash": "28.0144",
-    "open_value": "7.2",
+    "open_value": "7.14",
     "deposited": "10",
     "credits": "25",
     "credit_reasons": [
@@ -208,12 +208,12 @@
     },
     {
       "date": "2026-10-11",
-      "day": "-0.4682",
-      "pnl": "0.2144",
+      "day": "-0.5282",
+      "pnl": "0.1544",
       "items": [
         {
           "label": "Open positions (marked at Kalshi's value)",
-          "amount": "-0.4682"
+          "amount": "-0.5282"
         }
       ]
     }
@@ -1030,5 +1030,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-11T07:47:26Z"
+  "updated": "2026-10-11T16:18:34Z"
 }
