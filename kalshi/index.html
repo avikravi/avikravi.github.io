@@ -317,8 +317,8 @@
         table.bets td.fee { color: var(--fee); }
         table.bets td.back { color: var(--back); }
         table.bets td.live { font-style: italic; }
-        .live-tag { font-style: normal; font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-            color: var(--back); border: 1px solid var(--back); border-radius: 4px; padding: 0 3px; margin-left: 4px; vertical-align: 1px; }
+        .live-tag { font-style: normal; font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+            color: var(--back); border: 1px solid var(--back); border-radius: 4px; padding: 0 2px; margin-left: 3px; vertical-align: 1px; }
         table.bets td.profit.gain { color: var(--gain); }
         table.bets td.profit.loss { color: var(--loss); }
         table.bets td.profit.unreal { font-weight: 600; }
@@ -329,6 +329,9 @@
         table.bets .bet-title { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
         table.bets .bet-sub { color: var(--ink-faint); font-size: 11.5px; margin-top: 2px; font-weight: 400; }
         table.bets .date-cell { white-space: nowrap; }
+        table.bets .date-cell .bet-sub { font-size: 10.5px; }
+        /* Safety net: if a long amount ever makes the table wider than its card, scroll inside the card. */
+        .bets-scroll.too-wide { overflow-x: auto; }
         .chev {
             appearance: none; border: 0; background: transparent; color: var(--ink-faint); cursor: pointer; padding: 0 5px 0 0;
             font-size: 12px; line-height: 1; vertical-align: 1px; transition: transform 0.15s;
@@ -1571,12 +1574,22 @@
             row.appendChild(el('td'));
             foot.appendChild(row);
 
+            fitTable();
+
             var note = $('unvaluedNote');
             note.hidden = !totals.unvalued;
             if (totals.unvalued) {
                 note.textContent = totals.unvalued + ' open bet' + (totals.unvalued === 1 ? ' has' : 's have')
                     + ' no current bid, so the payout and profit totals leave it out.';
             }
+        }
+
+        // Keep the footer sticky (needs no scroll container) whenever the table fits;
+        // only if it doesn't, let the card scroll sideways instead of spilling.
+        function fitTable() {
+            var box = document.querySelector('.bets-scroll');
+            box.classList.remove('too-wide');
+            if ($('betsTable').scrollWidth > box.clientWidth + 1) box.classList.add('too-wide'); // layout
         }
 
         // ---------- Boot ----------
@@ -1589,6 +1602,7 @@
             resizeTimer = setTimeout(function () {
                 if (dataReady && betsState && parseHash().name === 'bets') {
                     renderTimeline(dataReady.bets, betsState, startDate(dataReady), localToday());
+                    fitTable();
                 }
             }, 150);
         });
