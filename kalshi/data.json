@@ -1,10 +1,13 @@
 {
   "source": "api",
   "summary": {
-    "net_pnl": "3.2344",
-    "account_value": "38.2344",
+    "net_pnl": "1.9378",
+    "net_pnl_basis": "bets_at_bid",
+    "account_value": "36.9378",
     "cash": "28.0144",
-    "open_value": "10.22",
+    "open_value": "8.9234",
+    "kalshi_open_value": "9.19",
+    "unvalued_open": 0,
     "deposited": "10",
     "credits": "25",
     "credit_reasons": [
@@ -14,7 +17,7 @@
     "deposit_fees": "0.2",
     "total_fees": "3.49498",
     "realized_pnl": "0.8826",
-    "unrealized_pnl": "1.6672",
+    "unrealized_pnl": "1.2552",
     "started": "2025-12-02",
     "bets": 17,
     "won": 5,
@@ -208,12 +211,12 @@
     },
     {
       "date": "2026-10-11",
-      "day": "2.5518",
-      "pnl": "3.2344",
+      "day": "1.2552",
+      "pnl": "1.9378",
       "items": [
         {
-          "label": "Open positions (marked at Kalshi's value)",
-          "amount": "2.5518"
+          "label": "Open bets at current bid (unrealized)",
+          "amount": "1.2552"
         }
       ]
     }
@@ -286,10 +289,10 @@
       "stake": "2.091",
       "buy_fees": "0.0864",
       "cost": "2.1774",
-      "payout": "3.264",
+      "payout": "4.233",
       "sell_fees": "0",
-      "net_payout": "3.264",
-      "profit": "1.0866",
+      "net_payout": "4.233",
+      "profit": "2.0556",
       "fills": [
         {
           "time": "2026-10-11T03:22:26Z",
@@ -304,8 +307,8 @@
       "settlement": null,
       "live": {
         "contracts": "5.1",
-        "bid": "0.64",
-        "amount": "3.264"
+        "bid": "0.83",
+        "amount": "4.233"
       },
       "legs": []
     },
@@ -327,10 +330,10 @@
       "stake": "1.904",
       "buy_fees": "0.0896",
       "cost": "1.9936",
-      "payout": "1.914",
+      "payout": "0",
       "sell_fees": "0",
-      "net_payout": "1.914",
-      "profit": "-0.0796",
+      "net_payout": "0",
+      "profit": "-1.9936",
       "fills": [
         {
           "time": "2026-10-11T03:24:22Z",
@@ -354,8 +357,8 @@
       "settlement": null,
       "live": {
         "contracts": "5.8",
-        "bid": "0.33",
-        "amount": "1.914"
+        "bid": "0",
+        "amount": "0"
       },
       "legs": []
     },
@@ -377,10 +380,10 @@
       "stake": "3.4112",
       "buy_fees": "0.086",
       "cost": "3.4972",
-      "payout": "4.1574",
+      "payout": "4.6904",
       "sell_fees": "0",
-      "net_payout": "4.1574",
-      "profit": "0.6602",
+      "net_payout": "4.6904",
+      "profit": "1.1932",
       "fills": [
         {
           "time": "2026-10-11T03:19:28Z",
@@ -404,8 +407,8 @@
       "settlement": null,
       "live": {
         "contracts": "5.33",
-        "bid": "0.78",
-        "amount": "4.1574"
+        "bid": "0.88",
+        "amount": "4.6904"
       },
       "legs": []
     },
@@ -1030,5 +1033,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-11T18:39:47Z"
+  "updated": "2026-10-11T19:22:20Z"
 }
