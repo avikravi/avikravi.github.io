@@ -27,7 +27,7 @@ import requests
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519, padding, rsa
 
-from kalshi_common import build_dashboard, group_fills, make_bet, parse_time, write_if_changed
+from kalshi_common import CREDITS, DEPOSITS, build_dashboard, group_fills, make_bet, parse_time, write_if_changed
 
 API_HOST = os.environ.get("KALSHI_API_HOST", "https://external-api.kalshi.com")
 API_PREFIX = "/trade-api/v2"
@@ -154,14 +154,63 @@ def market_info(client, ticker):
     }
 
 
-def main():
-    key_id = os.environ.get("KALSHI_API_KEY_ID", "").strip()
-    private_key = os.environ.get("KALSHI_PRIVATE_KEY", "")
-    if not key_id or not private_key:
-        raise SystemExit("KALSHI_API_KEY_ID and KALSHI_PRIVATE_KEY must be set")
+RECONCILE_TOLERANCE = 0.05
 
-    client = KalshiClient(key_id, private_key)
 
+class ReconciliationError(SystemExit):
+    """Raised (exit code 1) when API data doesn't add up; data.json is left alone."""
+
+
+def expected_cash(fills, settlement_payouts):
+    """Cash the account should hold, from API data alone.
+
+    deposits + credits + sale proceeds + settlement payouts - purchase costs - all fees
+
+    Every fill is recorded as a buy of its side (selling YES at P is buying NO
+    at 1 - P), so "sale proceeds - purchase costs" is computed as
+    (matched YES+NO pairs x $1) - (every fill's count x price). The two forms
+    are the same money; this one needs no buy/sell flag.
+    """
+    money_in = sum(row["amount"] for row in DEPOSITS) + sum(row["amount"] for row in CREDITS)
+    deposit_fees = sum(row["fee"] for row in DEPOSITS)
+    spent = sum(fill["count"] * fill["price"] for fill in fills)
+    trading_fees = sum(fill["fee"] for fill in fills)
+    pair_payouts = sum(min(entry["count"]["yes"], entry["count"]["no"]) for entry in group_fills(fills))
+    return money_in + pair_payouts + sum(settlement_payouts) - spent - trading_fees - deposit_fees
+
+
+def reconcile(dashboard, fills, settlement_payouts, actual_cash, portfolio_value):
+    """Block the write unless the numbers add up. Returns the success line.
+
+    Failure messages carry only the compared totals and their difference.
+    """
+    expected = expected_cash(fills, settlement_payouts)
+    cash_diff = actual_cash - expected
+    if abs(cash_diff) > RECONCILE_TOLERANCE:
+        raise ReconciliationError(
+            "Reconciliation failed: expected cash ${:.2f}, actual cash ${:.2f}, diff ${:+.2f}. "
+            "data.json not updated.".format(expected, actual_cash, cash_diff)
+        )
+
+    money_in = sum(row["amount"] for row in DEPOSITS) + sum(row["amount"] for row in CREDITS)
+    expected_net = actual_cash + portfolio_value - money_in
+    published_net = dashboard["summary"]["net_pnl"]
+    net_diff = published_net - expected_net
+    if abs(net_diff) > RECONCILE_TOLERANCE:
+        raise ReconciliationError(
+            "Reconciliation failed: expected net P&L ${:+.2f}, dashboard net P&L ${:+.2f}, diff ${:+.2f}. "
+            "data.json not updated.".format(expected_net, published_net, net_diff)
+        )
+    return "reconciled: cash diff ${:.2f}, net {}${:.2f}".format(
+        abs(cash_diff), "+" if published_net >= 0 else "-", abs(published_net)
+    )
+
+
+def build_from_api(client):
+    """Fetch everything and build the dashboard. Writes nothing.
+
+    Returns (dashboard, fills, settlement_payouts, cash, portfolio_value).
+    """
     balance = client.get("/portfolio/balance")
     cash = balance["balance"] / 100
     portfolio_value = balance["portfolio_value"] / 100
@@ -176,6 +225,7 @@ def main():
     }
 
     bets = []
+    settlement_payouts = []
     for entry in group_fills(fills):
         ticker = entry["ticker"]
         info = market_info(client, ticker)
@@ -190,6 +240,8 @@ def main():
             remaining = entry["count"][info["result"]] - entry["count"]["no" if info["result"] == "yes" else "yes"]
             payout = max(remaining, 0.0)
             resolved_time = entry["last_time"]
+        if payout is not None:
+            settlement_payouts.append(payout)
 
         position = held.get(ticker, 0.0)
         is_open = payout is None and abs(position) > 0
@@ -213,11 +265,24 @@ def main():
         series_note="Cumulative profit of settled and sold bets by date; the last point is today's "
         "net P&L including open positions.",
     )
-    wrote = write_if_changed(dashboard)
-    summary = dashboard["summary"]
-    # Aggregate counts only: safe for a public log.
-    print("data.json {}".format("updated" if wrote else "unchanged"))
-    print("bets={bets} resolved={resolved} pending={pending} open={open}".format(**summary))
+    return dashboard, fills, settlement_payouts, cash, portfolio_value
+
+
+def run(client, writer=write_if_changed):
+    """Build, reconcile, then write. A failed reconciliation never reaches writer."""
+    dashboard, fills, settlement_payouts, cash, portfolio_value = build_from_api(client)
+    line = reconcile(dashboard, fills, settlement_payouts, cash, portfolio_value)
+    wrote = writer(dashboard)
+    # One line, aggregates only: safe for a public log.
+    print("{} ({})".format(line, "data.json updated" if wrote else "data.json unchanged"))
+
+
+def main():
+    key_id = os.environ.get("KALSHI_API_KEY_ID", "").strip()
+    private_key = os.environ.get("KALSHI_PRIVATE_KEY", "")
+    if not key_id or not private_key:
+        raise SystemExit("KALSHI_API_KEY_ID and KALSHI_PRIVATE_KEY must be set")
+    run(KalshiClient(key_id, private_key))
 
 
 if __name__ == "__main__":

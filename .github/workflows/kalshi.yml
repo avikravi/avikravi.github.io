@@ -25,8 +25,14 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # This repo is public, so these logs are public. The script prints only
-      # aggregate counts; secrets are passed as env vars and GitHub masks them.
+      # Offline tests, including the reconciliation guard. No secrets needed.
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+      # This repo is public, so these logs are public. The script prints one
+      # reconciliation line; secrets are passed as env vars and GitHub masks them.
+      # If cash doesn't reconcile it exits non-zero BEFORE writing data.json,
+      # so the commit step below never runs and the site keeps the last good data.
       - name: Fetch from Kalshi API
         env:
           KALSHI_API_KEY_ID: ${{ secrets.KALSHI_API_KEY_ID }}

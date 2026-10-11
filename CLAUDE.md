@@ -33,6 +33,14 @@ scripts/
                          .github/workflows/kalshi.yml every 6h with KALSHI_API_KEY_ID /
                          KALSHI_PRIVATE_KEY secrets. Signs requests per docs.kalshi.com (RSA-PSS
                          SHA-256, or Ed25519, over timestamp+GET+path-without-query).
+                         RECONCILIATION GUARD (2026-10-10): before writing, run() checks
+                         expected cash (deposits + credits + sale proceeds + settlement payouts
+                         - purchase costs - all fees, from API data alone) against
+                         /portfolio/balance, and published net P&L against account value - money
+                         in, both within $0.05. On a miss it raises ReconciliationError (exit 1)
+                         showing only the totals and diff, and never writes data.json. Success
+                         prints one line: "reconciled: cash diff $0.00, net +$X.XX (...)". Keep
+                         build_from_api() write-free so this stays testable.
   kalshi_from_csv.py    Fallback: builds data.json from a Kalshi "Recent Activity" CSV export.
                          Its Amount_In_Dollars column is really the contract count, and
                          Price_In_Cents is ALWAYS the Yes price (a "No" fill at P traded No at
@@ -54,6 +62,10 @@ scripts/
                          contracts x current bid for the side held (liquidation value; mid flatters
                          wide spreads, last can be stale); no bid -> "—". CSV mode shows "—". Settled
                          payouts aren't in the CSV, so those bets show "Pending API".
+tests/
+  test_kalshi_reconcile.py  Offline unittest for the guard (fake API client; a deliberate $1
+                         settlement error must block the write). Run: python -m unittest discover
+                         -s tests -v. The Kalshi workflow runs it before every fetch.
 kalshi/                 URL: /kalshi. Added 2026-10-10. "Avi's Kalshi Tracker", a public, dark,
                          mobile-first dashboard (index.html, vanilla JS + Chart.js 4.4.4 from
                          jsDelivr) that reads kalshi/data.json. Standalone like games/ and agents/:
