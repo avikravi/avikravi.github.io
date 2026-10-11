@@ -24,6 +24,46 @@ tracker-data/
   applications.json     The tracker's actual data — see schema below
 scripts/
   add_application.py    CLI helper to append a new application entry
+  kalshi_common.py      Shared logic for /kalshi: groups fills into bets, builds the sanitized
+                         data.json, writes it only when the numbers changed. Holds the hand-kept
+                         DEPOSITS/CREDITS lists (the Trade API has no deposits endpoint) and the
+                         ticker-prefix -> category map.
+  kalshi_fetch.py       Live Kalshi Trade API v2 fetch (balance, fills + historical fills,
+                         settlements, positions, market/event titles). Run by
+                         .github/workflows/kalshi.yml every 6h with KALSHI_API_KEY_ID /
+                         KALSHI_PRIVATE_KEY secrets. Signs requests per docs.kalshi.com (RSA-PSS
+                         SHA-256, or Ed25519, over timestamp+GET+path-without-query).
+  kalshi_from_csv.py    Fallback: builds data.json from a Kalshi "Recent Activity" CSV export.
+                         Its Amount_In_Dollars column is really the contract count, and
+                         Price_In_Cents is ALWAYS the Yes price (a "No" fill at P traded No at
+                         100-P; one closing a Yes position sold Yes at P). check_against_app()
+                         asserts figures read off the Kalshi app so this can't regress.
+                         FEES (Avi's rule, 2026-10-10): every fee TOTAL comes from Kalshi's own
+                         record, the CSV's Fee_In_Dollars column in CSV mode or the API's fee_cost
+                         in live mode. data.json fees.source says which ("csv_fee_column" /
+                         "api_fee_cost"). Kalshi's formula 0.07*C*P*(1-P), unrounded, is used ONLY
+                         as cost_fee for an OPEN position's cost basis in CSV mode, because the CSV
+                         column runs ~1-2c low and misses the app's display (Golden $1.99, Doubs
+                         $2.18, Boston $3.50, $7.67 total, all asserted). Don't chase Canada's 1c.
+                         BASIS: every bet row (Open positions and Recent bets) uses the app's basis:
+                         cost includes opening fees, payout is net of closing fees, profit = payout
+                         - cost. WIN RATE: only sold-early or settled bets count; open positions
+                         are excluded and don't block it. Bets with unknown results ("pending", CSV
+                         mode only) block the percentage ("N won · N pending API sync"); in API
+                         mode it shows "%" plus "N won / N lost · N open". OPEN VALUE (API mode):
+                         contracts x current bid for the side held (liquidation value; mid flatters
+                         wide spreads, last can be stale); no bid -> "—". CSV mode shows "—". Settled
+                         payouts aren't in the CSV, so those bets show "Pending API".
+kalshi/                 URL: /kalshi. Added 2026-10-10. "Avi's Kalshi Tracker", a public, dark,
+                         mobile-first dashboard (index.html, vanilla JS + Chart.js 4.4.4 from
+                         jsDelivr) that reads kalshi/data.json. Standalone like games/ and agents/:
+                         no site sidebar, not linked from nav. Own dark tokens (--gain/--loss etc.),
+                         scoped to this page. PRIVACY: data.json must only hold aggregates and
+                         per-bet date/title/side/cost/payout/profit/fee/category/status. Never
+                         order/fill/market IDs, tickers, or account info. Repo is public, so Action
+                         logs are too: the fetch script prints counts only, never bodies/headers.
+                         Python in these scripts uses 3+ character variable names (Avi's rule).
+                         Don't commit Kalshi CSV exports (gitignored): they contain IDs.
 tailor/
   matching-engine.js    Scores master_resume_data.json entries against a pasted job description
   scoring-engine.js     Computes the 0-100 "Check Match Score" fit score (reuses matching-engine.js)
@@ -927,7 +967,7 @@ As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (g
 </script>
 ```
 
-There's no shared layout/build step in this repo, so the snippet is duplicated into all 37 HTML files individually (24 + the 11 `object-detect/` pages, `games/index.html` and `games/thermostat/index.html` added 2026-09-25, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
+There's no shared layout/build step in this repo, so the snippet is duplicated into all 38 HTML files individually (24 + the 11 `object-detect/` pages, `games/index.html` and `games/thermostat/index.html` added 2026-09-25, and `kalshi/index.html` added 2026-10-10, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
 
 Every page under `hp/` (all 18: `index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, `p66-example/index.html`, `30-60-90/index.html`, `object-detect-summary/index.html`, `object-detect-level-1/index.html` through `object-detect-level-10/index.html`) passes an extra `content_group: 'HP Portfolio'` parameter in its `gtag('config', ...)` call — a deliberate deviation from the plain snippet used elsewhere, added 2026-09-13 so Avi can filter GA4 reports (Engagement > Pages and screens, Path exploration) down to just visitors exploring the HP portfolio, separate from the rest of the site. Each page already has a distinct `<title>`, which combined with `content_group` is what makes per-page dwell time, click-through paths, and unique-visitor counts within `/hp` reportable in GA4 without any further code — this needs no additional event tracking, since GA4's default collection already measures page views, per-page engagement time, and users automatically on every full-page navigation. If a new `hp/` page is added, its `gtag('config', ...)` call must include this same `content_group` parameter — copy the pattern from any existing `hp/*/index.html` file.
 
@@ -975,6 +1015,28 @@ All of these guard with `typeof gtag === 'function'` before calling it, matching
 - Line endings: this repo is edited from both Windows and other environments; expect harmless LF→CRLF warnings from git on Windows — these are not errors.
 - Keep commits scoped and the commit message descriptive of the actual content change (e.g. "Add application: Rivian", not "update").
 - **Never mention compensation, salary, or pay figures anywhere on the site.** As of 2026-08-27, Avi explicitly asked that no page ever reference a dollar comp figure — this came up because a chat reply (not any page) mentioned a target salary number, and he wants the whole public site to stay silent on compensation entirely, not just the page that prompted it. If asked to discuss comp in future work, do it in chat only, never in a file that gets published.
+
+## Reporting format (end every task with this)
+
+Avi relays reports to a reviewer who can't see the repo. End every task with a report in exactly this structure:
+
+### Summary
+2–3 sentences: what changed and whether it worked.
+
+### Numbers check
+A table of every key figure the task touches. For `/kalshi` that means net P&L, account value, money in (deposit vs referral), fees, win rate or won/pending, open positions (each with cost and current value), category totals, and per-bet rows for every closed bet (title, side, buy price, sell price, contracts, fees, profit). Show before → after for anything that changed.
+
+### Assertions & tests
+Each check run, pass/fail, and actual vs expected for any failure.
+
+### Assumptions
+Anything inferred rather than verified (column meanings, API field behavior, categories, titles). Mark each verified or unverified.
+
+### Problems / open questions
+Bugs noticed but not fixed, data that looks wrong, anything uncertain. Say "none" if none.
+
+### Files changed
+Path + one line each.
 
 ## Keeping this file updated
 

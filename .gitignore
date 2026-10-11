@@ -15,3 +15,7 @@ weights/
 games/thermostat/CNAME
 games/thermostat/README.md
 games/thermostat/screenshot*.png
+
+# Kalshi CSV exports contain order and market IDs; never publish them.
+Kalshi-*.csv
+__pycache__/

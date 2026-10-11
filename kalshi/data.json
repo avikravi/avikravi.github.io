@@ -1,0 +1,305 @@
+{
+  "source": "csv",
+  "summary": {
+    "net_pnl": 0.31,
+    "account_value": 35.31,
+    "cash": 28.01,
+    "open_value": 7.3,
+    "deposited": 10.0,
+    "credits": 25.0,
+    "credit_reasons": [
+      "Referral bonus"
+    ],
+    "trading_fees": 3.23,
+    "deposit_fees": 0.2,
+    "total_fees": 3.43,
+    "bets": 17,
+    "resolved": 4,
+    "wins": 4,
+    "losses": 0,
+    "pending": 10,
+    "open": 3,
+    "win_rate": null
+  },
+  "fees": {
+    "maker_fills": 3,
+    "maker_fees": 0.0,
+    "taker_fills": 21,
+    "taker_fees": 3.23,
+    "source": "csv_fee_column"
+  },
+  "pnl_series": [
+    {
+      "date": "2025-12-02",
+      "pnl": -0.2
+    },
+    {
+      "date": "2026-10-10",
+      "pnl": 0.31
+    }
+  ],
+  "pnl_series_note": "Seeded from a CSV export. Bets that ran to settlement show as pending until the live API sync fills in their payouts.",
+  "categories": [
+    {
+      "name": "NFL",
+      "profit": 1.67,
+      "resolved": 2,
+      "pending": 2
+    },
+    {
+      "name": "NBA",
+      "profit": 0.0,
+      "resolved": 0,
+      "pending": 2
+    },
+    {
+      "name": "Soccer",
+      "profit": 12.85,
+      "resolved": 2,
+      "pending": 1
+    },
+    {
+      "name": "F1",
+      "profit": 0.0,
+      "resolved": 0,
+      "pending": 1
+    },
+    {
+      "name": "Crypto",
+      "profit": 0.0,
+      "resolved": 0,
+      "pending": 1
+    },
+    {
+      "name": "Politics",
+      "profit": 0.0,
+      "resolved": 0,
+      "pending": 1
+    },
+    {
+      "name": "Other",
+      "profit": 0.0,
+      "resolved": 0,
+      "pending": 2
+    }
+  ],
+  "open_positions": [
+    {
+      "date": "2026-10-10",
+      "title": "Denzel Boston 60+ receiving yards",
+      "side": "No",
+      "contracts": 5.33,
+      "cost": 3.5,
+      "value": null,
+      "category": "NFL"
+    },
+    {
+      "date": "2026-10-10",
+      "title": "Romeo Doubs 40+ receiving yards",
+      "side": "No",
+      "contracts": 5.1,
+      "cost": 2.18,
+      "value": null,
+      "category": "NFL"
+    },
+    {
+      "date": "2026-10-10",
+      "title": "Matthew Golden 40+ receiving yards",
+      "side": "No",
+      "contracts": 5.8,
+      "cost": 1.99,
+      "value": null,
+      "category": "NFL"
+    }
+  ],
+  "recent_bets": [
+    {
+      "date": "2026-10-10",
+      "title": "Denzel Boston 60+ receiving yards",
+      "side": "No",
+      "cost": 3.5,
+      "payout": null,
+      "profit": null,
+      "fee": 0.09,
+      "category": "NFL",
+      "status": "open"
+    },
+    {
+      "date": "2026-10-10",
+      "title": "Romeo Doubs 40+ receiving yards",
+      "side": "No",
+      "cost": 2.18,
+      "payout": null,
+      "profit": null,
+      "fee": 0.09,
+      "category": "NFL",
+      "status": "open"
+    },
+    {
+      "date": "2026-10-10",
+      "title": "Matthew Golden 40+ receiving yards",
+      "side": "No",
+      "cost": 1.99,
+      "payout": null,
+      "profit": null,
+      "fee": 0.09,
+      "category": "NFL",
+      "status": "open"
+    },
+    {
+      "date": "2026-09-27",
+      "title": "Texans vs. Colts: Houston wins",
+      "side": "Yes",
+      "cost": 4.99,
+      "payout": null,
+      "profit": null,
+      "fee": 0.23,
+      "category": "NFL",
+      "status": "pending"
+    },
+    {
+      "date": "2026-09-24",
+      "title": "Azerbaijan GP winner: Kimi Antonelli",
+      "side": "Yes",
+      "cost": 3.19,
+      "payout": null,
+      "profit": null,
+      "fee": 0.12,
+      "category": "F1",
+      "status": "pending"
+    },
+    {
+      "date": "2026-09-24",
+      "title": "Falcons vs. Packers: Green Bay wins",
+      "side": "Yes",
+      "cost": 0.99,
+      "payout": null,
+      "profit": null,
+      "fee": 0.02,
+      "category": "NFL",
+      "status": "pending"
+    },
+    {
+      "date": "2026-09-24",
+      "title": "Bijan Robinson anytime touchdown",
+      "side": "Yes",
+      "cost": 2.0,
+      "payout": 3.48,
+      "profit": 1.49,
+      "fee": 0.06,
+      "category": "NFL",
+      "status": "sold"
+    },
+    {
+      "date": "2026-09-24",
+      "title": "Michael Penix Jr. 275+ passing yards",
+      "side": "No",
+      "cost": 1.01,
+      "payout": 1.19,
+      "profit": 0.18,
+      "fee": 0.01,
+      "category": "NFL",
+      "status": "sold"
+    },
+    {
+      "date": "2026-07-01",
+      "title": "World Cup: USA advances vs. Bosnia",
+      "side": "Yes",
+      "cost": 1.09,
+      "payout": null,
+      "profit": null,
+      "fee": 0.01,
+      "category": "Soccer",
+      "status": "pending"
+    },
+    {
+      "date": "2026-06-30",
+      "title": "Bitcoin above $58,500 on Jun 30",
+      "side": "Yes",
+      "cost": 9.87,
+      "payout": null,
+      "profit": null,
+      "fee": 0.14,
+      "category": "Crypto",
+      "status": "pending"
+    },
+    {
+      "date": "2026-06-30",
+      "title": "World Cup: Mexico advances vs. Ecuador",
+      "side": "Yes",
+      "cost": 1.25,
+      "payout": 1.81,
+      "profit": 0.56,
+      "fee": 0.03,
+      "category": "Soccer",
+      "status": "sold"
+    },
+    {
+      "date": "2026-06-25",
+      "title": "Multi-game sports parlay",
+      "side": "Yes",
+      "cost": 7.57,
+      "payout": null,
+      "profit": null,
+      "fee": 0.27,
+      "category": "Other",
+      "status": "pending"
+    },
+    {
+      "date": "2026-05-06",
+      "title": "Jaden McDaniels 10+ points",
+      "side": "Yes",
+      "cost": 5.0,
+      "payout": null,
+      "profit": null,
+      "fee": 0.06,
+      "category": "NBA",
+      "status": "pending"
+    },
+    {
+      "date": "2026-02-04",
+      "title": "Celtics vs. Rockets: Houston wins",
+      "side": "Yes",
+      "cost": 4.29,
+      "payout": null,
+      "profit": null,
+      "fee": 0.09,
+      "category": "NBA",
+      "status": "pending"
+    },
+    {
+      "date": "2026-02-03",
+      "title": "Nevada vs. Boise State: Boise State wins",
+      "side": "Yes",
+      "cost": 4.35,
+      "payout": null,
+      "profit": null,
+      "fee": 0.09,
+      "category": "Other",
+      "status": "pending"
+    },
+    {
+      "date": "2026-01-22",
+      "title": "World Cup Group B winner: Canada",
+      "side": "Yes",
+      "cost": 10.99,
+      "payout": 23.28,
+      "profit": 12.29,
+      "fee": 1.77,
+      "category": "Soccer",
+      "status": "sold"
+    },
+    {
+      "date": "2025-12-02",
+      "title": "Honduras presidential election: Asfura wins",
+      "side": "Yes",
+      "cost": 3.88,
+      "payout": null,
+      "profit": null,
+      "fee": 0.1,
+      "category": "Politics",
+      "status": "pending"
+    }
+  ],
+  "updated": "2026-10-11T04:40:58Z"
+}
