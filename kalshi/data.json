@@ -227,6 +227,17 @@
           "amount": "-1.9936"
         }
       ]
+    },
+    {
+      "date": "2026-10-12",
+      "day": "0",
+      "pnl": "3.4444",
+      "items": [
+        {
+          "label": "Open bets at current bid (unrealized)",
+          "amount": "0"
+        }
+      ]
     }
   ],
   "pnl_series_note": "One step per day: bets count on the day they settled or were sold. The last step is today, with open positions at Kalshi's value.",
@@ -1041,5 +1052,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-11T21:57:57Z"
+  "updated": "2026-10-12T05:56:37Z"
 }
