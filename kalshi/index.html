@@ -481,6 +481,8 @@
         @media (max-width: 420px) {
             .tile-value { font-size: 20px; }
             .fee-modes, .fee-curve { grid-template-columns: minmax(0, 1fr); }
+            .fee-table .status-col { display: none; }
+            .fee-table td, .fee-table th { padding: 9px 10px; }
             .fee-share-col, .fee-table .share-col { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -787,7 +789,7 @@
                         <p class="section-desc">Every bet, most fees first. Fees = buy fees + sell fees.</p>
                     </div>
                     <table>
-                        <thead><tr><th>Bet</th><th>Status</th><th class="num">Stake</th><th class="num">Fees paid</th><th class="fee-share-col">Fees as share of stake</th></tr></thead>
+                        <thead><tr><th>Bet</th><th class="status-col">Status</th><th class="num">Stake</th><th class="num">Fees paid</th><th class="fee-share-col">Fees as share of stake</th></tr></thead>
                         <tbody id="feeBetBody"></tbody>
                         <tfoot id="feeBetFoot"></tfoot>
                     </table>
@@ -1171,7 +1173,7 @@
                 nameCell.appendChild(el('div', 'bet-title', bet.title));
                 nameCell.appendChild(el('div', 'bet-sub', bet.category));
                 tr.appendChild(nameCell);
-                var statusCell = el('td');
+                var statusCell = el('td', 'status-col');
                 statusCell.appendChild(statusPill(bet));
                 tr.appendChild(statusCell);
                 tr.appendChild(moneyEl('td', 'num', bet.stake, 'plain', 'bets.' + index + '.stake'));
@@ -1192,7 +1194,7 @@
             foot.textContent = '';
             var total = el('tr');
             total.appendChild(el('td', '', 'All ' + bets.length + ' bets'));
-            total.appendChild(el('td'));
+            total.appendChild(el('td', 'status-col'));
             total.appendChild(moneyEl('td', 'num', fees.stake_total, 'plain', 'fees.stake_total'));
             total.appendChild(moneyEl('td', 'num fee', s.trading_fees, 'plain', 'summary.trading_fees'));
             total.appendChild(el('td', 'share-col share-text', '≈' + fees.trading_pct_of_stake + '%'));
