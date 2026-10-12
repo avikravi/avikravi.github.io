@@ -251,6 +251,330 @@
     }
   ],
   "pnl_series_note": "One step per day: bets count on the day they settled or were sold. The last step is today, with open positions at Kalshi's value.",
+  "account_series": [
+    {
+      "date": "2025-12-02",
+      "money_in": "10",
+      "pnl": "-0.2",
+      "account_value": "9.8",
+      "change": null
+    },
+    {
+      "date": "2025-12-09",
+      "money_in": "10",
+      "pnl": "-0.2",
+      "account_value": "9.8",
+      "change": "0"
+    },
+    {
+      "date": "2025-12-16",
+      "money_in": "10",
+      "pnl": "-0.2",
+      "account_value": "9.8",
+      "change": "0"
+    },
+    {
+      "date": "2025-12-23",
+      "money_in": "10",
+      "pnl": "-0.2",
+      "account_value": "9.8",
+      "change": "0"
+    },
+    {
+      "date": "2025-12-30",
+      "money_in": "10",
+      "pnl": "1.92",
+      "account_value": "11.92",
+      "change": "2.12"
+    },
+    {
+      "date": "2026-01-06",
+      "money_in": "10",
+      "pnl": "1.92",
+      "account_value": "11.92",
+      "change": "0"
+    },
+    {
+      "date": "2026-01-13",
+      "money_in": "10",
+      "pnl": "1.92",
+      "account_value": "11.92",
+      "change": "0"
+    },
+    {
+      "date": "2026-01-20",
+      "money_in": "10",
+      "pnl": "1.92",
+      "account_value": "11.92",
+      "change": "0"
+    },
+    {
+      "date": "2026-01-27",
+      "money_in": "10",
+      "pnl": "1.92",
+      "account_value": "11.92",
+      "change": "0"
+    },
+    {
+      "date": "2026-02-03",
+      "money_in": "35",
+      "pnl": "3.57",
+      "account_value": "38.57",
+      "change": "26.65"
+    },
+    {
+      "date": "2026-02-10",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "-4.29"
+    },
+    {
+      "date": "2026-02-17",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-02-24",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-03-03",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-03-10",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-03-17",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-03-24",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-03-31",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-04-07",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-04-14",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-04-21",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-04-28",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-05-05",
+      "money_in": "35",
+      "pnl": "-0.72",
+      "account_value": "34.28",
+      "change": "0"
+    },
+    {
+      "date": "2026-05-12",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "1.02"
+    },
+    {
+      "date": "2026-05-19",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "0"
+    },
+    {
+      "date": "2026-05-26",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "0"
+    },
+    {
+      "date": "2026-06-02",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "0"
+    },
+    {
+      "date": "2026-06-09",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "0"
+    },
+    {
+      "date": "2026-06-16",
+      "money_in": "35",
+      "pnl": "0.3",
+      "account_value": "35.3",
+      "change": "0"
+    },
+    {
+      "date": "2026-06-23",
+      "money_in": "35",
+      "pnl": "12.5847",
+      "account_value": "47.5847",
+      "change": "12.2847"
+    },
+    {
+      "date": "2026-06-30",
+      "money_in": "35",
+      "pnl": "8.0118",
+      "account_value": "43.0118",
+      "change": "-4.5729"
+    },
+    {
+      "date": "2026-07-07",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0.1942"
+    },
+    {
+      "date": "2026-07-14",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-07-21",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-07-28",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-08-04",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-08-11",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-08-18",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-08-25",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-09-01",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-09-08",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-09-15",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-09-22",
+      "money_in": "35",
+      "pnl": "8.206",
+      "account_value": "43.206",
+      "change": "0"
+    },
+    {
+      "date": "2026-09-29",
+      "money_in": "35",
+      "pnl": "0.6826",
+      "account_value": "35.6826",
+      "change": "-7.5234"
+    },
+    {
+      "date": "2026-10-06",
+      "money_in": "35",
+      "pnl": "0.6826",
+      "account_value": "35.6826",
+      "change": "0"
+    },
+    {
+      "date": "2026-10-12",
+      "money_in": "35",
+      "pnl": "3.4444",
+      "account_value": "38.4444",
+      "change": "2.7618"
+    }
+  ],
   "resolution_dates": {
     "market_settlement_ts": 7,
     "settlement": 6
@@ -1096,5 +1420,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-12T06:31:38Z"
+  "updated": "2026-10-12T07:16:43Z"
 }
