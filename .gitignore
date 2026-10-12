@@ -22,3 +22,18 @@ __pycache__/
 
 # hypothesis test database (local cache)
 .hypothesis/
+
+# Credentials: never commit API keys, private keys or env files. Enforced by
+# kalshi/securitytests/test_sec_gitignore.py. Keys belong in GitHub repo secrets.
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+id_ecdsa
+
+# Claude Code's machine-local permissions (lists local folder paths)
+.claude/settings.local.json

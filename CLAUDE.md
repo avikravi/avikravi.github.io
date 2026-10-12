@@ -1184,6 +1184,23 @@ tolerances or `money()`. The math must be EXACT everywhere:
   it must go through exact.js.
   Never weaken a test or add a tolerance to make data fit; find the real rule instead.
 
+## Kalshi security tests (`kalshi/securitytests/`)
+
+Added 2026-10-12 at Avi's request; we keep adding to it over time. Run in the workflow as "Run security tests",
+after "Run tests" and BEFORE the fetch step, so a failure stops the job before the secrets are used. Local run:
+`python -m unittest discover -s kalshi/securitytests -v`. See `kalshi/securitytests/README.md` for what each file checks.
+
+- Secret detectors live in `sec_helpers.SECRET_PATTERNS` / `SENSITIVE_NAME_PATTERNS`; every new detector needs a fake
+  example in `SecretPatternSelfTests` proving it fires.
+- Never put a real or realistic secret (or a literal UUID) in any file: the repo-wide scan fails on it. Build fakes at
+  runtime by joining pieces. Failures print file, line and pattern name, never the secret.
+- `kalshi/data.json` must never contain order/fill/account IDs, tickers, UUIDs or emails.
+- Secrets are referenced only in the workflow's "Fetch from Kalshi API" step, via `env:`; the bot commits only
+  `kalshi/data.json`. `.gitignore` must keep `.env*`, `*.pem`, `*.key`, `id_*`, `Kalshi-*.csv` and
+  `.claude/settings.local.json` out of git.
+- Never weaken a security test to make it pass. If one finds a real secret: rotate it first, then remove it (deleting
+  it in a new commit leaves it in history).
+
 ## Reporting format (end every task with this)
 
 Avi relays reports to a reviewer who can't see the repo. End every task with a report in exactly this structure:

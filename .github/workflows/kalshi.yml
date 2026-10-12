@@ -32,6 +32,12 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -v
 
+      # Security gate, no secrets needed: no credentials in files or git history,
+      # .gitignore rules, public data.json has no IDs, the fetch script never
+      # prints keys/signatures/bodies, and this workflow's own hygiene.
+      - name: Run security tests
+        run: python -m unittest discover -s kalshi/securitytests -v
+
       # This repo is public, so these logs are public. The script prints one
       # reconciliation line; secrets are passed as env vars and GitHub masks them.
       # If cash doesn't reconcile EXACTLY it exits non-zero BEFORE writing data.json,
