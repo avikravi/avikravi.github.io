@@ -225,10 +225,53 @@
         .loss { color: var(--loss); }
 
         /* Fees */
-        .fee-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-        .explain p { margin: 0 0 10px; color: var(--ink-soft); font-size: 14px; max-width: 680px; }
-        .explain p:last-child { margin-bottom: 0; }
-        .fee-source { color: var(--ink-faint); font-size: 12.5px; margin-top: 12px; }
+        #panel-fees .card { margin-bottom: 14px; }
+        #panel-fees h2 { margin-bottom: 12px; }
+        .fee-eq { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+        .fee-eq-item { flex: 1 1 120px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface-2); min-width: 0; }
+        .fee-eq-item.result { border-color: var(--line-strong); background: var(--eq-bg); }
+        .fee-eq-label { font-size: 12.5px; color: var(--ink-faint); }
+        .fee-eq-value { font-size: 19px; font-weight: 700; margin-top: 2px; overflow-wrap: anywhere; }
+        .fee-eq-value.fee { color: var(--fee); }
+        .fee-eq-op { align-self: center; font-size: 20px; font-weight: 700; color: var(--ink-faint); }
+        .fee-hero-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 14px; max-width: 760px; }
+        .fee-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .fee-grid .card { margin-bottom: 14px; }
+        .fee-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--line); margin-bottom: 12px; }
+        .fee-bar span { display: block; height: 100%; min-width: 2px; }
+        .fee-bar span + span { border-left: 2px solid var(--surface); }
+        .fee-row { display: grid; grid-template-columns: 12px 1fr auto auto; align-items: baseline; column-gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+        .fee-row:first-child { border-top: 0; }
+        .fee-row .swatch { align-self: center; }
+        .fee-row-name { color: var(--ink); }
+        .fee-row-sub { display: block; color: var(--ink-faint); font-size: 12.5px; }
+        .fee-row-value { color: var(--fee); font-weight: 600; text-align: right; }
+        .fee-row-share { color: var(--ink-faint); font-size: 12.5px; text-align: right; min-width: 52px; }
+        .fee-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .fee-mode { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--surface-2); }
+        .fee-mode-head { display: flex; justify-content: space-between; gap: 8px; font-size: 13.5px; color: var(--ink); font-weight: 600; }
+        .fee-mode-tag { color: var(--ink-faint); font-weight: 500; font-size: 12px; }
+        .fee-mode-value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+        .fee-mode-value.fee { color: var(--fee); }
+        .fee-mode-sub { color: var(--ink-faint); font-size: 12.5px; }
+        .fee-mode p { margin: 8px 0 0; color: var(--ink-soft); font-size: 13px; }
+        .fee-tip { margin: 12px 0 0; color: var(--ink-soft); font-size: 13px; }
+        .fee-why p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14px; max-width: 760px; }
+        .fee-curve { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .fee-curve div { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface-2); }
+        .fee-curve-price { display: block; color: var(--ink-faint); font-size: 12.5px; }
+        .fee-curve-cost { display: block; color: var(--fee); font-size: 19px; font-weight: 700; margin-top: 2px; }
+        .fee-curve-sub { display: block; color: var(--ink-faint); font-size: 12px; }
+        .fee-small { color: var(--ink-faint); font-size: 12.5px; margin: 0 0 6px; }
+        .fee-table-head { padding: 14px 16px 0; }
+        .fee-table td, .fee-table th { padding: 9px 14px; font-size: 13.5px; }
+        .fee-table td.fee { color: var(--fee); font-weight: 600; }
+        .fee-share-col { width: 34%; }
+        .share-cell { display: flex; align-items: center; gap: 10px; }
+        .share-track { flex: 1; height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+        .share-fill { height: 100%; background: var(--fee); border-radius: 4px; max-width: 100%; }
+        .share-text { color: var(--ink-soft); font-size: 12.5px; min-width: 44px; text-align: right; }
+        .fee-table tfoot td { font-weight: 700; color: var(--ink); border-top: 2px solid var(--line-strong); border-bottom: 0; }
 
         /* About */
         .about p { margin: 0 0 12px; color: var(--ink-soft); font-size: 14.5px; max-width: 680px; }
@@ -405,7 +448,7 @@
 
         @media (max-width: 1100px) {
             .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .fee-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .fee-grid { grid-template-columns: minmax(0, 1fr); }
         }
         /* ---------- Below 900px: slim top bar + menu drawer ---------- */
         @media (max-width: 899px) {
@@ -437,7 +480,8 @@
         }
         @media (max-width: 420px) {
             .tile-value { font-size: 20px; }
-            .fee-tiles .tile-value { font-size: 18px; }
+            .fee-modes, .fee-curve { grid-template-columns: minmax(0, 1fr); }
+            .fee-share-col, .fee-table .share-col { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             .pulse, #timeline .dot.open { animation: none; }
@@ -691,35 +735,65 @@
             <section class="panel" id="panel-fees" data-title="Fees" hidden>
                 <div class="panel-head">
                     <h1>Fees</h1>
-                    <p>What Kalshi's own profile number leaves out.</p>
+                    <p>What fees took out of your result, where they came from, and how to pay less.</p>
                 </div>
-                <div class="tiles fee-tiles">
-                    <div class="tile">
-                        <div class="label">Total fees</div>
-                        <div class="tile-value" id="feeTotal">—</div>
+
+                <div class="card fee-hero">
+                    <h2>What fees cost you</h2>
+                    <div class="fee-eq" id="feeEquation" aria-label="Before fees minus each kind of fee equals your result after fees"></div>
+                    <p class="fee-hero-note" id="feeHeroNote"></p>
+                </div>
+
+                <div class="fee-grid">
+                    <div class="card">
+                        <h2>Where they came from</h2>
+                        <div class="fee-bar" id="feeBar" aria-hidden="true"></div>
+                        <div class="fee-rows" id="feeRows"></div>
                     </div>
-                    <div class="tile">
-                        <div class="label">Trading</div>
-                        <div class="tile-value" id="feeTrading">—</div>
-                    </div>
-                    <div class="tile">
-                        <div class="label">Deposit</div>
-                        <div class="tile-value" id="feeDeposit">—</div>
-                    </div>
-                    <div class="tile">
-                        <div class="label">Fills</div>
-                        <div class="tile-value" id="feeFills">—</div>
-                        <div class="tile-sub" id="feeFillsSub"></div>
+                    <div class="card">
+                        <h2>Taking vs. setting a price</h2>
+                        <div class="fee-modes">
+                            <div class="fee-mode">
+                                <div class="fee-mode-head"><span>You took the price</span><span class="fee-mode-tag">taker</span></div>
+                                <div class="fee-mode-value fee" id="takerPaid">—</div>
+                                <div class="fee-mode-sub" id="takerCount"></div>
+                                <p>Your order matched someone's offer instantly. Kalshi charges a fee on these.</p>
+                            </div>
+                            <div class="fee-mode">
+                                <div class="fee-mode-head"><span>You set the price</span><span class="fee-mode-tag">maker</span></div>
+                                <div class="fee-mode-value gain" id="makerPaid">—</div>
+                                <div class="fee-mode-sub" id="makerCount"></div>
+                                <p>Your limit order waited until someone traded with it. These cost nothing in fees.</p>
+                            </div>
+                        </div>
+                        <p class="fee-tip">Tip: placing a limit order and waiting, instead of buying at the current price, avoided the fee every time here.</p>
                     </div>
                 </div>
-                <div class="card explain" style="margin-top: 16px;">
-                    <h2>Maker vs taker</h2>
-                    <p><strong>Taker</strong> fills are orders that trade right away against an order already on the book. They pay Kalshi's trading fee. <span id="takerLine"></span></p>
-                    <p><strong>Maker</strong> fills are limit orders that sit on the book until someone else trades against them. <span id="makerLine"></span></p>
-                    <p>On these bets, waiting for a price instead of taking one avoided the fee.</p>
-                    <p id="roundingLine"></p>
-                    <div class="fee-source" id="feeSource"></div>
+
+                <div class="card fee-why">
+                    <h2>Why some bets cost more in fees</h2>
+                    <p>Kalshi's fee for taking a price is about <strong>7% × price × (1 − price)</strong> for each contract. It's biggest on coin-flip prices and small on long shots and near-sure things:</p>
+                    <div class="fee-curve">
+                        <div><span class="fee-curve-price">50¢</span><span class="fee-curve-cost">1.75¢</span><span class="fee-curve-sub">per contract</span></div>
+                        <div><span class="fee-curve-price">20¢ or 80¢</span><span class="fee-curve-cost">1.12¢</span><span class="fee-curve-sub">per contract</span></div>
+                        <div><span class="fee-curve-price">5¢ or 95¢</span><span class="fee-curve-cost">0.3325¢</span><span class="fee-curve-sub">per contract</span></div>
+                    </div>
+                    <p class="fee-small">Examples use the formula. Your actual fees below come from Kalshi's record of each fill.</p>
                 </div>
+
+                <div class="card table-card fee-table">
+                    <div class="fee-table-head">
+                        <h2>Fees by bet</h2>
+                        <p class="section-desc">Every bet, most fees first. Fees = buy fees + sell fees.</p>
+                    </div>
+                    <table>
+                        <thead><tr><th>Bet</th><th>Status</th><th class="num">Stake</th><th class="num">Fees paid</th><th class="fee-share-col">Fees as share of stake</th></tr></thead>
+                        <tbody id="feeBetBody"></tbody>
+                        <tfoot id="feeBetFoot"></tfoot>
+                    </table>
+                </div>
+                <p id="roundingLine" class="fee-small"></p>
+                <p class="fee-small" id="feeSource"></p>
             </section>
 
             <!-- 5. About -->
@@ -992,24 +1066,6 @@
                 setText(pair[0] + 'Title', pair[1].title);
             });
 
-            // Fees panel
-            setMoney('feeTotal', s.total_fees, 'plain', 'summary.total_fees');
-            setMoney('feeTrading', s.trading_fees, 'plain', 'summary.trading_fees');
-            setMoney('feeDeposit', s.deposit_fees, 'plain', 'summary.deposit_fees');
-            setText('feeFills', String(fees.maker_fills + fees.taker_fills));
-            setText('feeFillsSub', fees.taker_fills + ' taker · ' + fees.maker_fills + ' maker');
-            setText('takerLine', 'Your ' + fees.taker_fills + ' taker fills paid ' + plain(fees.taker_fees) + '.');
-            setText('makerLine', 'Your ' + fees.maker_fills + ' maker fills paid ' + plain(fees.maker_fees) + '.');
-            if (fees.rounding && !isZeroStr(fees.rounding)) {
-                setText('roundingLine', 'Trading fees include ' + plain(fees.rounding) + ' of Kalshi rounding fees, less '
-                    + plain(fees.rebates) + ' of rebates.');
-            }
-            var FEE_SOURCES = {
-                csv_fee_column: 'Source: the fee column in Kalshi’s activity export.',
-                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API).'
-            };
-            setText('feeSource', FEE_SOURCES[fees.source] || '');
-
             // About panel
             setText('aboutNet',
                 'Net P&L is every bet’s profit added up (finished bets, plus open bets valued at the current bid) minus the '
@@ -1025,6 +1081,132 @@
                 : 'Pulled from Kalshi’s Trade API every 6 hours by a GitHub Action. Before publishing, the numbers must reconcile exactly: '
                   + 'deposits, bonus, bets and fees have to add up to Kalshi’s cash balance to the last digit, or the update is skipped and the last good data stays up.');
             setText('seriesNote', data.pnl_series_note || '');
+        }
+
+        // ---------- Fees panel ----------
+        function eqItem(label, str, format, field, extraClass) {
+            var item = el('div', 'fee-eq-item' + (extraClass ? ' ' + extraClass : ''));
+            item.appendChild(el('div', 'fee-eq-label', label));
+            var value = moneyEl('div', 'fee-eq-value', str, format, field);
+            if (format === 'signed' && tone(str)) value.classList.add(tone(str));
+            if (format.indexOf('fee') === 0) value.classList.add('fee');
+            item.appendChild(value);
+            return item;
+        }
+
+        function renderFees(data) {
+            var s = data.summary;
+            var fees = data.fees;
+            if (!fees.shares || fees.before_fees_pnl === undefined) {
+                // data.json from before the Fees redesign: say so instead of breaking the page.
+                setText('feeHeroNote', 'Fee details are updating. Check back after the next data refresh.');
+                return;
+            }
+
+            // 1. Before fees − buy fees − sell fees − deposit fee = after fees (the headline).
+            var eq = $('feeEquation');
+            eq.textContent = '';
+            eq.appendChild(eqItem('Before fees', fees.before_fees_pnl, 'signed', 'fees.before_fees_pnl'));
+            eq.appendChild(el('span', 'fee-eq-op', '−'));
+            eq.appendChild(eqItem('Buy fees', fees.buy_total, 'plain', 'fees.buy_total', null));
+            eq.lastChild.querySelector('.fee-eq-value').classList.add('fee');
+            eq.appendChild(el('span', 'fee-eq-op', '−'));
+            eq.appendChild(eqItem('Sell fees', fees.sell_total, 'plain', 'fees.sell_total', null));
+            eq.lastChild.querySelector('.fee-eq-value').classList.add('fee');
+            eq.appendChild(el('span', 'fee-eq-op', '−'));
+            eq.appendChild(eqItem('Deposit fee', s.deposit_fees, 'plain', 'summary.deposit_fees', null));
+            eq.lastChild.querySelector('.fee-eq-value').classList.add('fee');
+            eq.appendChild(el('span', 'fee-eq-op', '='));
+            eq.appendChild(eqItem('After fees (your net P&L)', s.net_pnl, 'signed', 'summary.net_pnl', 'result'));
+
+            var note = $('feeHeroNote');
+            note.textContent = 'Fees took ';
+            note.appendChild(moneyEl('strong', '', s.total_fees, 'plain', 'summary.total_fees'));
+            note.appendChild(document.createTextNode(' off your result. Trading fees were ≈' + fees.trading_pct_of_stake
+                + '% of the '));
+            note.appendChild(moneyEl('span', '', fees.stake_total, 'plain', 'fees.stake_total'));
+            note.appendChild(document.createTextNode(' you’ve staked. Kalshi’s profile P&L doesn’t subtract fees, so it reads closer to the “before fees” number.'));
+
+            // 2. Where they came from: one stacked bar + three rows.
+            var parts = [
+                { name: 'Buy fees', sub: 'Paid when you bought in', value: fees.buy_total, field: 'fees.buy_total', share: fees.shares.buy, color: '#e0a94a' },
+                { name: 'Sell fees', sub: 'Paid when you sold before the result', value: fees.sell_total, field: 'fees.sell_total', share: fees.shares.sell, color: '#b98535' },
+                { name: 'Deposit fee', sub: 'One-time, on your ' + plain(s.deposited) + ' deposit', value: s.deposit_fees, field: 'summary.deposit_fees', share: fees.shares.deposit, color: '#7d6a4a' }
+            ];
+            var bar = $('feeBar');
+            var rows = $('feeRows');
+            bar.textContent = '';
+            rows.textContent = '';
+            parts.forEach(function (part) {
+                var seg = el('span');
+                seg.style.width = part.share + '%';
+                seg.style.background = part.color;
+                bar.appendChild(seg);
+                var row = el('div', 'fee-row');
+                var swatch = el('i', 'swatch');
+                swatch.style.background = part.color;
+                row.appendChild(swatch);
+                var name = el('div', 'fee-row-name', part.name);
+                name.appendChild(el('span', 'fee-row-sub', part.sub));
+                row.appendChild(name);
+                row.appendChild(moneyEl('div', 'fee-row-value', part.value, 'plain', part.field));
+                row.appendChild(el('div', 'fee-row-share', '≈' + part.share + '%'));
+                rows.appendChild(row);
+            });
+
+            // 3. Taker vs maker.
+            setMoney('takerPaid', fees.taker_fees, 'plain', 'fees.taker_fees');
+            setText('takerCount', 'on ' + fees.taker_fills + ' fill' + (fees.taker_fills === 1 ? '' : 's'));
+            setMoney('makerPaid', fees.maker_fees, 'plain', 'fees.maker_fees');
+            setText('makerCount', 'on ' + fees.maker_fills + ' fill' + (fees.maker_fills === 1 ? '' : 's'));
+
+            // 4. Fees by bet, most fees first (ordering via Exact.cmp, never arithmetic here).
+            var bets = (data.bets || []).slice().sort(function (left, right) { return Exact.cmp(right.fee, left.fee); });
+            var body = $('feeBetBody');
+            body.textContent = '';
+            bets.forEach(function (bet) {
+                var index = data.bets.indexOf(bet);
+                var tr = el('tr');
+                var nameCell = el('td');
+                nameCell.appendChild(el('div', 'bet-title', bet.title));
+                nameCell.appendChild(el('div', 'bet-sub', bet.category));
+                tr.appendChild(nameCell);
+                var statusCell = el('td');
+                statusCell.appendChild(statusPill(bet));
+                tr.appendChild(statusCell);
+                tr.appendChild(moneyEl('td', 'num', bet.stake, 'plain', 'bets.' + index + '.stake'));
+                tr.appendChild(moneyEl('td', 'num fee', bet.fee, 'plain', 'bets.' + index + '.fee'));
+                var shareCell = el('td', 'share-col');
+                var share = el('div', 'share-cell');
+                var track = el('div', 'share-track');
+                var fill = el('div', 'share-fill');
+                fill.style.width = (bet.fee_pct_of_stake || '0') + '%';
+                track.appendChild(fill);
+                share.appendChild(track);
+                share.appendChild(el('span', 'share-text', bet.fee_pct_of_stake === null ? '—' : '≈' + bet.fee_pct_of_stake + '%'));
+                shareCell.appendChild(share);
+                tr.appendChild(shareCell);
+                body.appendChild(tr);
+            });
+            var foot = $('feeBetFoot');
+            foot.textContent = '';
+            var total = el('tr');
+            total.appendChild(el('td', '', 'All ' + bets.length + ' bets'));
+            total.appendChild(el('td'));
+            total.appendChild(moneyEl('td', 'num', fees.stake_total, 'plain', 'fees.stake_total'));
+            total.appendChild(moneyEl('td', 'num fee', s.trading_fees, 'plain', 'summary.trading_fees'));
+            total.appendChild(el('td', 'share-col share-text', '≈' + fees.trading_pct_of_stake + '%'));
+            foot.appendChild(total);
+
+            if (fees.rounding && !isZeroStr(fees.rounding)) {
+                setText('roundingLine', 'Trading fees include ' + plain(fees.rounding) + ' of Kalshi rounding fees, less '
+                    + plain(fees.rebates) + ' of rebates.');
+            }
+            var FEE_SOURCES = {
+                csv_fee_column: 'Source: the fee column in Kalshi’s activity export.',
+                api_fee_cost: 'Source: Kalshi’s fee record on each fill (Trade API).'
+            };
+            setText('feeSource', FEE_SOURCES[fees.source] || '');
         }
 
         // ---------- Charts (Overview + Performance) ----------
@@ -1691,6 +1873,7 @@
             })
             .then(function (data) {
                 renderSummary(data);
+                renderFees(data);
                 renderSeriesTable(data);
                 renderCategoryTable(data);
                 dataReady = data;

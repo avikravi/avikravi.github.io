@@ -296,6 +296,18 @@ def identity_failures(dashboard, fills=None):
         problems.append("maker + taker fees != trading fees")
     if D(fees["reported"]) + D(fees["rounding"]) - D(fees["rebates"]) != D(summ["trading_fees"]):
         problems.append("reported + rounding - rebates != trading fees")
+    # Fees page: before fees - buy fees - sell fees - deposit fee = headline, exactly;
+    # buy + sell fees = trading fees; each bet's fee = its buy + sell fees.
+    if "before_fees_pnl" in fees:
+        if D(fees["before_fees_pnl"]) - D(fees["buy_total"]) - D(fees["sell_total"]) - D(summ["deposit_fees"]) != D(summ["net_pnl"]):
+            problems.append("fees page equation doesn't land on the headline")
+        if D(fees["buy_total"]) + D(fees["sell_total"]) != D(summ["trading_fees"]):
+            problems.append("buy + sell fees != trading fees")
+        if sum((D(bet["stake"]) for bet in bets), D(0)) != D(fees["stake_total"]):
+            problems.append("stake total != sum of stakes")
+    for bet in bets:
+        if "fee" in bet and D(bet["fee"]) != D(bet["buy_fees"]) + D(bet["sell_fees"]):
+            problems.append("{}: fee != buy fees + sell fees".format(bet["title"]))
     if fills is not None and sum((fill["fee"] for fill in fills), D(0)) != D(summ["trading_fees"]):
         problems.append("trading fees != exact sum of fill fees")
     if dashboard.get("max_decimal_places", 0) > 18:

@@ -46,6 +46,7 @@ VIEWS = {
     "lost_nfl": "bets?status=lost&cat=NFL",
     "since_sep": "bets?from=2026-09-01",
     "overview": "overview",
+    "fees": "fees",
 }
 CHROME_CANDIDATES = [
     os.environ.get("CHROME_BIN", ""),
@@ -410,6 +411,34 @@ class DisplayTests(unittest.TestCase):
         row = dom.find(lambda node: node.attrs.get("data-row") == legs.attrs["data-legs"])
         self.assertIn("Parlay · 3 legs", row.text())
         self.assertIn("WC", row.text())
+
+    def test_fees_page_adds_up_on_screen(self):
+        dom = self.doms["fees"]
+        panel = dom.find(lambda node: node.attrs.get("id") == "panel-fees")
+
+        def shown(field):
+            node = panel.find(lambda item: item.attrs.get("data-field") == field)
+            return parse_shown(node.text(), node.attrs.get("data-format", "plain"))
+
+        # Before fees - buy fees - sell fees - deposit fee = after fees = the headline, exactly.
+        before, buy, sell, deposit = (shown("fees.before_fees_pnl"), shown("fees.buy_total"),
+                                      shown("fees.sell_total"), shown("summary.deposit_fees"))
+        after = shown("summary.net_pnl")
+        self.assertEqual(before - buy - sell - deposit, after)
+        self.assertEqual(after, D(self.data["summary"]["net_pnl"]))
+        # Buy + sell + deposit = total fees; buy + sell = trading fees = taker + maker.
+        self.assertEqual(buy + sell + deposit, shown("summary.total_fees"))
+        self.assertEqual(buy + sell, shown("summary.trading_fees"))
+        self.assertEqual(shown("fees.taker_fees") + shown("fees.maker_fees"), buy + sell)
+        # Fees-by-bet table: every bet listed, most fees first, summing to the trading fees.
+        body = panel.find(lambda node: node.attrs.get("id") == "feeBetBody")
+        fee_cells = [node for node in body.walk() if str(node.attrs.get("data-field", "")).endswith(".fee")]
+        self.assertEqual(len(fee_cells), len(self.data["bets"]))
+        amounts = [parse_shown(node.text()) for node in fee_cells]
+        self.assertEqual(amounts, sorted(amounts, reverse=True))
+        self.assertEqual(sum(amounts, D(0)), buy + sell)
+        stakes = [parse_shown(node.text()) for node in body.walk() if str(node.attrs.get("data-field", "")).endswith(".stake")]
+        self.assertEqual(sum(stakes, D(0)), shown("fees.stake_total"))
 
     def test_sidebar_shows_account_value_on_every_view(self):
         summary = self.data["summary"]

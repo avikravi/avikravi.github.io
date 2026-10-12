@@ -300,8 +300,9 @@ def make_bet(entry, title, settlement_payout=None, resolved_time=None, is_open=F
         "sell_fees": sell_fees,
         "net_payout": net_payout,
         "profit": profit,
-        # Kept for the fee and win-rate summaries.
+        # Total fees on this bet (buy + sell), and that as ≈% of the stake (a ratio, for the Fees page).
         "fee": buy_fees + sell_fees,
+        "fee_pct_of_stake": approx_tenths(buy_fees + sell_fees, stake),
         "fills": fill_rows,
         "settlement": settlement,
         "live": live,
@@ -326,6 +327,17 @@ def fee_breakdown(fills):
     }
 
 
+def approx_tenths(part, whole):
+    """A ratio as a percent with one decimal, e.g. "61.5" (shown with "≈"; ratios, not money).
+
+    Half-up integer arithmetic on exact Decimals; None if whole is zero.
+    """
+    if not whole:
+        return None
+    tenths = int((part * 2000 + whole) // (whole * 2))
+    return "{}.{}".format(tenths // 10, tenths % 10)
+
+
 def approx_percent(part, whole):
     """Whole-number percent for the win-rate tile (a ratio, not money; shown with "≈")."""
     return (part * 200 + whole) // (whole * 2)
@@ -344,7 +356,7 @@ def to_json(value):
 
 BET_KEYS = ("kind", "tag", "date", "resolved", "event_date", "title", "side", "category", "status", "outcome",
             "unrealized", "contracts", "remaining", "price", "stake", "buy_fees", "cost", "payout", "sell_fees",
-            "net_payout", "profit", "fills", "settlement", "live", "legs")
+            "net_payout", "profit", "fills", "settlement", "live", "legs", "fee", "fee_pct_of_stake")
 
 
 def build_dashboard(bets, fills, cash, kalshi_open_value, source, fee_source, pnl_series=None, series_note="",
@@ -457,7 +469,7 @@ def build_dashboard(bets, fills, cash, kalshi_open_value, source, fee_source, pn
             "best_bet": {"title": best["title"], "profit": dec_str(best["profit"])} if best else None,
             "worst_bet": {"title": worst["title"], "profit": dec_str(worst["profit"])} if worst else None,
         },
-        "fees": dict(fee_breakdown(fills), source=fee_source),
+        "fees": dict(fee_breakdown(fills), source=fee_source, **fee_story(bets, net_pnl, trading_fees, deposit_fees)),
         "ledger": ledger or {},
         "pnl_series": pnl_series,
         "pnl_series_note": series_note,
@@ -471,6 +483,31 @@ def build_dashboard(bets, fills, cash, kalshi_open_value, source, fee_source, pn
     # The most decimal places any amount uses; kalshi/exact.js must handle at least this many.
     dashboard["max_decimal_places"] = max_places(dashboard)
     return dashboard
+
+
+def fee_story(bets, net_pnl, trading_fees, deposit_fees):
+    """Exact figures for the Fees page.
+
+    before_fees_pnl - buy fees - sell fees - deposit fees = net_pnl, exactly.
+    Buy + sell fees are the trading fees on every bet (= trading_fees).
+    Shares are ≈ percents (ratios, one decimal) used only for bar widths and labels.
+    """
+    buy_total = sum((bet["buy_fees"] for bet in bets), ZERO)
+    sell_total = sum((bet["sell_fees"] for bet in bets), ZERO)
+    stake_total = sum((bet["stake"] for bet in bets), ZERO)
+    total = buy_total + sell_total + deposit_fees
+    return {
+        "buy_total": dec_str(buy_total),
+        "sell_total": dec_str(sell_total),
+        "stake_total": dec_str(stake_total),
+        "before_fees_pnl": dec_str(net_pnl + total),
+        "shares": {
+            "buy": approx_tenths(buy_total, total),
+            "sell": approx_tenths(sell_total, total),
+            "deposit": approx_tenths(deposit_fees, total),
+        },
+        "trading_pct_of_stake": approx_tenths(trading_fees, stake_total),
+    }
 
 
 def max_places(node):

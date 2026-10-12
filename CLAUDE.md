@@ -95,6 +95,16 @@ scripts/
                          list legs (hit / missed / unknown from mve_selected_legs[].
                          yes_settlement_value_dollars, else the leg market's result) and "All legs
                          must hit to win". The table fits 1280px; narrower, it scrolls inside its card.
+                         FEES PAGE (2026-10-12 redesign): (1) "What fees cost you" equation: Before fees
+                         − Buy fees − Sell fees − Deposit fee = After fees (= headline net P&L), from
+                         data.json fees.before_fees_pnl / buy_total / sell_total (exact, tested on screen);
+                         (2) "Where they came from": stacked bar + rows (bar widths use fees.shares, ≈%
+                         ratios); (3) "Taking vs. setting a price" (taker/maker in plain words);
+                         (4) "Why some bets cost more": Kalshi's taker fee ≈ 7% × price × (1 − price) per
+                         contract, examples at 50¢ / 20-80¢ / 5-95¢ (matches the live fills within 0.6¢);
+                         (5) "Fees by bet": every bet, most fees first (sorted with Exact.cmp), fee and
+                         ≈% of stake (bet.fee, bet.fee_pct_of_stake). If data.json lacks these fields the
+                         panel shows an "updating" note instead of breaking the page.
                          JS MONEY MATH: kalshi/exact.js (BigInt, fixed SCALE 18 decimal places,
                          refuses numbers/exponents/longer decimals) is the ONLY money arithmetic;
                          kalshi/bets.js (pure filter/facet/group/totals logic, shared with Node tests)
