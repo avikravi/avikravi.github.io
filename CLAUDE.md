@@ -59,7 +59,10 @@ scripts/
                          when every mve_selected_legs ticker starts with KXWC, or the ticker is in
                          WORLD_CUP_PARLAYS), clipped to TITLE_MAX (40) with "…".
                          LAYOUT (2026-10-11, revised): desktop-first (1280px+), its OWN fixed left
-                         sidebar (240px): title + live dot + small net P&L, 5 hash links with
+                         sidebar (240px): title + live dot, then an "Account value" card (the biggest
+                         number in the sidebar: summary.account_value = cash + open bets at bid, with a
+                         "$cash cash + $open open at bid" line and net P&L under it; also shown in the
+                         phone drawer), 5 hash links with
                          inline-SVG icons (#overview #performance #bets #fees #about; active =
                          green left bar + aria-current="page"), "Last updated" at the bottom. No
                          separate Open section: open bets live in Bets (old #open redirects to

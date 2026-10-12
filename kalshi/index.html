@@ -98,6 +98,12 @@
         .brand-name { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; margin: 0; line-height: 1.25; }
         .brand-net { margin-top: 8px; font-size: 13px; color: var(--ink-faint); }
         .brand-net strong { font-size: 15px; font-weight: 700; margin-left: 4px; }
+        /* Account value: the biggest number in the sidebar. */
+        .side-account { margin-top: 14px; padding: 12px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+        .side-account .label { font-size: 10.5px; }
+        .side-account-value { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin-top: 3px; overflow-wrap: anywhere; }
+        .side-account-sub { color: var(--ink-faint); font-size: 11.5px; margin-top: 3px; line-height: 1.35; }
+        .side-account .brand-net { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
 
         .nav { display: flex; flex-direction: column; gap: 2px; }
         .nav a {
@@ -436,7 +442,12 @@
                 <span class="live-dot" aria-hidden="true"></span>
                 <p class="brand-name">Avi's Kalshi Tracker</p>
             </div>
-            <div class="brand-net">Net P&amp;L<strong id="sideNet">—</strong></div>
+            <div class="side-account">
+                <div class="label">Account value</div>
+                <div class="side-account-value" id="sideAccount">—</div>
+                <div class="side-account-sub" id="sideAccountSub"></div>
+                <div class="brand-net">Net P&amp;L<strong id="sideNet">—</strong></div>
+            </div>
         </div>
 
         <nav class="nav" id="nav">
@@ -886,6 +897,13 @@
             }));
             setText('sideSource', data.source === 'csv' ? 'from a CSV export' : 'live from Kalshi');
             setMoney('sideNet', s.net_pnl, 'signed', 'summary.net_pnl');
+            setMoney('sideAccount', s.account_value, 'plain', 'summary.account_value');
+            var accountSub = $('sideAccountSub');
+            accountSub.textContent = '';
+            accountSub.appendChild(moneyEl('span', '', s.cash, 'plain', 'summary.cash'));
+            accountSub.appendChild(document.createTextNode(' cash + '));
+            accountSub.appendChild(moneyEl('span', '', s.open_value, 'plain', 'summary.open_value'));
+            accountSub.appendChild(document.createTextNode(s.net_pnl_basis === 'bets_at_bid' ? ' open at bid' : ' open'));
             setMoney('topNet', s.net_pnl, 'signed', 'summary.net_pnl');
 
             setMoney('netPnl', s.net_pnl, 'signed', 'summary.net_pnl');

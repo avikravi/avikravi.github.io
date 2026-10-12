@@ -411,6 +411,17 @@ class DisplayTests(unittest.TestCase):
         self.assertIn("Parlay · 3 legs", row.text())
         self.assertIn("WC", row.text())
 
+    def test_sidebar_shows_account_value_on_every_view(self):
+        summary = self.data["summary"]
+        self.assertEqual(D(summary["account_value"]), D(summary["cash"]) + D(summary["open_value"]))
+        for key, dom in self.doms.items():
+            sidebar = dom.find(lambda node: node.attrs.get("id") == "sidebar")
+            value = sidebar.find(lambda node: node.attrs.get("id") == "sideAccount")
+            self.assertEqual(value.text().strip(), display(summary["account_value"], "plain"), key)
+            sub = sidebar.find(lambda node: node.attrs.get("id") == "sideAccountSub").text()
+            self.assertEqual(sub, "{} cash + {} open at bid".format(display(summary["cash"], "plain"),
+                                                                    display(summary["open_value"], "plain")), key)
+
     def test_overview_open_link_and_nav(self):
         dom = self.doms["overview"]
         link = dom.find(lambda node: node.attrs.get("id") == "openLink")
