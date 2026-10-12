@@ -175,7 +175,7 @@ MONEY_KEYS = {
     "cost", "payout", "profit", "fee", "value", "pnl", "day", "amount", "net_pnl", "account_value", "cash",
     "open_value", "deposited", "credits", "trading_fees", "deposit_fees", "total_fees", "realized_pnl",
     "unrealized_pnl", "maker_fees", "taker_fees", "reported", "rounding", "rebates", "contracts", "remaining",
-    "stake", "buy_fees", "sell_fees", "net_payout", "price", "bid", "per_contract",
+    "stake", "buy_fees", "sell_fees", "net_payout", "price", "bid", "per_contract", "money_in", "change",
 }
 
 
@@ -270,6 +270,19 @@ def identity_failures(dashboard, fills=None):
             problems.append("chart {}: items {} != day {}".format(point["date"], items_total, point["day"]))
     if dashboard["pnl_series"] and D(dashboard["pnl_series"][-1]["pnl"]) != D(summ["net_pnl"]):
         problems.append("last chart point {} != net {}".format(dashboard["pnl_series"][-1]["pnl"], summ["net_pnl"]))
+
+    # Account-value chart: each weekly point = money in + P&L to that date; changes add up;
+    # the last point is today's account value.
+    weekly = dashboard.get("account_series") or []
+    previous = None
+    for point in weekly:
+        if D(point["account_value"]) != D(point["money_in"]) + D(point["pnl"]):
+            problems.append("account chart {}: value != money in + pnl".format(point["date"]))
+        if previous is not None and D(point["change"]) != D(point["account_value"]) - previous:
+            problems.append("account chart {}: change is wrong".format(point["date"]))
+        previous = D(point["account_value"])
+    if weekly and D(weekly[-1]["account_value"]) != D(summ["account_value"]):
+        problems.append("last account chart point {} != account value {}".format(weekly[-1]["account_value"], summ["account_value"]))
 
     # Net P&L == account value - deposits - credits; account value == cash + open value.
     if D(summ["net_pnl"]) != D(summ["account_value"]) - D(summ["deposited"]) - D(summ["credits"]):

@@ -471,6 +471,30 @@ class DisplayTests(unittest.TestCase):
         bets_current = self.doms["all"].find(lambda node: node.attrs.get("aria-current") == "page")
         self.assertEqual(bets_current.attrs.get("href"), "#bets")
 
+    def test_overview_account_chart_table(self):
+        # One table row per weekly point; each value = money in + profit; the latest
+        # point shown is today's account value; changes add up on screen.
+        series = self.data["account_series"]
+        dom = self.doms["overview"]
+        card = dom.find(lambda node: node.attrs.get("id") == "accountCard")
+        self.assertNotIn("hidden", card.attrs)
+        body = dom.find(lambda node: node.attrs.get("id") == "accountBody")
+        rows = [node for node in body.children if getattr(node, "tag", None) == "tr"]
+        self.assertEqual(len(rows), len(series))
+        shown = {}
+        for node in body.walk():
+            field = node.attrs.get("data-field")
+            if field:
+                shown[field] = parse_shown(node.text(), node.attrs.get("data-format"))
+        last = len(series) - 1
+        self.assertEqual(shown["account_series.{}.account_value".format(last)], D(self.data["summary"]["account_value"]))
+        running = shown["account_series.0.account_value"]
+        for index in range(1, len(series)):
+            running += shown["account_series.{}.change".format(index)]
+            self.assertEqual(running, shown["account_series.{}.account_value".format(index)])
+        now = dom.find(lambda node: node.attrs.get("id") == "accountNow")
+        self.assertEqual(now.text().strip(), "Now " + display(self.data["summary"]["account_value"], "plain"))
+
     def test_overview_money_equation_adds_up_on_screen(self):
         # Deposited + referral bonus + profit = account value, as shown, exactly.
         eq = self.doms["overview"].find(lambda node: node.attrs.get("id") == "moneyEquation")

@@ -73,6 +73,17 @@ scripts/
                          "?" = Bets filter state); back/forward walk sections, filter changes use
                          history.replaceState. Below 900px the sidebar is an off-canvas drawer behind
                          a "Menu" button in a slim sticky top bar.
+                         ACCOUNT CHART (2026-10-12, top of Overview): "Account value over time", data.json
+                         account_series from kalshi_common.weekly_account_series(pnl_series): one point
+                         every 7 days from the first deposit, plus a final point for today. Each point
+                         {date, money_in, pnl, account_value, change} (exact strings; change null on the
+                         first): account_value = deposits + credits received by that date + pnl_series
+                         running total at that date, so open bets count at cost until they finish; the last
+                         point uses net P&L, so it equals summary.account_value (identity-tested). Solid
+                         green line with a dot per week + dashed stepped "Money you put in" line, tooltip
+                         (value, money in, profit so far, change), "Show weekly values" table (Money put in
+                         column hidden below 600px). Card hidden if data.json lacks account_series.
+                         write_if_changed ignores the moving last point, like pnl_series.
                          OVERVIEW (2026-10-12 redesign, plain words, same information): (1) hero
                          "Profit after fees" = summary.net_pnl, a one-line meaning (N bets, after every
                          fee, bonus isn't profit), "How it adds up: finished bets (realized) [+ open bets

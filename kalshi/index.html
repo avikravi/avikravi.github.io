@@ -225,6 +225,17 @@
 
         .chart-box { position: relative; height: 380px; }
         .chart-box.small { height: 190px; }
+        .chart-box.account { height: 280px; }
+        .account-card { margin-bottom: 14px; }
+        .account-card[hidden] { display: none; }
+        .account-now { font-size: 13px; color: var(--ink-faint); white-space: nowrap; }
+        .account-now strong { color: var(--ink); font-size: 15px; }
+        .account-card .table-card { overflow-x: auto; }
+        .account-card .week-col { white-space: nowrap; }
+        .chart-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12.5px; color: var(--ink-soft); margin: 0 0 8px; }
+        .chart-legend span { display: inline-flex; align-items: center; gap: 7px; }
+        .line-key { display: inline-block; flex: none; width: 20px; height: 0; border-top: 2px solid var(--gain); }
+        .line-key.dashed { border-top: 2px dashed var(--ink-faint); }
         .chart-box.cats { height: 300px; }
 
         .gain { color: var(--gain); }
@@ -481,6 +492,7 @@
             .hero-top { flex-direction: column; gap: 6px; }
             .chart-box { height: 260px; }
             .chart-box.small { height: 180px; }
+            .chart-box.account { height: 220px; }
             .bets-scroll { overflow-x: auto; }
             #timeline { height: 120px; }
         }
@@ -489,6 +501,8 @@
         }
         @media (max-width: 599px) {
             .tiles.trio { grid-template-columns: minmax(0, 1fr); }
+            .account-card .in-col { display: none; }
+            .account-card details.data-view td, .account-card details.data-view th { padding: 7px 8px; }
             /* The money equation reads top to bottom: one row per amount. */
             .money-card .fee-eq { flex-direction: column; gap: 4px; }
             .money-card .fee-eq-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; flex: none; }
@@ -579,6 +593,28 @@
             <section class="panel" id="panel-overview" data-title="Overview">
                 <div class="panel-head">
                     <h1>Overview</h1>
+                </div>
+
+                <div class="card account-card" id="accountCard" hidden>
+                    <div class="card-head">
+                        <h2>Account value over time</h2>
+                        <span class="account-now" id="accountNow"></span>
+                    </div>
+                    <p class="section-desc" id="accountChartNote"></p>
+                    <div class="chart-legend" aria-hidden="true">
+                        <span><i class="line-key"></i>Account value (each dot is one week)</span>
+                        <span><i class="line-key dashed"></i>Money you put in</span>
+                    </div>
+                    <div class="chart-box account"><canvas id="accountChart" role="img" aria-label="Line chart of the account's total value once a week since the first deposit, with the money put in as a dashed line"></canvas></div>
+                    <details class="data-view">
+                        <summary>Show weekly values</summary>
+                        <div class="table-card">
+                            <table>
+                                <thead><tr><th>Week of</th><th class="num in-col">Money put in</th><th class="num">Account value</th><th class="num">Change</th></tr></thead>
+                                <tbody id="accountBody"></tbody>
+                            </table>
+                        </div>
+                    </details>
                 </div>
 
                 <div class="card hero">
@@ -995,6 +1031,7 @@
             if (name === 'overview' && !chartsDrawn.small) {
                 chartsDrawn.small = true;
                 renderPnlChart('pnlChartSmall', data, true);
+                renderAccountChart(data);
             }
             if (name === 'performance' && !chartsDrawn.performance) {
                 chartsDrawn.performance = true;
@@ -1353,6 +1390,128 @@
                         pointBackgroundColor: function (ctx) { return ctx.raw ? stepColor(ctx.raw.row) : COLORS.gain; },
                         pointBorderColor: COLORS.surface,
                         pointBorderWidth: 1.5
+                    }]
+                },
+                options: opts
+            });
+        }
+
+        // ---------- Account value over time (weekly points from data.json) ----------
+        function weekLabel(series, index) {
+            var row = series[index];
+            if (index === series.length - 1) return 'Today, ' + fmtDate(row.date, true);
+            return 'Week of ' + fmtDate(row.date, true);
+        }
+
+        function renderAccountSection(data) {
+            var series = data.account_series || [];
+            if (!series.length) return;   // data.json from before this chart existed
+            $('accountCard').hidden = false;
+            var now = $('accountNow');
+            now.textContent = 'Now ';
+            var lastIndex = series.length - 1;
+            var latest = series[lastIndex];
+            now.appendChild(moneyEl('strong', '', latest.account_value, 'plain', 'account_series.' + lastIndex + '.account_value'));
+            setText('accountChartNote', 'One point per week since your first deposit on ' + fmtDate(series[0].date, true)
+                + '. The gap between the two lines is your profit. Open bets count at what you paid until they finish; '
+                + 'today’s point values them at the current bid.');
+            var body = $('accountBody');
+            body.textContent = '';
+            series.slice().reverse().forEach(function (row) {
+                var index = series.indexOf(row);
+                var tr = el('tr');
+                tr.appendChild(el('td', 'week-col', index === series.length - 1 ? 'Today' : fmtDate(row.date, true)));
+                tr.appendChild(moneyEl('td', 'num in-col', row.money_in, 'plain', 'account_series.' + index + '.money_in'));
+                tr.appendChild(moneyEl('td', 'num', row.account_value, 'plain', 'account_series.' + index + '.account_value'));
+                var change = row.change === null ? el('td', 'num', '—')
+                    : moneyEl('td', 'num', row.change, 'signed', 'account_series.' + index + '.change');
+                if (row.change !== null && tone(row.change)) change.classList.add(tone(row.change));
+                tr.appendChild(change);
+                body.appendChild(tr);
+            });
+        }
+
+        function renderAccountChart(data) {
+            var series = data.account_series || [];
+            if (!series.length) return;
+            var value = series.map(function (row, index) {
+                return { x: dayMs(row.date), y: Number(row.account_value), index: index }; // plot-coordinate
+            });
+            var moneyIn = series.map(function (row, index) {
+                return { x: dayMs(row.date), y: Number(row.money_in), index: index }; // plot-coordinate
+            });
+            var opts = baseChartOptions();
+            opts.interaction = { mode: 'index', axis: 'x', intersect: false };
+            opts.layout = { padding: { top: 8, right: 10, left: 4 } };
+            opts.plugins.tooltip.filter = function (item) { return item.datasetIndex === 0; };
+            opts.plugins.tooltip.callbacks = {
+                title: function (items) { return weekLabel(series, items[0].raw.index); },
+                label: function (item) {
+                    var row = series[item.raw.index];
+                    var lines = ['Account value ' + plain(row.account_value), 'Money put in ' + plain(row.money_in),
+                        'Profit so far ' + signed(row.pnl)];
+                    var index = item.raw.index;
+                    if (row.change !== null) {
+                        lines.push((index === series.length - 1 ? 'Change since ' + fmtDate(series[index - 1].date, false)
+                            : 'Change from the week before') + ' ' + signed(row.change));
+                    }
+                    return lines;
+                }
+            };
+            opts.scales = {
+                x: {
+                    type: 'linear',
+                    min: value[0].x,
+                    max: value[value.length - 1].x,
+                    grid: { display: false },
+                    border: { color: COLORS.line },
+                    ticks: {
+                        color: COLORS.faint, maxTicksLimit: 6, maxRotation: 0,
+                        callback: function (tick) {
+                            var day = new Date(tick);
+                            return MONTHS[day.getUTCMonth()] + " '" + String(day.getUTCFullYear()).slice(2);
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: COLORS.line },
+                    border: { display: false },
+                    ticks: {
+                        color: COLORS.faint, maxTicksLimit: 5,
+                        callback: function (tick, index, ticks) {
+                            return plain(String(Chart.Ticks.formatters.numeric.call(this, tick, index, ticks)).replace(/,/g, ''));
+                        }
+                    }
+                }
+            };
+            new Chart($('accountChart'), {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Account value',
+                        data: value,
+                        borderColor: COLORS.gain,
+                        borderWidth: 2,
+                        tension: 0,
+                        fill: { target: 'origin' },
+                        backgroundColor: 'rgba(33, 201, 122, 0.10)',
+                        pointRadius: value.length > 120 ? 0 : 3,
+                        pointHitRadius: 10,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: COLORS.gain,
+                        pointBorderColor: COLORS.surface,
+                        pointBorderWidth: 1.5
+                    }, {
+                        label: 'Money put in',
+                        data: moneyIn,
+                        stepped: true,
+                        borderColor: COLORS.faint,
+                        borderWidth: 1.5,
+                        borderDash: [5, 4],
+                        pointRadius: 0,
+                        pointHitRadius: 0,
+                        fill: false
                     }]
                 },
                 options: opts
@@ -1922,6 +2081,7 @@
                 renderSummary(data);
                 renderFees(data);
                 renderSeriesTable(data);
+                renderAccountSection(data);
                 renderCategoryTable(data);
                 dataReady = data;
                 showPanel();

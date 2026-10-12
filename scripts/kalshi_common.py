@@ -473,6 +473,7 @@ def build_dashboard(bets, fills, cash, kalshi_open_value, source, fee_source, pn
         "ledger": ledger or {},
         "pnl_series": pnl_series,
         "pnl_series_note": series_note,
+        "account_series": weekly_account_series(pnl_series),
         # How each settled bet's date was found (counts only). "last_fill" means
         # no settlement or close time was available and the bet's last trade
         # date was used instead.
@@ -560,6 +561,52 @@ def daily_series(resolved, deposit_fees, net_pnl, today=None):
     return points
 
 
+def money_in_by(day):
+    """Deposits + credits received on or before day (exact)."""
+    rows = [row["amount"] for row in DEPOSITS + CREDITS if row["date"] <= day]
+    return sum(rows, ZERO)
+
+
+def weekly_account_series(pnl_series):
+    """Account value once a week, from the first deposit to today.
+
+    Points fall every 7 days from the first deposit, plus a final point on the
+    last day of pnl_series (today). Each is {date, money_in, pnl, account_value,
+    change} as exact strings, with account_value = money_in + pnl exactly:
+    money put in by that date plus profit from bets finished by then (open bets
+    count at what was paid until they finish). The final point uses net P&L, so
+    it equals summary.account_value. change = difference from the previous point
+    (null on the first point).
+    """
+    if not DEPOSITS or not pnl_series:
+        return []
+    start = DEPOSITS[0]["date"]
+    end = pnl_series[-1]["date"]
+    dates = []
+    moment = datetime.strptime(start, "%Y-%m-%d")
+    while moment.strftime("%Y-%m-%d") < end:
+        dates.append(moment.strftime("%Y-%m-%d"))
+        moment += timedelta(days=7)
+    dates.append(end)
+
+    points = []
+    previous = None
+    for day in dates:
+        before = [point for point in pnl_series if point["date"] <= day]
+        pnl = to_decimal(before[-1]["pnl"]) if before else ZERO
+        money_in = money_in_by(day)
+        value = money_in + pnl
+        points.append({
+            "date": day,
+            "money_in": dec_str(money_in),
+            "pnl": dec_str(pnl),
+            "account_value": dec_str(value),
+            "change": dec_str(value - previous) if previous is not None else None,
+        })
+        previous = value
+    return points
+
+
 def write_if_changed(dashboard, path=DATA_PATH):
     """Write data.json, but only bump the timestamp when the numbers changed.
 
@@ -580,8 +627,9 @@ def write_if_changed(dashboard, path=DATA_PATH):
         old.pop("updated", None)
         # The trailing "today" point moves daily even when nothing else did.
         for blob in (old, comparable):
-            series = blob.get("pnl_series") or []
-            blob["pnl_series"] = series[:-1]
+            for key in ("pnl_series", "account_series"):
+                series = blob.get(key) or []
+                blob[key] = series[:-1]
         if old == comparable:
             return False
 

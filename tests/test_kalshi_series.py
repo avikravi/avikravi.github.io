@@ -47,5 +47,37 @@ class DailySeriesTests(unittest.TestCase):
         self.assertEqual(points[0]["day"], "11")
 
 
+class WeeklyAccountSeriesTests(unittest.TestCase):
+    def series(self):
+        bets = [finished("A", "2025-12-24", "2.12"), finished("B", "2026-02-04", "-4.29")]
+        daily = kalshi_common.daily_series(bets, D("0.20"), net_pnl=D("-1.5"), today="2026-02-20")
+        return kalshi_common.weekly_account_series(daily)
+
+    def test_one_point_a_week_from_first_deposit_then_today(self):
+        points = self.series()
+        dates = [point["date"] for point in points]
+        self.assertEqual(dates[0], kalshi_common.DEPOSITS[0]["date"])
+        self.assertEqual(dates[-1], "2026-02-20")
+        self.assertEqual(dates[1], "2025-12-09")
+        self.assertEqual(len(dates), len(set(dates)))
+        self.assertTrue(all(left < right for left, right in zip(dates, dates[1:])))
+
+    def test_value_is_money_in_plus_pnl_exactly(self):
+        points = self.series()
+        self.assertEqual(points[0]["account_value"], "9.8")    # $10 deposit - $0.20 fee
+        self.assertIsNone(points[0]["change"])
+        for point in points:
+            self.assertEqual(D(point["account_value"]), D(point["money_in"]) + D(point["pnl"]))
+        # The referral bonus arrives 2026-02-03; the 2026-02-03 point includes it.
+        feb = [point for point in points if point["date"] == "2026-02-03"][0]
+        self.assertEqual(feb["money_in"], "35")
+        self.assertEqual(points[-1]["account_value"], "33.5")  # 35 + (-1.5)
+
+    def test_changes_add_up_to_the_last_value(self):
+        points = self.series()
+        total = D(points[0]["account_value"]) + sum((D(point["change"]) for point in points[1:]), D(0))
+        self.assertEqual(total, D(points[-1]["account_value"]))
+
+
 if __name__ == "__main__":
     unittest.main()
