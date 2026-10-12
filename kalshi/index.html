@@ -212,6 +212,12 @@
         .tile-value { font-size: 23px; font-weight: 700; margin-top: 4px; }
         .tile-sub { color: var(--ink-faint); font-size: 12.5px; margin-top: 2px; }
         .tile-title { color: var(--ink-soft); font-size: 13px; margin-top: 4px; overflow-wrap: anywhere; }
+        .tile-link { display: inline-block; margin-top: 8px; font-size: 12.5px; color: var(--ink-soft); text-decoration: none; }
+        .tile-link:hover { color: var(--ink); text-decoration: underline; }
+        .fee-eq-sub { font-size: 12px; color: var(--ink-faint); margin-top: 3px; }
+        .money-card { margin-bottom: 14px; }
+        .money-card[hidden] { display: none; }
+        .hero-derive .part { white-space: nowrap; }
 
         .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
         .card-head a { color: var(--ink-soft); font-size: 13px; text-decoration: none; }
@@ -478,6 +484,18 @@
             .bets-scroll { overflow-x: auto; }
             #timeline { height: 120px; }
         }
+        @media (max-width: 1100px) and (min-width: 600px) {
+            .tiles.trio { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (max-width: 599px) {
+            .tiles.trio { grid-template-columns: minmax(0, 1fr); }
+            /* The money equation reads top to bottom: one row per amount. */
+            .money-card .fee-eq { flex-direction: column; gap: 4px; }
+            .money-card .fee-eq-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; flex: none; }
+            .money-card .fee-eq-value { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+            .money-card .fee-eq-sub { grid-column: 1; margin-top: 1px; }
+            .money-card .fee-eq-op { align-self: flex-start; padding-left: 14px; font-size: 16px; line-height: 1; }
+        }
         @media (max-width: 420px) {
             .tile-value { font-size: 20px; }
             .fee-modes, .fee-curve { grid-template-columns: minmax(0, 1fr); }
@@ -566,7 +584,7 @@
                 <div class="card hero">
                     <div class="hero-top">
                         <div>
-                            <div class="label">Net P&amp;L after fees</div>
+                            <div class="label">Profit after fees</div>
                             <div class="hero-value" id="netPnl">—</div>
                             <p class="hero-note" id="netNote"></p>
                             <p class="hero-derive" id="netDerive"></p>
@@ -576,36 +594,29 @@
                     </div>
                 </div>
 
-                <div class="tiles">
-                    <div class="tile">
-                        <div class="label">Account value</div>
-                        <div class="tile-value" id="accountValue">—</div>
-                        <div class="tile-sub" id="accountSub"></div>
-                    </div>
-                    <div class="tile">
-                        <div class="label">Money deposited</div>
-                        <div class="tile-value" id="deposited">—</div>
-                        <div class="tile-sub">Out of pocket</div>
-                    </div>
-                    <div class="tile">
-                        <div class="label">Fees paid</div>
-                        <div class="tile-value" id="feesPaid">—</div>
-                        <div class="tile-sub" id="feesSub"></div>
-                    </div>
+                <div class="card money-card" id="moneyCard">
+                    <h2>Where your account value comes from</h2>
+                    <p class="section-desc">What you put in, plus Kalshi&rsquo;s bonus, plus your profit, is what the account is worth now.</p>
+                    <div class="fee-eq" id="moneyEquation" aria-label="Money deposited plus referral bonus plus profit equals account value"></div>
+                </div>
+
+                <div class="tiles trio">
                     <div class="tile">
                         <div class="label">Win rate</div>
                         <div class="tile-value" id="winRate">—</div>
                         <div class="tile-sub" id="winSub"></div>
                     </div>
                     <div class="tile">
-                        <div class="label">Bets</div>
-                        <div class="tile-value" id="betCount">—</div>
-                        <div class="tile-sub" id="betSub"></div>
+                        <div class="label">Fees paid</div>
+                        <div class="tile-value" id="feesPaid">—</div>
+                        <div class="tile-sub" id="feesSub"></div>
+                        <a class="tile-link" href="#fees">See fees →</a>
                     </div>
                     <div class="tile">
-                        <div class="label">Referral bonus</div>
-                        <div class="tile-value" id="credits">—</div>
-                        <div class="tile-sub">Not counted as profit</div>
+                        <div class="label">Bets placed</div>
+                        <div class="tile-value" id="betCount">—</div>
+                        <div class="tile-sub" id="betSub"></div>
+                        <a class="tile-link" href="#bets">See all bets →</a>
                     </div>
                 </div>
 
@@ -624,10 +635,11 @@
 
                 <div class="card">
                     <div class="card-head">
-                        <h2>Cumulative P&amp;L</h2>
+                        <h2>Profit over time</h2>
                         <a href="#performance">Full chart →</a>
                     </div>
-                    <div class="chart-box small"><canvas id="pnlChartSmall" role="img" aria-label="Small step chart of cumulative profit and loss"></canvas></div>
+                    <p class="section-desc">Running total of profit after fees. Each step is a day bets finished. Above $0 means you&rsquo;re up overall.</p>
+                    <div class="chart-box small"><canvas id="pnlChartSmall" role="img" aria-label="Small step chart of running profit after fees"></canvas></div>
                 </div>
             </section>
 
@@ -1009,58 +1021,90 @@
             setMoney('topNet', s.net_pnl, 'signed', 'summary.net_pnl');
 
             setMoney('netPnl', s.net_pnl, 'signed', 'summary.net_pnl');
-            setText('netNote', 'After all fees. Started with ' + plain(s.deposited) + ' + a ' + plain(s.credits) + ' bonus.');
+            setText('netNote', 'Your result across ' + s.bets + ' bet' + (s.bets === 1 ? '' : 's')
+                + ', after every fee. The ' + plain(s.credits) + ' referral bonus isn’t counted as profit.');
             if (s.net_pnl_basis === 'bets_at_bid') {
-                // The headline is exactly what the Bets rows add up to, minus the deposit fee.
+                // Same math as before, in plain words: finished bets + open bets at
+                // the current bid − the deposit fee = the headline.
                 var derive = $('netDerive');
-                derive.textContent = '= realized ';
-                derive.appendChild(moneyEl('span', '', s.realized_pnl, 'signed', 'summary.realized_pnl'));
-                derive.appendChild(document.createTextNode(' − deposit fee '));
-                derive.appendChild(moneyEl('span', '', s.deposit_fees, 'plain', 'summary.deposit_fees'));
-                derive.appendChild(document.createTextNode(' + unrealized '));
-                derive.appendChild(moneyEl('span', '', s.unrealized_pnl, 'signed', 'summary.unrealized_pnl'));
-                derive.appendChild(document.createTextNode(' (open bets at current bid)'));
+                derive.textContent = 'How it adds up: ';
+                var finished = el('span', 'part', 'finished bets ');
+                finished.appendChild(moneyEl('strong', '', s.realized_pnl, 'signed', 'summary.realized_pnl'));
+                derive.appendChild(finished);
+                if (s.open) {
+                    derive.appendChild(document.createTextNode(' + '));
+                    var openPart = el('span', 'part', 'open bets ');
+                    openPart.appendChild(moneyEl('strong', '', s.unrealized_pnl, 'signed', 'summary.unrealized_pnl'));
+                    openPart.appendChild(document.createTextNode(' if sold now'));
+                    derive.appendChild(openPart);
+                }
+                derive.appendChild(document.createTextNode(' − '));
+                var depositPart = el('span', 'part', 'the one-time deposit fee ');
+                depositPart.appendChild(moneyEl('strong', '', s.deposit_fees, 'plain', 'summary.deposit_fees'));
+                derive.appendChild(depositPart);
+                derive.appendChild(document.createTextNode('.'));
                 if (s.open) {
                     var kalshi = $('kalshiLine');
-                    kalshi.textContent = 'Kalshi values open bets at ';
+                    kalshi.textContent = 'Kalshi’s app values your open bets at ';
                     kalshi.appendChild(moneyEl('span', '', s.kalshi_open_value, 'plain', 'summary.kalshi_open_value'));
-                    kalshi.appendChild(document.createTextNode('; this page uses the current bid ('));
+                    kalshi.appendChild(document.createTextNode('. This page uses what they’d sell for right now ('));
                     kalshi.appendChild(moneyEl('span', '', s.open_value, 'plain', 'summary.open_value'));
                     kalshi.appendChild(document.createTextNode(').'));
                 }
                 if (s.unvalued_open) {
                     $('kalshiLine').appendChild(document.createTextNode(' ' + s.unvalued_open
-                        + ' open bet(s) have no current bid and aren’t counted yet.'));
+                        + ' open bet(s) have no buyer right now and aren’t counted yet.'));
                 }
             } else {
-                setText('netDerive', '= Kalshi app snapshot (cash + open positions) − money in.');
+                setText('netDerive', 'How it adds up: the Kalshi app’s account value (cash + open positions) minus the money you put in.');
             }
             if (s.open) {
                 $('openLink').hidden = false;
                 setText('openLinkText', s.open + ' open bet' + (s.open === 1 ? '' : 's') + ' →');
             }
 
-            setMoney('accountValue', s.account_value, 'plain', 'summary.account_value');
-            setText('accountSub', plain(s.cash) + ' cash + ' + plain(s.open_value)
-                + (s.net_pnl_basis === 'bets_at_bid' ? ' open at bid' : ' open'));
-            setMoney('deposited', s.deposited, 'plain', 'summary.deposited');
-            setMoney('credits', s.credits, 'plain', 'summary.credits');
+            // Deposited + bonus + profit = account value. Shown only if it holds
+            // exactly; it always should, since net P&L = account value − money in.
+            var moneyEq = $('moneyEquation');
+            moneyEq.textContent = '';
+            if (Exact.cmp(Exact.sum([s.deposited, s.credits, s.net_pnl]), s.account_value) === 0) {
+                moneyEq.appendChild(eqItem('You deposited', s.deposited, 'plain', 'summary.deposited', null, 'Your own money'));
+                moneyEq.appendChild(el('span', 'fee-eq-op', '+'));
+                moneyEq.appendChild(eqItem('Referral bonus', s.credits, 'plain', 'summary.credits', null, 'Free credit from Kalshi'));
+                moneyEq.appendChild(el('span', 'fee-eq-op', '+'));
+                moneyEq.appendChild(eqItem('Your profit', s.net_pnl, 'signed', 'summary.net_pnl', null, 'After all fees'));
+                moneyEq.appendChild(el('span', 'fee-eq-op', '='));
+                var cashSub = 'Cash ' + plain(s.cash) + (s.open ? ' + open bets ' + plain(s.open_value) : ', no open bets');
+                moneyEq.appendChild(eqItem('Account value', s.account_value, 'plain', 'summary.account_value', 'result', cashSub));
+            } else {
+                $('moneyCard').hidden = true;
+            }
+
             setMoney('feesPaid', s.total_fees, 'plain', 'summary.total_fees');
-            setText('feesSub', plain(s.trading_fees) + ' trading + ' + plain(s.deposit_fees) + ' deposit');
+            var feesSub = $('feesSub');
+            feesSub.textContent = '';
+            if (data.fees && data.fees.before_fees_pnl !== undefined) {
+                feesSub.appendChild(document.createTextNode('Without fees you’d be '));
+                feesSub.appendChild(moneyEl('span', '', data.fees.before_fees_pnl, 'signed', 'fees.before_fees_pnl'));
+                feesSub.appendChild(document.createTextNode(' instead.'));
+            } else {
+                feesSub.textContent = plain(s.trading_fees) + ' on trades + ' + plain(s.deposit_fees) + ' deposit fee';
+            }
 
             if (s.win_rate_approx_pct === null || s.win_rate_approx_pct === undefined) {
                 // No percentage while results are pending: the known ones are
                 // mostly bets sold early, which skews toward winners.
                 setText('winRate', '—');
-                setText('winSub', s.pending ? s.wins + ' won · ' + s.pending + ' pending API sync' : 'No settled bets yet');
+                setText('winSub', s.pending ? s.wins + ' made money so far · ' + s.pending + ' still waiting on a result' : 'No finished bets yet');
             } else {
                 // A ratio, not money: the one rounded figure on the page, marked "≈".
                 setText('winRate', '≈' + s.win_rate_approx_pct + '%');
-                setText('winSub', s.wins + ' profitable (' + s.won + ' won, ' + s.sold_profitable + ' sold early) · ' + s.losses + ' lost');
+                setText('winSub', s.wins + ' of ' + (s.wins + s.losses) + ' finished bets made money ('
+                    + s.won + ' won, ' + s.sold_profitable + ' sold early for a gain). ' + s.losses + ' lost money.');
             }
 
             setText('betCount', String(s.bets));
-            setText('betSub', s.open + ' open' + (s.pending ? ' · ' + s.pending + ' pending' : ''));
+            setText('betSub', (s.open ? s.open + ' still open' : 'All finished') + (s.pending ? ' · ' + s.pending + ' waiting on a result' : ''));
 
             [['best', s.best_bet], ['worst', s.worst_bet]].forEach(function (pair) {
                 if (!pair[1]) return;
@@ -1086,13 +1130,14 @@
         }
 
         // ---------- Fees panel ----------
-        function eqItem(label, str, format, field, extraClass) {
+        function eqItem(label, str, format, field, extraClass, sub) {
             var item = el('div', 'fee-eq-item' + (extraClass ? ' ' + extraClass : ''));
             item.appendChild(el('div', 'fee-eq-label', label));
             var value = moneyEl('div', 'fee-eq-value', str, format, field);
             if (format === 'signed' && tone(str)) value.classList.add(tone(str));
             if (format.indexOf('fee') === 0) value.classList.add('fee');
             item.appendChild(value);
+            if (sub) item.appendChild(el('div', 'fee-eq-sub', sub));
             return item;
         }
 

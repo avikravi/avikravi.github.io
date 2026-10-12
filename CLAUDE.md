@@ -72,8 +72,20 @@ scripts/
                          #bets?status=open). One .panel at a time by location.hash (query part after
                          "?" = Bets filter state); back/forward walk sections, filter changes use
                          history.replaceState. Below 900px the sidebar is an off-canvas drawer behind
-                         a "Menu" button in a slim sticky top bar. Overview has a "N open bets ->"
-                         link to #bets?status=open.
+                         a "Menu" button in a slim sticky top bar.
+                         OVERVIEW (2026-10-12 redesign, plain words, same information): (1) hero
+                         "Profit after fees" = summary.net_pnl, a one-line meaning (N bets, after every
+                         fee, bonus isn't profit), "How it adds up: finished bets (realized) [+ open bets
+                         (unrealized) if sold now] − the one-time deposit fee", Kalshi's own open value
+                         line and a "N open bets ->" link to #bets?status=open only when bets are open;
+                         (2) "Where your account value comes from": You deposited + Referral bonus +
+                         Your profit = Account value (cash + open bets), rendered only if it holds
+                         exactly via Exact (the card hides otherwise; tested on screen); stacks one row
+                         per amount below 600px; (3) Win rate ("X of Y finished bets made money (won,
+                         sold early for a gain). Z lost money."), Fees paid ("Without fees you'd be
+                         fees.before_fees_pnl", link to #fees), Bets placed (open/all finished, link to
+                         #bets); (4) Best/Worst bet; (5) "Profit over time" small step chart with a
+                         one-line explanation. The money-equation reuses the Fees page .fee-eq styles.
                          BETS PAGE: every bet ever (no limit). Top: journey timeline (SVG, dot per
                          bet at its event_date = resolved date, or placed date if open; green won /
                          red lost / gray-blue sold / hollow pulsing open; hover tip; drag = date-range
@@ -1168,7 +1180,7 @@ tolerances or `money()`. The math must be EXACT everywhere:
   states on the fixture and on live data.json; URL state round-trip and "Reset to all time"). The display test
   renders #bets, #bets?status=open, #bets?status=lost&cat=NFL, #bets?from=2026-09-01 and #overview and checks
   every amount, every row's equation (open bets too), fills summing to rows, month/footer totals, All time
-  footer = realized + unrealized, parlay legs and nav. Arithmetic on money in the page or bets.js fails the lint;
+  footer = realized + unrealized, the Overview money equation (deposited + bonus + profit = account value), parlay legs and nav. Arithmetic on money in the page or bets.js fails the lint;
   it must go through exact.js.
   Never weaken a test or add a tolerance to make data fit; find the real rule instead.
 

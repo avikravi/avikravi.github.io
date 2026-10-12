@@ -371,7 +371,7 @@ class DisplayTests(unittest.TestCase):
                          parse_shown(headline.text(), "signed"))
         self.assertEqual(parse_shown(headline.text(), "signed"), fx.FULL_NET)
         kalshi = self.doms["overview"].find(lambda node: node.attrs.get("id") == "kalshiLine").text()
-        self.assertTrue(kalshi.startswith("Kalshi values open bets at $1.80; this page uses the current bid ($1.798)."), kalshi)
+        self.assertTrue(kalshi.startswith("Kalshi’s app values your open bets at $1.80. This page uses what they’d sell for right now ($1.798)."), kalshi)
 
     def test_url_filter_state(self):
         open_dom = self.doms["open"]
@@ -470,6 +470,18 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual(current.attrs.get("href"), "#overview")
         bets_current = self.doms["all"].find(lambda node: node.attrs.get("aria-current") == "page")
         self.assertEqual(bets_current.attrs.get("href"), "#bets")
+
+    def test_overview_money_equation_adds_up_on_screen(self):
+        # Deposited + referral bonus + profit = account value, as shown, exactly.
+        eq = self.doms["overview"].find(lambda node: node.attrs.get("id") == "moneyEquation")
+        values = {}
+        for node in eq.walk():
+            field = node.attrs.get("data-field")
+            if field:
+                values[field] = parse_shown(node.text(), node.attrs.get("data-format"))
+        self.assertEqual(sorted(values), ["summary.account_value", "summary.credits", "summary.deposited", "summary.net_pnl"])
+        self.assertEqual(values["summary.deposited"] + values["summary.credits"] + values["summary.net_pnl"],
+                         values["summary.account_value"])
 
 
 class DisplayRuleTests(unittest.TestCase):
