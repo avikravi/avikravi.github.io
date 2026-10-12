@@ -47,7 +47,17 @@
     "reported": "3.29498",
     "rounding": "0",
     "rebates": "0",
-    "source": "api_fee_cost"
+    "source": "api_fee_cost",
+    "buy_total": "2.14968",
+    "sell_total": "1.1453",
+    "stake_total": "66.01842",
+    "before_fees_pnl": "6.93938",
+    "shares": {
+      "buy": "61.5",
+      "sell": "32.8",
+      "deposit": "5.7"
+    },
+    "trading_pct_of_stake": "5.0"
   },
   "ledger": {
     "balance": "integer cents",
@@ -329,7 +339,9 @@
         "amount": "5.1"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0864",
+      "fee_pct_of_stake": "4.1"
     },
     {
       "kind": "single",
@@ -379,7 +391,9 @@
         "amount": "0"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0896",
+      "fee_pct_of_stake": "4.7"
     },
     {
       "kind": "single",
@@ -429,7 +443,9 @@
         "amount": "5.33"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.086",
+      "fee_pct_of_stake": "2.5"
     },
     {
       "kind": "single",
@@ -470,7 +486,9 @@
         "amount": "0"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.2367",
+      "fee_pct_of_stake": "5.0"
     },
     {
       "kind": "single",
@@ -511,7 +529,9 @@
         "amount": "0"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.1249",
+      "fee_pct_of_stake": "4.1"
     },
     {
       "kind": "single",
@@ -552,7 +572,9 @@
         "amount": "0"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0205",
+      "fee_pct_of_stake": "2.1"
     },
     {
       "kind": "single",
@@ -598,7 +620,9 @@
       ],
       "settlement": null,
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0119",
+      "fee_pct_of_stake": "1.2"
     },
     {
       "kind": "single",
@@ -644,7 +668,9 @@
       ],
       "settlement": null,
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.061",
+      "fee_pct_of_stake": "3.2"
     },
     {
       "kind": "single",
@@ -685,7 +711,9 @@
         "amount": "1.29"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0122",
+      "fee_pct_of_stake": "1.1"
     },
     {
       "kind": "single",
@@ -731,7 +759,9 @@
       ],
       "settlement": null,
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0307",
+      "fee_pct_of_stake": "2.5"
     },
     {
       "kind": "single",
@@ -772,7 +802,9 @@
         "amount": "12.32"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.1431",
+      "fee_pct_of_stake": "1.5"
     },
     {
       "kind": "parlay",
@@ -829,7 +861,9 @@
           "side": "Yes",
           "result": "hit"
         }
-      ]
+      ],
+      "fee": "0.27308",
+      "fee_pct_of_stake": "3.7"
     },
     {
       "kind": "single",
@@ -884,7 +918,9 @@
       ],
       "settlement": null,
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "1.7753",
+      "fee_pct_of_stake": "17.1"
     },
     {
       "kind": "single",
@@ -925,7 +961,9 @@
         "amount": "6.02"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.0636",
+      "fee_pct_of_stake": "1.3"
     },
     {
       "kind": "single",
@@ -966,7 +1004,9 @@
         "amount": "0"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.09",
+      "fee_pct_of_stake": "2.1"
     },
     {
       "kind": "single",
@@ -1007,7 +1047,9 @@
         "amount": "6"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.09",
+      "fee_pct_of_stake": "2.1"
     },
     {
       "kind": "single",
@@ -1048,9 +1090,11 @@
         "amount": "6"
       },
       "live": null,
-      "legs": []
+      "legs": [],
+      "fee": "0.1",
+      "fee_pct_of_stake": "2.6"
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-12T05:56:37Z"
+  "updated": "2026-10-12T06:31:38Z"
 }
