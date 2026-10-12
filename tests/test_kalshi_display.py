@@ -416,11 +416,17 @@ class DisplayTests(unittest.TestCase):
         self.assertEqual(D(summary["account_value"]), D(summary["cash"]) + D(summary["open_value"]))
         for key, dom in self.doms.items():
             sidebar = dom.find(lambda node: node.attrs.get("id") == "sidebar")
-            value = sidebar.find(lambda node: node.attrs.get("id") == "sideAccount")
-            self.assertEqual(value.text().strip(), display(summary["account_value"], "plain"), key)
-            sub = sidebar.find(lambda node: node.attrs.get("id") == "sideAccountSub").text()
-            self.assertEqual(sub, "{} cash + {} open at bid".format(display(summary["cash"], "plain"),
-                                                                    display(summary["open_value"], "plain")), key)
+
+            def shown(element_id):
+                return sidebar.find(lambda node: node.attrs.get("id") == element_id).text().strip()
+
+            self.assertEqual(shown("sideAccount"), display(summary["account_value"], "plain"), key)
+            self.assertEqual(shown("sideCash"), display(summary["cash"], "plain"), key)
+            self.assertEqual(shown("sideOpenLabel"), "Open at bid", key)
+            self.assertEqual(shown("sideOpen"), display(summary["open_value"], "plain"), key)
+            self.assertEqual(shown("sideNet"), display(summary["net_pnl"], "signed"), key)
+            # The breakdown adds up on screen: cash + open at bid = account value.
+            self.assertEqual(parse_shown(shown("sideCash")) + parse_shown(shown("sideOpen")), parse_shown(shown("sideAccount")), key)
 
     def test_overview_open_link_and_nav(self):
         dom = self.doms["overview"]
