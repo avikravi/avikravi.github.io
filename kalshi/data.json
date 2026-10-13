@@ -1,12 +1,12 @@
 {
   "source": "api",
   "summary": {
-    "net_pnl": "3.5444",
+    "net_pnl": "4.4244",
     "net_pnl_basis": "bets_at_bid",
-    "account_value": "38.5444",
-    "cash": "37.4244",
-    "open_value": "1.12",
-    "kalshi_open_value": "0.82",
+    "account_value": "39.4244",
+    "cash": "39.4244",
+    "open_value": "0",
+    "kalshi_open_value": "0",
     "unvalued_open": 0,
     "deposited": "10",
     "credits": "25",
@@ -16,20 +16,20 @@
     "trading_fees": "3.29498",
     "deposit_fees": "0.2",
     "total_fees": "3.49498",
-    "realized_pnl": "3.6444",
-    "unrealized_pnl": "0.1",
+    "realized_pnl": "4.6244",
+    "unrealized_pnl": "0",
     "started": "2025-12-02",
     "bets": 18,
-    "won": 7,
+    "won": 8,
     "lost": 6,
     "sold": 4,
     "sold_profitable": 4,
-    "resolved": 17,
-    "wins": 11,
+    "resolved": 18,
+    "wins": 12,
     "losses": 6,
     "pending": 0,
-    "open": 1,
-    "win_rate_approx_pct": 65,
+    "open": 0,
+    "win_rate_approx_pct": 67,
     "best_bet": {
       "title": "Canada wins WC Group B",
       "profit": "12.2847"
@@ -51,7 +51,7 @@
     "buy_total": "2.14968",
     "sell_total": "1.1453",
     "stake_total": "67.03842",
-    "before_fees_pnl": "7.03938",
+    "before_fees_pnl": "7.91938",
     "shares": {
       "buy": "61.5",
       "sell": "32.8",
@@ -240,12 +240,12 @@
     },
     {
       "date": "2026-10-12",
-      "day": "0.1",
-      "pnl": "3.5444",
+      "day": "0.98",
+      "pnl": "4.4244",
       "items": [
         {
-          "label": "Open bets at current bid (unrealized)",
-          "amount": "0.1"
+          "label": "Keon Coleman: 40+ receiving yards",
+          "amount": "0.98"
         }
       ]
     }
@@ -570,20 +570,20 @@
     {
       "date": "2026-10-12",
       "money_in": "35",
-      "pnl": "3.5444",
-      "account_value": "38.5444",
-      "change": "2.8618"
+      "pnl": "4.4244",
+      "account_value": "39.4244",
+      "change": "3.7418"
     }
   ],
   "resolution_dates": {
     "market_settlement_ts": 7,
-    "settlement": 6
+    "settlement": 7
   },
   "categories": [
     {
       "name": "NFL",
-      "profit": "-1.5623",
-      "resolved": 7,
+      "profit": "-0.5823",
+      "resolved": 8,
       "pending": 0
     },
     {
@@ -628,24 +628,24 @@
       "kind": "single",
       "tag": null,
       "date": "2026-10-12",
-      "resolved": null,
+      "resolved": "2026-10-12",
       "event_date": "2026-10-12",
       "title": "Keon Coleman: 40+ receiving yards",
       "side": "No",
       "category": "NFL",
-      "status": "open",
-      "outcome": "open",
-      "unrealized": true,
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
       "contracts": "2",
-      "remaining": "2",
+      "remaining": null,
       "price": "0.51",
       "stake": "1.02",
       "buy_fees": "0",
       "cost": "1.02",
-      "payout": "1.12",
+      "payout": "2",
       "sell_fees": "0",
-      "net_payout": "1.12",
-      "profit": "0.1",
+      "net_payout": "2",
+      "profit": "0.98",
       "fills": [
         {
           "time": "2026-10-12T10:52:39Z",
@@ -657,12 +657,12 @@
           "liquidity": "maker"
         }
       ],
-      "settlement": null,
-      "live": {
+      "settlement": {
         "contracts": "2",
-        "bid": "0.56",
-        "amount": "1.12"
+        "per_contract": "1",
+        "amount": "2"
       },
+      "live": null,
       "legs": [],
       "fee": "0",
       "fee_pct_of_stake": "0.0"
@@ -1463,5 +1463,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-13T00:39:02Z"
+  "updated": "2026-10-13T04:14:46Z"
 }
