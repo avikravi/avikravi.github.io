@@ -38,7 +38,7 @@ CATEGORIES = [
         sub('AI Arcade', '/games', ext=True),
     ]),
     ('construction', 'Construction', [
-        sub('TaskTag', '/#tasktag'),
+        sub('TaskTag', 'https://tasktag.com/', ext=True),
     ]),
     ('oilgas', 'Oil &amp; Gas', [
         sub('Corrosion Pipeline', 'https://p66-vessel-integrity.vercel.app', ext=True),
@@ -252,7 +252,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
 
         .site-main { margin-left: 248px; }
 
-        /* Sidebar links that jump to a card (/#tasktag) land with breathing room */
+        /* Sidebar links that jump to a card (/#houston-texans) land with breathing room */
         :target { scroll-margin-top: 24px; }
 
         /* Top bar: resume button (plus the Menu button on phones) */
