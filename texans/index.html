@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics self-exclusion (must run before the tag below) -->
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get('ga_optout') === '1') {
+            localStorage.setItem('ga_opt_out', 'true');
+          } else if (params.get('ga_optout') === '0') {
+            localStorage.removeItem('ga_opt_out');
+          }
+          if (localStorage.getItem('ga_opt_out') === 'true') {
+            window['ga-disable-G-JVHGKBB8PD'] = true;
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JVHGKBB8PD');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explosive Plays | Houston Texans Analytics Project</title>
+    <meta name="description" content="What makes an explosive play, and how can the Houston Texans create more of them? A 2025 analytics mentorship project on 2024 NFL play data.">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --texans: #a71930;     /* Texans "Battle Red": the one highlighted bar */
+            --bar: #c9c9c9;        /* every other bar: quiet context */
+            --track: #f3f3f3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+        a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
+
+        .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+        /* Top bar */
+        .top-bar { border-bottom: 1px solid var(--line); }
+        .top-bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; padding-bottom: 14px; }
+        .back-link { font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .top-tag { font-size: 13px; color: var(--ink-faint); }
+
+        /* Header */
+        header.page-header { padding: 56px 0 8px; }
+        .eyebrow { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+        h1 { margin-top: 10px; font-size: 40px; line-height: 1.12; letter-spacing: -0.02em; font-weight: 800; }
+        .dek { margin-top: 14px; max-width: 640px; font-size: 18px; line-height: 1.55; color: var(--ink-soft); }
+
+        /* Headline numbers */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .stat { padding: 20px 16px 20px 0; }
+        .stat + .stat { padding-left: 20px; border-left: 1px solid var(--line); }
+        .stat-num { display: block; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+        .stat-num.red { color: var(--texans); }
+        .stat-label { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.4; color: var(--ink-faint); }
+
+        /* Sections */
+        section { padding: 56px 0 0; }
+        .panel-title { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; }
+        .panel-desc { margin-top: 6px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-size: 15.5px; color: var(--ink-faint); }
+        .body-text { margin-top: 18px; max-width: 700px; color: var(--ink-soft); }
+        .body-text + .body-text { margin-top: 12px; }
+
+        /* Definition */
+        .def-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 22px; }
+        .def { padding: 4px 20px 4px 0; }
+        .def + .def { padding-left: 20px; border-left: 1px solid var(--line); }
+        .def-kind { font-size: 13px; font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+        .def-rule { margin-top: 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+        .def-or { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
+
+        .why-list { margin-top: 22px; list-style: none; max-width: 700px; }
+        .why-list li { position: relative; padding: 10px 0 10px 18px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 15.5px; }
+        .why-list li::before { content: ""; position: absolute; left: 0; top: 20px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+        .why-list strong { color: var(--ink); }
+
+        /* Bar charts (horizontal, HTML) */
+        .chart { margin-top: 24px; }
+        .chart-title { font-size: 15.5px; font-weight: 700; }
+        .chart-sub { margin-top: 2px; font-size: 14px; color: var(--ink-faint); }
+        .bars { margin-top: 16px; display: flex; flex-direction: column; gap: 2px; }
+        .bar-row { display: grid; grid-template-columns: 140px 1fr 44px; align-items: center; gap: 12px; min-height: 26px; border-radius: 4px; }
+        .bars.compact .bar-row { grid-template-columns: 56px 1fr 30px; min-height: 20px; gap: 10px; }
+        .bar-row:hover { background: #fafafa; }
+        .bar-label { font-size: 13.5px; color: var(--ink-soft); text-align: right; white-space: nowrap; }
+        .bar-track { height: 16px; display: flex; align-items: center; }
+        .bars.compact .bar-track { height: 12px; }
+        .bar { height: 100%; min-width: 3px; background: var(--bar); border-radius: 0 4px 4px 0; }
+        .bar.hi { background: var(--texans); }
+        .bar.ink { background: var(--ink); }
+        .bar-val { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+        .bar-row.is-hi .bar-label, .bar-row.is-hi .bar-val { color: var(--ink); font-weight: 700; }
+        .chart-note { margin-top: 12px; font-size: 13.5px; color: var(--ink-faint); }
+
+        /* Findings & recommendations */
+        .num-list { margin-top: 8px; list-style: none; counter-reset: item; }
+        .num-list li { counter-increment: item; display: grid; grid-template-columns: 40px 1fr; gap: 8px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+        .num-list li::before { content: counter(item, decimal-leading-zero); font-size: 14px; font-weight: 700; color: var(--ink-faint); padding-top: 2px; font-variant-numeric: tabular-nums; }
+        .num-list h3 { font-size: 17px; font-weight: 700; line-height: 1.35; }
+        .num-list p { margin-top: 4px; font-size: 15.5px; color: var(--ink-soft); }
+
+        /* Project facts */
+        .facts { margin-top: 8px; }
+        .fact { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+        .fact dt { color: var(--ink-faint); font-weight: 600; font-size: 14px; padding-top: 1px; }
+        .fact dd { color: var(--ink-soft); }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { display: inline-block; padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fafafa; font-size: 13px; color: var(--ink-soft); }
+
+        /* Photos (filled in from the PHOTOS list at the bottom of this file) */
+        .gallery { margin-top: 22px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .gallery figure { margin: 0; }
+        .gallery img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); background: #fafafa; }
+        .gallery figcaption { margin-top: 8px; font-size: 13.5px; color: var(--ink-faint); line-height: 1.45; }
+        .gallery figure.wide { grid-column: 1 / -1; }
+        .gallery.three { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .sub-title { margin-top: 40px; font-size: 17px; font-weight: 700; }
+        .sub-desc { margin-top: 2px; font-size: 14px; color: var(--ink-faint); }
+
+        footer { margin-top: 72px; padding: 24px 0 40px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-faint); }
+
+        @media (max-width: 700px) {
+            header.page-header { padding-top: 36px; }
+            h1 { font-size: 30px; }
+            .dek { font-size: 16.5px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .stat { padding: 16px 12px 16px 0; }
+            .stat + .stat { padding-left: 0; border-left: none; }
+            .stat:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+            .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+            .stat-num { font-size: 28px; }
+            .def-grid { grid-template-columns: 1fr; }
+            .def, .def + .def { padding: 12px 0; border-left: none; border-top: 1px solid var(--line); }
+            .bar-row { grid-template-columns: 112px 1fr 34px; gap: 8px; }
+            .bar-label { font-size: 12.5px; white-space: normal; line-height: 1.25; }
+            .fact { grid-template-columns: 1fr; gap: 2px; }
+            .gallery, .gallery.three { grid-template-columns: 1fr; }
+            .top-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="wrap">
+            <a href="/" class="back-link">&larr; Avi Ravishankar</a>
+            <span class="top-tag">Sports analytics</span>
+        </div>
+    </div>
+
+    <main class="wrap">
+        <header class="page-header">
+            <p class="eyebrow">Houston Texans &times; Strength in Numbers &middot; October 2025</p>
+            <h1>What makes an explosive play?</h1>
+            <p class="dek">A team of five graduate students set out to define an explosive play and find how the Houston Texans can create more of them, consistently, on every down. We used the 2024 play data the Texans gave us and presented four recommendations to the football operations staff.</p>
+        </header>
+
+        <div class="stats" aria-label="Headline numbers">
+            <div class="stat"><span class="stat-num">600</span><span class="stat-label">explosive plays analyzed</span></div>
+            <div class="stat"><span class="stat-num">52%</span><span class="stat-label">of those drives ended in a touchdown</span></div>
+            <div class="stat"><span class="stat-num">74%</span><span class="stat-label">ended with points (touchdown or field goal)</span></div>
+            <div class="stat"><span class="stat-num red">26th</span><span class="stat-label">Texans' rank of 32 teams, and they still made the playoffs</span></div>
+        </div>
+
+        <section aria-labelledby="photos-title" id="photos" hidden>
+            <h2 class="panel-title" id="photos-title">From the presentation</h2>
+            <p class="panel-desc">Presenting to Texans management, the analytics staff and coaches, then on the field at NRG Stadium</p>
+            <div class="gallery" id="gallery"></div>
+            <div id="funBlock" hidden>
+                <h3 class="sub-title">Behind the scenes</h3>
+                <p class="sub-desc">A few fun ones from the day</p>
+                <div class="gallery three" id="funGallery"></div>
+            </div>
+        </section>
+
+        <section aria-labelledby="def-title">
+            <h2 class="panel-title" id="def-title">Our definition</h2>
+            <p class="panel-desc">Yardage catches the obvious big plays. EPA catches the ones that matter most.</p>
+            <div class="def-grid">
+                <div class="def"><p class="def-kind">Run</p><p class="def-rule">10+ yards</p></div>
+                <div class="def"><p class="def-kind">Pass</p><p class="def-rule">20+ yards</p></div>
+                <div class="def"><p class="def-kind">Or any play with</p><p class="def-rule">EPA &ge; 1.0</p><p class="def-or">Expected Points Added</p></div>
+            </div>
+            <ul class="why-list">
+                <li><strong>The yardage cutoffs</strong> are big enough to change a drive. They match the "explosive" or "chunk play" definitions analysts already use, and they leave enough plays to study without filling the set with small gains.</li>
+                <li><strong>EPA already accounts for the situation:</strong> down, distance and field position. A play worth +1.0 EPA raised the chance of scoring by a full point or more.</li>
+                <li><strong>We tested other thresholds.</strong> Lower cutoffs pulled in too many ordinary plays. Higher ones threw out too many real ones.</li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="impact-title">
+            <h2 class="panel-title" id="impact-title">Why they matter</h2>
+            <p class="panel-desc">An explosive play flips field position, momentum and the odds of scoring on that drive.</p>
+            <div class="chart">
+                <p class="chart-title">How drives ended after an explosive play</p>
+                <p class="chart-sub">Number of explosive plays, by the drive's final result (600 total)</p>
+                <div class="bars" id="driveChart"></div>
+                <p class="chart-note">Touchdown plus field goal: 446 of 600 drives (74%) ended with points. Turnovers were rare: 20 interceptions and 12 fumbles.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="team-title">
+            <h2 class="panel-title" id="team-title">Explosive plays by team</h2>
+            <p class="panel-desc">Consistent offenses create more big plays. The Texans had 15.</p>
+            <div class="chart">
+                <p class="chart-title">Explosive plays by team, 2024 data</p>
+                <p class="chart-sub">Number of explosive plays by the team on offense. Houston in red.</p>
+                <div class="bars compact" id="teamChart"></div>
+                <p class="chart-note">Top three: Detroit, Pittsburgh and Minnesota, all playoff teams. Bottom three: Indianapolis, the Giants and the Jets, all missed the playoffs. Houston ranked 26th of 32 and still made the playoffs.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="findings-title">
+            <h2 class="panel-title" id="findings-title">What we found</h2>
+            <p class="panel-desc">Three patterns from the data</p>
+            <ol class="num-list">
+                <li><div><h3>Explosive plays lead to points</h3><p>About 52% of drives with an explosive play ended in a touchdown, and about 74% ended with points.</p></div></li>
+                <li><div><h3>They happen on early downs</h3><p>Most explosive plays came on 1st and 2nd down, when defenses are less predictable. Most of those were passes.</p></div></li>
+                <li><div><h3>The Texans have room to grow</h3><p>Houston ranked 26th of 32 teams in explosive plays. More big plays would make the offense more dynamic.</p></div></li>
+            </ol>
+        </section>
+
+        <section aria-labelledby="recs-title">
+            <h2 class="panel-title" id="recs-title">Our recommendations</h2>
+            <p class="panel-desc">Four ways to create more explosive plays</p>
+            <ol class="num-list">
+                <li><div><h3>Attack on early downs</h3><p>Use play-action and deep routes on 1st and 2nd down. Don't be afraid to take shots.</p></div></li>
+                <li><div><h3>Track EPA-based explosives</h3><p>Measure which plays actually move the needle, not just which ones gain yards.</p></div></li>
+                <li><div><h3>Study opponents' defensive tendencies</h3><p>Especially on early downs, where most explosive plays happen.</p></div></li>
+                <li><div><h3>Keep the run-pass balance</h3><p>Balance sets up the big play. Top teams like the Lions mix in creative looks, even trick plays, to keep defenses guessing.</p></div></li>
+            </ol>
+        </section>
+
+
+        <section aria-labelledby="project-title">
+            <h2 class="panel-title" id="project-title">About the project</h2>
+            <p class="panel-desc">Texans Analytics Mentorship Project, Strength in Numbers 2025, Team A</p>
+            <dl class="facts">
+                <div class="fact"><dt>Data</dt><dd>2024 game data provided by the Houston Texans</dd></div>
+                <div class="fact"><dt>Measures</dt><dd>Yardage, Expected Points Added (EPA), down, drive result</dd></div>
+                <div class="fact"><dt>Tools</dt><dd><div class="chip-row"><span class="chip">Python</span><span class="chip">Power BI</span><span class="chip">Feature engineering</span><span class="chip">NFL analytics</span></div></dd></div>
+                <div class="fact"><dt>Delivered</dt><dd>Presentation, Python notebook, Power BI dashboard</dd></div>
+                <div class="fact"><dt>Team</dt><dd>Five graduate students, about four weeks</dd></div>
+                <div class="fact"><dt>Program</dt><dd>Strength in Numbers 2025 with the Houston Texans. Strength in Numbers is a nonprofit, founded by <a href="https://sds.charlotte.edu/directory/john-tobias/" target="_blank" rel="noopener">Professor John Tobias</a> of UNC Charlotte, that teaches sports analytics to students from underrepresented groups.</dd></div>
+                <div class="fact"><dt>My role</dt><dd>Opened the presentation and presented the data and methods and the recommendations. Ran team coordination: questions to our Texans mentor, meeting scheduling and notes. Worked on the Python analysis and the Power BI tooling.</dd></div>
+                <div class="fact"><dt>Next steps</dt><dd>Video analysis, a breakdown by opposing defense, home-field effects, and a full season of data</dd></div>
+            </dl>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap">&copy; 2026 Avi Ravishankar. Independent student project; not an official Houston Texans publication.</div>
+    </footer>
+
+    <script>
+        /* Chart data, read off the team's Power BI charts (both total 600 plays). */
+        var DRIVE_END = [
+            ['Touchdown', 313], ['Field goal', 133], ['Punt', 50], ['Missed field goal', 35],
+            ['Turnover on downs', 25], ['Interception', 20], ['Fumble', 12], ['End of game', 10],
+            ['End of half', 1], ['Fumble return TD', 1]
+        ];
+        var BY_TEAM = [
+            ['DET', 32], ['PIT', 31], ['MIN', 25], ['SF', 24], ['BUF', 22], ['LAC', 22], ['LV', 21], ['PHI', 21],
+            ['ATL', 20], ['BAL', 20], ['CIN', 20], ['NO', 20], ['TB', 20], ['GB', 19], ['CLE', 18], ['KC', 18],
+            ['LA', 18], ['TEN', 18], ['CHI', 17], ['JAX', 17], ['MIA', 17], ['WAS', 17], ['DAL', 16], ['DEN', 16],
+            ['SEA', 16], ['ARI', 15], ['HOU', 15], ['NE', 15], ['CAR', 14], ['IND', 13], ['NYG', 12], ['NYJ', 11]
+        ];
+
+        /* Photos: put image files in /texans/photos/ and list them here, in order.
+           wide: true makes a photo span the full width. */
+        var PHOTOS = [
+            { src: 'photos/opening.jpg', w: 1600, h: 905, caption: 'Opening the presentation, football in hand, with the story of one explosive play.', wide: true },
+            { src: 'photos/presenting.jpg', w: 1600, h: 905, caption: 'Walking the room through the play, with Team A on stage.' },
+            { src: 'photos/explaining.jpg', w: 1600, h: 905, caption: 'Presenting to Texans management, analysts and coaches.' },
+            { src: 'photos/field-group.jpg', w: 1400, h: 1050, caption: 'Everyone on the field at NRG Stadium: the student teams with the Texans front office, analytics staff and coaches.', wide: true },
+            { src: 'photos/team-a.jpg', w: 1400, h: 1050, caption: 'Team A, the graduate students who presented this project, with Professor John Tobias (far left).', wide: true }
+        ];
+
+        function drawBars(el, rows, opts) {
+            var max = rows.reduce(function (m, r) { return Math.max(m, r[1]); }, 0);
+            rows.forEach(function (r) {
+                var hi = opts.highlight && r[0] === opts.highlight;
+                var row = document.createElement('div');
+                row.className = 'bar-row' + (hi ? ' is-hi' : '');
+                row.title = (opts.fullName ? opts.fullName(r[0]) : r[0]) + ': ' + r[1] + ' explosive plays';
+                var pct = (r[1] / max * 100).toFixed(1); // layout
+                row.innerHTML = '<span class="bar-label">' + r[0] + '</span>' +
+                    '<span class="bar-track"><span class="bar' + (hi ? ' hi' : (opts.ink ? ' ink' : '')) + '" style="width:' + pct + '%"></span></span>' +
+                    '<span class="bar-val">' + r[1] + '</span>';
+                el.appendChild(row);
+            });
+        }
+
+        drawBars(document.getElementById('driveChart'), DRIVE_END, { ink: true });
+        drawBars(document.getElementById('teamChart'), BY_TEAM, {
+            highlight: 'HOU',
+            fullName: function (code) { return code === 'HOU' ? 'Houston Texans' : code; }
+        });
+
+        var FUN_PHOTOS = [
+            { src: 'photos/fun-field.jpg', w: 900, h: 1200, caption: 'On the field at NRG Stadium.' },
+            { src: 'photos/fun-nrg.jpg', w: 900, h: 1200, caption: 'Outside NRG Stadium.' },
+            { src: 'photos/fun-andre-johnson.jpg', w: 900, h: 1200, caption: 'With Texans legend Andre Johnson.' }
+        ];
+
+        function fillGallery(gallery, photos) {
+            photos.forEach(function (p) {
+                var fig = document.createElement('figure');
+                if (p.wide) fig.className = 'wide';
+                var img = document.createElement('img');
+                img.src = p.src; img.alt = p.caption || ''; img.loading = 'lazy';
+                if (p.w) { img.width = p.w; img.height = p.h; }
+                fig.appendChild(img);
+                if (p.caption) {
+                    var cap = document.createElement('figcaption');
+                    cap.textContent = p.caption;
+                    fig.appendChild(cap);
+                }
+                gallery.appendChild(fig);
+            });
+        }
+
+        if (PHOTOS.length) {
+            fillGallery(document.getElementById('gallery'), PHOTOS);
+            document.getElementById('photos').hidden = false;
+        }
+        if (PHOTOS.length && FUN_PHOTOS.length) {
+            fillGallery(document.getElementById('funGallery'), FUN_PHOTOS);
+            document.getElementById('funBlock').hidden = false;
+        }
+    </script>
+</body>
+</html>

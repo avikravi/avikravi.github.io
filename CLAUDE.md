@@ -945,6 +945,29 @@ agents/index.html       URL: /agents — "Cleanie's Homebase." Added 2026-09-19.
                          happens, keep the same iso-plateau/HUD visual language and fog-of-war
                          framing rather than introducing a new visual system, and update this
                          entry plus README.md's page table together, same as any other new page.
+texans/index.html       URL: /texans. Added 2026-10-17. "What makes an explosive play?" showcase of Avi's
+                         Texans Analytics Mentorship Project (Team A, Oct 2025, 2024 Texans-provided play data).
+                         Standalone light-editorial page (no site sidebar, "← Avi Ravishankar" back link), opened in
+                         a new tab from the sidebar's Sports > Houston Texans and the homepage card's "View Details".
+                         Content comes ONLY from the team's Drive folder: the final deck ExplosivePlays_TeamA.pptx and
+                         the "Project Definitions" doc. Both bar charts are plain HTML drawn from DRIVE_END / BY_TEAM
+                         arrays at the bottom of the file, transcribed from the team's Power BI PNGs; both sum to 600
+                         plays (313 TD = 52%, 313+133 = 446 = 74% scoring, HOU 15 = 26th, matching the deck). Don't
+                         add numbers that aren't in those sources. Teammates are not named (private individuals;
+                         ask Avi first). Photos: image files go in texans/photos/ and get listed in the PHOTOS array
+                         ({src, caption, wide}); the "From the presentation" section (placed right under the headline numbers,
+                         first photo wide) stays hidden while it's empty. Current photos (2026-10-17): opening.jpg,
+                         presenting.jpg, explaining.jpg (cropped from Avi's phone screenshots, black side bars removed),
+                         field-group.jpg (everyone on the field at NRG Stadium) and team-a.jpg (Team A with Professor
+                         John Tobias, far left, verified against his faculty photo), the last two re-encoded with
+                         Pillow at 1400px with metadata stripped. Captions describe only what's visible. The program
+                         was "Strength in Numbers 2025" with the Texans (from the program's intro deck);
+                         Strength in Numbers is Prof. Tobias's nonprofit (sds.charlotte.edu/directory/john-tobias/).
+                         Teammates are still not named. A "Behind the scenes" row (FUN_PHOTOS array, 3 columns,
+                         1 on phones) holds fun-field.jpg, fun-nrg.jpg (a stranger's license plate is BLURRED in
+                         it: keep it blurred) and fun-andre-johnson.jpg (with Andre Johnson). Every photo entry has
+                         w/h so the browser reserves its space before it lazy-loads.
+                         Resize big photos (sips, ~1600px wide, JPEG ~80%) before committing.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
@@ -1029,7 +1052,7 @@ run `python3 scripts/build_sidebar.py .` from the root; it is idempotent and rew
 `<aside>`, the `.top-bar` and the phone-drawer `<script>` on all 13 pages). To change the menu, edit its CATEGORIES
 list and rerun; never hand-edit 13 pages. Current menu:
 Home · Robotics & Manufacturing (Object Detect + level grid, Robotic Surgery ↗) · Sports (Kalshi ↗, Houston Texans
--> `/#houston-texans`, Clutch Sports Data -> `/projects.html#clutch-sports-data`, muvve ↗ https://muvve.com/) ·
+↗ `/texans`, Clutch Sports Data -> `/projects.html#clutch-sports-data`, muvve ↗ https://muvve.com/) ·
 Gaming (AI Arcade ↗ `/games`) · Construction (TaskTag ↗ https://tasktag.com/, new tab) · Oil & Gas (Corrosion Pipeline ↗
 https://p66-vessel-integrity.vercel.app). `id`s `houston-texans`/`tasktag` (index.html; `tasktag` is no longer used by the menu) and `muvve` (projects.html, no longer used by the menu)
 were added for these links; `:target` gets scroll-margin so cards don't land under the sticky phone bar.
@@ -1118,7 +1141,7 @@ As of 2026-09-13, every page in this repo carries the same Google Analytics 4 (g
 </script>
 ```
 
-There's no shared layout/build step in this repo, so the snippet is duplicated into all 38 HTML files individually (24 + the 11 `object-detect/` pages, `games/index.html` and `games/thermostat/index.html` added 2026-09-25, and `kalshi/index.html` added 2026-10-10, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
+There's no shared layout/build step in this repo, so the snippet is duplicated into all 38 HTML files individually (24 + the 11 `object-detect/` pages, `games/index.html` and `games/thermostat/index.html` added 2026-09-25, `kalshi/index.html` added 2026-10-10, and `texans/index.html` added 2026-10-17, which use the plain snippet, not `content_group`) rather than living in one place: `index.html`, `projects.html`, `tracker.html`, `agents/index.html`, `hp-pmm-worksheet.html`, `zgx-nano-case-study.html`, and every `hp/*/index.html` page (eighteen of them). **Any new page added to this repo must get this same snippet pasted after its `<head>` tag** — it's easy to forget since there's no template enforcing it. One Measurement ID covers the whole `avikravi.github.io` domain, so nothing else needs to change if a new page is added elsewhere on the site.
 
 Every page under `hp/` (all 18: `index.html`, `case-study/index.html`, `use-cases/index.html`, `youtube/index.html`, `ai-research/index.html`, `p66-example/index.html`, `30-60-90/index.html`, `object-detect-summary/index.html`, `object-detect-level-1/index.html` through `object-detect-level-10/index.html`) passes an extra `content_group: 'HP Portfolio'` parameter in its `gtag('config', ...)` call — a deliberate deviation from the plain snippet used elsewhere, added 2026-09-13 so Avi can filter GA4 reports (Engagement > Pages and screens, Path exploration) down to just visitors exploring the HP portfolio, separate from the rest of the site. Each page already has a distinct `<title>`, which combined with `content_group` is what makes per-page dwell time, click-through paths, and unique-visitor counts within `/hp` reportable in GA4 without any further code — this needs no additional event tracking, since GA4's default collection already measures page views, per-page engagement time, and users automatically on every full-page navigation. If a new `hp/` page is added, its `gtag('config', ...)` call must include this same `content_group` parameter — copy the pattern from any existing `hp/*/index.html` file.
 
