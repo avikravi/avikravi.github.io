@@ -53,38 +53,33 @@
 
         .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 
-        /* Left sidebar nav */
+        /* Left sidebar nav (v7: category groups) */
         .site-side {
             position: fixed;
             top: 0; left: 0; bottom: 0;
-            width: 232px;
+            width: 248px;
             display: flex;
             flex-direction: column;
             background: #fafafa;
             border-right: 1px solid var(--line);
-            padding: 20px 14px 24px;
+            padding: 20px 12px 28px;
             overflow-y: auto;
+            z-index: 30;
         }
 
-        .side-brand {
-            display: block;
-            padding: 4px 10px 18px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid var(--line);
-            text-decoration: none;
-        }
-
+        .side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding-bottom: 16px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+        .side-brand { display: block; padding: 4px 8px 0; text-decoration: none; }
         .side-brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #000; line-height: 1.25; }
         .side-brand-role { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-faint); line-height: 1.35; }
 
-        .side-links { display: flex; flex-direction: column; gap: 2px; }
+        .side-nav { display: flex; flex-direction: column; gap: 14px; }
 
-        .side-links a,
-        .side-group-head {
+        /* Home: a main link */
+        .side-top {
             display: flex;
             align-items: center;
-            gap: 11px;
-            padding: 8px 10px;
+            gap: 10px;
+            padding: 8px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
@@ -92,41 +87,34 @@
             text-decoration: none;
             transition: background 0.15s, color 0.15s, box-shadow 0.15s;
         }
+        .side-top:hover { background: #efefef; color: #000; }
+
+        /* Category heading: a label, not a link */
+        .side-cat-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 2px 8px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            color: var(--ink);
+            line-height: 1.3;
+        }
 
         .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
-        .side-ext { width: 13px; height: 13px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
+        .side-top:hover .side-icon,
+        .side-top.active .side-icon,
+        .side-cat-head.current .side-icon { color: #000; }
+        .side-cat-head.current { color: #000; }
+        .side-ext { width: 12px; height: 12px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
 
-        .side-links a:hover,
-        .side-group-head:hover { background: #efefef; color: #000; }
-        .side-links a:hover .side-icon,
-        .side-group-head:hover .side-icon { color: #000; }
-
-        .side-links a.active,
-        .side-group-head.active,
-        .side-sub-link.active {
-            background: #fff;
-            color: #000;
-            font-weight: 600;
-            box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .side-links a.active .side-icon,
-        .side-group-head.active .side-icon,
-        .side-group-head.current .side-icon { color: #000; }
-        .side-group-head.current { color: #000; font-weight: 600; }
-
-        .side-links a:focus-visible,
-        .side-group-head:focus-visible,
-        .side-sub-link:focus-visible,
-        .side-level-grid a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-
-        /* Projects section: individual projects indented under it */
-        .side-group { margin-top: 2px; }
-
+        /* Items inside a category: indented under a thin guide line */
         .side-sub {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            margin: 4px 0 0 19px;
+            gap: 1px;
+            margin: 2px 0 0 16px;
             padding-left: 10px;
             border-left: 1px solid var(--line);
         }
@@ -135,22 +123,40 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 10px;
+            padding: 6px 8px;
             border-radius: 6px;
             font-size: 13.5px;
             color: var(--ink-soft);
             text-decoration: none;
+            line-height: 1.3;
             transition: background 0.15s, color 0.15s;
         }
-
         .side-sub-link:hover { background: #efefef; color: #000; }
+        .side-sub-link:hover .side-ext { color: #000; }
+        .side-sub-link.current { color: #000; font-weight: 600; }
 
+        .side-top.active,
+        .side-sub-link.active {
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .side-top:focus-visible,
+        .side-sub-link:focus-visible,
+        .side-level-grid a:focus-visible,
+        .side-open:focus-visible,
+        .side-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        /* Object Detect level buttons: shown only on Object Detect pages */
         .side-level-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 5px;
-            padding: 4px 2px 6px 10px;
+            padding: 4px 2px 8px 8px;
         }
+        .site-side:not(.in-od) .side-level-grid { display: none; }
 
         .side-level-grid a {
             display: flex;
@@ -166,18 +172,25 @@
             text-decoration: none;
             transition: border-color 0.15s, color 0.15s, background 0.15s;
         }
-
         .side-level-grid a:hover { border-color: #191919; color: #000; }
         .side-level-grid a.active { background: #191919; border-color: #191919; color: #fff; }
 
-        .site-main { margin-left: 232px; }
+        /* Phone menu controls (hidden on desktop) */
+        .side-open, .side-close, .side-scrim { display: none; }
 
-        /* Top bar: resume button only */
+        .site-main { margin-left: 248px; }
+
+        /* Sidebar links that jump to a card (/#tasktag) land with breathing room */
+        :target { scroll-margin-top: 24px; }
+
+        /* Top bar: resume button (plus the Menu button on phones) */
         .top-bar {
             border-bottom: 1px solid var(--line);
             padding: 14px 24px;
             display: flex;
+            align-items: center;
             justify-content: flex-end;
+            gap: 12px;
         }
 
         .nav-resume-btn {
@@ -197,27 +210,65 @@
 
         @media (max-width: 760px) {
             .site-side {
-                position: static;
-                width: auto;
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 4px;
-                border-right: none;
-                border-bottom: 1px solid var(--line);
-                padding: 14px 16px;
+                width: min(300px, 86vw);
+                padding: 16px 14px 28px;
+                transform: translateX(-100%);
+                visibility: hidden;
+                transition: transform 0.22s ease, visibility 0s linear 0.22s;
+                box-shadow: none;
+                z-index: 50;
             }
-            .side-brand { flex-basis: 100%; padding: 0 0 12px; margin-bottom: 6px; }
-            .side-links, .side-group { display: contents; }
-            .side-links a, .side-group-head { padding: 7px 10px; font-size: 13px; }
-            .side-icon, .side-ext { display: none; }
-            .side-sub { flex-basis: 100%; flex-direction: row; flex-wrap: wrap; margin: 2px 0 0; padding: 0; border-left: none; }
-            .side-sub-link { padding: 6px 9px; font-size: 12.5px; }
-            .side-level-grid { flex-basis: 100%; grid-template-columns: repeat(10, 1fr); gap: 4px; padding: 4px 0 0; order: 99; }
-            .site-side:not(.in-od) .side-level-grid { display: none; }
-            .side-level-grid a { height: 30px; }
+            .site-side.open { transform: translateX(0); visibility: visible; transition: transform 0.22s ease; box-shadow: 0 0 40px rgba(0, 0, 0, 0.18); }
+            .side-close {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px; height: 36px;
+                margin: -4px -4px 0 0;
+                border: none;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--ink-soft);
+                cursor: pointer;
+            }
+            .side-close:hover { background: #efefef; color: #000; }
+            .side-close svg { width: 20px; height: 20px; }
+            .side-scrim { display: block; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.32); z-index: 40; }
+            .side-scrim[hidden] { display: none; }
+            .side-top, .side-sub-link { padding-top: 9px; padding-bottom: 9px; }
+            .side-level-grid a { height: 32px; }
+            body.side-locked { overflow: hidden; }
+
             .site-main { margin-left: 0; }
-            .top-bar { padding: 10px 16px; }
+            :target { scroll-margin-top: 76px; }
+            .top-bar {
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                background: var(--bg);
+                padding: 10px 16px;
+                justify-content: space-between;
+            }
+            .side-open {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 12px 7px 10px;
+                border: 1px solid var(--line);
+                border-radius: 6px;
+                background: #fff;
+                font: inherit;
+                font-size: 13.5px;
+                font-weight: 600;
+                color: var(--ink);
+                cursor: pointer;
+            }
+            .side-open svg { width: 18px; height: 18px; }
+            .side-open:hover { border-color: #191919; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .site-side { transition: none; }
         }
 
         /* Page header */
@@ -346,39 +397,69 @@
     </style>
 </head>
 <body>
-    <aside class="site-side">
-        <a href="/" class="side-brand">
-            <span class="side-brand-name">Avi Ravishankar</span>
-            <span class="side-brand-role">AI/ML Engineer</span>
-        </a>
-        <nav class="side-links" aria-label="Main">
-            <a href="/"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
-        </nav>
-        <div class="side-group">
-            <a href="/projects.html" class="side-group-head active" aria-current="page"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Projects</a>
-            <nav class="side-sub" aria-label="Projects">
-                <a href="/object-detect" class="side-sub-link">Object Detect</a>
-                <div class="side-level-grid" aria-label="Object Detect levels">
-                    <a href="/object-detect/level-1" title="Level 1">1</a>
-                    <a href="/object-detect/level-2" title="Level 2">2</a>
-                    <a href="/object-detect/level-3" title="Level 3">3</a>
-                    <a href="/object-detect/level-4" title="Level 4">4</a>
-                    <a href="/object-detect/level-5" title="Level 5">5</a>
-                    <a href="/object-detect/level-6" title="Level 6">6</a>
-                    <a href="/object-detect/level-7" title="Level 7">7</a>
-                    <a href="/object-detect/level-8" title="Level 8">8</a>
-                    <a href="/object-detect/level-9" title="Level 9">9</a>
-                    <a href="/object-detect/level-10" title="Level 10">10</a>
-                </div>
-                <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" class="side-sub-link" target="_blank" rel="noopener">Robotic Surgery<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-                <a href="/games" class="side-sub-link" target="_blank" rel="noopener">AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-                <a href="/kalshi" class="side-sub-link" target="_blank" rel="noopener">Kalshi<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
-            </nav>
+    <aside class="site-side" id="siteSide" aria-label="Site menu">
+        <div class="side-head">
+            <a href="/" class="side-brand">
+                <span class="side-brand-name">Avi Ravishankar</span>
+                <span class="side-brand-role">AI/ML Engineer</span>
+            </a>
+            <button type="button" class="side-close" id="siteSideClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
+        <nav class="side-nav" aria-label="Main">
+            <a href="/" class="side-top"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4.5"/><circle cx="12" cy="3.5" r="1"/><path d="M9 13v1.5M15 13v1.5M9.5 17.5h5"/></svg>Robotics &amp; Manufacturing</div>
+                <div class="side-sub">
+                    <a href="/object-detect" class="side-sub-link">Object Detect</a>
+                    <div class="side-level-grid" aria-label="Object Detect levels">
+                        <a href="/object-detect/level-1" title="Level 1">1</a>
+                        <a href="/object-detect/level-2" title="Level 2">2</a>
+                        <a href="/object-detect/level-3" title="Level 3">3</a>
+                        <a href="/object-detect/level-4" title="Level 4">4</a>
+                        <a href="/object-detect/level-5" title="Level 5">5</a>
+                        <a href="/object-detect/level-6" title="Level 6">6</a>
+                        <a href="/object-detect/level-7" title="Level 7">7</a>
+                        <a href="/object-detect/level-8" title="Level 8">8</a>
+                        <a href="/object-detect/level-9" title="Level 9">9</a>
+                        <a href="/object-detect/level-10" title="Level 10">10</a>
+                    </div>
+                    <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" class="side-sub-link" target="_blank" rel="noopener">Robotic Surgery<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4"/><path d="M17 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/></svg>Sports</div>
+                <div class="side-sub">
+                    <a href="/kalshi" class="side-sub-link" target="_blank" rel="noopener">Kalshi<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                    <a href="/#houston-texans" class="side-sub-link">Houston Texans</a>
+                    <a href="/projects.html#clutch-sports-data" class="side-sub-link">Clutch Sports Data</a>
+                    <a href="/projects.html#muvve" class="side-sub-link">muvve</a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 12.5h3.5M8.75 10.75v3.5"/><circle cx="15.5" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.75" r=".6" fill="currentColor"/></svg>Gaming</div>
+                <div class="side-sub">
+                    <a href="/games" class="side-sub-link" target="_blank" rel="noopener">AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-2.5a7 7 0 0 1 14 0V18"/><path d="M10 9V5.5h4V9"/></svg>Construction</div>
+                <div class="side-sub">
+                    <a href="/#tasktag" class="side-sub-link">TaskTag</a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/><path d="M9.2 14.5a2.9 2.9 0 0 0 2.6 2.7"/></svg>Oil &amp; Gas</div>
+                <div class="side-sub">
+                    <a href="https://p66-vessel-integrity.vercel.app" class="side-sub-link" target="_blank" rel="noopener">Corrosion Pipeline<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+        </nav>
     </aside>
+    <div class="side-scrim" id="siteSideScrim" hidden></div>
 
     <div class="site-main">
     <div class="top-bar">
+        <button type="button" class="side-open" id="siteSideOpen" aria-controls="siteSide" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
         <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
     </div>
 
@@ -485,7 +566,7 @@
                 </div>
 
                 <!-- muvve - 2016 to 2019 -->
-                <div class="card">
+                <div class="card" id="muvve">
                     <div class="card-head">
                         <span class="frank">2016 - 2019</span>
                         <span class="tag-co">B2C Mobile App</span>
@@ -508,5 +589,31 @@
         </section>
     </div>
     </div>
+    <script>
+        /* Phone menu: the sidebar slides in as a drawer below 760px */
+        (function () {
+            var side = document.getElementById('siteSide');
+            var openBtn = document.getElementById('siteSideOpen');
+            var closeBtn = document.getElementById('siteSideClose');
+            var scrim = document.getElementById('siteSideScrim');
+            if (!side || !openBtn) return;
+            function setOpen(open) {
+                side.classList.toggle('open', open);
+                scrim.hidden = !open;
+                openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                document.body.classList.toggle('side-locked', open);
+                if (open) closeBtn.focus(); else if (document.activeElement && side.contains(document.activeElement)) openBtn.focus();
+            }
+            openBtn.addEventListener('click', function () { setOpen(true); });
+            closeBtn.addEventListener('click', function () { setOpen(false); });
+            scrim.addEventListener('click', function () { setOpen(false); });
+            side.addEventListener('click', function (e) {
+                if (e.target.closest('a') && side.classList.contains('open')) setOpen(false);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && side.classList.contains('open')) setOpen(false);
+            });
+        })();
+    </script>
 </body>
 </html>
