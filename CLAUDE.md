@@ -1029,9 +1029,9 @@ run `python3 scripts/build_sidebar.py .` from the root; it is idempotent and rew
 `<aside>`, the `.top-bar` and the phone-drawer `<script>` on all 13 pages). To change the menu, edit its CATEGORIES
 list and rerun; never hand-edit 13 pages. Current menu:
 Home · Robotics & Manufacturing (Object Detect + level grid, Robotic Surgery ↗) · Sports (Kalshi ↗, Houston Texans
--> `/#houston-texans`, Clutch Sports Data -> `/projects.html#clutch-sports-data`, muvve -> `/projects.html#muvve`) ·
+-> `/#houston-texans`, Clutch Sports Data -> `/projects.html#clutch-sports-data`, muvve ↗ https://muvve.com/) ·
 Gaming (AI Arcade ↗ `/games`) · Construction (TaskTag ↗ https://tasktag.com/, new tab) · Oil & Gas (Corrosion Pipeline ↗
-https://p66-vessel-integrity.vercel.app). `id`s `houston-texans`/`tasktag` (index.html; `tasktag` is no longer used by the menu) and `muvve` (projects.html)
+https://p66-vessel-integrity.vercel.app). `id`s `houston-texans`/`tasktag` (index.html; `tasktag` is no longer used by the menu) and `muvve` (projects.html, no longer used by the menu)
 were added for these links; `:target` gets scroll-margin so cards don't land under the sticky phone bar.
 Design: 248px, `#fafafa`, icons only on Home and category headings (robot, trophy, gamepad, hard hat, droplet).
 Category headings are `.side-cat-head` labels (14px, 600, `--ink`, NOT links, no hover); items are `.side-sub-link`

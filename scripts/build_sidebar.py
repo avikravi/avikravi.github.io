@@ -32,7 +32,7 @@ CATEGORIES = [
         sub('Kalshi', '/kalshi', ext=True),
         sub('Houston Texans', '/#houston-texans'),
         sub('Clutch Sports Data', '/projects.html#clutch-sports-data'),
-        sub('muvve', '/projects.html#muvve'),
+        sub('muvve', 'https://muvve.com/', ext=True),
     ]),
     ('gaming', 'Gaming', [
         sub('AI Arcade', '/games', ext=True),
