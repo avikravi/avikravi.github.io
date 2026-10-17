@@ -954,19 +954,18 @@ texans/index.html       URL: /texans. Added 2026-10-17. "What makes an explosive
                          arrays at the bottom of the file, transcribed from the team's Power BI PNGs; both sum to 600
                          plays (313 TD = 52%, 313+133 = 446 = 74% scoring, HOU 15 = 26th, matching the deck). Don't
                          add numbers that aren't in those sources. Teammates are not named (private individuals;
-                         ask Avi first). Photos: image files go in texans/photos/ and get listed in the PHOTOS array
-                         ({src, caption, wide}); the "From the presentation" section (placed right under the headline numbers,
-                         first photo wide) stays hidden while it's empty. Current photos (2026-10-17): opening.jpg,
-                         presenting.jpg, explaining.jpg (cropped from Avi's phone screenshots, black side bars removed),
-                         field-group.jpg (everyone on the field at NRG Stadium) and team-a.jpg (Team A with Professor
-                         John Tobias, far left, verified against his faculty photo), the last two re-encoded with
-                         Pillow at 1400px with metadata stripped. Captions describe only what's visible. The program
-                         was "Strength in Numbers 2025" with the Texans (from the program's intro deck);
-                         Strength in Numbers is Prof. Tobias's nonprofit (sds.charlotte.edu/directory/john-tobias/).
-                         Teammates are still not named. A "Behind the scenes" row (FUN_PHOTOS array, 3 columns,
-                         1 on phones) holds fun-field.jpg, fun-nrg.jpg (a stranger's license plate is BLURRED in
-                         it: keep it blurred) and fun-andre-johnson.jpg (with Andre Johnson). Every photo entry has
-                         w/h so the browser reserves its space before it lazy-loads.
+                         ask Avi first). PHOTOS (redesigned 2026-10-17 per Avi: the big captioned
+                         gallery was "WAY too big" and captions "corny"; he wants to reach the model with less
+                         scrolling): NO captions, NO separate photo section. Photos are small fixed-height
+                         object-fit crops (`.photo` buttons, plain HTML) woven between sections: opening.jpg beside
+                         the header (`.header-grid`), a `.photo-row.three` (presenting, explaining, team-a) at the end
+                         of "Why they matter", and a `.photo-row.mixed` (field-group wide + fun-field, fun-nrg,
+                         fun-andre-johnson) at the end of "Our recommendations". Tapping one opens a `<dialog>`
+                         lightbox at full size. Keep rows short (190-220px desktop); tune crops with object-position.
+                         Alt text stays (accessibility). fun-nrg.jpg has a stranger's license plate BLURRED: keep it.
+                         Team A photo = Prof. John Tobias (Strength in Numbers founder) far left, verified against
+                         his faculty photo. New photos: resize with Pillow (~1400-1600px, JPEG ~78, no EXIF), blur
+                         strangers' private details, add as another `.photo` in a row.
                          Resize big photos (sips, ~1600px wide, JPEG ~80%) before committing.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
