@@ -980,6 +980,27 @@ clutch/index.html       URL: /clutch. Added 2026-10-17 as an MVP, same format an
                          (already public on the site). The "1 national championship, 2 Final Fours, 3 Elite Eights"
                          stat is from the pitch deck's traction slide; Avi hasn't confirmed it for public use yet.
                          No photos yet. Avi wants to keep adding to it and review suggestions together.
+                         VISUAL PASS (2026-10-17, Avi: "make this way more visual"), all plain HTML/CSS/inline SVG:
+                         Final Four callout (Houston and Baylor, both clients, met in the 2021 national semifinal;
+                         Baylor won the title; public facts), a 4-step data pipeline diagram (.flow), "A season of
+                         scouting reports" timeline (.season: 13 opponent reports for Houston 2020-21, names/dates
+                         taken from the PDF file names in the Drive's "2020-21 UH Reports" folder, ending at the Final
+                         Four, "Houston's first since 1984"), and "Inside a scouting report" (.anatomy: the 27-page
+                         report's sections from its table of contents, abstract glyphs, NO real data). The headline
+                         stats now use those checkable facts; the pitch deck's "1 title, 2 Final Fours, 3 Elite
+                         Eights" claim was dropped. NEVER publish the reports' contents: per-player Houston
+                         practice/rebounding numbers are the client's internal data, and play/shot-type tables are
+                         licensed Synergy data. Stacking breakpoints are 900px (pipeline/timeline) because the
+                         sidebar takes 248px. A second project, "2022 NBA Draft Prospects" (Drive folder with Shot
+                         Charts and Data Management subfolders), is meant to go on this same page, but its files
+                         weren't visible to the Drive connector; waiting on Avi.
+                         OPEN (2026-10-17): Avi shared ~/Downloads/Baylor_TexasTech_OpponentScoutingReport.pdf (34 pp,
+                         03/11/2022), ~/Downloads/Stanford_Stanford_SelfScoutingReport.pdf (5 pp, 02/24/2022) and a
+                         Data Studio "Chattanooga Report (03/03/2022)" self-scout (publicly viewable, but its charts
+                         now error: "Credential settings are incorrect", so don't link it). Rendering report pages
+                         into the repo was BLOCKED by the permission classifier (client deliverables: licensed Synergy
+                         data, player headshots, school logos). Nothing from these files is on the page yet. Ask Avi
+                         before publishing any page image, and before naming Stanford/Chattanooga as clients.
 hp-pmm-worksheet.html    Thin meta-refresh redirect stub → /hp (old pre-2026-08-22 URL, kept so
                          any existing links don't 404).
 zgx-nano-case-study.html Thin meta-refresh redirect stub → /hp/case-study (old pre-2026-08-22
