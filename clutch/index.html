@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics self-exclusion (must run before the tag below) -->
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get('ga_optout') === '1') {
+            localStorage.setItem('ga_opt_out', 'true');
+          } else if (params.get('ga_optout') === '0') {
+            localStorage.removeItem('ga_opt_out');
+          }
+          if (localStorage.getItem('ga_opt_out') === 'true') {
+            window['ga-disable-G-JVHGKBB8PD'] = true;
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JVHGKBB8PD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-JVHGKBB8PD');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clutch Sports Data | Avi Ravishankar</title>
+    <meta name="description" content="Clutch Sports Data: the sports analytics company Avi Ravishankar co-founded to give college basketball staffs one place for their data, automated reports and custom insights.">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --ink: #191919;
+            --ink-soft: #3d3d3d;
+            --ink-faint: #767676;
+            --line: #e5e5e5;
+            --blue: #1967b1;
+            --texans: #a71930;     /* Texans "Battle Red": the one highlighted bar */
+            --bar: #c9c9c9;        /* every other bar: quiet context */
+            --track: #f3f3f3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--blue); }
+        a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
+
+        .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+        /* Left sidebar nav (v7: category groups) */
+        .site-side {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 248px;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+            border-right: 1px solid var(--line);
+            padding: 20px 12px 28px;
+            overflow-y: auto;
+            z-index: 30;
+        }
+
+        .side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding-bottom: 16px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+        .side-brand { display: block; padding: 4px 8px 0; text-decoration: none; }
+        .side-brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #000; line-height: 1.25; }
+        .side-brand-role { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-faint); line-height: 1.35; }
+
+        .side-nav { display: flex; flex-direction: column; gap: 14px; }
+
+        /* Home: a main link */
+        .side-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ink-soft);
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+        }
+        .side-top:hover { background: #efefef; color: #000; }
+
+        /* Category heading: a label, not a link */
+        .side-cat-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 2px 8px 4px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            color: var(--ink);
+            line-height: 1.3;
+        }
+
+        .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
+        .side-top:hover .side-icon,
+        .side-top.active .side-icon,
+        .side-cat-head.current .side-icon { color: #000; }
+        .side-cat-head.current { color: #000; }
+        .side-ext { width: 12px; height: 12px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
+
+        /* Items inside a category: indented under a thin guide line */
+        .side-sub {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            margin: 2px 0 0 16px;
+            padding-left: 10px;
+            border-left: 1px solid var(--line);
+        }
+
+        .side-sub-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            text-decoration: none;
+            line-height: 1.3;
+            transition: background 0.15s, color 0.15s;
+        }
+        .side-sub-link:hover { background: #efefef; color: #000; }
+        .side-sub-link:hover .side-ext { color: #000; }
+        .side-sub-link.current { color: #000; font-weight: 600; }
+
+        .side-top.active,
+        .side-sub-link.active {
+            background: #fff;
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .side-top:focus-visible,
+        .side-sub-link:focus-visible,
+        .side-level-grid a:focus-visible,
+        .side-open:focus-visible,
+        .side-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        /* Object Detect level buttons: shown only on Object Detect pages */
+        .side-level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            padding: 4px 2px 8px 8px;
+        }
+        .site-side:not(.in-od) .side-level-grid { display: none; }
+
+        .side-level-grid a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 26px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #fff;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+        }
+        .side-level-grid a:hover { border-color: #191919; color: #000; }
+        .side-level-grid a.active { background: #191919; border-color: #191919; color: #fff; }
+
+        /* Phone menu controls (hidden on desktop) */
+        .side-open, .side-close, .side-scrim { display: none; }
+
+        .site-main { margin-left: 248px; }
+
+        /* Sidebar links that jump to a card (/#houston-texans) land with breathing room */
+        :target { scroll-margin-top: 24px; }
+
+        /* Top bar: resume button (plus the Menu button on phones) */
+        .top-bar {
+            border-bottom: 1px solid var(--line);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .nav-resume-btn {
+            padding: 8px 16px;
+            background: #191919;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .nav-resume-btn:hover { background: #000; }
+
+        @media (max-width: 760px) {
+            .site-side {
+                width: min(300px, 86vw);
+                padding: 16px 14px 28px;
+                transform: translateX(-100%);
+                visibility: hidden;
+                transition: transform 0.22s ease, visibility 0s linear 0.22s;
+                box-shadow: none;
+                z-index: 50;
+            }
+            .site-side.open { transform: translateX(0); visibility: visible; transition: transform 0.22s ease; box-shadow: 0 0 40px rgba(0, 0, 0, 0.18); }
+            .side-close {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px; height: 36px;
+                margin: -4px -4px 0 0;
+                border: none;
+                border-radius: 8px;
+                background: transparent;
+                color: var(--ink-soft);
+                cursor: pointer;
+            }
+            .side-close:hover { background: #efefef; color: #000; }
+            .side-close svg { width: 20px; height: 20px; }
+            .side-scrim { display: block; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.32); z-index: 40; }
+            .side-scrim[hidden] { display: none; }
+            .side-top, .side-sub-link { padding-top: 9px; padding-bottom: 9px; }
+            .side-level-grid a { height: 32px; }
+            body.side-locked { overflow: hidden; }
+
+            .site-main { margin-left: 0; }
+            :target { scroll-margin-top: 76px; }
+            .top-bar {
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                background: var(--bg);
+                padding: 10px 16px;
+                justify-content: space-between;
+            }
+            .side-open {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 12px 7px 10px;
+                border: 1px solid var(--line);
+                border-radius: 6px;
+                background: #fff;
+                font: inherit;
+                font-size: 13.5px;
+                font-weight: 600;
+                color: var(--ink);
+                cursor: pointer;
+            }
+            .side-open svg { width: 18px; height: 18px; }
+            .side-open:hover { border-color: #191919; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .site-side { transition: none; }
+        }
+
+
+        /* Header */
+        header.page-header { padding: 56px 0 8px; }
+        .eyebrow { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+        h1 { margin-top: 10px; font-size: 36px; line-height: 1.12; letter-spacing: -0.02em; font-weight: 800; }
+        .dek { margin-top: 14px; max-width: 640px; font-size: 18px; line-height: 1.55; color: var(--ink-soft); }
+
+        /* Headline numbers */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 40px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .stat { padding: 20px 16px 20px 0; }
+        .stat + .stat { padding-left: 20px; border-left: 1px solid var(--line); }
+        .stat-num { display: block; font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+        .stat-num.red { color: var(--texans); }
+        .stat-label { display: block; margin-top: 6px; font-size: 13.5px; line-height: 1.4; color: var(--ink-faint); }
+
+        /* Sections */
+        section { padding: 56px 0 0; }
+        .panel-title { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; }
+        .panel-desc { margin-top: 6px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-size: 15.5px; color: var(--ink-faint); }
+        .body-text { margin-top: 18px; max-width: 700px; color: var(--ink-soft); }
+        .body-text + .body-text { margin-top: 12px; }
+
+        /* Definition */
+        .def-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 22px; }
+        .def { padding: 4px 20px 4px 0; }
+        .def + .def { padding-left: 20px; border-left: 1px solid var(--line); }
+        .def-kind { font-size: 13px; font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+        .def-rule { margin-top: 4px; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+        .def-or { font-size: 13px; color: var(--ink-faint); margin-top: 2px; }
+
+        .why-list { margin-top: 22px; list-style: none; max-width: 700px; }
+        .why-list li { position: relative; padding: 10px 0 10px 18px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 15.5px; }
+        .why-list li::before { content: ""; position: absolute; left: 0; top: 20px; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+        .why-list strong { color: var(--ink); }
+
+        /* Bar charts (horizontal, HTML) */
+        .chart { margin-top: 24px; }
+        .chart-title { font-size: 15.5px; font-weight: 700; }
+        .chart-sub { margin-top: 2px; font-size: 14px; color: var(--ink-faint); }
+        .bars { margin-top: 16px; display: flex; flex-direction: column; gap: 2px; }
+        .bar-row { display: grid; grid-template-columns: 140px 1fr 44px; align-items: center; gap: 12px; min-height: 26px; border-radius: 4px; }
+        .bars.compact .bar-row { grid-template-columns: 56px 1fr 30px; min-height: 20px; gap: 10px; }
+        .bar-row:hover { background: #fafafa; }
+        .bar-label { font-size: 13.5px; color: var(--ink-soft); text-align: right; white-space: nowrap; }
+        .bar-track { height: 16px; display: flex; align-items: center; }
+        .bars.compact .bar-track { height: 12px; }
+        .bar { height: 100%; min-width: 3px; background: var(--bar); border-radius: 0 4px 4px 0; }
+        .bar.hi { background: var(--texans); }
+        .bar.ink { background: var(--ink); }
+        .bar-val { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+        .bar-row.is-hi .bar-label, .bar-row.is-hi .bar-val { color: var(--ink); font-weight: 700; }
+        .chart-note { margin-top: 12px; font-size: 13.5px; color: var(--ink-faint); }
+
+        /* Findings & recommendations */
+        .num-list { margin-top: 8px; list-style: none; counter-reset: item; }
+        .num-list li { counter-increment: item; display: grid; grid-template-columns: 40px 1fr; gap: 8px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+        .num-list li::before { content: counter(item, decimal-leading-zero); font-size: 14px; font-weight: 700; color: var(--ink-faint); padding-top: 2px; font-variant-numeric: tabular-nums; }
+        .num-list h3 { font-size: 17px; font-weight: 700; line-height: 1.35; }
+        .num-list p { margin-top: 4px; font-size: 15.5px; color: var(--ink-soft); }
+
+        /* Project facts */
+        .facts { margin-top: 8px; }
+        .fact { display: grid; grid-template-columns: 170px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15.5px; }
+        .fact dt { color: var(--ink-faint); font-weight: 600; font-size: 14px; padding-top: 1px; }
+        .fact dd { color: var(--ink-soft); }
+        .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .chip { display: inline-block; padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fafafa; font-size: 13px; color: var(--ink-soft); }
+
+        /* Photos: small fixed-height crops placed between sections; tap to enlarge */
+        .photo { display: block; width: 100%; height: 100%; padding: 0; border: none; border-radius: 8px; overflow: hidden; background: #f3f3f3; cursor: zoom-in; }
+        .photo img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .photo:hover img { transform: scale(1.03); }
+        .photo:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        .header-grid { display: grid; grid-template-columns: 1fr 260px; gap: 32px; align-items: center; }
+        .header-photo { height: 200px; }
+        @media (max-width: 1000px) {
+            .header-grid { grid-template-columns: 1fr; gap: 20px; }
+            .header-photo { height: 170px; max-width: 420px; }
+        }
+
+        .photo-row { display: grid; gap: 8px; margin-top: 48px; height: 190px; }
+        .photo-row.three { grid-template-columns: repeat(3, 1fr); }
+        .photo-row.mixed { grid-template-columns: 2fr 1fr 1fr 1fr; height: 220px; }
+
+        .lightbox { border: none; padding: 0; background: transparent; max-width: 92vw; max-height: 92vh; margin: auto; }
+        .lightbox::backdrop { background: rgba(0, 0, 0, 0.82); }
+        .lightbox img { display: block; max-width: 92vw; max-height: 92vh; width: auto; height: auto; border-radius: 6px; }
+        .lightbox-close { position: fixed; top: 16px; right: 16px; width: 40px; height: 40px; border: none; border-radius: 50%; background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+        .lightbox-close:hover { background: rgba(255, 255, 255, 0.26); }
+        @media (prefers-reduced-motion: reduce) { .photo img { transition: none; } .photo:hover img { transform: none; } }
+
+        footer { margin-top: 72px; padding: 24px 0 40px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-faint); }
+
+        @media (max-width: 700px) {
+            header.page-header { padding-top: 36px; }
+            h1 { font-size: 30px; }
+            .dek { font-size: 16.5px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .stat { padding: 16px 12px 16px 0; }
+            .stat + .stat { padding-left: 0; border-left: none; }
+            .stat:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+            .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+            .stat-num { font-size: 28px; }
+            .def-grid { grid-template-columns: 1fr; }
+            .def, .def + .def { padding: 12px 0; border-left: none; border-top: 1px solid var(--line); }
+            .bar-row { grid-template-columns: 112px 1fr 34px; gap: 8px; }
+            .bar-label { font-size: 12.5px; white-space: normal; line-height: 1.25; }
+            .fact { grid-template-columns: 1fr; gap: 2px; }
+            .header-grid { grid-template-columns: 1fr; gap: 20px; }
+            .header-photo { height: 170px; }
+            .photo-row { margin-top: 36px; }
+            .photo-row.three { grid-template-columns: 1fr 1fr; grid-template-rows: 150px 110px; height: auto; }
+            .photo-row.three > :first-child { grid-column: 1 / -1; }
+            .photo-row.mixed { grid-template-columns: repeat(3, 1fr); grid-template-rows: 150px 150px; height: auto; }
+            .photo-row.mixed > :first-child { grid-column: 1 / -1; }
+        }
+
+        /* Clutch: numbered process steps and the plain chip list */
+        .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 22px; }
+        .step { padding: 4px 18px 4px 0; }
+        .step + .step { padding-left: 18px; border-left: 1px solid var(--line); }
+        .step-num { font-size: 13px; font-weight: 700; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+        .step-name { margin-top: 4px; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+        .step-text { margin-top: 4px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; }
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 22px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+        .ba { padding: 18px 20px 18px 0; }
+        .ba + .ba { padding-left: 20px; border-left: 1px solid var(--line); }
+        .ba-kind { font-size: 13px; font-weight: 600; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+        .ba-text { margin-top: 6px; font-size: 16px; color: var(--ink); line-height: 1.5; }
+        .chip-row.roomy { margin-top: 18px; gap: 8px; }
+        .chip-row.roomy .chip { font-size: 13.5px; padding: 4px 12px; }
+        @media (max-width: 860px) {
+            .steps { grid-template-columns: 1fr 1fr; }
+            .step:nth-child(3) { padding-left: 0; border-left: none; }
+            .step:nth-child(n+3) { margin-top: 16px; }
+        }
+        @media (max-width: 700px) {
+            .steps, .before-after { grid-template-columns: 1fr; }
+            .step, .step + .step, .ba, .ba + .ba { padding: 12px 0; border-left: none; border-top: 1px solid var(--line); margin-top: 0; }
+            .steps > :first-child, .before-after > :first-child { border-top: none; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="site-side" id="siteSide" aria-label="Site menu">
+        <div class="side-head">
+            <a href="/" class="side-brand">
+                <span class="side-brand-name">Avi Ravishankar</span>
+                <span class="side-brand-role">AI/ML Engineer</span>
+            </a>
+            <button type="button" class="side-close" id="siteSideClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </div>
+        <nav class="side-nav" aria-label="Main">
+            <a href="/" class="side-top"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4.5"/><circle cx="12" cy="3.5" r="1"/><path d="M9 13v1.5M15 13v1.5M9.5 17.5h5"/></svg>Robotics &amp; Manufacturing</div>
+                <div class="side-sub">
+                    <a href="/object-detect" class="side-sub-link">Object Detect</a>
+                    <div class="side-level-grid" aria-label="Object Detect levels">
+                        <a href="/object-detect/level-1" title="Level 1">1</a>
+                        <a href="/object-detect/level-2" title="Level 2">2</a>
+                        <a href="/object-detect/level-3" title="Level 3">3</a>
+                        <a href="/object-detect/level-4" title="Level 4">4</a>
+                        <a href="/object-detect/level-5" title="Level 5">5</a>
+                        <a href="/object-detect/level-6" title="Level 6">6</a>
+                        <a href="/object-detect/level-7" title="Level 7">7</a>
+                        <a href="/object-detect/level-8" title="Level 8">8</a>
+                        <a href="/object-detect/level-9" title="Level 9">9</a>
+                        <a href="/object-detect/level-10" title="Level 10">10</a>
+                    </div>
+                    <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" class="side-sub-link" target="_blank" rel="noopener">Robotic Surgery<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head current"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4"/><path d="M17 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/></svg>Sports</div>
+                <div class="side-sub">
+                    <a href="/kalshi" class="side-sub-link" target="_blank" rel="noopener">Kalshi<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                    <a href="/texans" class="side-sub-link">Houston Texans</a>
+                    <a href="/clutch" class="side-sub-link active" aria-current="page">Clutch Sports Data</a>
+                    <a href="https://muvve.com/" class="side-sub-link" target="_blank" rel="noopener">muvve<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 12.5h3.5M8.75 10.75v3.5"/><circle cx="15.5" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.75" r=".6" fill="currentColor"/></svg>Gaming</div>
+                <div class="side-sub">
+                    <a href="/games" class="side-sub-link" target="_blank" rel="noopener">AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-2.5a7 7 0 0 1 14 0V18"/><path d="M10 9V5.5h4V9"/></svg>Construction</div>
+                <div class="side-sub">
+                    <a href="https://tasktag.com/" class="side-sub-link" target="_blank" rel="noopener">TaskTag<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+            <div class="side-cat">
+                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/><path d="M9.2 14.5a2.9 2.9 0 0 0 2.6 2.7"/></svg>Oil &amp; Gas</div>
+                <div class="side-sub">
+                    <a href="https://p66-vessel-integrity.vercel.app" class="side-sub-link" target="_blank" rel="noopener">Corrosion Pipeline<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+                </div>
+            </div>
+        </nav>
+    </aside>
+    <div class="side-scrim" id="siteSideScrim" hidden></div>
+
+    <div class="site-main">
+    <div class="top-bar">
+        <button type="button" class="side-open" id="siteSideOpen" aria-controls="siteSide" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+        <a href="/AvinashResume2026.pdf" download class="nav-resume-btn">Download Resume</a>
+    </div>
+
+    <main class="wrap">
+        <header class="page-header">
+            <p class="eyebrow">Co-founder &amp; CEO &middot; 2020&ndash;2025</p>
+            <h1>Clutch Sports Data</h1>
+            <p class="dek">A sports analytics company I co-founded to give college basketball staffs what pro teams have: one place for their data, reports that build themselves, and insights coaches can take onto the court.</p>
+        </header>
+
+        <div class="stats" aria-label="Headline numbers">
+            <div class="stat"><span class="stat-num">2</span><span class="stat-label">Division I men's basketball programs: Houston and Baylor</span></div>
+            <div class="stat"><span class="stat-num">1</span><span class="stat-label">national championship among our clients</span></div>
+            <div class="stat"><span class="stat-num">2</span><span class="stat-label">Final Fours</span></div>
+            <div class="stat"><span class="stat-num">3</span><span class="stat-label">Elite Eights, in our first two years</span></div>
+        </div>
+
+        <section aria-labelledby="problem-title">
+            <h2 class="panel-title" id="problem-title">The problem</h2>
+            <p class="panel-desc">College teams have more data than ever, but few have the people or tools to use it.</p>
+            <div class="steps">
+                <div class="step"><p class="step-name">Data</p><p class="step-text">Stats live in many places, from hand-kept logs to Synergy and Genius Sports, with no plan to bring them together.</p></div>
+                <div class="step"><p class="step-name">Tools</p><p class="step-text">No central, easy-to-use platform built around what a staff actually needs.</p></div>
+                <div class="step"><p class="step-name">Adoption</p><p class="step-text">College sports have been slower than the pros to make analytics part of how they work.</p></div>
+                <div class="step"><p class="step-name">Resources</p><p class="step-text">Unlike pro teams, most programs can't hire data engineers and analysts full time.</p></div>
+            </div>
+        </section>
+
+        <section aria-labelledby="built-title">
+            <h2 class="panel-title" id="built-title">What we built</h2>
+            <p class="panel-desc">An end-to-end data platform, tailored to each staff, that works like a virtual assistant coach.</p>
+            <div class="steps">
+                <div class="step"><p class="step-num">01</p><p class="step-name">Collect</p><p class="step-text">Gather reliable data from every source the team uses.</p></div>
+                <div class="step"><p class="step-num">02</p><p class="step-name">Centralize</p><p class="step-text">Store it all in one cloud database we manage.</p></div>
+                <div class="step"><p class="step-num">03</p><p class="step-name">Report</p><p class="step-text">Build interactive dashboards that update automatically.</p></div>
+                <div class="step"><p class="step-num">04</p><p class="step-name">Advise</p><p class="step-text">Run custom analyses that point coaches straight to what matters.</p></div>
+            </div>
+        </section>
+
+        <section aria-labelledby="case-title">
+            <h2 class="panel-title" id="case-title">Case study: hustle stats at Houston</h2>
+            <p class="panel-desc">Our first project, and the pilot that turned Houston into a paying customer.</p>
+            <div class="before-after">
+                <div class="ba"><p class="ba-kind">Before</p><p class="ba-text">Staff tallied hustle plays by hand on a printed Excel sheet.</p></div>
+                <div class="ba"><p class="ba-kind">After</p><p class="ba-text">A custom hustle metric, counted per possession, showing coaches at a glance which players bring the most effort.</p></div>
+            </div>
+            <ul class="why-list">
+                <li><strong>Player profiles</strong> for Houston's own roster and upcoming opponents: where on the floor each player is most efficient, which play types they're best in, and how they trend across the season.</li>
+                <li><strong>Custom analyses on request,</strong> from scouting transfers in the offseason to game plans for upcoming opponents, delivered straight to the coaches.</li>
+                <li><strong>One data stream</strong> that joins team-kept stats with outside sources, so every question can be answered at the player and team level.</li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="work-title">
+            <h2 class="panel-title" id="work-title">Analyses we built</h2>
+            <p class="panel-desc">For Houston's 2020&ndash;21 season, plus player radar plots for Baylor</p>
+            <div class="chip-row roomy">
+                <span class="chip">Hustle metric</span>
+                <span class="chip">Lineup analysis</span>
+                <span class="chip">Individual offensive rating</span>
+                <span class="chip">Individual defensive rating</span>
+                <span class="chip">Opponent player profiles</span>
+                <span class="chip">Opponent shot charts</span>
+                <span class="chip">Player radar plots</span>
+            </div>
+        </section>
+
+        <section aria-labelledby="approach-title">
+            <h2 class="panel-title" id="approach-title">How we worked with each team</h2>
+            <p class="panel-desc">Start from the staff's real pain points, then ship something they can use right away.</p>
+            <ol class="num-list">
+                <li><div><h3>Discover</h3><p>Agree on the team's goals, interview the staff, and confirm the biggest pain points.</p></div></li>
+                <li><div><h3>Assess</h3><p>Map how they work today and where it can improve.</p></div></li>
+                <li><div><h3>Plan</h3><p>Rank the initiatives, recommend what to build, and highlight quick wins.</p></div></li>
+                <li><div><h3>Build and iterate</h3><p>Use the tools they already have, deliver a test product, and refine it with the staff.</p></div></li>
+            </ol>
+        </section>
+
+        <section aria-labelledby="project-title">
+            <h2 class="panel-title" id="project-title">About the company</h2>
+            <p class="panel-desc">Clutch Sports Data, Houston, 2020&ndash;2025</p>
+            <dl class="facts">
+                <div class="fact"><dt>My role</dt><dd>Co-founder and CEO. Led product and strategy, pitched the company, and built reports and analyses for our basketball clients.</dd></div>
+                <div class="fact"><dt>Team</dt><dd>Four co-founders, plus a software engineer and a data analyst intern</dd></div>
+                <div class="fact"><dt>Clients</dt><dd>University of Houston and Baylor University men's basketball</dd></div>
+                <div class="fact"><dt>Data</dt><dd>Team-kept logs, Synergy Sports, Genius Sports and public stats</dd></div>
+                <div class="fact"><dt>Business model</dt><dd>Software as a service: tiered annual packages, from a free pilot to a fully custom platform</dd></div>
+                <div class="fact"><dt>Market</dt><dd>Started with NCAA men's basketball (about 350 Division I schools), with women's basketball, other leagues and other sports next</dd></div>
+                <div class="fact"><dt>Startup programs</dt><dd>Rice OwlSpark accelerator; pitched to the Pokatok sports tech program in 2022</dd></div>
+            </dl>
+        </section>
+    </main>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Photo">
+        <button type="button" class="lightbox-close" aria-label="Close photo">&times;</button>
+        <img id="lightboxImg" alt="">
+    </dialog>
+
+    <footer>
+        <div class="wrap">&copy; 2026 Avi Ravishankar</div>
+    </footer>
+    </div>
+
+    <script>
+        /* Tap a photo to see it full size */
+        (function () {
+            var box = document.getElementById('lightbox');
+            var big = document.getElementById('lightboxImg');
+            if (!box || typeof box.showModal !== 'function') return;
+            document.querySelectorAll('.photo').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var img = btn.querySelector('img');
+                    big.src = btn.dataset.full;
+                    big.alt = img.alt;
+                    box.showModal();
+                });
+            });
+            box.addEventListener('click', function () { box.close(); });
+        })();
+    </script>
+    <script>
+        /* Phone menu: the sidebar slides in as a drawer below 760px */
+        (function () {
+            var side = document.getElementById('siteSide');
+            var openBtn = document.getElementById('siteSideOpen');
+            var closeBtn = document.getElementById('siteSideClose');
+            var scrim = document.getElementById('siteSideScrim');
+            if (!side || !openBtn) return;
+            function setOpen(open) {
+                side.classList.toggle('open', open);
+                scrim.hidden = !open;
+                openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                document.body.classList.toggle('side-locked', open);
+                if (open) closeBtn.focus(); else if (document.activeElement && side.contains(document.activeElement)) openBtn.focus();
+            }
+            openBtn.addEventListener('click', function () { setOpen(true); });
+            closeBtn.addEventListener('click', function () { setOpen(false); });
+            scrim.addEventListener('click', function () { setOpen(false); });
+            side.addEventListener('click', function (e) {
+                if (e.target.closest('a') && side.classList.contains('open')) setOpen(false);
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && side.classList.contains('open')) setOpen(false);
+            });
+        })();
+    </script>
+</body>
+</html>

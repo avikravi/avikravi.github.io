@@ -1,5 +1,5 @@
 """Main-site left sidebar generator (v7, category groups). Run from the repo root: python3 scripts/build_sidebar.py .
-Rewrites the sidebar CSS, aside markup, top bar and phone-drawer script on all 14 sidebar pages. Edit CATEGORIES to change the menu."""
+Rewrites the sidebar CSS, aside markup, top bar and phone-drawer script on all 15 sidebar pages. Edit CATEGORIES to change the menu."""
 import re, sys, pathlib
 
 ROOT = pathlib.Path(sys.argv[1])
@@ -31,7 +31,7 @@ CATEGORIES = [
     ('sports', 'Sports', [
         sub('Kalshi', '/kalshi', ext=True),
         sub('Houston Texans', '/texans', key='texans'),
-        sub('Clutch Sports Data', '/projects.html#clutch-sports-data'),
+        sub('Clutch Sports Data', '/clutch', key='clutch'),
         sub('muvve', 'https://muvve.com/', ext=True),
     ]),
     ('gaming', 'Gaming', [
@@ -383,7 +383,7 @@ def rewrite(path, page):
 
 PAGES = [('index.html', 'home'), ('projects.html', 'projects'), ('object-detect/index.html', 'od')]
 PAGES += [('object-detect/level-%d/index.html' % n, 'level-%d' % n) for n in range(1, 11)]
-PAGES += [('texans/index.html', 'texans')]
+PAGES += [('texans/index.html', 'texans'), ('clutch/index.html', 'clutch')]
 for rel, page in PAGES:
     rewrite(ROOT / rel, page)
     print('ok', rel)
