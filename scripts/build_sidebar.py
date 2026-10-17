@@ -1,5 +1,5 @@
 """Main-site left sidebar generator (v7, category groups). Run from the repo root: python3 scripts/build_sidebar.py .
-Rewrites the sidebar CSS, aside markup, top bar and phone-drawer script on all 13 sidebar pages. Edit CATEGORIES to change the menu."""
+Rewrites the sidebar CSS, aside markup, top bar and phone-drawer script on all 14 sidebar pages. Edit CATEGORIES to change the menu."""
 import re, sys, pathlib
 
 ROOT = pathlib.Path(sys.argv[1])
@@ -30,7 +30,7 @@ CATEGORIES = [
     ]),
     ('sports', 'Sports', [
         sub('Kalshi', '/kalshi', ext=True),
-        sub('Houston Texans', '/texans', ext=True),
+        sub('Houston Texans', '/texans', key='texans'),
         sub('Clutch Sports Data', '/projects.html#clutch-sports-data'),
         sub('muvve', 'https://muvve.com/', ext=True),
     ]),
@@ -62,7 +62,8 @@ def build_aside(page):
     home_active = ' class="side-top active" aria-current="page"' if page == 'home' else ' class="side-top"'
     out.append('            <a href="/"%s>%sHome</a>' % (home_active, ICONS['home']))
     for key, label, items in CATEGORIES:
-        current = ' current' if (key == 'robotics' and in_od) else ''
+        current = ' current' if ((key == 'robotics' and in_od) or any(
+            isinstance(item, dict) and item['key'] == page for item in items)) else ''
         out.append('            <div class="side-cat">')
         out.append('                <div class="side-cat-head%s">%s%s</div>' % (current, ICONS[key], label))
         out.append('                <div class="side-sub">')
@@ -77,6 +78,9 @@ def build_aside(page):
             cls = 'side-sub-link'
             extra = ''
             if item['key'] == 'od' and page == 'od':
+                cls += ' active'
+                extra = ' aria-current="page"'
+            elif item['key'] and item['key'] == page:
                 cls += ' active'
                 extra = ' aria-current="page"'
             elif item['key'] == 'od' and in_od:
@@ -379,6 +383,7 @@ def rewrite(path, page):
 
 PAGES = [('index.html', 'home'), ('projects.html', 'projects'), ('object-detect/index.html', 'od')]
 PAGES += [('object-detect/level-%d/index.html' % n, 'level-%d' % n) for n in range(1, 11)]
+PAGES += [('texans/index.html', 'texans')]
 for rel, page in PAGES:
     rewrite(ROOT / rel, page)
     print('ok', rel)
