@@ -1,12 +1,12 @@
 {
   "source": "api",
   "summary": {
-    "net_pnl": "4.5069",
+    "net_pnl": "4.3569",
     "net_pnl_basis": "bets_at_bid",
-    "account_value": "39.5069",
-    "cash": "38.0769",
-    "open_value": "1.43",
-    "kalshi_open_value": "1.42",
+    "account_value": "39.3569",
+    "cash": "36.7569",
+    "open_value": "2.6",
+    "kalshi_open_value": "2.6",
     "unvalued_open": 0,
     "deposited": "10",
     "credits": "25",
@@ -17,9 +17,9 @@
     "deposit_fees": "0.2",
     "total_fees": "3.51248",
     "realized_pnl": "4.6769",
-    "unrealized_pnl": "0.03",
+    "unrealized_pnl": "-0.12",
     "started": "2025-12-02",
-    "bets": 22,
+    "bets": 25,
     "won": 8,
     "lost": 6,
     "sold": 5,
@@ -28,7 +28,7 @@
     "wins": 13,
     "losses": 6,
     "pending": 0,
-    "open": 3,
+    "open": 6,
     "win_rate_approx_pct": 68,
     "best_bet": {
       "title": "Canada wins WC Group B",
@@ -40,7 +40,7 @@
     }
   },
   "fees": {
-    "maker_fills": 8,
+    "maker_fills": 11,
     "maker_fees": "0",
     "taker_fills": 22,
     "taker_fees": "3.31248",
@@ -50,14 +50,14 @@
     "source": "api_fee_cost",
     "buy_total": "2.14968",
     "sell_total": "1.1628",
-    "stake_total": "68.89842",
-    "before_fees_pnl": "8.01938",
+    "stake_total": "70.21842",
+    "before_fees_pnl": "7.86938",
     "shares": {
       "buy": "61.2",
       "sell": "33.1",
       "deposit": "5.7"
     },
-    "trading_pct_of_stake": "4.8"
+    "trading_pct_of_stake": "4.7"
   },
   "ledger": {
     "balance": "integer cents",
@@ -69,8 +69,8 @@
     "price_max_places": 4,
     "count_max_places": 2,
     "settlement_revenue": "integer cents",
-    "fills": 30,
-    "fills_whose_cash_change_is_whole_cents": 11,
+    "fills": 33,
+    "fills_whose_cash_change_is_whole_cents": 14,
     "fills_with_modeled_rounding_fee": 0,
     "settlements_with_fee_cost": 9
   },
@@ -262,12 +262,12 @@
     },
     {
       "date": "2026-10-18",
-      "day": "0.03",
-      "pnl": "4.5069",
+      "day": "-0.12",
+      "pnl": "4.3569",
       "items": [
         {
           "label": "Open bets at current bid (unrealized)",
-          "amount": "0.03"
+          "amount": "-0.12"
         }
       ]
     }
@@ -599,9 +599,9 @@
     {
       "date": "2026-10-18",
       "money_in": "35",
-      "pnl": "4.5069",
-      "account_value": "39.5069",
-      "change": "0.0825"
+      "pnl": "4.3569",
+      "account_value": "39.3569",
+      "change": "-0.0675"
     }
   ],
   "resolution_dates": {
@@ -671,10 +671,10 @@
       "stake": "0.47",
       "buy_fees": "0",
       "cost": "0.47",
-      "payout": "0.48",
+      "payout": "0.47",
       "sell_fees": "0",
-      "net_payout": "0.48",
-      "profit": "0.01",
+      "net_payout": "0.47",
+      "profit": "0",
       "fills": [
         {
           "time": "2026-10-18T05:02:31Z",
@@ -689,8 +689,94 @@
       "settlement": null,
       "live": {
         "contracts": "1",
+        "bid": "0.47",
+        "amount": "0.47"
+      },
+      "legs": [],
+      "fee": "0",
+      "fee_pct_of_stake": "0.0"
+    },
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-18",
+      "resolved": null,
+      "event_date": "2026-10-18",
+      "title": "Ladd McConkey: 40+ receiving yards",
+      "side": "No",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
+      "contracts": "1",
+      "remaining": "1",
+      "price": "0.48",
+      "stake": "0.48",
+      "buy_fees": "0",
+      "cost": "0.48",
+      "payout": "0.48",
+      "sell_fees": "0",
+      "net_payout": "0.48",
+      "profit": "0",
+      "fills": [
+        {
+          "time": "2026-10-18T11:19:39Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.48",
+          "amount": "0.48",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "1",
         "bid": "0.48",
         "amount": "0.48"
+      },
+      "legs": [],
+      "fee": "0",
+      "fee_pct_of_stake": "0.0"
+    },
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-18",
+      "resolved": null,
+      "event_date": "2026-10-18",
+      "title": "Josh Downs: 50+ receiving yards",
+      "side": "No",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
+      "contracts": "1",
+      "remaining": "1",
+      "price": "0.49",
+      "stake": "0.49",
+      "buy_fees": "0",
+      "cost": "0.49",
+      "payout": "0.45",
+      "sell_fees": "0",
+      "net_payout": "0.45",
+      "profit": "-0.04",
+      "fills": [
+        {
+          "time": "2026-10-18T15:32:39Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.49",
+          "amount": "0.49",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "1",
+        "bid": "0.45",
+        "amount": "0.45"
       },
       "legs": [],
       "fee": "0",
@@ -714,10 +800,10 @@
       "stake": "0.48",
       "buy_fees": "0",
       "cost": "0.48",
-      "payout": "0.5",
+      "payout": "0.49",
       "sell_fees": "0",
-      "net_payout": "0.5",
-      "profit": "0.02",
+      "net_payout": "0.49",
+      "profit": "0.01",
       "fills": [
         {
           "time": "2026-10-18T07:38:10Z",
@@ -732,8 +818,51 @@
       "settlement": null,
       "live": {
         "contracts": "1",
-        "bid": "0.5",
-        "amount": "0.5"
+        "bid": "0.49",
+        "amount": "0.49"
+      },
+      "legs": [],
+      "fee": "0",
+      "fee_pct_of_stake": "0.0"
+    },
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-18",
+      "resolved": null,
+      "event_date": "2026-10-18",
+      "title": "Cam Skattebo: 60+ rushing yards",
+      "side": "Yes",
+      "category": "NFL",
+      "status": "open",
+      "outcome": "open",
+      "unrealized": true,
+      "contracts": "1",
+      "remaining": "1",
+      "price": "0.35",
+      "stake": "0.35",
+      "buy_fees": "0",
+      "cost": "0.35",
+      "payout": "0.26",
+      "sell_fees": "0",
+      "net_payout": "0.26",
+      "profit": "-0.09",
+      "fills": [
+        {
+          "time": "2026-10-18T13:07:34Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.35",
+          "amount": "0.35",
+          "fee": "0",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": {
+        "contracts": "1",
+        "bid": "0.26",
+        "amount": "0.26"
       },
       "legs": [],
       "fee": "0",
@@ -1669,5 +1798,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-18T11:03:40Z"
+  "updated": "2026-10-18T15:51:45Z"
 }
