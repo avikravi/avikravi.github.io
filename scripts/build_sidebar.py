@@ -259,6 +259,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
             padding: 4px 2px 8px 8px;
         }
         .site-side:not(.in-od) .side-level-grid { display: none; }
+        .side-cat:not([open]) > .side-sub { display: none; }
 
         .side-level-grid a {
             display: flex;
