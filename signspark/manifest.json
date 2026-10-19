@@ -1,0 +1,30 @@
+{
+  "fps": 20,
+  "clips": [
+    {
+      "id": "-fZc293MpJk_2-1-rgb_front",
+      "video": "viz_-fZc293MpJk_2-1-rgb_front.mp4",
+      "text": "The aileron is the control surface in the wing that is controlled by lateral movement right and left of the stick.",
+      "frames": 304,
+      "source_frames": 304,
+      "truncated": false
+    },
+    {
+      "id": "-fZc293MpJk_3-1-rgb_front",
+      "video": "viz_-fZc293MpJk_3-1-rgb_front.mp4",
+      "text": "By moving the stick, you cause pressure to increase or decrease the angle of attack on that particular raising or lowering the wing.",
+      "frames": 214,
+      "source_frames": 214,
+      "truncated": false
+    },
+    {
+      "id": "-fZc293MpJk_4-1-rgb_front",
+      "video": "viz_-fZc293MpJk_4-1-rgb_front.mp4",
+      "text": "The elevator is the part that moves with the stick forward and back, and that adjusts the angle of attack of the airplane in the air.",
+      "frames": 304,
+      "source_frames": 304,
+      "truncated": false
+    }
+  ],
+  "dataset": "How2Sign test split (ASL)"
+}

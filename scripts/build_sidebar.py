@@ -16,6 +16,7 @@ ICONS = {
     'sports': icon('<path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4"/><path d="M17 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/>'),
     'gaming': icon('<rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 12.5h3.5M8.75 10.75v3.5"/><circle cx="15.5" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.75" r=".6" fill="currentColor"/>'),
     'construction': icon('<path d="M3 18h18"/><path d="M5 18v-2.5a7 7 0 0 1 14 0V18"/><path d="M10 9V5.5h4V9"/>'),
+    'research': icon('<path d="M9.5 3h5"/><path d="M10.5 3v6.2L5.3 18.1A2 2 0 0 0 7 21h10a2 2 0 0 0 1.7-2.9l-5.2-8.9V3"/><path d="M7.6 15h8.8"/>'),
     'oilgas': icon('<path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/><path d="M9.2 14.5a2.9 2.9 0 0 0 2.6 2.7"/>'),
 }
 
@@ -42,6 +43,9 @@ CATEGORIES = [
     ]),
     ('oilgas', 'Oil &amp; Gas', [
         sub('Corrosion Pipeline', 'https://p66-vessel-integrity.vercel.app', ext=True),
+    ]),
+    ('research', 'Other Research', [
+        sub('SignSpark', '/signspark', ext=True),
     ]),
 ]
 
