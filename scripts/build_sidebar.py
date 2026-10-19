@@ -6,6 +6,10 @@ ROOT = pathlib.Path(sys.argv[1])
 
 EXT = '<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>'
 
+CHEVRON = ('<svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>')
+
+
 def icon(paths):
     return ('<svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" '
             'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>')
@@ -65,11 +69,13 @@ def build_aside(page):
     out.append('        <nav class="side-nav" aria-label="Main">')
     home_active = ' class="side-top active" aria-current="page"' if page == 'home' else ' class="side-top"'
     out.append('            <a href="/"%s>%sHome</a>' % (home_active, ICONS['home']))
+    out.append('            <div class="side-divider" role="separator"></div>')
     for key, label, items in CATEGORIES:
         current = ' current' if ((key == 'robotics' and in_od) or any(
             isinstance(item, dict) and item['key'] == page for item in items)) else ''
-        out.append('            <div class="side-cat">')
-        out.append('                <div class="side-cat-head%s">%s%s</div>' % (current, ICONS[key], label))
+        out.append('            <details class="side-cat%s" name="side-cats"%s>' % (current, ' open' if current else ''))
+        out.append('                <summary class="side-cat-head">%s<span class="side-cat-name">%s</span>'
+                   '%s</summary>' % (ICONS[key], label, CHEVRON))
         out.append('                <div class="side-sub">')
         for item in items:
             if item == 'LEVELS':
@@ -94,7 +100,7 @@ def build_aside(page):
             out.append('                    <a href="%s" class="%s"%s>%s%s</a>' % (
                 item['href'], cls, extra, item['label'], EXT if item['ext'] else ''))
         out.append('                </div>')
-        out.append('            </div>')
+        out.append('            </details>')
     out.append('        </nav>')
     out.append('    </aside>')
     out.append('    <div class="side-scrim" id="siteSideScrim" hidden></div>')
@@ -137,7 +143,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
         .site-side {
             position: fixed;
             top: 0; left: 0; bottom: 0;
-            width: 248px;
+            width: 260px;
             display: flex;
             flex-direction: column;
             background: #fafafa;
@@ -152,13 +158,14 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
         .side-brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #000; line-height: 1.25; }
         .side-brand-role { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-faint); line-height: 1.35; }
 
-        .side-nav { display: flex; flex-direction: column; gap: 14px; }
+        .side-nav { display: flex; flex-direction: column; gap: 2px; }
+        .side-divider { height: 1px; background: var(--line); margin: 8px 8px; }
 
         /* Home: a main link */
         .side-top {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             padding: 8px;
             border-radius: 8px;
             font-size: 14px;
@@ -169,24 +176,38 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
         }
         .side-top:hover { background: #efefef; color: #000; }
 
-        /* Category heading: a label, not a link */
+        /* Category: a dropdown. Only the current page's category starts open; opening one closes the others */
         .side-cat-head {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 2px 8px 4px;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: -0.005em;
-            color: var(--ink);
+            color: var(--ink-soft);
             line-height: 1.3;
+            list-style: none;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s, color 0.15s;
         }
+        .side-cat-head::-webkit-details-marker { display: none; }
+        .side-cat-head:hover { background: #efefef; color: #000; }
+        .side-cat-head:hover .side-icon { color: #000; }
+        .side-cat-name { flex: 1; min-width: 0; }
+        .side-chev { width: 14px; height: 14px; flex-shrink: 0; color: var(--ink-faint); transition: transform 0.2s ease; }
+        .side-cat[open] > .side-cat-head { color: var(--ink); }
+        .side-cat[open] > .side-cat-head .side-icon { color: var(--ink); }
+        .side-cat[open] .side-chev { transform: rotate(180deg); }
+        .side-cat[open] > .side-sub { margin-bottom: 6px; }
 
         .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
         .side-top:hover .side-icon,
         .side-top.active .side-icon,
-        .side-cat-head.current .side-icon { color: #000; }
-        .side-cat-head.current { color: #000; }
+        .side-cat.current > .side-cat-head .side-icon { color: #000; }
+        .side-cat.current > .side-cat-head { color: #000; }
         .side-ext { width: 12px; height: 12px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
 
         /* Items inside a category: indented under a thin guide line */
@@ -225,6 +246,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
 
         .side-top:focus-visible,
         .side-sub-link:focus-visible,
+        .side-cat-head:focus-visible,
         .side-level-grid a:focus-visible,
         .side-open:focus-visible,
         .side-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
@@ -258,7 +280,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
         /* Phone menu controls (hidden on desktop) */
         .side-open, .side-close, .side-scrim { display: none; }
 
-        .site-main { margin-left: 248px; }
+        .site-main { margin-left: 260px; }
 
         /* Sidebar links that jump to a card (/#houston-texans) land with breathing room */
         :target { scroll-margin-top: 24px; }
@@ -348,7 +370,7 @@ CSS = '''/* Left sidebar nav (v7: category groups) */
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .site-side { transition: none; }
+            .site-side, .side-chev { transition: none; }
         }'''
 
 
@@ -367,7 +389,7 @@ def css_span(src):
                 break
     # also swallow a previously generated reduced-motion block
     rest = src[end:]
-    m = re.match(r'\s*@media \(prefers-reduced-motion: reduce\) \{\s*\.site-side \{ transition: none; \}\s*\}', rest)
+    m = re.match(r'\s*@media \(prefers-reduced-motion: reduce\) \{\s*\.site-side[^{}]*\{ transition: none; \}\s*\}', rest)
     if m:
         end += m.end()
     return start, end

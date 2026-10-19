@@ -57,7 +57,7 @@
         .site-side {
             position: fixed;
             top: 0; left: 0; bottom: 0;
-            width: 248px;
+            width: 260px;
             display: flex;
             flex-direction: column;
             background: #fafafa;
@@ -72,13 +72,14 @@
         .side-brand-name { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #000; line-height: 1.25; }
         .side-brand-role { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-faint); line-height: 1.35; }
 
-        .side-nav { display: flex; flex-direction: column; gap: 14px; }
+        .side-nav { display: flex; flex-direction: column; gap: 2px; }
+        .side-divider { height: 1px; background: var(--line); margin: 8px 8px; }
 
         /* Home: a main link */
         .side-top {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             padding: 8px;
             border-radius: 8px;
             font-size: 14px;
@@ -89,24 +90,38 @@
         }
         .side-top:hover { background: #efefef; color: #000; }
 
-        /* Category heading: a label, not a link */
+        /* Category: a dropdown. Only the current page's category starts open; opening one closes the others */
         .side-cat-head {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 2px 8px 4px;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: -0.005em;
-            color: var(--ink);
+            color: var(--ink-soft);
             line-height: 1.3;
+            list-style: none;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s, color 0.15s;
         }
+        .side-cat-head::-webkit-details-marker { display: none; }
+        .side-cat-head:hover { background: #efefef; color: #000; }
+        .side-cat-head:hover .side-icon { color: #000; }
+        .side-cat-name { flex: 1; min-width: 0; }
+        .side-chev { width: 14px; height: 14px; flex-shrink: 0; color: var(--ink-faint); transition: transform 0.2s ease; }
+        .side-cat[open] > .side-cat-head { color: var(--ink); }
+        .side-cat[open] > .side-cat-head .side-icon { color: var(--ink); }
+        .side-cat[open] .side-chev { transform: rotate(180deg); }
+        .side-cat[open] > .side-sub { margin-bottom: 6px; }
 
         .side-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink-faint); transition: color 0.15s; }
         .side-top:hover .side-icon,
         .side-top.active .side-icon,
-        .side-cat-head.current .side-icon { color: #000; }
-        .side-cat-head.current { color: #000; }
+        .side-cat.current > .side-cat-head .side-icon { color: #000; }
+        .side-cat.current > .side-cat-head { color: #000; }
         .side-ext { width: 12px; height: 12px; margin-left: auto; flex-shrink: 0; color: var(--ink-faint); }
 
         /* Items inside a category: indented under a thin guide line */
@@ -145,6 +160,7 @@
 
         .side-top:focus-visible,
         .side-sub-link:focus-visible,
+        .side-cat-head:focus-visible,
         .side-level-grid a:focus-visible,
         .side-open:focus-visible,
         .side-close:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
@@ -178,7 +194,7 @@
         /* Phone menu controls (hidden on desktop) */
         .side-open, .side-close, .side-scrim { display: none; }
 
-        .site-main { margin-left: 248px; }
+        .site-main { margin-left: 260px; }
 
         /* Sidebar links that jump to a card (/#houston-texans) land with breathing room */
         :target { scroll-margin-top: 24px; }
@@ -268,7 +284,7 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .site-side { transition: none; }
+            .site-side, .side-chev { transition: none; }
         }
 
         /* Page header */
@@ -407,8 +423,9 @@
         </div>
         <nav class="side-nav" aria-label="Main">
             <a href="/" class="side-top"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg>Home</a>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4.5"/><circle cx="12" cy="3.5" r="1"/><path d="M9 13v1.5M15 13v1.5M9.5 17.5h5"/></svg>Robotics &amp; Manufacturing</div>
+            <div class="side-divider" role="separator"></div>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2.5"/><path d="M12 8V4.5"/><circle cx="12" cy="3.5" r="1"/><path d="M9 13v1.5M15 13v1.5M9.5 17.5h5"/></svg><span class="side-cat-name">Robotics &amp; Manufacturing</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="/object-detect" class="side-sub-link">Object Detect</a>
                     <div class="side-level-grid" aria-label="Object Detect levels">
@@ -425,40 +442,40 @@
                     </div>
                     <a href="https://avikravi.github.io/surgical-robotics-tissue-sim/dataset_viewer.html" class="side-sub-link" target="_blank" rel="noopener">Robotic Surgery<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4"/><path d="M17 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/></svg>Sports</div>
+            </details>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4"/><path d="M17 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 14v4M8.5 21h7M9.5 18h5"/></svg><span class="side-cat-name">Sports</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="/kalshi" class="side-sub-link" target="_blank" rel="noopener">Kalshi<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                     <a href="/texans" class="side-sub-link">Houston Texans</a>
                     <a href="/clutch" class="side-sub-link">Clutch Sports Data</a>
                     <a href="https://muvve.com/" class="side-sub-link" target="_blank" rel="noopener">muvve<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 12.5h3.5M8.75 10.75v3.5"/><circle cx="15.5" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.75" r=".6" fill="currentColor"/></svg>Gaming</div>
+            </details>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="7" width="19" height="11" rx="5"/><path d="M7 12.5h3.5M8.75 10.75v3.5"/><circle cx="15.5" cy="11.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="13.75" r=".6" fill="currentColor"/></svg><span class="side-cat-name">Gaming</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="/games" class="side-sub-link" target="_blank" rel="noopener">AI Arcade<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-2.5a7 7 0 0 1 14 0V18"/><path d="M10 9V5.5h4V9"/></svg>Construction</div>
+            </details>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-2.5a7 7 0 0 1 14 0V18"/><path d="M10 9V5.5h4V9"/></svg><span class="side-cat-name">Construction</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="https://tasktag.com/" class="side-sub-link" target="_blank" rel="noopener">TaskTag<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/><path d="M9.2 14.5a2.9 2.9 0 0 0 2.6 2.7"/></svg>Oil &amp; Gas</div>
+            </details>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/><path d="M9.2 14.5a2.9 2.9 0 0 0 2.6 2.7"/></svg><span class="side-cat-name">Oil &amp; Gas</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="https://p66-vessel-integrity.vercel.app" class="side-sub-link" target="_blank" rel="noopener">Corrosion Pipeline<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
-            <div class="side-cat">
-                <div class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 3h5"/><path d="M10.5 3v6.2L5.3 18.1A2 2 0 0 0 7 21h10a2 2 0 0 0 1.7-2.9l-5.2-8.9V3"/><path d="M7.6 15h8.8"/></svg>Other Research</div>
+            </details>
+            <details class="side-cat" name="side-cats">
+                <summary class="side-cat-head"><svg class="side-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 3h5"/><path d="M10.5 3v6.2L5.3 18.1A2 2 0 0 0 7 21h10a2 2 0 0 0 1.7-2.9l-5.2-8.9V3"/><path d="M7.6 15h8.8"/></svg><span class="side-cat-name">Other Research</span><svg class="side-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
                 <div class="side-sub">
                     <a href="/signspark" class="side-sub-link" target="_blank" rel="noopener">SignSpark<svg class="side-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
                 </div>
-            </div>
+            </details>
         </nav>
     </aside>
     <div class="side-scrim" id="siteSideScrim" hidden></div>
