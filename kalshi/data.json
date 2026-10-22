@@ -1,10 +1,10 @@
 {
   "source": "api",
   "summary": {
-    "net_pnl": "4.3895",
+    "net_pnl": "4.1706",
     "net_pnl_basis": "bets_at_bid",
-    "account_value": "39.3895",
-    "cash": "39.3895",
+    "account_value": "39.1706",
+    "cash": "39.1706",
     "open_value": "0",
     "kalshi_open_value": "0",
     "unvalued_open": 0,
@@ -13,23 +13,23 @@
     "credit_reasons": [
       "Referral bonus"
     ],
-    "trading_fees": "3.32988",
+    "trading_fees": "3.36878",
     "deposit_fees": "0.2",
-    "total_fees": "3.52988",
-    "realized_pnl": "4.5895",
+    "total_fees": "3.56878",
+    "realized_pnl": "4.3706",
     "unrealized_pnl": "0",
     "started": "2025-12-02",
-    "bets": 27,
-    "won": 11,
-    "lost": 9,
-    "sold": 7,
-    "sold_profitable": 5,
-    "resolved": 27,
-    "wins": 16,
-    "losses": 11,
+    "bets": 30,
+    "won": 12,
+    "lost": 10,
+    "sold": 8,
+    "sold_profitable": 6,
+    "resolved": 30,
+    "wins": 18,
+    "losses": 12,
     "pending": 0,
     "open": 0,
-    "win_rate_approx_pct": 59,
+    "win_rate_approx_pct": 60,
     "best_bet": {
       "title": "Canada wins WC Group B",
       "profit": "12.2847"
@@ -40,24 +40,24 @@
     }
   },
   "fees": {
-    "maker_fills": 13,
-    "maker_fees": "0",
-    "taker_fills": 24,
-    "taker_fees": "3.32988",
-    "reported": "3.32988",
+    "maker_fills": 14,
+    "maker_fees": "0.0013",
+    "taker_fills": 27,
+    "taker_fees": "3.36748",
+    "reported": "3.36878",
     "rounding": "0",
     "rebates": "0",
     "source": "api_fee_cost",
-    "buy_total": "2.14968",
-    "sell_total": "1.1802",
-    "stake_total": "70.93842",
-    "before_fees_pnl": "7.91938",
+    "buy_total": "2.18728",
+    "sell_total": "1.1815",
+    "stake_total": "73.03842",
+    "before_fees_pnl": "7.73938",
     "shares": {
-      "buy": "60.9",
-      "sell": "33.4",
-      "deposit": "5.7"
+      "buy": "61.3",
+      "sell": "33.1",
+      "deposit": "5.6"
     },
-    "trading_pct_of_stake": "4.7"
+    "trading_pct_of_stake": "4.6"
   },
   "ledger": {
     "balance": "integer cents",
@@ -69,10 +69,10 @@
     "price_max_places": 4,
     "count_max_places": 2,
     "settlement_revenue": "integer cents",
-    "fills": 37,
+    "fills": 41,
     "fills_whose_cash_change_is_whole_cents": 16,
     "fills_with_modeled_rounding_fee": 0,
-    "settlements_with_fee_cost": 11
+    "settlements_with_fee_cost": 14
   },
   "pnl_series": [
     {
@@ -301,12 +301,20 @@
     },
     {
       "date": "2026-10-21",
-      "day": "0",
-      "pnl": "4.3895",
+      "day": "-0.2189",
+      "pnl": "4.1706",
       "items": [
         {
-          "label": "Open bets at current bid (unrealized)",
-          "amount": "0"
+          "label": "Cooper Flagg: 15+ points",
+          "amount": "0.1315"
+        },
+        {
+          "label": "Dallas vs Houston: Houston wins",
+          "amount": "0.117"
+        },
+        {
+          "label": "Kyrie Irving: 30+ points, rebounds, and assists",
+          "amount": "-0.4674"
         }
       ]
     }
@@ -645,14 +653,14 @@
     {
       "date": "2026-10-21",
       "money_in": "35",
-      "pnl": "4.3895",
-      "account_value": "39.3895",
-      "change": "0"
+      "pnl": "4.1706",
+      "account_value": "39.1706",
+      "change": "-0.2189"
     }
   ],
   "resolution_dates": {
     "market_settlement_ts": 7,
-    "settlement": 13
+    "settlement": 15
   },
   "categories": [
     {
@@ -663,8 +671,8 @@
     },
     {
       "name": "NBA",
-      "profit": "-3.27",
-      "resolved": 2,
+      "profit": "-3.4889",
+      "resolved": 5,
       "pending": 0
     },
     {
@@ -699,6 +707,140 @@
     }
   ],
   "bets": [
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-21",
+      "resolved": "2026-10-21",
+      "event_date": "2026-10-21",
+      "title": "Kyrie Irving: 30+ points, rebounds, and assists",
+      "side": "Yes",
+      "category": "NBA",
+      "status": "settled",
+      "outcome": "lost",
+      "unrealized": false,
+      "contracts": "1",
+      "remaining": null,
+      "price": "0.45",
+      "stake": "0.45",
+      "buy_fees": "0.0174",
+      "cost": "0.4674",
+      "payout": "0",
+      "sell_fees": "0",
+      "net_payout": "0",
+      "profit": "-0.4674",
+      "fills": [
+        {
+          "time": "2026-10-22T00:09:18Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.45",
+          "amount": "0.45",
+          "fee": "0.0174",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "1",
+        "per_contract": "0",
+        "amount": "0"
+      },
+      "live": null,
+      "legs": [],
+      "fee": "0.0174",
+      "fee_pct_of_stake": "3.9"
+    },
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-21",
+      "resolved": "2026-10-21",
+      "event_date": "2026-10-21",
+      "title": "Dallas vs Houston: Houston wins",
+      "side": "Yes",
+      "category": "NBA",
+      "status": "sold",
+      "outcome": "sold",
+      "unrealized": false,
+      "contracts": "1",
+      "remaining": null,
+      "price": "0.79",
+      "stake": "0.79",
+      "buy_fees": "0.0117",
+      "cost": "0.8017",
+      "payout": "0.92",
+      "sell_fees": "0.0013",
+      "net_payout": "0.9187",
+      "profit": "0.117",
+      "fills": [
+        {
+          "time": "2026-10-22T00:02:36Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.79",
+          "amount": "0.79",
+          "fee": "0.0117",
+          "liquidity": "taker"
+        },
+        {
+          "time": "2026-10-22T01:22:38Z",
+          "action": "sell",
+          "contracts": "1",
+          "price": "0.92",
+          "amount": "0.92",
+          "fee": "0.0013",
+          "liquidity": "maker"
+        }
+      ],
+      "settlement": null,
+      "live": null,
+      "legs": [],
+      "fee": "0.013",
+      "fee_pct_of_stake": "1.6"
+    },
+    {
+      "kind": "single",
+      "tag": null,
+      "date": "2026-10-21",
+      "resolved": "2026-10-21",
+      "event_date": "2026-10-21",
+      "title": "Cooper Flagg: 15+ points",
+      "side": "Yes",
+      "category": "NBA",
+      "status": "settled",
+      "outcome": "won",
+      "unrealized": false,
+      "contracts": "1",
+      "remaining": null,
+      "price": "0.86",
+      "stake": "0.86",
+      "buy_fees": "0.0085",
+      "cost": "0.8685",
+      "payout": "1",
+      "sell_fees": "0",
+      "net_payout": "1",
+      "profit": "0.1315",
+      "fills": [
+        {
+          "time": "2026-10-22T00:03:46Z",
+          "action": "buy",
+          "contracts": "1",
+          "price": "0.86",
+          "amount": "0.86",
+          "fee": "0.0085",
+          "liquidity": "taker"
+        }
+      ],
+      "settlement": {
+        "contracts": "1",
+        "per_contract": "1",
+        "amount": "1"
+      },
+      "live": null,
+      "legs": [],
+      "fee": "0.0085",
+      "fee_pct_of_stake": "1.0"
+    },
     {
       "kind": "single",
       "tag": null,
@@ -1940,5 +2082,5 @@
     }
   ],
   "max_decimal_places": 5,
-  "updated": "2026-10-21T11:48:12Z"
+  "updated": "2026-10-22T04:43:43Z"
 }
