@@ -406,14 +406,13 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          header (Day 1/30/60/90 .arc-timeline kept) -> Purpose (2 sentences + badge
                          legend) -> Role Vision (on-prem vision AI, data sovereignty, crawl-walk-run
                          Nano -> Fury) -> 30/60/90 Plan (one .phase-card per phase: Objective, Key
-                         activities, Deliverables, Target; content is the old 90-day arc) -> Day 1
-                         Hypotheses (the three oil-and-gas cards, compact/secondary, tagged Question)
-                         -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
+                         activities, Deliverables, Target; content is the old 90-day arc) -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
                          numbers) -> Other Ideas (academic channel starting with Rice, OEM reality,
                          NVIDIA, positioning-as-a-system, re-baseline) -> Discussion Topics LAST (5
                          questions, .topic-list: Scope, Six months in, Stakeholders, Resources, Risks;
                          Priorities and 12-month KPIs were removed 2026-11-12 per Avi). Removed per Avi: Next Steps & My Ask (2026-11-11), What I've
-                         Heard So Far and Risks & Dependencies (2026-11-12; their CSS was removed too).
+                         Heard So Far, Risks & Dependencies and Day 1 Hypotheses (2026-11-12; their CSS
+                         was removed too).
                          Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
                          2026-11-12: all copy cut ~30% (1,018 -> 724 words) per Avi; same sections. The legend no longer shows Confirmed (nothing on the page uses it now).
                          Only facts Avi stated are tagged Confirmed; everything else is Hypothesis or
@@ -422,16 +421,15 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          .capture-field with a data-note key; text saves to localStorage under
                          "hp-align-note:<key>" (plain text, paste is forced to plain text). Labels:
                          "Her words:" (topics), "Stephanie's input" (under each phase),
-                         "How Stephanie defines success" (metrics). Two .capture.blank boxes have NO
-                         label on purpose (after Role Vision and Day 1 Hypotheses); keep them
-                         unlabeled. A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
+                         "How Stephanie defines success" (metrics). One .capture.blank box has NO
+                         label on purpose (after Role Vision); keep it unlabeled. A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
                          toggle (#notesToggle): it adds body.notes-hidden, which hides every field's
                          text but keeps empty boxes, and is remembered (hp-align-notes-hidden) so a
                          refresh mid-screen-share stays hidden. Notes live only in that browser; never
                          put Avi's notes into the HTML. No new dependencies.
                          Still true from earlier versions: no compensation figures anywhere; don't fill
                          the .confirm-blank lines in Other Ideas; short sentences, no walls of
-                         text; Day 1 hypotheses extend the real /hp/p66-example prototype.
+                         text.
   object-detect-summary/index.html  URL: /hp/object-detect-summary. Added 2026-09-20 as a
                          6-level placeholder breakdown, expanded 2026-09-21 to 10 levels, then
                          completely rewritten 2026-09-21 with Avi's real project content (he
