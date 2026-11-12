@@ -313,21 +313,6 @@
             margin: 22px 0 10px;
         }
 
-        /* What I've heard */
-        .heard-list { list-style: none; max-width: 820px; }
-        .heard-list li {
-            display: grid;
-            grid-template-columns: 104px 1fr;
-            align-items: baseline;
-            gap: 14px;
-            padding: 13px 0;
-            border-top: 1px solid var(--line);
-            font-size: 14.5px;
-            color: var(--ink);
-        }
-        .heard-list li:first-child { border-top: none; padding-top: 2px; }
-        .heard-list .badge { justify-self: start; }
-
         /* Discussion topics */
         .topic-list { list-style: none; display: flex; flex-direction: column; gap: 30px; max-width: 820px; }
         .topic { display: flex; gap: 16px; }
@@ -433,13 +418,6 @@
         .hypothesis-grid.compact .hyp-text + .hyp-text { margin-top: 4px; }
         .hypothesis-grid.compact .hyp-text b { color: var(--ink-soft); font-weight: 600; }
 
-        /* Risks */
-        .risk-list { list-style: none; max-width: 820px; }
-        .risk-list li { padding: 14px 0; border-top: 1px solid var(--line); }
-        .risk-list li:first-child { border-top: none; padding-top: 2px; }
-        .risk-name { font-size: 14.5px; font-weight: 700; color: #000; margin-bottom: 3px; }
-        .risk-text { font-size: 14px; color: var(--ink-soft); }
-
         @media (max-width: 880px) {
             .doc-bar { position: static; }
         }
@@ -447,7 +425,6 @@
         @media (max-width: 640px) {
             .phase-cols { grid-template-columns: 1fr; }
             .phase-card { padding: 18px 16px; }
-            .heard-list li { grid-template-columns: 1fr; gap: 6px; }
             .doc-bar { padding: 9px 20px; }
             .doc-bar-note { display: none; }
         }
@@ -687,85 +664,7 @@
             <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on role vision" data-note="vision"></div></div>
         </section>
 
-        <!-- 3. What I've heard -->
-        <section class="content-section">
-            <h2 class="panel-title">What I've Heard So Far</h2>
-            <p class="panel-desc">Tagged so you can correct me. Anything wrong here changes the plan below.</p>
-            <ul class="heard-list">
-                <li><span class="badge confirmed">Confirmed</span><span>The role focuses on Robotics &amp; Manufacturing within AI Solutions.</span></li>
-                <li><span class="badge hypothesis">Hypothesis</span><span>ZGX Nano is the entry point and Fury is the scale-up path for the same buyer.</span></li>
-                <li><span class="badge hypothesis">Hypothesis</span><span>Buyers care most about on-prem vision AI and keeping data inside the plant.</span></li>
-                <li><span class="badge hypothesis">Hypothesis</span><span>No battlecards or reference architectures exist yet for this segment.</span></li>
-                <li><span class="badge question">Question</span><span>Is oil &amp; gas still in scope, or is it fully Robotics &amp; Manufacturing now?</span></li>
-                <li><span class="badge question">Question</span><span>Who do I work with day one across PMM, Sales and Engineering?</span></li>
-            </ul>
-        </section>
-
-        <!-- 4. Discussion topics -->
-        <section class="content-section">
-            <h2 class="panel-title">Discussion Topics</h2>
-            <p class="panel-desc">Questions I'd like your take on.</p>
-            <ol class="topic-list">
-                <li class="topic">
-                    <span class="topic-num">1</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Priorities</div>
-                        <div class="topic-q">What does a great first 90 days look like to you? Which one outcome matters most?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on priorities" data-note="topic-priorities"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">2</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Scope</div>
-                        <div class="topic-q">Where does this role start and stop? Positioning only, or also demos, battlecards, competitive intel and partner enablement?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on scope" data-note="topic-scope"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">3</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Six months in</div>
-                        <div class="topic-q">Is there anything I can take off your plate by six months in?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on six months in" data-note="topic-six-months"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">4</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Stakeholders</div>
-                        <div class="topic-q">Are there any internal and external stakeholders you would want me to stay super engaged with?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on stakeholders" data-note="topic-stakeholders"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">5</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Resources</div>
-                        <div class="topic-q">What do I have on day one: hardware access, demo budget, and the people I'd lean on?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on resources" data-note="topic-resources"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">6</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Risks</div>
-                        <div class="topic-q">Where could this role stall? What has made similar launches hard before?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on risks" data-note="topic-risks"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">7</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Success at 12 months</div>
-                        <div class="topic-q">What metrics or KPIs would you want to hit in order to consider this a success in 12 months?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on success at 12 months" data-note="topic-success-12"></div></div>
-                    </div>
-                </li>
-            </ol>
-        </section>
-
-        <!-- 5. 30/60/90 plan -->
+        <!-- 3. 30/60/90 plan -->
         <section class="content-section">
             <h2 class="panel-title">30/60/90 Plan <span class="badge hypothesis">Hypothesis</span></h2>
             <p class="panel-desc">My draft. I'd rather adjust it with you now than after I start.</p>
@@ -848,7 +747,7 @@
             <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 61 to 90" data-note="phase-90"></div></div>
         </section>
 
-        <!-- 6. Day 1 hypotheses (compact, secondary) -->
+        <!-- 4. Day 1 hypotheses (compact, secondary) -->
         <section class="content-section secondary">
             <h2 class="panel-title small">Day 1 Hypotheses <span class="badge question">Question</span></h2>
             <p class="panel-desc">Drafted for oil &amp; gas, extending my <a href="/hp/p66-example">P66 Vessel Integrity prototype</a>. Keep these, or retarget the same pattern to a factory line?</p>
@@ -875,7 +774,7 @@
             <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on Day 1 hypotheses" data-note="hypotheses"></div></div>
         </section>
 
-        <!-- 7. Success metrics -->
+        <!-- 5. Success metrics -->
         <section class="content-section">
             <h2 class="panel-title">How We'd Measure Success <span class="badge hypothesis">Hypothesis</span></h2>
             <p class="panel-desc">Proposed now. Set real thresholds together by day 30.</p>
@@ -909,27 +808,7 @@
             <div class="capture"><div class="capture-label">How Stephanie defines success</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="How Stephanie defines success" data-note="success"></div></div>
         </section>
 
-        <!-- 8. Risks & dependencies -->
-        <section class="content-section">
-            <h2 class="panel-title">Risks &amp; Dependencies <span class="badge hypothesis">Hypothesis</span></h2>
-            <ul class="risk-list">
-                <li>
-                    <div class="risk-name">Team structure</div>
-                    <div class="risk-text">Unclear lanes with adjacent PMM, technical marketing and partner teams would slow the first 30 days.</div>
-                </li>
-                <li>
-                    <div class="risk-name">Resources &amp; hardware access</div>
-                    <div class="risk-text">Credible vision AI positioning means running it. I need early Nano access, time on a Fury, and a small demo budget.</div>
-                </li>
-                <li>
-                    <div class="risk-name">Stakeholder alignment</div>
-                    <div class="risk-text">Product, Sales, partners and NVIDIA each pull the story differently. The plan assumes one agreed owner for messaging calls.</div>
-                </li>
-            </ul>
-            <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on risks and dependencies" data-note="risks"></div></div>
-        </section>
-
-        <!-- Also worth exploring -->
+        <!-- 6. Other ideas -->
         <section class="content-section">
             <h2 class="panel-title">Other Ideas <span class="badge question">Question</span></h2>
             <ul class="plan-list">
@@ -939,6 +818,70 @@
                 <li><strong>Positioning as a system.</strong> Formalize scrape &rarr; score &rarr; draft &rarr; review &rarr; publish, the loop already prototyped in the <a href="/hp/case-study">ZGX Nano case study</a>. Confirm: does a version of this exist internally? <span class="confirm-blank"></span></li>
                 <li><strong>Re-baseline cadence.</strong> Revisit the roadmap every 4&ndash;6 weeks against fresh competitive signal. This market moved on price, a new entrant and a brand split in about twelve weeks this year alone.</li>
             </ul>
+        </section>
+
+        <!-- 7. Discussion topics (last) -->
+        <section class="content-section">
+            <h2 class="panel-title">Discussion Topics</h2>
+            <p class="panel-desc">Questions I'd like your take on.</p>
+            <ol class="topic-list">
+                <li class="topic">
+                    <span class="topic-num">1</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Priorities</div>
+                        <div class="topic-q">What does a great first 90 days look like to you? Which one outcome matters most?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on priorities" data-note="topic-priorities"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">2</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Scope</div>
+                        <div class="topic-q">Where does this role start and stop? Positioning only, or also demos, battlecards, competitive intel and partner enablement?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on scope" data-note="topic-scope"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">3</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Six months in</div>
+                        <div class="topic-q">Is there anything I can take off your plate by six months in?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on six months in" data-note="topic-six-months"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">4</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Stakeholders</div>
+                        <div class="topic-q">Are there any internal and external stakeholders you would want me to stay super engaged with?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on stakeholders" data-note="topic-stakeholders"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">5</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Resources</div>
+                        <div class="topic-q">What do I have on day one: hardware access, demo budget, and the people I'd lean on?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on resources" data-note="topic-resources"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">6</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Risks</div>
+                        <div class="topic-q">Where could this role stall? What has made similar launches hard before?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on risks" data-note="topic-risks"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">7</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Success at 12 months</div>
+                        <div class="topic-q">What metrics or KPIs would you want to hit in order to consider this a success in 12 months?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on success at 12 months" data-note="topic-success-12"></div></div>
+                    </div>
+                </li>
+            </ol>
         </section>
 
         <footer>

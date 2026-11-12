@@ -405,24 +405,24 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          use the old title). Sidebar label stays "30/60/90 Plan". Section order:
                          header (Day 1/30/60/90 .arc-timeline kept) -> Purpose (2 sentences + badge
                          legend) -> Role Vision (on-prem vision AI, data sovereignty, crawl-walk-run
-                         Nano -> Fury) -> What I've Heard So Far (.heard-list, each item a .badge
-                         .confirmed / .hypothesis / .question) -> Discussion Topics (7 questions,
-                         .topic-list; 2026-11-11 Avi added six-months-in, stakeholders, 12-month KPIs) -> 30/60/90 Plan (one .phase-card per phase: Objective, Key
+                         Nano -> Fury) -> 30/60/90 Plan (one .phase-card per phase: Objective, Key
                          activities, Deliverables, Target; content is the old 90-day arc) -> Day 1
                          Hypotheses (the three oil-and-gas cards, compact/secondary, tagged Question)
                          -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
-                         numbers) -> Risks & Dependencies (team structure, hardware access, stakeholder
-                         alignment) -> Other Ideas (academic channel starting with Rice, OEM
-                         reality, NVIDIA, positioning-as-a-system, re-baseline). Next Steps & My Ask was
-                         removed 2026-11-11 per Avi. Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
+                         numbers) -> Other Ideas (academic channel starting with Rice, OEM reality,
+                         NVIDIA, positioning-as-a-system, re-baseline) -> Discussion Topics LAST (7
+                         questions, .topic-list; 2026-11-11 Avi added six-months-in, stakeholders,
+                         12-month KPIs). Removed per Avi: Next Steps & My Ask (2026-11-11), What I've
+                         Heard So Far and Risks & Dependencies (2026-11-12; their CSS was removed too).
+                         Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
                          Only facts Avi stated are tagged Confirmed; everything else is Hypothesis or
                          Question. Don't upgrade a tag without Avi saying so.
                          CAPTURE BOXES: .capture (dashed, light-tinted) holding a contenteditable
                          .capture-field with a data-note key; text saves to localStorage under
                          "hp-align-note:<key>" (plain text, paste is forced to plain text). Labels:
                          "Her words:" (topics), "Stephanie's input" (under each phase),
-                         "How Stephanie defines success" (metrics). Three .capture.blank boxes have NO
-                         label on purpose (after Role Vision, Day 1 Hypotheses, Risks); keep them
+                         "How Stephanie defines success" (metrics). Two .capture.blank boxes have NO
+                         label on purpose (after Role Vision and Day 1 Hypotheses); keep them
                          unlabeled. A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
                          toggle (#notesToggle): it adds body.notes-hidden, which hides every field's
                          text but keeps empty boxes, and is remembered (hp-align-notes-hidden) so a
