@@ -406,8 +406,8 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          header (Day 1/30/60/90 .arc-timeline kept) -> Purpose (2 sentences + badge
                          legend) -> Role Vision (on-prem vision AI, data sovereignty, crawl-walk-run
                          Nano -> Fury) -> What I've Heard So Far (.heard-list, each item a .badge
-                         .confirmed / .hypothesis / .question) -> Discussion Topics (5 questions,
-                         .topic-list) -> 30/60/90 Plan (one .phase-card per phase: Objective, Key
+                         .confirmed / .hypothesis / .question) -> Discussion Topics (7 questions,
+                         .topic-list; 2026-11-11 Avi added six-months-in, stakeholders, 12-month KPIs) -> 30/60/90 Plan (one .phase-card per phase: Objective, Key
                          activities, Deliverables, Target; content is the old 90-day arc) -> Day 1
                          Hypotheses (the three oil-and-gas cards, compact/secondary, tagged Question)
                          -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
