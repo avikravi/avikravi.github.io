@@ -421,12 +421,19 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          .capture-field with a data-note key; text saves to localStorage under
                          "hp-align-note:<key>" (plain text, paste is forced to plain text). Labels:
                          "Her words:" (topics), "Stephanie's input" (under each phase),
-                         "How Stephanie defines success" (metrics). One .capture.blank box has NO
-                         label on purpose (after Role Vision); keep it unlabeled. A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
+                         "How Stephanie defines success" (metrics). (The old unlabeled Role Vision box is now her notes block.) A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
                          toggle (#notesToggle): it adds body.notes-hidden, which hides every field's
                          text but keeps empty boxes, and is remembered (hp-align-notes-hidden) so a
                          refresh mid-screen-share stays hidden. Notes live only in that browser; never
                          put Avi's notes into the HTML. No new dependencies.
+                         STEPHANIE'S NOTES (2026-11-12, after the call, at Avi's explicit request; this
+                         overrides "never put notes into the HTML" for these): her filled-in boxes are now
+                         static .her-notes blocks (solid, blue left bar, label + list; ol for "How
+                         Stephanie defines success") in place of their capture boxes: after Role Vision
+                         ("Stephanie on the role"), under each phase, under metrics, and on topics Six
+                         months in / Resources / Risks. Only typos were fixed; don't add to her words.
+                         Scope and Stakeholders are still empty editable capture boxes. Hide notes hides
+                         .her-notes lists too.
                          Still true from earlier versions: no compensation figures anywhere; don't fill
                          the .confirm-blank lines in Other Ideas; short sentences, no walls of
                          text.
