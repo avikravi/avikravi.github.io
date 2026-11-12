@@ -27,8 +27,8 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30/60/90 Day Plan | Avi Ravishankar</title>
-    <meta name="description" content="A first-90-days plan for HP's Principal Technical Product Marketing Manager, AI Solutions role.">
+    <title>Role Alignment &amp; 30/60/90 Plan | Avi Ravishankar</title>
+    <meta name="description" content="A working alignment doc and 30/60/90 plan for HP's Product Marketing Manager, AI Solutions – Robotics &amp; Manufacturing role.">
     <meta name="robots" content="noindex, nofollow">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -107,8 +107,8 @@
         }
 
         .content-section {
-            margin-top: 40px;
-            padding-top: 28px;
+            margin-top: 56px;
+            padding-top: 36px;
             border-top: 1px solid var(--line);
         }
 
@@ -136,25 +136,7 @@
             .arc-day, .arc-desc { margin-top: 0; }
         }
 
-        /* Open questions / confirm-blanks */
-        .confirm-box {
-            border: 1px dashed var(--line);
-            border-radius: 10px;
-            padding: 18px 20px;
-        }
-
-        .confirm-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
-
-        .confirm-list li {
-            font-size: 13.5px;
-            color: var(--ink-soft);
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
-            line-height: 1.5;
-        }
-
+        /* Inline blanks (Also Worth Exploring) */
         .confirm-blank {
             display: inline-block;
             flex: 1 1 90px;
@@ -220,8 +202,6 @@
 
         .phase-title { font-size: 19px; font-weight: 700; color: #000; margin-bottom: 14px; }
 
-        .phase-block + .phase-block { margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line); }
-
         .plan-list { list-style: none; display: flex; flex-direction: column; gap: 9px; max-width: 820px; }
 
         .plan-list li {
@@ -249,15 +229,6 @@
             margin-top: 14px;
             font-size: 13px;
             color: var(--ink-soft);
-        }
-
-        .phase-target strong {
-            color: #000;
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-right: 6px;
         }
 
         /* Metrics dashboard */
@@ -307,6 +278,180 @@
             h1 { font-size: 25px; }
             header.page-header { padding: 32px 0 0; }
             .phase-title { font-size: 17px; }
+        }
+
+        /* Alignment doc: lead text, legend, badges */
+        .lead { font-size: 16px; color: var(--ink); line-height: 1.6; max-width: 720px; }
+
+        .legend { margin-top: 18px; font-size: 13px; color: var(--ink-faint); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+        .legend-sep { color: var(--line); }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .badge.confirmed { color: #1a7f37; border-color: #b7dfc2; background: #f1f9f3; }
+        .badge.hypothesis { color: #8a5a00; border-color: #ecd6a6; background: #fdf8ec; }
+        .badge.question { color: var(--blue); border-color: #bcd3ea; background: #f2f7fc; }
+        .panel-title .badge { margin-left: 8px; position: relative; top: -2px; }
+
+        .sub-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin: 22px 0 10px;
+        }
+
+        /* What I've heard */
+        .heard-list { list-style: none; max-width: 820px; }
+        .heard-list li {
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            align-items: baseline;
+            gap: 14px;
+            padding: 13px 0;
+            border-top: 1px solid var(--line);
+            font-size: 14.5px;
+            color: var(--ink);
+        }
+        .heard-list li:first-child { border-top: none; padding-top: 2px; }
+        .heard-list .badge { justify-self: start; }
+
+        /* Discussion topics */
+        .topic-list { list-style: none; display: flex; flex-direction: column; gap: 30px; max-width: 820px; }
+        .topic { display: flex; gap: 16px; }
+        .topic-num {
+            flex-shrink: 0;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            font-size: 12px; font-weight: 700; color: #000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .topic-body { flex: 1; min-width: 0; }
+        .topic-tag { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); margin: 3px 0 4px; }
+        .topic-q { font-size: 15px; font-weight: 600; color: #000; line-height: 1.45; }
+
+        /* Capture boxes (contenteditable, saved to localStorage) */
+        .capture {
+            margin-top: 12px;
+            max-width: 820px;
+            border: 1px dashed #b4c4d8;
+            background: #f7f9fc;
+            border-radius: 8px;
+            padding: 10px 14px 12px;
+            transition: border-color 0.15s;
+        }
+        .capture:focus-within { border-color: var(--blue); }
+        .capture-label { font-size: 12px; font-weight: 600; color: var(--ink-faint); margin-bottom: 2px; }
+        .capture-field {
+            min-height: 44px;
+            font-size: 14px;
+            line-height: 1.55;
+            color: var(--ink);
+            outline: none;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+        .capture.blank { margin-top: 22px; }
+        .capture.blank .capture-field { min-height: 64px; }
+        .capture.tall .capture-field { min-height: 120px; }
+        .phase-card + .capture { margin-top: 12px; }
+
+        body.notes-hidden .capture-field { display: none; }
+        body.notes-hidden .capture::after { content: ''; display: block; min-height: 44px; }
+        body.notes-hidden .capture.blank::after { min-height: 64px; }
+        body.notes-hidden .capture.tall::after { min-height: 120px; }
+
+        /* Top bar with the notes toggle */
+        .doc-bar {
+            position: sticky;
+            top: 0;
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 9px 24px;
+            background: rgba(255,255,255,0.96);
+            border-bottom: 1px solid var(--line);
+        }
+        .doc-bar-note { font-size: 12px; color: var(--ink-faint); }
+        .notes-toggle {
+            font: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 5px 13px;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .notes-toggle:hover { border-color: #000; }
+        .notes-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        /* Phase cards */
+        .phase-card {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 22px 24px;
+            background: #fff;
+            max-width: 980px;
+        }
+        .capture + .phase-card { margin-top: 36px; }
+        .phase-objective { font-size: 14.5px; color: var(--ink); margin-top: -4px; }
+        .phase-objective strong,
+        .phase-target strong {
+            color: #000;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-right: 8px;
+        }
+        .phase-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+        .phase-card .phase-target { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--line); }
+
+        /* Day 1 hypotheses: compact, secondary */
+        .content-section.secondary .panel-title.small { font-size: 16px; }
+        .hypothesis-grid.compact { gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .hypothesis-grid.compact .hypothesis-card { padding: 13px 14px; background: #fafafa; }
+        .hypothesis-grid.compact .hyp-num { margin-bottom: 4px; }
+        .hypothesis-grid.compact .hyp-title { font-size: 13.5px; margin-bottom: 6px; }
+        .hypothesis-grid.compact .hyp-text { font-size: 12.5px; color: var(--ink-faint); }
+        .hypothesis-grid.compact .hyp-text + .hyp-text { margin-top: 4px; }
+        .hypothesis-grid.compact .hyp-text b { color: var(--ink-soft); font-weight: 600; }
+
+        /* Risks */
+        .risk-list { list-style: none; max-width: 820px; }
+        .risk-list li { padding: 14px 0; border-top: 1px solid var(--line); }
+        .risk-list li:first-child { border-top: none; padding-top: 2px; }
+        .risk-name { font-size: 14.5px; font-weight: 700; color: #000; margin-bottom: 3px; }
+        .risk-text { font-size: 14px; color: var(--ink-soft); }
+
+        @media (max-width: 880px) {
+            .doc-bar { position: static; }
+        }
+
+        @media (max-width: 640px) {
+            .phase-cols { grid-template-columns: 1fr; }
+            .phase-card { padding: 18px 16px; }
+            .heard-list li { grid-template-columns: 1fr; gap: 6px; }
+            .doc-bar { padding: 9px 20px; }
+            .doc-bar-note { display: none; }
         }
 
         /* HP section nav (shared across /hp pages) */
@@ -479,12 +624,16 @@
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="15" y2="8"/><line x1="1" y1="12" x2="15" y2="12"/></svg>
                 Menu
             </button>
+            <div class="doc-bar">
+                <span class="doc-bar-note">Notes save in this browser only.</span>
+                <button type="button" class="notes-toggle" id="notesToggle" aria-pressed="false">Hide notes</button>
+            </div>
     <div class="wrap">
         <header class="page-header">
-            <div class="eyebrow">Post-Interview Follow-Up</div>
-            <h1>30/60/90 Day Plan</h1>
-            <p class="dek">My first 90 days as Principal TPMM, AI Solutions. I lead with evidence, ship value in week one, and name what I don't know yet.</p>
-            <p class="meta-line">Prepared for HP Inc. &middot; Principal Technical Product Marketing Manager, AI Solutions &middot; Req #3166789</p>
+            <div class="eyebrow">Alignment Doc &middot; Working Draft</div>
+            <h1>Role Alignment &amp; 30/60/90 Plan</h1>
+            <p class="dek">Product Marketing Manager, AI Solutions &ndash; Robotics &amp; Manufacturing</p>
+            <p class="meta-line">HP Inc. &middot; Prepared for my conversation with Stephanie</p>
 
             <div class="arc-timeline">
                 <div class="arc-track"></div>
@@ -513,101 +662,209 @@
             </div>
         </header>
 
+        <!-- 1. Purpose -->
         <section class="content-section">
-            <h2 class="panel-title">Open Questions I Confirm First</h2>
-            <p class="panel-desc">I flag gaps instead of guessing. I confirm these with my manager, the PMM team, and Sales in week one.</p>
-            <div class="confirm-box">
-                <ul class="confirm-list">
-                    <li>PMM team structure &mdash; who I work with day one: <span class="confirm-blank"></span></li>
-                    <li>Existing competitive-intel process, if one exists: <span class="confirm-blank"></span></li>
-                    <li>Current battlecard / reference-architecture status: <span class="confirm-blank"></span></li>
-                    <li>Q3&ndash;Q4 roadmap priorities: <span class="confirm-blank"></span></li>
-                    <li>Real oil &amp; gas pipeline today: <span class="confirm-blank"></span></li>
-                    <li>Appetite for academic hardware placements: <span class="confirm-blank"></span></li>
-                </ul>
-            </div>
+            <h2 class="panel-title">Purpose</h2>
+            <p class="lead">A working document to align on scope, priorities and how I'd ramp. Based on our conversations and my assumptions; please correct anything.</p>
+            <p class="legend">
+                <span class="badge confirmed">Confirmed</span> heard directly
+                <span class="legend-sep">&middot;</span>
+                <span class="badge hypothesis">Hypothesis</span> my assumption
+                <span class="legend-sep">&middot;</span>
+                <span class="badge question">Question</span> I need your answer
+            </p>
         </section>
 
+        <!-- 2. Role vision -->
         <section class="content-section">
-            <h2 class="panel-title">Day 1: Oil &amp; Gas Hypotheses</h2>
-            <p class="panel-desc">HP already sees early oil &amp; gas interest. I extend the <a href="/hp/p66-example">P66 Vessel Integrity Intelligence prototype</a> into three testable demos in week one, not quarter one.</p>
-
-            <div class="hypothesis-grid">
-                <div class="hypothesis-card">
-                    <span class="hyp-num">Hypothesis 01</span>
-                    <div class="hyp-title">Field inspection shouldn't need a cloud connection.</div>
-                    <div class="hyp-label">Build</div>
-                    <div class="hyp-text">Offline vision pipeline on the ZGX Nano that drafts a corrosion report from inspection photos.</div>
-                    <div class="hyp-label">Proves</div>
-                    <div class="hyp-text">The edge, no-connectivity pitch &mdash; with a working demo, not a slide.</div>
-                </div>
-                <div class="hypothesis-card">
-                    <span class="hyp-num">Hypothesis 02</span>
-                    <div class="hyp-title">This data never touches a cloud LLM.</div>
-                    <div class="hyp-label">Build</div>
-                    <div class="hyp-text">Air-gapped RAG pipeline over a synthetic well-log corpus, running on the ZGX Nano.</div>
-                    <div class="hyp-label">Proves</div>
-                    <div class="hyp-text">The data-never-leaves-the-building claim, verified for security teams.</div>
-                </div>
-                <div class="hypothesis-card">
-                    <span class="hyp-num">Hypothesis 03</span>
-                    <div class="hyp-title">Standards lookup belongs in the design review, not after it.</div>
-                    <div class="hyp-label">Build</div>
-                    <div class="hyp-text">Local ASME/API standards-lookup tool, extending P66's standards module.</div>
-                    <div class="hyp-label">Proves</div>
-                    <div class="hyp-text">A compliance use case a buyer can try live, in the room.</div>
-                </div>
-            </div>
+            <h2 class="panel-title">Role Vision <span class="badge hypothesis">Hypothesis</span></h2>
+            <p class="lead">Manufacturers and robotics teams want vision AI on the floor without sending production data to the cloud. This role makes ZGX Nano and Fury the obvious way to do that.</p>
+            <div class="sub-label">Year one, in my words</div>
+            <ul class="plan-list">
+                <li><strong>A clear position.</strong> ZGX Nano and Fury as on-prem vision AI for manufacturing and robotics buyers.</li>
+                <li><strong>Data sovereignty as the lead message.</strong> Images, models and results stay inside the plant.</li>
+                <li><strong>Crawl, walk, run.</strong> Prove one use case on a Nano, then scale to Fury as shared infrastructure.</li>
+                <li><strong>A team that can tell it.</strong> Sales and partners carry the story with demos, battlecards and proof points.</li>
+            </ul>
+            <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on role vision" data-note="vision"></div></div>
         </section>
 
+        <!-- 3. What I've heard -->
         <section class="content-section">
-            <h2 class="panel-title">The 90-Day Arc</h2>
+            <h2 class="panel-title">What I've Heard So Far</h2>
+            <p class="panel-desc">Tagged so you can correct me. Anything wrong here changes the plan below.</p>
+            <ul class="heard-list">
+                <li><span class="badge confirmed">Confirmed</span><span>The role focuses on Robotics &amp; Manufacturing within AI Solutions.</span></li>
+                <li><span class="badge hypothesis">Hypothesis</span><span>ZGX Nano is the entry point and Fury is the scale-up path for the same buyer.</span></li>
+                <li><span class="badge hypothesis">Hypothesis</span><span>Buyers care most about on-prem vision AI and keeping data inside the plant.</span></li>
+                <li><span class="badge hypothesis">Hypothesis</span><span>No battlecards or reference architectures exist yet for this segment.</span></li>
+                <li><span class="badge question">Question</span><span>Is oil &amp; gas still in scope, or is it fully Robotics &amp; Manufacturing now?</span></li>
+                <li><span class="badge question">Question</span><span>Who do I work with day one across PMM, Sales and Engineering?</span></li>
+            </ul>
+        </section>
 
-            <div class="phase-block">
+        <!-- 4. Discussion topics -->
+        <section class="content-section">
+            <h2 class="panel-title">Discussion Topics</h2>
+            <p class="panel-desc">Five questions I'd like your take on.</p>
+            <ol class="topic-list">
+                <li class="topic">
+                    <span class="topic-num">1</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Priorities</div>
+                        <div class="topic-q">What does a great first 90 days look like to you? Which one outcome matters most?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on priorities" data-note="topic-priorities"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">2</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Scope</div>
+                        <div class="topic-q">Where does this role start and stop? Positioning only, or also demos, battlecards, competitive intel and partner enablement?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on scope" data-note="topic-scope"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">3</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Unspoken priorities</div>
+                        <div class="topic-q">What isn't in the job description that you'd want this role to take off your plate?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on unspoken priorities" data-note="topic-unspoken"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">4</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Resources</div>
+                        <div class="topic-q">What do I have on day one: hardware access, demo budget, and the people I'd lean on?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on resources" data-note="topic-resources"></div></div>
+                    </div>
+                </li>
+                <li class="topic">
+                    <span class="topic-num">5</span>
+                    <div class="topic-body">
+                        <div class="topic-tag">Risks</div>
+                        <div class="topic-q">Where could this role stall? What has made similar launches hard before?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on risks" data-note="topic-risks"></div></div>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <!-- 5. 30/60/90 plan -->
+        <section class="content-section">
+            <h2 class="panel-title">30/60/90 Plan <span class="badge hypothesis">Hypothesis</span></h2>
+            <p class="panel-desc">My draft. I'd rather adjust it with you now than after I start.</p>
+
+            <div class="phase-card">
                 <span class="phase-tag">Days 1&ndash;30</span>
                 <h3 class="phase-title">Learn &amp; Map</h3>
-                <ul class="plan-list">
-                    <li>Run a ZGX Nano end to end. Benchmark 3 open models (small, mid, large) via Ollama.</li>
-                    <li>Verify the public review claims myself: memory bandwidth, idle power, context falloff.</li>
-                    <li>Interview 8&ndash;10 stakeholders across Product, Engineering, Sales, and Channel.</li>
-                    <li>Talk to 5+ real ZGX Nano users or developer-community members.</li>
-                    <li>Stand up a living competitor tracker: every GB10 OEM plus real alternatives.</li>
-                    <li>Take one Day 1 hypothesis to demo-ready.</li>
-                </ul>
+                <p class="phase-objective"><strong>Objective</strong>Know the product, the buyer and the team firsthand before I write positioning.</p>
+                <div class="phase-cols">
+                    <div>
+                        <div class="sub-label">Key activities</div>
+                        <ul class="plan-list">
+                            <li>Run a ZGX Nano end to end. Benchmark 3 open models (small, mid, large) via Ollama.</li>
+                            <li>Verify the public review claims myself: memory bandwidth, idle power, context falloff.</li>
+                            <li>Interview 8&ndash;10 stakeholders across Product, Engineering, Sales and Channel.</li>
+                            <li>Talk to 5+ real ZGX Nano users or developer-community members.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="sub-label">Deliverables</div>
+                        <ul class="plan-list">
+                            <li>A living competitor tracker: every GB10 OEM plus real alternatives.</li>
+                            <li>One Day 1 hypothesis taken to demo-ready.</li>
+                        </ul>
+                    </div>
+                </div>
                 <p class="phase-target"><strong>Target</strong>100% of stakeholders interviewed, 3 models benchmarked, 1 prototype demo-ready.</p>
             </div>
+            <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 1 to 30" data-note="phase-30"></div></div>
 
-            <div class="phase-block">
+            <div class="phase-card">
                 <span class="phase-tag">Days 31&ndash;60</span>
                 <h3 class="phase-title">Build &amp; Ship</h3>
-                <ul class="plan-list">
-                    <li>Build the first ZGX Nano battlecard vs. every GB10 OEM and AMD's Ryzen AI Halo.</li>
-                    <li>Build a reference RAG architecture: Ollama for serving, LangChain/LangGraph for orchestration.</li>
-                    <li>Extend hands-on coverage to Llama, Mistral, Gemma, and Qwen; evaluate vLLM.</li>
-                    <li>Publish one benchmarked, fully-cited technical post.</li>
-                    <li>Package the strongest Day 1 prototype into a customer-ready demo.</li>
-                    <li>Run a GTM readiness review with Sales and channel partners.</li>
-                </ul>
+                <p class="phase-objective"><strong>Objective</strong>Ship the first assets Sales and partners can use in real deals.</p>
+                <div class="phase-cols">
+                    <div>
+                        <div class="sub-label">Key activities</div>
+                        <ul class="plan-list">
+                            <li>Extend hands-on coverage to Llama, Mistral, Gemma and Qwen; evaluate vLLM.</li>
+                            <li>Run a GTM readiness review with Sales and channel partners.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="sub-label">Deliverables</div>
+                        <ul class="plan-list">
+                            <li>First ZGX Nano battlecard vs. every GB10 OEM and AMD's Ryzen AI Halo.</li>
+                            <li>A reference RAG architecture: Ollama for serving, LangChain/LangGraph for orchestration.</li>
+                            <li>One benchmarked, fully cited technical post.</li>
+                            <li>The strongest Day 1 prototype, packaged as a customer-ready demo.</li>
+                        </ul>
+                    </div>
+                </div>
                 <p class="phase-target"><strong>Target</strong>Battlecard adopted by 2+ sales/channel teams. Hands-on across all 5 named model families.</p>
             </div>
+            <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 31 to 60" data-note="phase-60"></div></div>
 
-            <div class="phase-block">
+            <div class="phase-card">
                 <span class="phase-tag">Days 61&ndash;90</span>
                 <h3 class="phase-title">Own &amp; Scale</h3>
-                <ul class="plan-list">
-                    <li>Brief cross-functional leadership: position, landscape, and roadmap for the next two quarters.</li>
-                    <li>Stand up a recurring competitive-intel cadence with a named owner.</li>
-                    <li>Land one customer-facing proof point Sales can cite in active deals.</li>
-                    <li>Set up a lightweight customer/developer feedback loop.</li>
-                    <li>Retro against the Day 1 stakeholder list: what closed, what's still open.</li>
-                </ul>
+                <p class="phase-objective"><strong>Objective</strong>Make the motion repeatable and land one proof point in an active deal.</p>
+                <div class="phase-cols">
+                    <div>
+                        <div class="sub-label">Key activities</div>
+                        <ul class="plan-list">
+                            <li>Brief cross-functional leadership: position, landscape and roadmap for the next two quarters.</li>
+                            <li>Set up a lightweight customer/developer feedback loop.</li>
+                            <li>Retro against the Day 1 stakeholder list: what closed, what's still open.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="sub-label">Deliverables</div>
+                        <ul class="plan-list">
+                            <li>A recurring competitive-intel cadence with a named owner.</li>
+                            <li>One customer-facing proof point Sales can cite in active deals.</li>
+                        </ul>
+                    </div>
+                </div>
                 <p class="phase-target"><strong>Target</strong>Roadmap signed off, cadence running without me, 1 deal citing my work.</p>
             </div>
+            <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 61 to 90" data-note="phase-90"></div></div>
         </section>
 
+        <!-- 6. Day 1 hypotheses (compact, secondary) -->
+        <section class="content-section secondary">
+            <h2 class="panel-title small">Day 1 Hypotheses <span class="badge question">Question</span></h2>
+            <p class="panel-desc">Drafted for oil &amp; gas, extending my <a href="/hp/p66-example">P66 Vessel Integrity prototype</a>. Keep these, or retarget the same pattern to a factory line?</p>
+            <div class="hypothesis-grid compact">
+                <div class="hypothesis-card">
+                    <span class="hyp-num">01</span>
+                    <div class="hyp-title">Field inspection shouldn't need a cloud connection.</div>
+                    <div class="hyp-text"><b>Build:</b> offline vision pipeline on the ZGX Nano that drafts a corrosion report from inspection photos.</div>
+                    <div class="hyp-text"><b>Proves:</b> the edge, no-connectivity pitch, with a working demo instead of a slide.</div>
+                </div>
+                <div class="hypothesis-card">
+                    <span class="hyp-num">02</span>
+                    <div class="hyp-title">This data never touches a cloud LLM.</div>
+                    <div class="hyp-text"><b>Build:</b> air-gapped RAG pipeline over a synthetic well-log corpus, running on the ZGX Nano.</div>
+                    <div class="hyp-text"><b>Proves:</b> the data-never-leaves-the-building claim, verified for security teams.</div>
+                </div>
+                <div class="hypothesis-card">
+                    <span class="hyp-num">03</span>
+                    <div class="hyp-title">Standards lookup belongs in the design review, not after it.</div>
+                    <div class="hyp-text"><b>Build:</b> local ASME/API standards-lookup tool, extending P66's standards module.</div>
+                    <div class="hyp-text"><b>Proves:</b> a compliance use case a buyer can try live, in the room.</div>
+                </div>
+            </div>
+            <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on Day 1 hypotheses" data-note="hypotheses"></div></div>
+        </section>
+
+        <!-- 7. Success metrics -->
         <section class="content-section">
-            <h2 class="panel-title">Metrics That Matter</h2>
-            <p class="panel-desc">Proposed now. Set real thresholds with leadership by day 30.</p>
+            <h2 class="panel-title">How We'd Measure Success <span class="badge hypothesis">Hypothesis</span></h2>
+            <p class="panel-desc">Proposed now. Set real thresholds together by day 30.</p>
             <div class="metrics-grid">
                 <div class="metric-tile north-star">
                     <span class="metric-tag">North Star</span>
@@ -635,21 +892,50 @@
                     <div class="metric-def">Organic traction on published benchmarks and developer-community mentions.</div>
                 </div>
             </div>
+            <div class="capture"><div class="capture-label">How Stephanie defines success</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="How Stephanie defines success" data-note="success"></div></div>
         </section>
 
+        <!-- 8. Risks & dependencies -->
         <section class="content-section">
-            <h2 class="panel-title">Also Worth Exploring</h2>
+            <h2 class="panel-title">Risks &amp; Dependencies <span class="badge hypothesis">Hypothesis</span></h2>
+            <ul class="risk-list">
+                <li>
+                    <div class="risk-name">Team structure</div>
+                    <div class="risk-text">Unclear lanes with adjacent PMM, technical marketing and partner teams would slow the first 30 days.</div>
+                </li>
+                <li>
+                    <div class="risk-name">Resources &amp; hardware access</div>
+                    <div class="risk-text">Credible vision AI positioning means running it. I need early Nano access, time on a Fury, and a small demo budget.</div>
+                </li>
+                <li>
+                    <div class="risk-name">Stakeholder alignment</div>
+                    <div class="risk-text">Product, Sales, partners and NVIDIA each pull the story differently. The plan assumes one agreed owner for messaging calls.</div>
+                </li>
+            </ul>
+            <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on risks and dependencies" data-note="risks"></div></div>
+        </section>
+
+        <!-- Also worth exploring -->
+        <section class="content-section">
+            <h2 class="panel-title">Also Worth Exploring <span class="badge question">Question</span></h2>
             <ul class="plan-list">
                 <li><strong>Academic channel.</strong> Place ZGX Nano units with 1&ndash;2 labs, starting with Rice, for co-published benchmarks. Confirm: appetite for a formal program? <span class="confirm-blank"></span></li>
-                <li><strong>OEM reality.</strong> HP is one of 6+ OEMs (ASUS, Dell, Lenovo, MSI, Supermicro) on the same GB10 chip. Chassis, support, and GTM execution differentiate &mdash; not the silicon.</li>
+                <li><strong>OEM reality.</strong> HP is one of 6+ OEMs (ASUS, Dell, Lenovo, MSI, Supermicro) on the same GB10 chip. Chassis, support and GTM execution differentiate, not the silicon.</li>
                 <li><strong>NVIDIA dependency.</strong> NVIDIA sets the roadmap and, this year, DGX Spark pricing independent of OEMs. I'd set a standing quarterly NVIDIA touchpoint.</li>
                 <li><strong>Positioning as a system.</strong> Formalize scrape &rarr; score &rarr; draft &rarr; review &rarr; publish, the loop already prototyped in the <a href="/hp/case-study">ZGX Nano case study</a>. Confirm: does a version of this exist internally? <span class="confirm-blank"></span></li>
-                <li><strong>Re-baseline cadence.</strong> Revisit the roadmap every 4&ndash;6 weeks against fresh competitive signal &mdash; this market moved on price, a new entrant, and a brand split in about twelve weeks this year alone.</li>
+                <li><strong>Re-baseline cadence.</strong> Revisit the roadmap every 4&ndash;6 weeks against fresh competitive signal. This market moved on price, a new entrant and a brand split in about twelve weeks this year alone.</li>
             </ul>
         </section>
 
+        <!-- 9. Next steps -->
+        <section class="content-section">
+            <h2 class="panel-title">Next Steps &amp; My Ask</h2>
+            <p class="panel-desc">What we agree to, who I should meet next, and what you need from me.</p>
+            <div class="capture tall"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Agreed next steps" data-note="next-steps"></div></div>
+        </section>
+
         <footer>
-            Prepared for the HP Principal Technical Product Marketing Manager, AI Solutions interview process. Not for external distribution.
+            Working alignment doc for the HP Product Marketing Manager, AI Solutions &ndash; Robotics &amp; Manufacturing role. Not for external distribution.
         </footer>
     </div>
         </div>
@@ -666,6 +952,47 @@
             if (openBtn) openBtn.addEventListener('click', openNav);
             if (closeBtn) closeBtn.addEventListener('click', closeNav);
             if (scrim) scrim.addEventListener('click', closeNav);
+        })();
+    </script>
+    <script>
+        // Capture boxes: save each note to localStorage; "Hide notes" blanks them for screen-sharing.
+        (function () {
+            var PREFIX = 'hp-align-note:';
+            var HIDE_KEY = 'hp-align-notes-hidden';
+            function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+            function write(key, val) {
+                try { if (val) { localStorage.setItem(key, val); } else { localStorage.removeItem(key); } } catch (e) {}
+            }
+
+            var fields = document.querySelectorAll('.capture-field[data-note]');
+            Array.prototype.forEach.call(fields, function (field) {
+                var key = PREFIX + field.getAttribute('data-note');
+                var saved = read(key);
+                if (saved) field.innerText = saved;
+                field.addEventListener('input', function () {
+                    var text = field.innerText;
+                    write(key, text.trim() ? text : '');
+                });
+                field.addEventListener('paste', function (e) {
+                    e.preventDefault();
+                    var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+                    document.execCommand('insertText', false, text);
+                });
+            });
+
+            var toggle = document.getElementById('notesToggle');
+            function apply(hidden) {
+                document.body.classList.toggle('notes-hidden', hidden);
+                toggle.textContent = hidden ? 'Show notes' : 'Hide notes';
+                toggle.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+            }
+            apply(read(HIDE_KEY) === 'true');
+            toggle.addEventListener('click', function () {
+                var hidden = !document.body.classList.contains('notes-hidden');
+                if (hidden && document.activeElement && document.activeElement.blur) document.activeElement.blur();
+                write(HIDE_KEY, hidden ? 'true' : '');
+                apply(hidden);
+            });
         })();
     </script>
 </body>
