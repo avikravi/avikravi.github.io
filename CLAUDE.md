@@ -410,11 +410,12 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          Hypotheses (the three oil-and-gas cards, compact/secondary, tagged Question)
                          -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
                          numbers) -> Other Ideas (academic channel starting with Rice, OEM reality,
-                         NVIDIA, positioning-as-a-system, re-baseline) -> Discussion Topics LAST (7
-                         questions, .topic-list; 2026-11-11 Avi added six-months-in, stakeholders,
-                         12-month KPIs). Removed per Avi: Next Steps & My Ask (2026-11-11), What I've
+                         NVIDIA, positioning-as-a-system, re-baseline) -> Discussion Topics LAST (5
+                         questions, .topic-list: Scope, Six months in, Stakeholders, Resources, Risks;
+                         Priorities and 12-month KPIs were removed 2026-11-12 per Avi). Removed per Avi: Next Steps & My Ask (2026-11-11), What I've
                          Heard So Far and Risks & Dependencies (2026-11-12; their CSS was removed too).
                          Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
+                         2026-11-12: all copy cut ~30% (1,018 -> 724 words) per Avi; same sections. The legend no longer shows Confirmed (nothing on the page uses it now).
                          Only facts Avi stated are tagged Confirmed; everything else is Hypothesis or
                          Question. Don't upgrade a tag without Avi saying so.
                          CAPTURE BOXES: .capture (dashed, light-tinted) holding a contenteditable

@@ -172,17 +172,6 @@
             margin-bottom: 6px;
         }
 
-        .hyp-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--ink-faint);
-            margin: 10px 0 3px;
-        }
-
-        .hyp-label:first-of-type { margin-top: 8px; }
-
         .hyp-text { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
         .hyp-title { font-size: 14.5px; font-weight: 700; color: #000; margin-bottom: 6px; line-height: 1.3; }
 
@@ -299,7 +288,6 @@
             vertical-align: middle;
             white-space: nowrap;
         }
-        .badge.confirmed { color: #1a7f37; border-color: #b7dfc2; background: #f1f9f3; }
         .badge.hypothesis { color: #8a5a00; border-color: #ecd6a6; background: #fdf8ec; }
         .badge.question { color: var(--blue); border-color: #bcd3ea; background: #f2f7fc; }
         .panel-title .badge { margin-left: 8px; position: relative; top: -2px; }
@@ -395,6 +383,7 @@
             max-width: 980px;
         }
         .capture + .phase-card { margin-top: 36px; }
+        .panel-title + .phase-card { margin-top: 20px; }
         .phase-objective { font-size: 14.5px; color: var(--ink); margin-top: -4px; }
         .phase-objective strong,
         .phase-target strong {
@@ -608,7 +597,7 @@
             <div class="eyebrow">Alignment Doc &middot; Working Draft</div>
             <h1>Role Alignment &amp; 30/60/90 Plan</h1>
             <p class="dek">Product Marketing Manager, AI Solutions &ndash; Robotics &amp; Manufacturing</p>
-            <p class="meta-line">HP Inc. &middot; Prepared for my conversation with Stephanie</p>
+            <p class="meta-line">HP Inc. &middot; For my conversation with Stephanie</p>
 
             <div class="arc-timeline">
                 <div class="arc-track"></div>
@@ -631,7 +620,7 @@
                     <div class="arc-milestone">
                         <span class="arc-dot"></span>
                         <span class="arc-day">Day 90</span>
-                        <span class="arc-desc">Motion running without me</span>
+                        <span class="arc-desc">Running without me</span>
                     </div>
                 </div>
             </div>
@@ -640,10 +629,8 @@
         <!-- 1. Purpose -->
         <section class="content-section">
             <h2 class="panel-title">Purpose</h2>
-            <p class="lead">A working document to align on scope, priorities and how I'd ramp. Based on our conversations and my assumptions; please correct anything.</p>
+            <p class="lead">A working doc to align on scope, priorities and how I'd ramp. Please correct anything.</p>
             <p class="legend">
-                <span class="badge confirmed">Confirmed</span> heard directly
-                <span class="legend-sep">&middot;</span>
                 <span class="badge hypothesis">Hypothesis</span> my assumption
                 <span class="legend-sep">&middot;</span>
                 <span class="badge question">Question</span> I need your answer
@@ -653,13 +640,13 @@
         <!-- 2. Role vision -->
         <section class="content-section">
             <h2 class="panel-title">Role Vision <span class="badge hypothesis">Hypothesis</span></h2>
-            <p class="lead">Manufacturers and robotics teams want vision AI on the floor without sending production data to the cloud. This role makes ZGX Nano and Fury the obvious way to do that.</p>
-            <div class="sub-label">Year one, in my words</div>
+            <p class="lead">Manufacturers want vision AI on the floor without sending production data to the cloud. ZGX Nano and Fury should be the obvious way to do that.</p>
+            <div class="sub-label">Year one</div>
             <ul class="plan-list">
-                <li><strong>A clear position.</strong> ZGX Nano and Fury as on-prem vision AI for manufacturing and robotics buyers.</li>
-                <li><strong>Data sovereignty as the lead message.</strong> Images, models and results stay inside the plant.</li>
-                <li><strong>Crawl, walk, run.</strong> Prove one use case on a Nano, then scale to Fury as shared infrastructure.</li>
-                <li><strong>A team that can tell it.</strong> Sales and partners carry the story with demos, battlecards and proof points.</li>
+                <li><strong>Clear position.</strong> On-prem vision AI for manufacturing and robotics.</li>
+                <li><strong>Data sovereignty first.</strong> Images, models and results stay in the plant.</li>
+                <li><strong>Crawl, walk, run.</strong> Prove one use case on a Nano, then scale to Fury.</li>
+                <li><strong>Enabled field.</strong> Sales and partners carry the story with demos and battlecards.</li>
             </ul>
             <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on role vision" data-note="vision"></div></div>
         </section>
@@ -667,82 +654,78 @@
         <!-- 3. 30/60/90 plan -->
         <section class="content-section">
             <h2 class="panel-title">30/60/90 Plan <span class="badge hypothesis">Hypothesis</span></h2>
-            <p class="panel-desc">My draft. I'd rather adjust it with you now than after I start.</p>
-
             <div class="phase-card">
                 <span class="phase-tag">Days 1&ndash;30</span>
                 <h3 class="phase-title">Learn, Map, and Build from Day 1</h3>
-                <p class="phase-objective"><strong>Objective</strong>Know the product, the buyer and the team firsthand before I write positioning.</p>
+                <p class="phase-objective"><strong>Objective</strong>Know the product, buyer and team before writing positioning.</p>
                 <div class="phase-cols">
                     <div>
                         <div class="sub-label">Key activities</div>
                         <ul class="plan-list">
-                            <li>Run a ZGX Nano end to end. Benchmark 3 open models (small, mid, large) via Ollama.</li>
-                            <li>Verify the public review claims myself: memory bandwidth, idle power, context falloff.</li>
-                            <li>Interview 8&ndash;10 stakeholders across Product, Engineering, Sales and Channel.</li>
-                            <li>Talk to 5+ real ZGX Nano users or developer-community members.</li>
+                            <li>Run a ZGX Nano end to end and benchmark 3 open models.</li>
+                            <li>Verify the public review claims myself.</li>
+                            <li>Interview 8&ndash;10 stakeholders and 5+ real users.</li>
                         </ul>
                     </div>
                     <div>
                         <div class="sub-label">Deliverables</div>
                         <ul class="plan-list">
-                            <li>A living competitor tracker: every GB10 OEM plus real alternatives.</li>
-                            <li>One Day 1 hypothesis taken to demo-ready.</li>
+                            <li>A living competitor tracker.</li>
+                            <li>One Day 1 hypothesis, demo-ready.</li>
                         </ul>
                     </div>
                 </div>
-                <p class="phase-target"><strong>Target</strong>100% of stakeholders interviewed, 3 models benchmarked, 1 prototype demo-ready.</p>
+                <p class="phase-target"><strong>Target</strong>All stakeholders interviewed, 3 models benchmarked, 1 demo ready.</p>
             </div>
             <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 1 to 30" data-note="phase-30"></div></div>
 
             <div class="phase-card">
                 <span class="phase-tag">Days 31&ndash;60</span>
                 <h3 class="phase-title">Build &amp; Ship</h3>
-                <p class="phase-objective"><strong>Objective</strong>Ship the first assets Sales and partners can use in real deals.</p>
+                <p class="phase-objective"><strong>Objective</strong>Ship the first assets Sales and partners use in real deals.</p>
                 <div class="phase-cols">
                     <div>
                         <div class="sub-label">Key activities</div>
                         <ul class="plan-list">
-                            <li>Extend hands-on coverage to Llama, Mistral, Gemma and Qwen; evaluate vLLM.</li>
-                            <li>Run a GTM readiness review with Sales and channel partners.</li>
+                            <li>Go hands-on with Llama, Mistral, Gemma and Qwen.</li>
+                            <li>Run a GTM readiness review with Sales and partners.</li>
                         </ul>
                     </div>
                     <div>
                         <div class="sub-label">Deliverables</div>
                         <ul class="plan-list">
-                            <li>First ZGX Nano battlecard vs. every GB10 OEM and AMD's Ryzen AI Halo.</li>
-                            <li>A reference RAG architecture: Ollama for serving, LangChain/LangGraph for orchestration.</li>
-                            <li>One benchmarked, fully cited technical post.</li>
-                            <li>The strongest Day 1 prototype, packaged as a customer-ready demo.</li>
+                            <li>First battlecard vs. GB10 OEMs and AMD's Ryzen AI Halo.</li>
+                            <li>A reference RAG architecture.</li>
+                            <li>One benchmarked technical post.</li>
+                            <li>The best prototype as a customer-ready demo.</li>
                         </ul>
                     </div>
                 </div>
-                <p class="phase-target"><strong>Target</strong>Battlecard adopted by 2+ sales/channel teams. Hands-on across all 5 named model families.</p>
+                <p class="phase-target"><strong>Target</strong>Battlecard used by 2+ sales or channel teams.</p>
             </div>
             <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 31 to 60" data-note="phase-60"></div></div>
 
             <div class="phase-card">
                 <span class="phase-tag">Days 61&ndash;90</span>
                 <h3 class="phase-title">Own &amp; Scale</h3>
-                <p class="phase-objective"><strong>Objective</strong>Make the motion repeatable and land one proof point in an active deal.</p>
+                <p class="phase-objective"><strong>Objective</strong>Make it repeatable and land one proof point in a live deal.</p>
                 <div class="phase-cols">
                     <div>
                         <div class="sub-label">Key activities</div>
                         <ul class="plan-list">
-                            <li>Brief cross-functional leadership: position, landscape and roadmap for the next two quarters.</li>
-                            <li>Set up a lightweight customer/developer feedback loop.</li>
-                            <li>Retro against the Day 1 stakeholder list: what closed, what's still open.</li>
+                            <li>Brief leadership on the position and next two quarters.</li>
+                            <li>Set up a customer and developer feedback loop.</li>
                         </ul>
                     </div>
                     <div>
                         <div class="sub-label">Deliverables</div>
                         <ul class="plan-list">
-                            <li>A recurring competitive-intel cadence with a named owner.</li>
-                            <li>One customer-facing proof point Sales can cite in active deals.</li>
+                            <li>A competitive-intel cadence with a named owner.</li>
+                            <li>One proof point Sales can cite in deals.</li>
                         </ul>
                     </div>
                 </div>
-                <p class="phase-target"><strong>Target</strong>Roadmap signed off, cadence running without me, 1 deal citing my work.</p>
+                <p class="phase-target"><strong>Target</strong>Roadmap signed off, cadence running, 1 deal citing my work.</p>
             </div>
             <div class="capture"><div class="capture-label">Stephanie's input</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Stephanie's input on days 61 to 90" data-note="phase-90"></div></div>
         </section>
@@ -750,25 +733,25 @@
         <!-- 4. Day 1 hypotheses (compact, secondary) -->
         <section class="content-section secondary">
             <h2 class="panel-title small">Day 1 Hypotheses <span class="badge question">Question</span></h2>
-            <p class="panel-desc">Drafted for oil &amp; gas, extending my <a href="/hp/p66-example">P66 Vessel Integrity prototype</a>. Keep these, or retarget the same pattern to a factory line?</p>
+            <p class="panel-desc">Drafted for oil &amp; gas from my <a href="/hp/p66-example">P66 prototype</a>. Keep, or retarget to a factory line?</p>
             <div class="hypothesis-grid compact">
                 <div class="hypothesis-card">
                     <span class="hyp-num">01</span>
-                    <div class="hyp-title">Field inspection shouldn't need a cloud connection.</div>
-                    <div class="hyp-text"><b>Build:</b> offline vision pipeline on the ZGX Nano that drafts a corrosion report from inspection photos.</div>
-                    <div class="hyp-text"><b>Proves:</b> the edge, no-connectivity pitch, with a working demo instead of a slide.</div>
+                    <div class="hyp-title">Field inspection without the cloud.</div>
+                    <div class="hyp-text"><b>Build:</b> offline pipeline that drafts corrosion reports from photos.</div>
+                    <div class="hyp-text"><b>Proves:</b> the edge pitch, with a live demo.</div>
                 </div>
                 <div class="hypothesis-card">
                     <span class="hyp-num">02</span>
-                    <div class="hyp-title">This data never touches a cloud LLM.</div>
-                    <div class="hyp-text"><b>Build:</b> air-gapped RAG pipeline over a synthetic well-log corpus, running on the ZGX Nano.</div>
-                    <div class="hyp-text"><b>Proves:</b> the data-never-leaves-the-building claim, verified for security teams.</div>
+                    <div class="hyp-title">Data never touches a cloud LLM.</div>
+                    <div class="hyp-text"><b>Build:</b> air-gapped RAG over synthetic well logs.</div>
+                    <div class="hyp-text"><b>Proves:</b> data stays in the building.</div>
                 </div>
                 <div class="hypothesis-card">
                     <span class="hyp-num">03</span>
-                    <div class="hyp-title">Standards lookup belongs in the design review, not after it.</div>
-                    <div class="hyp-text"><b>Build:</b> local ASME/API standards-lookup tool, extending P66's standards module.</div>
-                    <div class="hyp-text"><b>Proves:</b> a compliance use case a buyer can try live, in the room.</div>
+                    <div class="hyp-title">Standards lookup in the design review.</div>
+                    <div class="hyp-text"><b>Build:</b> local ASME/API lookup tool.</div>
+                    <div class="hyp-text"><b>Proves:</b> a compliance use case buyers try live.</div>
                 </div>
             </div>
             <div class="capture blank"><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notes on Day 1 hypotheses" data-note="hypotheses"></div></div>
@@ -777,32 +760,32 @@
         <!-- 5. Success metrics -->
         <section class="content-section">
             <h2 class="panel-title">How We'd Measure Success <span class="badge hypothesis">Hypothesis</span></h2>
-            <p class="panel-desc">Proposed now. Set real thresholds together by day 30.</p>
+            <p class="panel-desc">Proposed. We'd set real targets together by day 30.</p>
             <div class="metrics-grid">
                 <div class="metric-tile north-star">
                     <span class="metric-tag">North Star</span>
-                    <div class="metric-name">Revenue-Qualified Pipeline Influenced</div>
-                    <div class="metric-def">Pipeline where Sales cites a PMM asset (battlecard, architecture, benchmark) as directly influential.</div>
+                    <div class="metric-name">Pipeline Influenced</div>
+                    <div class="metric-def">Pipeline where Sales cites a PMM asset as influential.</div>
                 </div>
                 <div class="metric-tile">
                     <span class="metric-tag">Enablement</span>
                     <div class="metric-name">Sales &amp; Partner Adoption</div>
-                    <div class="metric-def">Share of sales/channel teams actively using the current battlecard.</div>
+                    <div class="metric-def">Teams actively using the battlecard.</div>
                 </div>
                 <div class="metric-tile">
                     <span class="metric-tag">Speed</span>
                     <div class="metric-name">Competitive Response Time</div>
-                    <div class="metric-def">Time from a competitor signal appearing publicly to HP's response publishing.</div>
+                    <div class="metric-def">From a competitor's move to HP's response.</div>
                 </div>
                 <div class="metric-tile">
                     <span class="metric-tag">Credibility</span>
                     <div class="metric-name">First-Hand Model Coverage</div>
-                    <div class="metric-def">Share of the named model ecosystem I've run myself, not researched secondhand.</div>
+                    <div class="metric-def">Models I've run myself.</div>
                 </div>
                 <div class="metric-tile">
                     <span class="metric-tag">Community</span>
                     <div class="metric-name">Developer &amp; Academic Engagement</div>
-                    <div class="metric-def">Organic traction on published benchmarks and developer-community mentions.</div>
+                    <div class="metric-def">Traction on published benchmarks.</div>
                 </div>
             </div>
             <div class="capture"><div class="capture-label">How Stephanie defines success</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="How Stephanie defines success" data-note="success"></div></div>
@@ -812,80 +795,64 @@
         <section class="content-section">
             <h2 class="panel-title">Other Ideas <span class="badge question">Question</span></h2>
             <ul class="plan-list">
-                <li><strong>Academic channel.</strong> Place ZGX Nano units with 1&ndash;2 labs, starting with Rice, for co-published benchmarks. Confirm: appetite for a formal program? <span class="confirm-blank"></span></li>
-                <li><strong>OEM reality.</strong> HP is one of 6+ OEMs (ASUS, Dell, Lenovo, MSI, Supermicro) on the same GB10 chip. Chassis, support and GTM execution differentiate, not the silicon.</li>
-                <li><strong>NVIDIA dependency.</strong> NVIDIA sets the roadmap and, this year, DGX Spark pricing independent of OEMs. I'd set a standing quarterly NVIDIA touchpoint.</li>
-                <li><strong>Positioning as a system.</strong> Formalize scrape &rarr; score &rarr; draft &rarr; review &rarr; publish, the loop already prototyped in the <a href="/hp/case-study">ZGX Nano case study</a>. Confirm: does a version of this exist internally? <span class="confirm-blank"></span></li>
-                <li><strong>Re-baseline cadence.</strong> Revisit the roadmap every 4&ndash;6 weeks against fresh competitive signal. This market moved on price, a new entrant and a brand split in about twelve weeks this year alone.</li>
+                <li><strong>Academic channel.</strong> Place Nanos with 1&ndash;2 labs, starting with Rice, for joint benchmarks. Appetite for this? <span class="confirm-blank"></span></li>
+                <li><strong>OEM reality.</strong> 6+ OEMs share the GB10 chip. Chassis, support and GTM set HP apart, not silicon.</li>
+                <li><strong>NVIDIA.</strong> NVIDIA sets the roadmap and DGX Spark pricing. I'd keep a quarterly touchpoint.</li>
+                <li><strong>Positioning as a system.</strong> Scrape &rarr; score &rarr; draft &rarr; review &rarr; publish, prototyped in my <a href="/hp/case-study">case study</a>. Does this exist internally? <span class="confirm-blank"></span></li>
+                <li><strong>Re-baseline.</strong> Revisit the roadmap every 4&ndash;6 weeks as the market moves.</li>
             </ul>
         </section>
 
         <!-- 7. Discussion topics (last) -->
         <section class="content-section">
             <h2 class="panel-title">Discussion Topics</h2>
-            <p class="panel-desc">Questions I'd like your take on.</p>
+            <p class="panel-desc">Questions for you.</p>
             <ol class="topic-list">
                 <li class="topic">
                     <span class="topic-num">1</span>
                     <div class="topic-body">
-                        <div class="topic-tag">Priorities</div>
-                        <div class="topic-q">What does a great first 90 days look like to you? Which one outcome matters most?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on priorities" data-note="topic-priorities"></div></div>
+                        <div class="topic-tag">Scope</div>
+                        <div class="topic-q">Positioning only, or also demos, battlecards, competitive intel and partner enablement?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on scope" data-note="topic-scope"></div></div>
                     </div>
                 </li>
                 <li class="topic">
                     <span class="topic-num">2</span>
                     <div class="topic-body">
-                        <div class="topic-tag">Scope</div>
-                        <div class="topic-q">Where does this role start and stop? Positioning only, or also demos, battlecards, competitive intel and partner enablement?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on scope" data-note="topic-scope"></div></div>
+                        <div class="topic-tag">Six months in</div>
+                        <div class="topic-q">What can I take off your plate by six months in?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on six months in" data-note="topic-six-months"></div></div>
                     </div>
                 </li>
                 <li class="topic">
                     <span class="topic-num">3</span>
                     <div class="topic-body">
-                        <div class="topic-tag">Six months in</div>
-                        <div class="topic-q">Is there anything I can take off your plate by six months in?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on six months in" data-note="topic-six-months"></div></div>
+                        <div class="topic-tag">Stakeholders</div>
+                        <div class="topic-q">Which internal and external stakeholders should I stay closely engaged with?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on stakeholders" data-note="topic-stakeholders"></div></div>
                     </div>
                 </li>
                 <li class="topic">
                     <span class="topic-num">4</span>
                     <div class="topic-body">
-                        <div class="topic-tag">Stakeholders</div>
-                        <div class="topic-q">Are there any internal and external stakeholders you would want me to stay super engaged with?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on stakeholders" data-note="topic-stakeholders"></div></div>
+                        <div class="topic-tag">Resources</div>
+                        <div class="topic-q">What hardware, demo budget and people do I have on day one?</div>
+                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on resources" data-note="topic-resources"></div></div>
                     </div>
                 </li>
                 <li class="topic">
                     <span class="topic-num">5</span>
                     <div class="topic-body">
-                        <div class="topic-tag">Resources</div>
-                        <div class="topic-q">What do I have on day one: hardware access, demo budget, and the people I'd lean on?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on resources" data-note="topic-resources"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">6</span>
-                    <div class="topic-body">
                         <div class="topic-tag">Risks</div>
-                        <div class="topic-q">Where could this role stall? What has made similar launches hard before?</div>
+                        <div class="topic-q">Where could this role stall?</div>
                         <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on risks" data-note="topic-risks"></div></div>
-                    </div>
-                </li>
-                <li class="topic">
-                    <span class="topic-num">7</span>
-                    <div class="topic-body">
-                        <div class="topic-tag">Success at 12 months</div>
-                        <div class="topic-q">What metrics or KPIs would you want to hit in order to consider this a success in 12 months?</div>
-                        <div class="capture"><div class="capture-label">Her words:</div><div class="capture-field" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Her words on success at 12 months" data-note="topic-success-12"></div></div>
                     </div>
                 </li>
             </ol>
         </section>
 
         <footer>
-            Working alignment doc for the HP Product Marketing Manager, AI Solutions &ndash; Robotics &amp; Manufacturing role. Not for external distribution.
+            Working alignment doc. Not for external distribution.
         </footer>
     </div>
         </div>
