@@ -412,7 +412,7 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          Hypotheses (the three oil-and-gas cards, compact/secondary, tagged Question)
                          -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
                          numbers) -> Risks & Dependencies (team structure, hardware access, stakeholder
-                         alignment) -> Also Worth Exploring (academic channel starting with Rice, OEM
+                         alignment) -> Other Ideas (academic channel starting with Rice, OEM
                          reality, NVIDIA, positioning-as-a-system, re-baseline). Next Steps & My Ask was
                          removed 2026-11-11 per Avi. Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
                          Only facts Avi stated are tagged Confirmed; everything else is Hypothesis or
@@ -429,7 +429,7 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          refresh mid-screen-share stays hidden. Notes live only in that browser; never
                          put Avi's notes into the HTML. No new dependencies.
                          Still true from earlier versions: no compensation figures anywhere; don't fill
-                         the .confirm-blank lines in Also Worth Exploring; short sentences, no walls of
+                         the .confirm-blank lines in Other Ideas; short sentences, no walls of
                          text; Day 1 hypotheses extend the real /hp/p66-example prototype.
   object-detect-summary/index.html  URL: /hp/object-detect-summary. Added 2026-09-20 as a
                          6-level placeholder breakdown, expanded 2026-09-21 to 10 levels, then
