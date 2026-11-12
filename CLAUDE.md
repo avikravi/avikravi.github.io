@@ -413,13 +413,14 @@ hp/                      All of Avi's HP application material, as of 2026-08-22.
                          -> How We'd Measure Success (same .metrics-grid tiles; proposed, never fake
                          numbers) -> Risks & Dependencies (team structure, hardware access, stakeholder
                          alignment) -> Also Worth Exploring (academic channel starting with Rice, OEM
-                         reality, NVIDIA, positioning-as-a-system, re-baseline) -> Next Steps & My Ask.
+                         reality, NVIDIA, positioning-as-a-system, re-baseline). Next Steps & My Ask was
+                         removed 2026-11-11 per Avi. Days 1-30 phase is titled "Learn, Map, and Build from Day 1".
                          Only facts Avi stated are tagged Confirmed; everything else is Hypothesis or
                          Question. Don't upgrade a tag without Avi saying so.
                          CAPTURE BOXES: .capture (dashed, light-tinted) holding a contenteditable
                          .capture-field with a data-note key; text saves to localStorage under
                          "hp-align-note:<key>" (plain text, paste is forced to plain text). Labels:
-                         "Her words:" (topics, next steps), "Stephanie's input" (under each phase),
+                         "Her words:" (topics), "Stephanie's input" (under each phase),
                          "How Stephanie defines success" (metrics). Three .capture.blank boxes have NO
                          label on purpose (after Role Vision, Day 1 Hypotheses, Risks); keep them
                          unlabeled. A sticky .doc-bar at the top of .hp-main holds the "Hide notes"
